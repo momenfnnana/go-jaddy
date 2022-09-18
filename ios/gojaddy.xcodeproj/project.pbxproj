@@ -12,8 +12,12 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		2531615C8ABA4AA9AA0E4BC1 /* Almarai-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34BAF778C4D448D9A43AB940 /* Almarai-Light.ttf */; };
 		7699B88040F8A987B510C191 /* libPods-gojaddy-gojaddyTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-gojaddy-gojaddyTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		A42DCC286D484A2C86C00450 /* Almarai-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 683BDD73256B4C13A774CF9D /* Almarai-Regular.ttf */; };
+		BEAB64C5D1964904911EBA84 /* Almarai-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 96B53455B1124625BB67581E /* Almarai-ExtraBold.ttf */; };
+		E143EBA52AE3403DAA30339E /* Almarai-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3C045F9911FB491285461253 /* Almarai-Bold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,12 +41,16 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = gojaddy/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = gojaddy/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-gojaddy-gojaddyTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-gojaddy-gojaddyTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BAF778C4D448D9A43AB940 /* Almarai-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Almarai-Light.ttf"; path = "../src/assets/fonts/Almarai-Light.ttf"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-gojaddy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-gojaddy.debug.xcconfig"; path = "Target Support Files/Pods-gojaddy/Pods-gojaddy.debug.xcconfig"; sourceTree = "<group>"; };
+		3C045F9911FB491285461253 /* Almarai-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Almarai-Bold.ttf"; path = "../src/assets/fonts/Almarai-Bold.ttf"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-gojaddy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-gojaddy.release.xcconfig"; path = "Target Support Files/Pods-gojaddy/Pods-gojaddy.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-gojaddy-gojaddyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-gojaddy-gojaddyTests.debug.xcconfig"; path = "Target Support Files/Pods-gojaddy-gojaddyTests/Pods-gojaddy-gojaddyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-gojaddy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-gojaddy.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		683BDD73256B4C13A774CF9D /* Almarai-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Almarai-Regular.ttf"; path = "../src/assets/fonts/Almarai-Regular.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = gojaddy/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-gojaddy-gojaddyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-gojaddy-gojaddyTests.release.xcconfig"; path = "Target Support Files/Pods-gojaddy-gojaddyTests/Pods-gojaddy-gojaddyTests.release.xcconfig"; sourceTree = "<group>"; };
+		96B53455B1124625BB67581E /* Almarai-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Almarai-ExtraBold.ttf"; path = "../src/assets/fonts/Almarai-ExtraBold.ttf"; sourceTree = "<group>"; };
 		AF18809828D4673D00A3F90F /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
 		AF18809928D4673D00A3F90F /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
 		AF18809A28D4673D00A3F90F /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Feather.ttf; sourceTree = "<group>"; };
@@ -139,6 +147,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				F4B7378AEFE04B03AA4CDCAF /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -187,6 +196,18 @@
 				89C6BE57DB24E9ADA2F236DE /* Pods-gojaddy-gojaddyTests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		F4B7378AEFE04B03AA4CDCAF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				3C045F9911FB491285461253 /* Almarai-Bold.ttf */,
+				96B53455B1124625BB67581E /* Almarai-ExtraBold.ttf */,
+				34BAF778C4D448D9A43AB940 /* Almarai-Light.ttf */,
+				683BDD73256B4C13A774CF9D /* Almarai-Regular.ttf */,
+			);
+			name = Resources;
+			path = "";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -285,6 +306,10 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				E143EBA52AE3403DAA30339E /* Almarai-Bold.ttf in Resources */,
+				BEAB64C5D1964904911EBA84 /* Almarai-ExtraBold.ttf in Resources */,
+				2531615C8ABA4AA9AA0E4BC1 /* Almarai-Light.ttf in Resources */,
+				A42DCC286D484A2C86C00450 /* Almarai-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

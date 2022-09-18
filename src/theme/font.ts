@@ -1,8 +1,8 @@
 const type = {
-  regular: 'AvenirNext-Regular',
-  medium: 'AvenirNext-Medium',
-  bold: 'AvenirNext-Bold',
-  semiBold: 'AvenirNext-DemiBold',
+  regular: 'Almarai-Regular',
+  light: 'Almarai-Light',
+  bold: 'Almarai-Bold',
+  extraBold: 'Almarai-ExtraBold',
 };
 
 const size = {
@@ -23,82 +23,107 @@ const lineHeight = {
 
 export const typography = {
   // XL
+  xLargeLight: {
+    fontFamily: type.light,
+    fontSize: size.xLarge,
+    lineHeight: lineHeight.xLarge,
+  },
+  xLargeRegular: {
+    fontFamily: type.regular,
+    fontSize: size.xLarge,
+    lineHeight: lineHeight.xLarge,
+  },
   xLargeBold: {
     fontFamily: type.bold,
     fontSize: size.xLarge,
     lineHeight: lineHeight.xLarge,
   },
-  xLargeSemiBold: {
-    fontFamily: type.semiBold,
-    fontSize: size.xLarge,
-    lineHeight: lineHeight.xLarge,
-  },
-  xLargeMedium: {
-    fontFamily: type.medium,
+  xLargeExtraBold: {
+    fontFamily: type.extraBold,
     fontSize: size.xLarge,
     lineHeight: lineHeight.xLarge,
   },
   // L
+  largeLight: {
+    fontFamily: type.light,
+    fontSize: size.large,
+    lineHeight: lineHeight.large,
+  },
   largeRegular: {
     fontFamily: type.regular,
     fontSize: size.large,
     lineHeight: lineHeight.large,
   },
-  largeSemiBold: {
-    fontFamily: type.semiBold,
+  largeBold: {
+    fontFamily: type.bold,
     fontSize: size.large,
     lineHeight: lineHeight.large,
   },
-  largeMedium: {
-    fontFamily: type.medium,
+  largeExtraBold: {
+    fontFamily: type.extraBold,
     fontSize: size.large,
     lineHeight: lineHeight.large,
   },
   // M
+  mediumLight: {
+    fontFamily: type.light,
+    fontSize: size.medium,
+    lineHeight: lineHeight.medium,
+  },
   mediumRegular: {
     fontFamily: type.regular,
     fontSize: size.medium,
     lineHeight: lineHeight.medium,
   },
-  mediumSemiBold: {
-    fontFamily: type.semiBold,
+  mediumBold: {
+    fontFamily: type.bold,
     fontSize: size.medium,
     lineHeight: lineHeight.medium,
   },
-  mediumMedium: {
-    fontFamily: type.medium,
+  mediumExtraBold: {
+    fontFamily: type.extraBold,
     fontSize: size.medium,
     lineHeight: lineHeight.medium,
   },
   // S
+  smallLight: {
+    fontFamily: type.light,
+    fontSize: size.small,
+    lineHeight: lineHeight.small,
+  },
   smallRegular: {
     fontFamily: type.regular,
     fontSize: size.small,
     lineHeight: lineHeight.small,
   },
-  smallSemiBold: {
-    fontFamily: type.semiBold,
+  smallBold: {
+    fontFamily: type.bold,
     fontSize: size.small,
     lineHeight: lineHeight.small,
   },
-  smallMedium: {
-    fontFamily: type.medium,
+  smallExtraBold: {
+    fontFamily: type.extraBold,
     fontSize: size.small,
     lineHeight: lineHeight.small,
   },
   // XS
+  xSmallLight: {
+    fontFamily: type.light,
+    fontSize: size.xSmall,
+    lineHeight: lineHeight.xSmall,
+  },
   xSmallRegular: {
     fontFamily: type.regular,
     fontSize: size.xSmall,
     lineHeight: lineHeight.xSmall,
   },
-  xSmallSemiBold: {
-    fontFamily: type.semiBold,
+  xSmallBold: {
+    fontFamily: type.bold,
     fontSize: size.xSmall,
     lineHeight: lineHeight.xSmall,
   },
-  xSmallMedium: {
-    fontFamily: type.medium,
+  xSmallExtraBold: {
+    fontFamily: type.extraBold,
     fontSize: size.xSmall,
     lineHeight: lineHeight.xSmall,
   },
