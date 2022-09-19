@@ -1,4 +1,5 @@
 const white = '#FFFFFF';
+const tabsColor = '#121212';
 
 const primaryPalette = {
   primary: '#FF914D', // Main
@@ -79,6 +80,7 @@ export const colors = {
 
   // Status colors
   ...statusPalette,
+  tabsColor,
 };
 
 export type ColorsTypes = keyof typeof colors;

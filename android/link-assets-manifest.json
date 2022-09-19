@@ -1,0 +1,21 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/Almarai-Bold.ttf",
+      "sha1": "29da0cb13a3569e44d983a5497f05d637f700a52"
+    },
+    {
+      "path": "src/assets/fonts/Almarai-ExtraBold.ttf",
+      "sha1": "1027eff77cef57a47cbb4842a64b47fbc4c30ba4"
+    },
+    {
+      "path": "src/assets/fonts/Almarai-Light.ttf",
+      "sha1": "8b2bfee8a592c8afd1616ffd7f552fe7050117dd"
+    },
+    {
+      "path": "src/assets/fonts/Almarai-Regular.ttf",
+      "sha1": "70717b2433c393140de1608f1b1dc50773342d9e"
+    }
+  ]
+}

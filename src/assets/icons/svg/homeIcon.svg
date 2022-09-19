@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="22.633" height="22.146" viewBox="0 0 22.633 22.146">
   <g id="home-2" transform="translate(0.317 0.646)">
-    <path id="Path" d="M4,6V0H0V6" transform="translate(9 15)" fill="none" stroke="#ff6701" stroke-width="1"/>
-    <path id="Path-2" data-name="Path" d="M22,9,11,0,0,9" fill="none" stroke="#ff6701" stroke-width="1"/>
-    <path id="Path-3" data-name="Path" d="M16,0V10H0V0" transform="translate(3 11)" fill="none" stroke="#ff6701" stroke-linecap="square" stroke-width="1"/>
-    <rect id="Rectangle" width="2" height="2" transform="translate(10 9)" fill="none" stroke="#ff6701" stroke-width="1"/>
-    <rect id="Rectangle-2" data-name="Rectangle" width="2" height="2" transform="translate(10 9)" fill="currentColor" stroke="#ff6701" stroke-linecap="square" stroke-width="1"/>
+    <path id="Path" d="M4,6V0H0V6" transform="translate(9 15)" fill="none" stroke="none" stroke-width="1"/>
+    <path id="Path-2" data-name="Path" d="M22,9,11,0,0,9" fill="none" stroke="none" stroke-width="1"/>
+    <path id="Path-3" data-name="Path" d="M16,0V10H0V0" transform="translate(3 11)" fill="none" stroke="none" stroke-linecap="square" stroke-width="1"/>
+    <rect id="Rectangle" width="2" height="2" transform="translate(10 9)" fill="none" stroke="none" stroke-width="1"/>
+    <rect id="Rectangle-2" data-name="Rectangle" width="2" height="2" transform="translate(10 9)" fill="none" stroke="none" stroke-linecap="square" stroke-width="1"/>
   </g>
 </svg>

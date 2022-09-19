@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {HomeScreen, ProfileScreen} from 'screens';
 import {HomeRoutes} from './RoutesTypes';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -18,32 +18,33 @@ const HomeStack = () => {
   const user: IUser = {
     id: '1',
   };
+
+  const getColor = useCallback((focused: boolean) => {
+    return focused ? colors.danger : colors.tabsColor;
+  }, []);
+
   return (
     <>
       <Tab.Navigator
         screenOptions={({route}) => ({
-          tabBarIcon: ({focused, color, size}) => {
-            let iconName;
-            if (route.name === 'Home') {
-              // console.log({name: route.name, focused, iconName});
-              // change validation on colors
-              return <HomeIcon color={colors.danger} />;
-            } else if (route.name === 'Profile') {
-              return <CartIcon color={colors.danger} />;
-            }
-          },
           tabBarActiveTintColor: colors.danger,
           tabBarInactiveTintColor: colors.gray[800],
         })}>
         <Tab.Screen
           name="Home"
           component={HomeScreen}
-          // options={{tabBarIcon: HomeIcon}}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <HomeIcon stroke={getColor(focused)} fill={getColor(focused)} />
+            ),
+          }}
         />
         <Tab.Screen
           component={ProfileScreen}
           name="Profile"
-          // options={{tabBarIcon: CartIcon}}
+          options={{
+            tabBarIcon: ({focused}) => <CartIcon stroke={getColor(focused)} />,
+          }}
           initialParams={{userId: user.id}}
         />
       </Tab.Navigator>

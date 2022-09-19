@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="19.366" height="24.897" viewBox="0 0 19.366 24.897">
   <g id="Group_38051" data-name="Group 38051" transform="translate(-21.033 -8.568)">
-    <path id="Path" d="M18.366,17.345H0V0H18.366Z" transform="translate(21.533 15.62)" fill="currentColor" stroke="#121212" stroke-linecap="square" stroke-width="1"/>
-    <path id="Path-2" data-name="Path" d="M0,8.521V4.261A4.186,4.186,0,0,1,4.081,0h0A4.186,4.186,0,0,1,8.162,4.261V8.521" transform="translate(26.634 9.068)" fill="currentColor" stroke="#121212" stroke-linecap="square" stroke-width="1"/>
+    <path id="Path" d="M18.366,17.345H0V0H18.366Z" transform="translate(21.533 15.62)" fill="none" stroke="none" stroke-linecap="square" stroke-width="1"/>
+    <path id="Path-2" data-name="Path" d="M0,8.521V4.261A4.186,4.186,0,0,1,4.081,0h0A4.186,4.186,0,0,1,8.162,4.261V8.521" transform="translate(26.634 9.068)" fill="none" stroke="none" stroke-linecap="square" stroke-width="1"/>
   </g>
 </svg>
