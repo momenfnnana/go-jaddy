@@ -8,6 +8,7 @@ import {
 import {useTranslation} from 'react-i18next';
 import {HomeRoutes} from 'navigators/RoutesTypes';
 import {Text} from 'components';
+import {HeaderIcon, NotificationIcon} from 'assets/icons';
 
 interface IHomeNavigation
   extends NativeStackNavigationProp<HomeRoutes, 'Home'> {}
@@ -17,7 +18,9 @@ const Home = (props: IHome) => {
   const navigation = useNavigation<IHomeNavigation>();
   const {t} = useTranslation();
   return (
-    <View>
+    <View style={{flex: 1, backgroundColor: 'red'}}>
+      <HeaderIcon />
+      <NotificationIcon />
       <Text tx="what_to_add" />
     </View>
   );
