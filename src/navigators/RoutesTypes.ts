@@ -7,3 +7,8 @@ export type AuthRoutes = {
   Onboarding: undefined;
   Login: undefined;
 };
+
+export type MainNavigator = {
+  HomeFlow: undefined;
+  LoginFlow: {userId: string};
+};
