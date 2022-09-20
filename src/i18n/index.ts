@@ -22,6 +22,9 @@ i18n
     },
     supportedLngs: Object.keys(resources),
     compatibilityJSON: 'v3',
+    react: {
+      useSuspense: false,
+    },
   });
 
 export default i18n;
