@@ -1,5 +1,6 @@
 const white = '#FFFFFF';
 const tabsColor = '#121212';
+const reloadColor = '#DEDEDE';
 
 const primaryPalette = {
   primary: '#FF914D', // Main
@@ -33,10 +34,11 @@ const greenPalette = {
   greenDark: '#005005',
 };
 const bluePalette = {
-  blue: '#1E88E5', // Main
+  blue: '#0232EB', // Main
   blueLight: '#E9F4FF',
   blueDark: '#005CB2',
 };
+
 const gray = {
   50: '#F9FAFB',
   100: '#F3F4F6',
@@ -81,6 +83,7 @@ export const colors = {
   // Status colors
   ...statusPalette,
   tabsColor,
+  reloadColor,
 };
 
 export type ColorsTypes = keyof typeof colors;
