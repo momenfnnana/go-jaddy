@@ -6,6 +6,7 @@ export type HomeRoutes = {
 export type AuthRoutes = {
   Onboarding: undefined;
   Login: undefined;
+  Register: undefined;
 };
 
 export type MainNavigator = {

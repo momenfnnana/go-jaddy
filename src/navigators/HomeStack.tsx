@@ -37,6 +37,7 @@ const HomeStack = () => {
             tabBarIcon: ({focused}) => (
               <HomeIcon stroke={getColor(focused)} fill={getColor(focused)} />
             ),
+            headerShown: false,
           }}
         />
         <Tab.Screen
