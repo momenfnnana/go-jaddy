@@ -1,4 +1,8 @@
 {
   "header": {},
-  "what_to_add": "What to add?"
+  "what_to_add": "What to add?",
+  "internet": {
+    "title": "No internet connection",
+    "description": "Unable to connect to your internet, please make sure you have internet service, then refresh the page"
+  }
 }
