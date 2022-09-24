@@ -4,5 +4,21 @@
   "internet": {
     "title": "No internet connection",
     "description": "Unable to connect to your internet, please make sure you have internet service, then refresh the page"
+  },
+  "common": {
+    "search_in_store": "Search in store",
+    "see-more": "See more"
+  },
+  "carasoule": {
+    "name": "clothes title goes here"
+  },
+  "home": {
+    "arrival": "Arrival",
+    "news": "News",
+    "best": "Best",
+    "selling": "Selling"
+  },
+  "product-details": {
+    "select-color": "Select color"
   }
 }
