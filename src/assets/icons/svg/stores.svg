@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20.13" height="22.043" viewBox="0 0 20.13 22.043">
+  <g id="archive-drawer" transform="translate(0.5 0.5)">
+    <rect id="Rectangle" width="19.13" height="13.391" transform="translate(0 7.652)" fill="none" stroke="none" stroke-linecap="square" stroke-width="1"/>
+    <path id="Path" d="M13.391.478H0" transform="translate(2.87 3.348)" fill="none" stroke="none" stroke-linecap="square" stroke-width="1"/>
+    <path id="Path-2" data-name="Path" d="M7.652.478H0" transform="translate(5.739 -0.478)" fill="none" stroke="none" stroke-linecap="square" stroke-width="1"/>
+    <path id="Path-3" data-name="Path" d="M0,7.913V0H7.652V7.913" transform="translate(5.739 12.435)" fill="none" stroke="none" stroke-linecap="square" stroke-width="1"/>
+  </g>
+</svg>
