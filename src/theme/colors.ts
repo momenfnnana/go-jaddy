@@ -3,7 +3,7 @@ const tabsColor = '#121212';
 const reloadColor = '#DEDEDE';
 
 const primaryPalette = {
-  primary: '#FF914D', // Main
+  primary: '#0232EB', // Main
   primaryLight1: '#FF8863',
   primaryLight2: '#FFC19E',
   primaryLight3: '#F2DE91',
@@ -11,7 +11,7 @@ const primaryPalette = {
 };
 
 const secondaryPalette = {
-  secondary: '#02323D', // Main
+  secondary: '#FF6701', // Main
   secondaryLight1: '#17505C',
   secondaryLight2: '#A4C1C8',
   secondaryLight3: '#D1E0E3',

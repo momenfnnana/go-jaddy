@@ -7,6 +7,7 @@ export type AuthRoutes = {
   Onboarding: undefined;
   Login: undefined;
   Register: undefined;
+  Splash: undefined;
 };
 
 export type MainNavigator = {

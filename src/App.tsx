@@ -6,7 +6,7 @@ import {MainNavigator} from 'navigators/RoutesTypes';
 
 const Stack = createNativeStackNavigator<MainNavigator>();
 const App = () => {
-  const token = true;
+  const token = false;
   return (
     <NavigationContainer>
       <Stack.Navigator

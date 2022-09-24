@@ -1,30 +1,30 @@
-import {View, ViewStyle, Pressable} from 'react-native';
+import {Pressable, ViewStyle} from 'react-native';
 import React from 'react';
-import {colors} from 'theme';
 import Text from 'components/Text';
+import {colors} from 'theme';
 
 interface buttomProps {
   style?: ViewStyle;
   title: string;
   onPress?: any;
 }
-
-const Button: React.FC<buttomProps> = ({style, title, onPress}) => {
+const SecondaryButton: React.FC<buttomProps> = ({style, title, onPress}) => {
   return (
     <Pressable
       onPress={onPress}
       style={[
         {
           borderRadius: 30,
-          backgroundColor: colors.blue,
+          borderWidth: 1,
+          borderColor: colors.secondary,
           paddingHorizontal: 20,
           paddingVertical: 10,
         },
         style,
       ]}>
-      <Text center variant="largeBold" tx={title} color={colors.white} />
+      <Text center variant="largeBold" tx={title} color={colors.secondary} />
     </Pressable>
   );
 };
 
-export default Button;
+export default SecondaryButton;
