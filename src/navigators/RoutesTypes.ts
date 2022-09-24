@@ -1,6 +1,16 @@
+import {IProductInterface} from 'screens/main/Home/types';
+
+export type BottomTabsRoutes = {
+  Home: undefined;
+  Categories: undefined;
+  Stores: undefined;
+  Cart: undefined;
+  Profile: {userId: string};
+};
+
 export type HomeRoutes = {
   Home: undefined;
-  Profile: {userId: string};
+  ProductDetails: IProductInterface;
 };
 
 export type AuthRoutes = {
