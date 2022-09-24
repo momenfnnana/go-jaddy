@@ -30,5 +30,17 @@
     "arBtn": "العربية",
     "enBtn": "English",
     "saveBtn": "حفظ ومتابعة"
+  },
+  "login": {
+    "welcome": "Welcome Go Jaddy",
+    "login": "Login",
+    "continue-as-visitor": "Continue as a visitor",
+    "new-user": "New user",
+    "register": "Register"
+  },
+  "common": {
+    "phone-numebr": "Phone Number",
+    "password": "Password",
+    "forget-password": "Forget Password?"
   }
 }
