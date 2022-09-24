@@ -12,5 +12,5 @@ export type AuthRoutes = {
 
 export type MainNavigator = {
   HomeFlow: undefined;
-  LoginFlow: {userId: string};
+  AuthFlow: {userId: string};
 };
