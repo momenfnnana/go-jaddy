@@ -1,4 +1,11 @@
-export {HomeScreen, ProfileScreen} from './main';
+export {
+  HomeScreen,
+  ProfileScreen,
+  ProductDetailsScreen,
+  CategoriesScreen,
+  StoresScreen,
+  CartScreen,
+} from './main';
 export {
   OnboardingScreen,
   LoginScreen,

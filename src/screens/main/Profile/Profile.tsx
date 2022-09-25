@@ -1,18 +1,19 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import {HomeRoutes} from 'navigators/RoutesTypes';
+import {BottomTabsRoutes} from 'navigators/RoutesTypes';
 import type {RouteProp} from '@react-navigation/native';
+import {Text} from 'components';
 
 interface IProfileNavigation
-  extends NativeStackNavigationProp<HomeRoutes, 'Profile'>,
-    RouteProp<HomeRoutes, 'Profile'> {}
+  extends NativeStackNavigationProp<BottomTabsRoutes, 'Profile'>,
+    RouteProp<BottomTabsRoutes, 'Profile'> {}
 
-interface IProfile extends NativeStackScreenProps<HomeRoutes, 'Profile'> {}
+interface IProfile extends NativeStackScreenProps<BottomTabsRoutes, 'Profile'> {}
 const Profile = (props: IProfile) => {
   const {navigate} = useNavigation<IProfileNavigation>();
   const {params} = useRoute<IProfileNavigation>();
@@ -20,7 +21,7 @@ const Profile = (props: IProfile) => {
 
   return (
     <View>
-      <Text>Profile</Text>
+      <Text text="Profile" />
     </View>
   );
 };

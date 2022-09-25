@@ -41,6 +41,20 @@
   "common": {
     "phone-numebr": "Phone Number",
     "password": "Password",
-    "forget-password": "Forget Password?"
+    "forget-password": "Forget Password?",
+    "search_in_store": "Search in store",
+    "see-more": "See more"
+  },
+  "carasoule": {
+    "name": "clothes title goes here"
+  },
+  "home": {
+    "arrival": "Arrival",
+    "news": "News",
+    "best": "Best",
+    "selling": "Selling"
+  },
+  "product-details": {
+    "select-color": "Select color"
   }
 }

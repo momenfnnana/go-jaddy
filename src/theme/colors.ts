@@ -1,8 +1,11 @@
 const white = '#FFFFFF';
+const black = '#000000';
 const tabsColor = '#121212';
 const reloadColor = '#DEDEDE';
 const arrowColor = '#747474';
 const arrowBackgroundColor = '#0000000A';
+const grayMain = '#C4C4C4';
+const grayMainBolder = '#C8C8C8';
 
 const primaryPalette = {
   primary: '#0232EB', // Main
@@ -30,9 +33,16 @@ const yellowPalette = {
   yellowLight: '#FDF7EB',
   yellowDark: '#C2850A',
 };
+
+const orangePalette = {
+  orange: '#FF6701',
+  orangeDark: '#F83838',
+};
+
 const greenPalette = {
   green: '#087F23', // Main
   greenLight: '#E7F3E7',
+  greenSimiLight: '#B5B5B5',
   greenDark: '#005005',
 };
 const brouwnPalette = {
@@ -81,6 +91,7 @@ export const colors = {
   ...yellowPalette,
   ...bluePalette,
   ...brouwnPalette,
+  ...orangePalette,
 
   text: gray[800], // Default text color
   input: gray[800], // Input text color
@@ -95,6 +106,9 @@ export const colors = {
   reloadColor,
   arrowColor,
   arrowBackgroundColor,
+  black,
+  grayMain,
+  grayMainBolder,
 };
 
 export type ColorsTypes = keyof typeof colors;
