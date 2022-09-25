@@ -10,52 +10,38 @@ import {colors} from 'theme';
 import Icon from 'react-native-vector-icons/AntDesign';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {Button, Text} from 'components';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {AuthRoutes} from 'navigators/RoutesTypes';
 
 interface ILanguageModalProps {
   style?: ViewStyle;
   language?: string;
   visibleLangModal?: boolean;
-  setLanguage: (lang: string) => void;
-  setVisibleLangModal: (lang: boolean) => void;
+  setLanguage?: (lang: string) => void;
+  setVisibleLangModal?: (lang: boolean) => void;
 }
 
+interface IOnboardingNavigation extends NativeStackNavigationProp<AuthRoutes> {}
+
 const LanguageModal: React.FC<ILanguageModalProps> = ({
-  style,
   language,
   visibleLangModal,
   setLanguage,
   setVisibleLangModal,
 }) => {
-  //   const [language, setLanguage] = useState('ar');
-  //   const [visibleLangModal, setVisibleLangModal] = useState(false);
+  const {navigate} = useNavigation<IOnboardingNavigation>();
   return (
-    <View>
+    <>
       {visibleLangModal && (
-        <Pressable
-          onPress={() => setVisibleLangModal(false)}
-          style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            backgroundColor: '#0008',
-            justifyContent: 'flex-end',
-          }}>
+        <View style={styles.container}>
+          <Pressable
+            style={styles.overlay}
+            onPress={() => setVisibleLangModal!(false)}
+          />
           <SafeAreaView style={{width: '100%', alignItems: 'center'}}>
-            <View
-              style={{
-                width: '90%',
-                paddingHorizontal: 25,
-                paddingVertical: 20,
-                borderRadius: 15,
-                // height: 300,
-                backgroundColor: colors.white,
-              }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginBottom: 30,
-                }}>
+            <View style={styles.containerModal}>
+              <View style={styles.containerHeader}>
                 <Icon
                   name="close"
                   style={{opacity: 0}}
@@ -63,10 +49,15 @@ const LanguageModal: React.FC<ILanguageModalProps> = ({
                   color={colors.gray[500]}
                 />
                 <Text tx="languageModel.title" variant="largeBold" />
-                <Icon name="close" size={26} color={colors.gray[500]} />
+                <Icon
+                  onPress={() => setVisibleLangModal!(false)}
+                  name="close"
+                  size={26}
+                  color={colors.gray[500]}
+                />
               </View>
               <Pressable
-                onPress={() => setLanguage('ar')}
+                onPress={() => setLanguage!('ar')}
                 style={
                   language == 'ar' ? styles.activeButn : styles.disabledButn
                 }>
@@ -89,7 +80,7 @@ const LanguageModal: React.FC<ILanguageModalProps> = ({
                 />
               </Pressable>
               <Pressable
-                onPress={() => setLanguage('en')}
+                onPress={() => setLanguage!('en')}
                 style={[
                   language == 'en' ? styles.activeButn : styles.disabledButn,
                   {marginTop: 20},
@@ -112,18 +103,46 @@ const LanguageModal: React.FC<ILanguageModalProps> = ({
                   color={language == 'en' ? colors.white : colors.gray[500]}
                 />
               </Pressable>
-              <Button title="buttons.languageBtn" style={{marginTop: 30}} />
+              <Button
+                onPress={() => navigate('Login')}
+                title="buttons.languageBtn"
+                style={{marginTop: 30}}
+              />
             </View>
           </SafeAreaView>
-        </Pressable>
+        </View>
       )}
-    </View>
+    </>
   );
 };
 
 export default LanguageModal;
 
 const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'flex-end',
+  },
+  overlay: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#0008',
+  },
+  containerModal: {
+    width: '90%',
+    paddingHorizontal: 25,
+    paddingVertical: 20,
+    borderRadius: 15,
+    backgroundColor: colors.white,
+  },
+  containerHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 30,
+  },
   activeButn: {
     paddingVertical: 10,
     backgroundColor: colors.secondary,
