@@ -1,8 +1,14 @@
 const white = '#FFFFFF';
+const black = '#000000';
 const tabsColor = '#121212';
+const reloadColor = '#DEDEDE';
+const arrowColor = '#747474';
+const arrowBackgroundColor = '#0000000A';
+const grayMain = '#C4C4C4';
+const grayMainBolder = '#C8C8C8';
 
 const primaryPalette = {
-  primary: '#FF914D', // Main
+  primary: '#0232EB', // Main
   primaryLight1: '#FF8863',
   primaryLight2: '#FFC19E',
   primaryLight3: '#F2DE91',
@@ -10,7 +16,7 @@ const primaryPalette = {
 };
 
 const secondaryPalette = {
-  secondary: '#02323D', // Main
+  secondary: '#FF6701', // Main
   secondaryLight1: '#17505C',
   secondaryLight2: '#A4C1C8',
   secondaryLight3: '#D1E0E3',
@@ -27,16 +33,30 @@ const yellowPalette = {
   yellowLight: '#FDF7EB',
   yellowDark: '#C2850A',
 };
+
+const orangePalette = {
+  orange: '#FF6701',
+  orangeDark: '#F83838',
+};
+
 const greenPalette = {
   green: '#087F23', // Main
   greenLight: '#E7F3E7',
+  greenSimiLight: '#B5B5B5',
   greenDark: '#005005',
 };
+const brouwnPalette = {
+  brouwn: '#9F9F9F', // Main
+  brouwnLight: '#747474',
+  greenDark: '#005005',
+};
+
 const bluePalette = {
-  blue: '#1E88E5', // Main
+  blue: '#0232EB', // Main
   blueLight: '#E9F4FF',
   blueDark: '#005CB2',
 };
+
 const gray = {
   50: '#F9FAFB',
   100: '#F3F4F6',
@@ -70,6 +90,8 @@ export const colors = {
   ...greenPalette,
   ...yellowPalette,
   ...bluePalette,
+  ...brouwnPalette,
+  ...orangePalette,
 
   text: gray[800], // Default text color
   input: gray[800], // Input text color
@@ -81,6 +103,12 @@ export const colors = {
   // Status colors
   ...statusPalette,
   tabsColor,
+  reloadColor,
+  arrowColor,
+  arrowBackgroundColor,
+  black,
+  grayMain,
+  grayMainBolder,
 };
 
 export type ColorsTypes = keyof typeof colors;

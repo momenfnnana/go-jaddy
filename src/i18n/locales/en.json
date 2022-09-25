@@ -4,5 +4,57 @@
   "internet": {
     "title": "No internet connection",
     "description": "Unable to connect to your internet, please make sure you have internet service, then refresh the page"
+  },
+  "onboarding": {
+    "page1": {
+      "title": "كل اللي رح تحتاجه",
+      "subTitle": "في مكان واحد"
+    },
+    "page2": {
+      "title": "أنت كتاجر اعرض منتجاتك",
+      "subTitle": "والدفع أون لاين"
+    },
+    "page3": {
+      "title": "لا تقلق من شيء",
+      "subTitle": "طلبك واصل لباب بيتك"
+    }
+  },
+  "buttons": {
+    "next": "التالي",
+    "skip": "تخطي",
+    "onboardingBtn": "تسوقي الآن",
+    "languageBtn": "حفظ ومتابعة"
+  },
+  "languageModel": {
+    "title": "اختر اللغة",
+    "arBtn": "العربية",
+    "enBtn": "English",
+    "saveBtn": "حفظ ومتابعة"
+  },
+  "login": {
+    "welcome": "Welcome Go Jaddy",
+    "login": "Login",
+    "continue-as-visitor": "Continue as a visitor",
+    "new-user": "New user",
+    "register": "Register"
+  },
+  "common": {
+    "phone-numebr": "Phone Number",
+    "password": "Password",
+    "forget-password": "Forget Password?",
+    "search_in_store": "Search in store",
+    "see-more": "See more"
+  },
+  "carasoule": {
+    "name": "clothes title goes here"
+  },
+  "home": {
+    "arrival": "Arrival",
+    "news": "News",
+    "best": "Best",
+    "selling": "Selling"
+  },
+  "product-details": {
+    "select-color": "Select color"
   }
 }

@@ -127,6 +127,11 @@ export const typography = {
     fontSize: size.xSmall,
     lineHeight: lineHeight.xSmall,
   },
+  error: {
+    fontFamily: type.light,
+    fontSize: size.small,
+    lineHeight: lineHeight.xSmall,
+  },
 };
 
 export type TypographyTypes = keyof typeof typography;
