@@ -56,11 +56,13 @@ const Pagination: React.FC<ISliderListProps> = ({
               }}
               title="buttons.next"
             />
-            <Text
-              onPress={() => setVisibleLangModal!(true)}
-              tx="buttons.skip"
-              style={{opacity: 0.5}}
-            />
+            <Pressable>
+              <Text
+                onPress={() => setVisibleLangModal!(true)}
+                tx="buttons.skip"
+                style={{opacity: 0.5}}
+              />
+            </Pressable>
           </View>
         ) : (
           <Button
