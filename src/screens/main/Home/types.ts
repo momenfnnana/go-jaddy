@@ -3,7 +3,7 @@ import {ImageBackgroundProps, ImageSourcePropType} from 'react-native';
 
 export interface ICategories {
   imageUrl: ImageSourcePropType;
-  Name: string;
+  name: string;
 }
 export interface IProductInterface {
   id: number;

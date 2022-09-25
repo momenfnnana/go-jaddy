@@ -24,7 +24,7 @@ import {ProductImage} from 'assets/icons';
 import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
 import {getStores} from 'services/Home';
-import NetworkErrorScreen from 'screens/NetworkErrorScreen';
+import {NetworkErrorScreen} from 'screens';
 
 interface IHomeNavigation
   extends NativeStackNavigationProp<BottomTabsRoutes, 'Home'> {}

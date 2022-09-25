@@ -14,35 +14,19 @@ const SliderItem: React.FC<{
   item: ISliderDataSource;
 }> = ({style, item}) => {
   const {width, height} = useWindowDimensions();
-  const ImageSlide = item.image;
+  const ImageSlide: React.Component = item.image;
   return (
-    <View style={[{width: width, justifyContent: 'flex-end'}, style]}>
-      <View
-        style={{
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-        }}>
+    <View style={[styles.constainer, {width: width}, style]}>
+      <View style={styles.containImage}>
         <ImageSlide />
-        {/* <Image style={{width: 280, height: 230}} source={item.image} /> */}
       </View>
       <View style={{alignItems: 'center'}}>
-        <Text
-          tx={item.title}
-          variant="largeBold"
-          style={{
-            marginTop: 40,
-            fontSize: 25,
-          }}
-          center
-        />
+        <Text tx={item.title} variant="largeBold" style={styles.title} center />
         <Text
           tx={item.subTitle}
           variant="largeBold"
-          style={{
-            marginTop: 10,
-            color: '#FF6701',
-            fontSize: 25,
-          }}
+          style={styles.subTitle}
+          center
         />
       </View>
     </View>
@@ -51,4 +35,19 @@ const SliderItem: React.FC<{
 
 export default SliderItem;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  constainer: {justifyContent: 'flex-end'},
+  containImage: {
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  title: {
+    marginTop: 40,
+    fontSize: 25,
+  },
+  subTitle: {
+    marginTop: 10,
+    color: '#FF6701',
+    fontSize: 25,
+  },
+});

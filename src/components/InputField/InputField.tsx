@@ -13,9 +13,15 @@ import {colors, spacing} from 'theme';
 interface IInputField extends TextInputProps {
   rightIcon?: ReactNode;
   containerStyle?: ViewStyle;
+  placeholder?: string;
 }
 
-const InputField = ({rightIcon, containerStyle, ...rest}: IInputField) => {
+const InputField = ({
+  rightIcon,
+  containerStyle,
+  placeholder,
+  ...rest
+}: IInputField) => {
   const {t} = useTranslation();
   const {width} = useWindowDimensions();
   return (
@@ -26,9 +32,8 @@ const InputField = ({rightIcon, containerStyle, ...rest}: IInputField) => {
         containerStyle,
       ]}>
       <TextInput
-        placeholder={t('common.phone-numebr')}
+        placeholder={placeholder ? t(placeholder) : t('common.phone-numebr')}
         style={[styles.textInput, {width: width * 0.65}]}
-        autoCapitalize="none"
         {...rest}
       />
       <View style={{width: width * 0.2}}>{rightIcon && rightIcon}</View>
