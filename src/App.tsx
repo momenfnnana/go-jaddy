@@ -10,10 +10,10 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={token ? 'HomeFlow' : 'LoginFlow'}
+        initialRouteName={token ? 'HomeFlow' : 'AuthFlow'}
         screenOptions={{headerShown: false}}>
         <Stack.Screen component={HomeStack} name="HomeFlow" />
-        <Stack.Screen component={AuthStack} name="LoginFlow" />
+        <Stack.Screen component={AuthStack} name="AuthFlow" />
       </Stack.Navigator>
     </NavigationContainer>
   );

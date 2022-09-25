@@ -22,7 +22,12 @@ const SliderItem: React.FC<{
       </View>
       <View style={{alignItems: 'center'}}>
         <Text tx={item.title} variant="largeBold" style={styles.title} center />
-        <Text tx={item.subTitle} variant="largeBold" style={styles.subTitle} />
+        <Text
+          tx={item.subTitle}
+          variant="largeBold"
+          style={styles.subTitle}
+          center
+        />
       </View>
     </View>
   );

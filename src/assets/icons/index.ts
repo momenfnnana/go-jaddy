@@ -3,3 +3,7 @@ export {default as HomeIcon} from './svg/homeIcon.svg';
 export {default as NetworkErrorIcon} from './svg/network-error.svg';
 export {default as HeaderIcon} from './svg/header-logo.svg';
 export {default as NotificationIcon} from './svg/notification.svg';
+export {default as GojaddyLoginIcon} from './svg/gojaddy-login-icon.svg';
+export {default as VisibilityEyeIcon} from './svg/visibility_eye.svg';
+export {default as FacebookIcon} from './svg/facebook-icon.svg';
+export {default as GoogleIcon} from './svg/google-icon.svg';
