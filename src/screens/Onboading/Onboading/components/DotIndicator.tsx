@@ -31,11 +31,6 @@ const DotIndicator: React.FC<{
           outputRange: [0.7, 1, 0.7],
           extrapolate: 'clamp',
         });
-        const bgColor = scrollX.interpolate({
-          inputRange,
-          outputRange: [WHITE, BLUE, WHITE],
-          extrapolate: 'clamp',
-        });
         return (
           <Animated.View
             key={i.toString()}
@@ -44,7 +39,7 @@ const DotIndicator: React.FC<{
               {
                 width: dotWidth,
                 opacity,
-                backgroundColor: bgColor,
+                backgroundColor: i === currentIndex ? BLUE : WHITE,
               },
             ]}
           />

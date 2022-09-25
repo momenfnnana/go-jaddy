@@ -7,29 +7,29 @@
   },
   "onboarding": {
     "page1": {
-      "title": "All you need",
-      "subTitle": "in one place"
+      "title": "كل اللي رح تحتاجه",
+      "subTitle": "في مكان واحد"
     },
     "page2": {
-      "title": "You as a merchant show your products",
-      "subTitle": "Online Payment"
+      "title": "أنت كتاجر اعرض منتجاتك",
+      "subTitle": "والدفع أون لاين"
     },
     "page3": {
-      "title": "Don't worry about anything",
-      "subTitle": "Your request is delivered to your doorstep."
+      "title": "لا تقلق من شيء",
+      "subTitle": "طلبك واصل لباب بيتك"
     }
   },
   "buttons": {
-    "next": "next",
-    "skip": "skip",
-    "onboardingBtn": "shop now",
-    "languageBtn": "Save and continue"
+    "next": "التالي",
+    "skip": "تخطي",
+    "onboardingBtn": "تسوقي الآن",
+    "languageBtn": "حفظ ومتابعة"
   },
   "languageModel": {
-    "title": "choose the language",
+    "title": "اختر اللغة",
     "arBtn": "العربية",
     "enBtn": "English",
-    "languageBtn": "Save and continue"
+    "saveBtn": "حفظ ومتابعة"
   },
   "login": {
     "welcome": "Welcome Go Jaddy",
@@ -38,18 +38,7 @@
     "new-user": "New user",
     "register": "Register"
   },
-  "register": {
-    "clientAccount": "Client Account",
-    "traderAccount": "Trader Account",
-    "newRegister": "New Register",
-    "confirmPassword": "Confirm Password",
-    "shareDetails": "Excited to share the app with your friend?",
-    "referFriend": "Refer a friend"
-  },
   "common": {
-    "firstName": "First Name",
-    "lastName": "Last Name",
-    "email": "Email Address",
     "phone-numebr": "Phone Number",
     "password": "Password",
     "forget-password": "Forget Password?"

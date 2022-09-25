@@ -42,14 +42,21 @@ const Pagination: React.FC<ISliderListProps> = ({
         style={{...styles.dotIndicator, marginBottom: height / 6}}
       />
       <SafeAreaView>
-        {currentIndex! < data?.length! - 1 ? (
-          <View style={[styles.containerButtons, {width: width}]}>
+        {currentIndex < data?.length - 1 ? (
+          <View
+            style={{
+              width: width,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingHorizontal: 20,
+            }}>
             <SecondaryButton
               onPress={() => {
-                if (currentIndex! < data?.length! - 1) {
+                if (currentIndex < data?.length - 1) {
                   flatRef.current.scrollToIndex({
-                    index: currentIndex! + 1,
-                    animated: true,
+                    index: currentIndex + 1,
+                    animated: false,
                   });
                 } else {
                 }
@@ -57,16 +64,12 @@ const Pagination: React.FC<ISliderListProps> = ({
               title="buttons.next"
             />
             <Pressable>
-              <Text
-                onPress={() => setVisibleLangModal!(true)}
-                tx="buttons.skip"
-                style={{opacity: 0.5}}
-              />
+              <Text tx="buttons.skip" style={{opacity: 0.5}} />
             </Pressable>
           </View>
         ) : (
           <Button
-            onPress={() => setVisibleLangModal!(true)}
+            onPress={() => navigate('Login')}
             style={{width: width - 50}}
             title="buttons.onboardingBtn"
           />
@@ -77,17 +80,15 @@ const Pagination: React.FC<ISliderListProps> = ({
 };
 const styles = StyleSheet.create({
   container: {
+    // flex: 0.1,
+    // marginBottom: 200,
+    // flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
   dotIndicator: {
     marginTop: 52,
-  },
-  containerButtons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
+    // marginBottom: 200,
   },
 });
 export default Pagination;
