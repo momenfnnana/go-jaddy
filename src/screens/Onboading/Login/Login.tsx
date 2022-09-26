@@ -1,4 +1,4 @@
-import React, {ReactNode, useState} from 'react';
+import React, {ReactNode, useContext, useEffect, useState} from 'react';
 import {
   View,
   Image,
@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import {LoginMain, PalestineFlag} from 'assets/images';
 import LinearGradient from 'react-native-linear-gradient';
-import {Button, InputField, Spacer, Text} from 'components';
+import {Button, InputField, Loader, Spacer, Text} from 'components';
 import {colors, spacing} from 'theme';
 import {
   FacebookIcon,
@@ -26,10 +26,14 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {RouteProp, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {AuthRoutes} from 'navigators/RoutesTypes';
+import {AuthRoutes, HomeRoutes} from 'navigators/RoutesTypes';
 import {Formik} from 'formik';
 import * as Yub from 'yup';
 import {useTranslation} from 'react-i18next';
+import {doLogin_service} from 'services/Auth';
+import {useMutation} from '@tanstack/react-query';
+import {UserContext} from 'context/UserContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface IinitialValues {
   phoneNumber: string;
@@ -67,6 +71,7 @@ const Login = () => {
   const {top} = useSafeAreaInsets();
   const {navigate, canGoBack, goBack} = useNavigation<ILoginNavigation>();
   const {t} = useTranslation();
+  const {setUserData} = useContext(UserContext);
   const [selectedFlag, setSelectedFlag] = useState<IFlag>({
     imageUrl: PalestineFlag,
     introructionNumber: '970',
@@ -82,9 +87,23 @@ const Login = () => {
   };
 
   const doLogin = (values: any) => {
-    console.log({values});
+    const data = {
+      PhoneNumber: values.phoneNumber,
+      Password: values.password,
+    };
+    mutate(data);
   };
-
+  const {mutate, isLoading, isError, error, isSuccess, data} = useMutation(
+    doLogin_service,
+    {
+      onSuccess: data => {
+        return data;
+      },
+      onError: error => {
+        return error;
+      },
+    },
+  );
   const showPassword = () => {
     setIsPasswordShown(currentValue => !currentValue);
   };
@@ -93,12 +112,36 @@ const Login = () => {
     Keyboard.dismiss();
   };
 
+  useEffect(() => {
+    if (isSuccess) {
+      const {
+        AccessToken,
+        RememberMe,
+        UserEmailAddress,
+        UserFullName,
+        UserId,
+        UserPhoneNumber,
+        UserType,
+      } = data.data;
+      setUserData({
+        AccessToken,
+        RememberMe,
+        UserEmailAddress,
+        UserFullName,
+        UserId,
+        UserPhoneNumber,
+        UserType,
+      });
+      if (!RememberMe) {
+        AsyncStorage.setItem('accessToken', AccessToken);
+      }
+    }
+  }, [isSuccess]);
+
   return (
-    <TouchableWithoutFeedback onPress={closeKeyboard} style={styles.container}>
-      <ScrollView>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.container}>
+    <ScrollView keyboardDismissMode="interactive">
+      <TouchableWithoutFeedback onPress={closeKeyboard}>
+        <KeyboardAvoidingView>
           <LinearGradient
             colors={[GredientFrom, GredientTo]}
             style={styles.linearGradient}>
@@ -214,20 +257,12 @@ const Login = () => {
                     variant="mediumRegular"
                   />
                   <View style={styles.buttonsContainer}>
-                    <View
-                      style={[
-                        styles.row,
-                        {
-                          width: '100%',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          marginTop: spacing.huge,
-                        },
-                      ]}>
+                    <View style={[styles.row, styles.loginMethods]}>
                       <Button
                         title="login.login"
                         style={[styles.submitLogin, {width: width * 0.5}]}
                         onPress={handleSubmit}
+                        isLoading={isLoading}
                       />
                       <View style={styles.row}>
                         <View style={styles.socailButtonContainer}>
@@ -238,6 +273,18 @@ const Login = () => {
                         </View>
                       </View>
                     </View>
+                    {isError && (
+                      <Text
+                        variant="backend_error"
+                        color={colors.red}
+                        style={{
+                          alignSelf: 'flex-start',
+                          fontSize: 18,
+                          marginTop: 20,
+                        }}
+                        tx={`${error?.response?.data?.Message}`}
+                      />
+                    )}
                     <Button
                       title="login.continue-as-visitor"
                       style={[styles.continueAsVisitor, {width: width * 0.9}]}
@@ -251,8 +298,8 @@ const Login = () => {
             }}
           </Formik>
         </KeyboardAvoidingView>
-      </ScrollView>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </ScrollView>
   );
 };
 
@@ -345,5 +392,16 @@ const styles = StyleSheet.create({
   },
   feildContainer: {
     marginBottom: spacing.large,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loginMethods: {
+    width: '100%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: spacing.huge,
   },
 });
