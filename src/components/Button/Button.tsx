@@ -12,7 +12,9 @@ interface buttomProps {
 
 const Button: React.FC<buttomProps> = ({style, title, onPress, color}) => {
   return (
-    <Pressable onPress={onPress} style={[styles.pressable, style]}>
+    <Pressable
+      onPress={onPress}
+      style={StyleSheet.flatten([styles.pressable, style])}>
       <Text
         center
         variant="largeBold"

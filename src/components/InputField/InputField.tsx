@@ -33,11 +33,11 @@ const InputField = ({
       ]}>
       <TextInput
         placeholder={placeholder ? t(placeholder) : t('common.phone-numebr')}
-        style={[styles.textInput, {width: width * 0.65}]}
+        style={[styles.textInput, {flex: 1}]}
         autoCapitalize="none"
         {...rest}
       />
-      <View style={{width: width * 0.2}}>{rightIcon && rightIcon}</View>
+      <View>{rightIcon && rightIcon}</View>
     </View>
   );
 };
