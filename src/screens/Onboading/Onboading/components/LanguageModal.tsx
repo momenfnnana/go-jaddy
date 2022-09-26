@@ -5,7 +5,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import {colors} from 'theme';
 import Icon from 'react-native-vector-icons/AntDesign';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -13,6 +13,8 @@ import {Button, Text} from 'components';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {AuthRoutes} from 'navigators/RoutesTypes';
+import i18n from 'i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface ILanguageModalProps {
   style?: ViewStyle;
@@ -31,6 +33,11 @@ const LanguageModal: React.FC<ILanguageModalProps> = ({
   setVisibleLangModal,
 }) => {
   const {navigate} = useNavigation<IOnboardingNavigation>();
+  const confirmLanguage = () => {
+    i18n.changeLanguage(language);
+    AsyncStorage.setItem('languageId', language);
+    navigate('Login');
+  };
   return (
     <>
       {visibleLangModal && (
@@ -104,7 +111,7 @@ const LanguageModal: React.FC<ILanguageModalProps> = ({
                 />
               </Pressable>
               <Button
-                onPress={() => navigate('Login')}
+                onPress={confirmLanguage}
                 title="buttons.languageBtn"
                 style={{marginTop: 30}}
               />
