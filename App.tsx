@@ -6,7 +6,7 @@ import {Provider as LanguageProvider} from 'context/reducer';
 import AppIndex from 'App';
 import {NetworkErrorScreen} from 'screens';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import {AuthProvider} from 'context/languageProvider';
+import {AuthProvider} from 'context/AuthProvider';
 import i18n from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import en from 'i18n/locales/en.json';
