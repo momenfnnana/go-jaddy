@@ -67,5 +67,12 @@
   },
   "product-details": {
     "select-color": "Select color"
+  },
+  "api": {
+    "account": {
+      "login": {
+        "usernotfound": "*User not found"
+      }
+    }
   }
 }

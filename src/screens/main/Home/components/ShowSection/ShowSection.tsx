@@ -46,7 +46,7 @@ const Header = ({title, coloredTitle}: IHeader) => {
 
 const ShowSection = ({title, coloredTitle, data}: IShowSection) => {
   console.log({data});
-  
+
   return (
     <View style={styles.container}>
       <Header title={title} coloredTitle={coloredTitle} />
@@ -56,6 +56,10 @@ const ShowSection = ({title, coloredTitle, data}: IShowSection) => {
         </View> */}
         <FlatList
           data={data}
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          style={{marginHorizontal: -15}}
+          contentContainerStyle={{paddingHorizontal: 15}}
           keyExtractor={(_, index) => index.toString()}
           horizontal
           renderItem={({item}) => <ProductCard {...item} />}

@@ -1,4 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useRef, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {
   Animated,
   StyleSheet,
@@ -8,6 +10,7 @@ import {
 } from 'react-native';
 import data from '../data/data';
 import {ISliderDataSource} from '../helpers/types';
+import * as RNLocalize from 'react-native-localize';
 
 interface ISliderListProps {
   style?: ViewStyle;
@@ -23,11 +26,14 @@ const Slider: React.FC<{style?: ViewStyle; children?: React.ReactNode}> = ({
   style,
   children,
 }) => {
+  const locales = RNLocalize.getLocales() ?? [];
+  let localLanguage = locales[0]?.languageCode;
+
   const scrollX = useRef(new Animated.Value(0)).current;
   const flatRef = useRef(null);
   const {width} = useWindowDimensions();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [language, setLanguage] = useState('ar');
+  const [language, setLanguage] = useState(localLanguage);
   const [visibleLangModal, setVisibleLangModal] = useState(false);
 
   const childrenWithProps = React.Children.map(

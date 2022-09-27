@@ -77,7 +77,7 @@ const Carasoule = ({containerStyle}: ICarasoule) => {
       height: height * 0.2,
       justifyContent: 'flex-end',
       paddingVertical: spacing.large + 2,
-      width: width - spacing.normal - 1,
+      width: width - 30,
     };
   }, []);
   const customTitleContainer: ViewStyle = useMemo(() => {
@@ -89,7 +89,6 @@ const Carasoule = ({containerStyle}: ICarasoule) => {
 
   const flatListStyle: ViewStyle = useMemo(() => {
     return {
-      width: width - spacing.normal - 1,
       alignSelf: 'center',
       maxHeight: height * 0.2,
     };
@@ -110,7 +109,7 @@ const Carasoule = ({containerStyle}: ICarasoule) => {
         showsHorizontalScrollIndicator={false}
         decelerationRate={0}
         style={flatListStyle}
-        snapToInterval={width - spacing.normal - 1}
+        snapToInterval={width - 30}
         onScroll={scrollHandler}
         renderItem={({item: {imageUrl, name, id}}) => (
           <ImageBackground source={imageUrl} style={customStyle}>

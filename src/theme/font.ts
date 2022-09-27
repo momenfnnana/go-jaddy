@@ -132,6 +132,11 @@ export const typography = {
     fontSize: size.small,
     lineHeight: lineHeight.xSmall,
   },
+  backend_error: {
+    fontFamily: type.regular,
+    fontSize: size.small,
+    lineHeight: lineHeight.xSmall,
+  },
 };
 
 export type TypographyTypes = keyof typeof typography;

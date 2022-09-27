@@ -151,6 +151,7 @@ const Home = (props: IHome) => {
     isError,
     refetch,
   } = useQuery(['getStores'], getStores);
+
   if (isLoading) {
     return <Loader containerStyle={styles.loaderStyle} />;
   }
@@ -162,9 +163,9 @@ const Home = (props: IHome) => {
   return (
     <View style={{flex: 1}}>
       <MainHeader />
-      <ScreenContainer withPadding>
-        <SearchInput containerStyle={styles.searchInputContainer} />
-        <ScrollView>
+      <SearchInput containerStyle={styles.searchInputContainer} />
+      <View style={{flex: 1}}>
+        <ScrollView contentContainerStyle={{paddingHorizontal: 15}}>
           <Carasoule
             containerStyle={{
               marginTop:
@@ -187,7 +188,7 @@ const Home = (props: IHome) => {
             data={data}
           />
         </ScrollView>
-      </ScreenContainer>
+      </View>
     </View>
   );
 };
@@ -196,15 +197,19 @@ export default Home;
 
 const styles = StyleSheet.create({
   searchInputContainer: {
-    position: 'absolute',
-    width: '100%',
-    alignSelf: 'center',
-    top: -spacing.xxxLarge,
+    // position: 'absolute',
+    // width: '100%',
+    // alignSelf: 'center',
+    // top: -spacing.xxxLarge,
+    marginHorizontal: spacing.normal - 1,
+    marginTop: -20,
+    marginBottom: 20,
   },
   bannerImage: {
-    width: '100%',
-    resizeMode: 'contain',
+    // flex: 1,
+    resizeMode: 'cover',
     maxHeight: 100,
+    marginHorizontal: -(spacing.normal - 1),
   },
   paddingSection: {
     paddingHorizontal: spacing.normal - 1,

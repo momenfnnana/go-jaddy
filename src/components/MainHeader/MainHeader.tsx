@@ -1,14 +1,18 @@
-import React from 'react';
-import {StyleSheet, View, useWindowDimensions} from 'react-native';
+import React, {useContext} from 'react';
+import {StyleSheet, View, useWindowDimensions, Pressable} from 'react-native';
 import {HeaderIcon, NotificationIcon} from 'assets/icons';
 import {colors, spacing} from 'theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {UserContext} from 'context/UserContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MainHeader = () => {
   const {top} = useSafeAreaInsets();
   const {width, height} = useWindowDimensions();
   const SIZE: number = width * 0.1;
   const HEADER_HEIGHT = height * 0.177;
+  const {setUserData} = useContext(UserContext);
+
   return (
     <View
       style={[
@@ -19,9 +23,16 @@ const MainHeader = () => {
       ]}>
       <View style={{width: SIZE}} />
       <HeaderIcon />
-      <View style={styles.notificationIconContainer}>
-        <NotificationIcon width={SIZE} />
-      </View>
+      <Pressable
+        onPress={async () => {
+          await AsyncStorage.removeItem('accessToken');
+          setUserData({});
+          console.log('ssss');
+        }}>
+        <View style={styles.notificationIconContainer}>
+          <NotificationIcon width={SIZE} />
+        </View>
+      </Pressable>
     </View>
   );
 };
