@@ -30,6 +30,7 @@ import {UserContext} from 'context/UserContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImageResizer from 'react-native-image-resizer';
 import {launchImageLibrary} from 'react-native-image-picker';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface IFlag {
   imageUrl: ImageSourcePropType;
@@ -44,8 +45,7 @@ const loginSchema = Yup.object().shape({
   email: Yup.string().email().required('email is required'),
   phoneNumber: Yup.string()
     .matches(phoneRegExp, 'phone number is not valid')
-    .required('phone number is required')
-    .length(10, 'phone number must be exactly 10 characters'),
+    .required('phone number is required'),
   password: Yup.string()
     .required('password is required')
     .min(8, 'password must being at least 8 characters'),
@@ -57,29 +57,39 @@ const loginSchema = Yup.object().shape({
 const Register = () => {
   const {width, height} = useWindowDimensions();
   const {canGoBack, goBack} = useNavigation();
-  const [isClient, setClient] = useState(true);
+  const [isSeller, setSeller] = useState(true);
   const [isPasswordShow, setIsPasswordShown] = useState<boolean>(false);
   const [isCPasswordShow, setIsCPasswordShown] = useState<boolean>(false);
   const {setUserData} = useContext(UserContext);
   const [image, setImage] = useState({});
+  const {top, bottom} = useSafeAreaInsets();
   // const [data, setData÷÷] = useState({});
   const [selectedFlag, setSelectedFlag] = useState<IFlag>({
     imageUrl: PalestineFlag,
     introructionNumber: '970',
   });
+
+  console.log({isSeller});
   const onRegisterHandle = (values: any) => {
     const data = new FormData();
-    data.append('CustomerType', 'Seller');
+
+    data.append('CustomerType', isSeller ? 'Seller' : 'Buyer');
     data.append('FirstName', values.firstName);
     data.append('LastName', values.lastName);
     data.append('PhoneNumber', values.phoneNumber);
     data.append('Email', values.email);
     data.append('Password', values.password);
     data.append('ConfirmPassword', values.confirmPassword);
-    data.append('CustomerStoreName', 'sasasada');
-    data.append('StoreImage', image);
+    if (isSeller) {
+      data.append('CustomerStoreName', 'sdef');
+      data.append('StoreImage', {
+        uri: image.uri,
+        type: image.type,
+        name: image.name,
+      });
+    }
     const datas = {
-      CustomerType: isClient ? 'Seller' : 'Buyer',
+      CustomerType: isSeller ? 'Seller' : 'Buyer',
       FirstName: values.firstName,
       LastName: values.lastName,
       PhoneNumber: values.phoneNumber,
@@ -113,13 +123,9 @@ const Register = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      const {AccessToken} = data?.data;
       setUserData({
         ...data?.data,
       });
-      // if (!RememberMe) {
-      AsyncStorage.setItem('accessToken', AccessToken);
-      // }
     }
   }, [data]);
 
@@ -137,13 +143,6 @@ const Register = () => {
     };
     launchImageLibrary(options, response => {
       if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        if (response.customButton === 'remove') {
-          console.log('User tapped custom button: ', response.customButton);
-        }
       } else {
         console.log({image: response?.assets[0]});
         let localUri = response?.assets[0]?.uri;
@@ -165,8 +164,6 @@ const Register = () => {
     });
   };
 
-  console.log({image});
-
   return (
     <KeyboardAvoidingView
       style={styles.cont}
@@ -177,6 +174,7 @@ const Register = () => {
         <ImageBackground
           resizeMode="cover"
           style={{
+            paddingTop: top,
             height: height / 4.3,
             width,
             position: 'relative',
@@ -191,7 +189,6 @@ const Register = () => {
               bottom: 0,
               width: '100%',
             }}>
-            {/* <SafeAreaView> */}
             {canGoBack() && (
               <Pressable style={styles.goBackContainer} onPress={goBack}>
                 <MaterialIcons
@@ -202,7 +199,6 @@ const Register = () => {
                 />
               </Pressable>
             )}
-            {/* </SafeAreaView> */}
           </LinearGradient>
           <RegisterLogo
             style={{
@@ -220,85 +216,94 @@ const Register = () => {
             marginVertical: 20,
           }}>
           <Pressable
-            onPress={() => setClient(true)}
+            onPress={() => setSeller(false)}
             style={{flexDirection: 'row', alignItems: 'center'}}>
             <MaterialIcons
-              name={`radio-button-${isClient ? 'on' : 'off'}`}
+              name={`radio-button-${!isSeller ? 'on' : 'off'}`}
               size={20}
-              color={isClient ? colors.secondary : colors.gray[300]}
+              color={!isSeller ? colors.secondary : colors.gray[300]}
             />
             <Text
-              tx="register.clientAccount"
+              tx="register.buyerAccount"
               style={{marginLeft: 5}}
               variant={'smallBold'}
-              color={isClient ? colors.secondary : colors.gray[400]}
+              color={!isSeller ? colors.secondary : colors.gray[400]}
             />
           </Pressable>
           <Pressable
-            onPress={() => setClient(false)}
+            onPress={() => setSeller(true)}
             style={{
               flexDirection: 'row',
               alignItems: 'center',
               marginLeft: 20,
             }}>
             <MaterialIcons
-              name={`radio-button-${!isClient ? 'on' : 'off'}`}
+              name={`radio-button-${isSeller ? 'on' : 'off'}`}
               size={20}
-              color={!isClient ? colors.secondary : colors.gray[300]}
+              color={isSeller ? colors.secondary : colors.gray[300]}
             />
             <Text
-              tx="register.traderAccount"
+              tx="register.sellerAccount"
               style={{marginLeft: 5}}
               variant={'smallBold'}
-              color={!isClient ? colors.secondary : colors.gray[400]}
+              color={isSeller ? colors.secondary : colors.gray[400]}
             />
           </Pressable>
         </View>
-        <TouchableOpacity
-          onPress={useLibraryHandler}
-          style={{
-            width: 80,
-            height: 80,
-            borderRadius: 40,
-            justifyContent: 'center',
-            alignItems: 'center',
-            overflow: 'hidden',
-            backgroundColor: '#EFEFEF',
-            marginBottom: 20,
-            position: 'relative',
-          }}>
-          {image.uri && (
-            <>
-              <Image
-                source={{uri: image.uri}}
-                style={{
-                  position: 'absolute',
-                  width: '100%',
-                  height: '100%',
-                  zIndex: -1,
-                }}
-              />
-              <View
-                style={{
-                  position: 'absolute',
-                  width: '100%',
-                  height: '100%',
-                  zIndex: 0,
-                  backgroundColor: '#0005',
-                }}
-              />
-            </>
-          )}
-          <MaterialCommunityIcons
-            name="camera-outline"
-            color={colors.white}
-            size={25}
-            style={{zIndex: 1}}
-          />
-        </TouchableOpacity>
+        {isSeller && (
+          <TouchableOpacity
+            onPress={useLibraryHandler}
+            style={{
+              width: 80,
+              height: 80,
+              borderRadius: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+              overflow: 'hidden',
+              backgroundColor: colors.border,
+              marginBottom: 20,
+              position: 'relative',
+            }}>
+            {image.uri && (
+              <>
+                <Image
+                  source={{uri: image.uri}}
+                  style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    zIndex: -1,
+                  }}
+                />
+                <View
+                  style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    zIndex: 0,
+                    backgroundColor: '#0005',
+                  }}
+                />
+              </>
+            )}
+            <MaterialCommunityIcons
+              name="camera-outline"
+              color={colors.white}
+              size={25}
+              style={{zIndex: 1}}
+            />
+            <Text
+              variant="smallRegular"
+              color={colors.white}
+              style={{fontSize: 11}}
+              tx="register.storeImage"
+            />
+          </TouchableOpacity>
+        )}
         <Formik
           initialValues={{
             firstName: '',
+            storeName: '',
             lastName: '',
             phoneNumber: '',
             email: '',
@@ -308,9 +313,18 @@ const Register = () => {
           onSubmit={onRegisterHandle}
           validationSchema={loginSchema}>
           {({handleChange, handleBlur, handleSubmit, values, errors}) => {
-            console.log({SS: errors});
             return (
               <>
+                {isSeller && (
+                  <InputField
+                    value={values.storeName}
+                    onChangeText={handleChange('storeName')}
+                    onBlur={handleBlur('storeName')}
+                    containerStyle={styles.inputContainer}
+                    placeholder={'register.storeName'}
+                    error={errors.storeName}
+                  />
+                )}
                 <InputField
                   value={values.firstName}
                   onChangeText={handleChange('firstName')}
@@ -422,9 +436,10 @@ const Register = () => {
             );
           }}
         </Formik>
-        {/* <SafeAreaView> */}
+
         <View
           style={{
+            marginBottom: bottom,
             borderWidth: 1,
             borderColor: colors.primary,
             borderRadius: 15,
@@ -451,7 +466,6 @@ const Register = () => {
             </View>
           </View>
         </View>
-        {/* </SafeAreaView> */}
       </ScrollView>
     </KeyboardAvoidingView>
   );

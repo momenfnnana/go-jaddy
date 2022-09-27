@@ -125,8 +125,8 @@ const Login = () => {
   };
 
   const showPasswordModal = () => {
-    navigate('SetPasswordScreen')
-    // setIsResetPassModalOpened(true);
+    // navigate('SetPasswordScreen')
+    setIsResetPassModalOpened(true);
   };
 
   const onCodeSent = (value: boolean) => {

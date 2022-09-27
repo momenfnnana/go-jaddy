@@ -44,12 +44,14 @@
     "forget-password-description": "did you forget your password? No problem, you can return the registered email to receive the recovery code"
   },
   "register": {
-    "clientAccount": "Client Account",
-    "traderAccount": "Trader Account",
+    "buyerAccount": "Buyer Account",
+    "sellerAccount": "Seller Account",
     "newRegister": "New Register",
     "confirmPassword": "Confirm Password",
     "shareDetails": "Excited to share the app with your friend?",
-    "referFriend": "Refer a friend"
+    "referFriend": "Refer a friend",
+    "storeName": "Store Name",
+    "storeImage": "Store Image"
   },
   "common": {
     "phone-numebr": "Phone Number",

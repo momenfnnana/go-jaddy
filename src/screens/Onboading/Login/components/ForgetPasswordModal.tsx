@@ -114,15 +114,8 @@ const ResetPasswordModal: React.FC<IResetPasswordModalProps> = ({
                       onChangeText={handleChange('email')}
                       onBlur={handleBlur('email')}
                       placeholder={t('common.email')}
+                      error={errors.email}
                     />
-                    {errors.email && (
-                      <Text
-                        variant="error"
-                        color={colors.red}
-                        style={styles.errorMessage}>
-                        {errors.email}
-                      </Text>
-                    )}
                     {isError && (
                       <Text
                         variant="backend_error"
