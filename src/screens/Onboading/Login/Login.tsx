@@ -50,7 +50,7 @@ interface ILoginNavigation
   extends NativeStackNavigationProp<AuthRoutes, 'Login'>,
     RouteProp<AuthRoutes, 'Login'> {}
 const SIZE = 18;
-const ICON_WIDTH = 30;
+export const ICON_WIDTH = 30;
 const topFieldsSpace = 20;
 const GO_BACK_SIZE = 36;
 
@@ -84,7 +84,8 @@ const Login = () => {
     useState<boolean>(false);
   const [isResetPassModalOpened, setIsResetPassModalOpened] =
     useState<boolean>(false);
-  const [isSetPassModalOpened, setSetPassModalOpened] = useState<boolean>(false);
+  const [isSetPassModalOpened, setSetPassModalOpened] =
+    useState<boolean>(false);
   const mainImageStyle: ImageStyle = {
     width: width * 0.9,
     height: height * 0.5,
@@ -125,8 +126,7 @@ const Login = () => {
   };
 
   const showPasswordModal = () => {
-    navigate('SetPasswordScreen')
-    // setIsResetPassModalOpened(true);
+    setIsResetPassModalOpened(true);
   };
 
   const onCodeSent = (value: boolean) => {
@@ -236,15 +236,8 @@ const Login = () => {
                         </Pressable>
                       }
                       containerStyle={styles.inputContainer}
+                      error={errors.phoneNumber}
                     />
-                    {errors.phoneNumber && (
-                      <Text
-                        variant="error"
-                        color={colors.red}
-                        style={styles.errorMessage}>
-                        {errors.phoneNumber}
-                      </Text>
-                    )}
                   </View>
                   <View style={styles.feildContainer}>
                     <InputField
@@ -260,15 +253,8 @@ const Login = () => {
                         </Pressable>
                       }
                       containerStyle={styles.inputContainer}
+                      error={errors.password}
                     />
-                    {errors.password && (
-                      <Text
-                        variant="error"
-                        color={colors.red}
-                        style={styles.errorMessage}>
-                        {errors.password}
-                      </Text>
-                    )}
                   </View>
                 </View>
                 <Text
