@@ -45,8 +45,6 @@ const Header = ({title, coloredTitle}: IHeader) => {
 };
 
 const ShowSection = ({title, coloredTitle, data}: IShowSection) => {
-  console.log({data});
-
   return (
     <View style={styles.container}>
       <Header title={title} coloredTitle={coloredTitle} />

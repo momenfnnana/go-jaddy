@@ -1,4 +1,5 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
+import {View, StyleSheet} from 'react-native';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider as LanguageProvider} from 'context/reducer';
@@ -26,8 +27,10 @@ const resources = {
 export default function App() {
   const {isConnected} = useNetInfo();
   const queryClient = new QueryClient();
+  const [isAr, setIsAr] = useState<boolean>(false);
   useEffect(() => {
     readLanguage().then((res: string | null) => {
+      setIsAr(res === 'ar' ? true : false);
       i18n.use(initReactI18next).init({
         lng: res || 'ar',
         resources,
@@ -53,14 +56,22 @@ export default function App() {
     );
   }
   return (
-    <UserProvider>
-      <LanguageProvider>
-        <AuthProvider>
-          <QueryClientProvider client={queryClient}>
-            <AppIndex />
-          </QueryClientProvider>
-        </AuthProvider>
-      </LanguageProvider>
-    </UserProvider>
+    <View style={[styles.container, {direction: isAr ? 'rtl' : 'ltr'}]}>
+      <UserProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <QueryClientProvider client={queryClient}>
+              <AppIndex />
+            </QueryClientProvider>
+          </AuthProvider>
+        </LanguageProvider>
+      </UserProvider>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
