@@ -34,6 +34,8 @@ import {doLogin_service} from 'services/Auth';
 import {useMutation} from '@tanstack/react-query';
 import {UserContext} from 'context/UserContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AnonymousModal from './components/AnonymousModal';
+import ResetPasswordModal from './components/ForgetPasswordModal';
 
 interface IinitialValues {
   phoneNumber: string;
@@ -77,6 +79,11 @@ const Login = () => {
     introructionNumber: '970',
   });
   const [isPasswordShow, setIsPasswordShown] = useState<boolean>(false);
+  const [isAnonymousModalOpened, setIsAnonymousModalOpened] =
+    useState<boolean>(false);
+  const [isResetPassModalOpened, setIsResetPassModalOpened] =
+    useState<boolean>(false);
+  const [isSetPassModalOpened, setSetPassModalOpened] = useState<boolean>(false);
   const mainImageStyle: ImageStyle = {
     width: width * 0.9,
     height: height * 0.5,
@@ -110,6 +117,19 @@ const Login = () => {
 
   const closeKeyboard = () => {
     Keyboard.dismiss();
+  };
+
+  const showAnonymousModal = () => {
+    setIsAnonymousModalOpened(true);
+  };
+
+  const showPasswordModal = () => {
+    navigate('SetPasswordScreen')
+    // setIsResetPassModalOpened(true);
+  };
+
+  const onCodeSent = (value: boolean) => {
+    value && setSetPassModalOpened(true);
   };
 
   useEffect(() => {
@@ -190,113 +210,121 @@ const Login = () => {
             initialValues={initialValues}
             onSubmit={doLogin}
             validationSchema={loginSchema}>
-            {({handleChange, handleBlur, handleSubmit, values, errors}) => {
-              return (
-                <View style={styles.formContainer}>
-                  <View style={styles.inputsContainer}>
-                    <View style={styles.feildContainer}>
-                      <InputField
-                        value={values.phoneNumber}
-                        onChangeText={handleChange('phoneNumber')}
-                        onBlur={handleBlur('phoneNumber')}
-                        rightIcon={
-                          <Pressable style={styles.row}>
-                            <View style={styles.introNumber}>
-                              <Text
-                                text={selectedFlag.introructionNumber}
-                                variant="smallRegular"
-                                color={colors.brouwnLight}
-                              />
-                            </View>
-                            <Image
-                              source={selectedFlag.imageUrl}
-                              style={[styles.flag, styles.introNumber]}
-                              resizeMode="contain"
+            {({handleChange, handleBlur, handleSubmit, values, errors}) => (
+              <View style={styles.formContainer}>
+                <View style={styles.inputsContainer}>
+                  <View style={styles.feildContainer}>
+                    <InputField
+                      value={values.phoneNumber}
+                      onChangeText={handleChange('phoneNumber')}
+                      onBlur={handleBlur('phoneNumber')}
+                      rightIcon={
+                        <Pressable style={styles.row}>
+                          <View style={styles.introNumber}>
+                            <Text
+                              text={selectedFlag.introructionNumber}
+                              variant="smallRegular"
+                              color={colors.brouwnLight}
                             />
-                          </Pressable>
-                        }
-                        containerStyle={styles.inputContainer}
-                      />
-                      {errors.phoneNumber && (
-                        <Text
-                          variant="error"
-                          color={colors.red}
-                          style={styles.errorMessage}>
-                          {errors.phoneNumber}
-                        </Text>
-                      )}
-                    </View>
-                    <View style={styles.feildContainer}>
-                      <InputField
-                        value={values.password}
-                        onChangeText={handleChange('password')}
-                        onBlur={handleBlur('password')}
-                        placeholder={t('common.password')}
-                        secureTextEntry={!isPasswordShow}
-                        rightIcon={
-                          <Pressable style={styles.row} onPress={showPassword}>
-                            <View style={styles.introNumber} />
-                            <VisibilityEyeIcon style={styles.introNumber} />
-                          </Pressable>
-                        }
-                        containerStyle={styles.inputContainer}
-                      />
-                      {errors.password && (
-                        <Text
-                          variant="error"
-                          color={colors.red}
-                          style={styles.errorMessage}>
-                          {errors.password}
-                        </Text>
-                      )}
-                    </View>
-                  </View>
-                  <Text
-                    tx="common.forget-password"
-                    center
-                    variant="mediumRegular"
-                  />
-                  <View style={styles.buttonsContainer}>
-                    <View style={[styles.row, styles.loginMethods]}>
-                      <Button
-                        title="login.login"
-                        style={[styles.submitLogin, {width: width * 0.5}]}
-                        onPress={handleSubmit}
-                        isLoading={isLoading}
-                      />
-                      <View style={styles.row}>
-                        <View style={styles.socailButtonContainer}>
-                          <FacebookIcon />
-                        </View>
-                        <View style={styles.socailButtonContainer}>
-                          <GoogleIcon />
-                        </View>
-                      </View>
-                    </View>
-                    {isError && (
-                      <Text
-                        variant="backend_error"
-                        color={colors.red}
-                        style={{
-                          alignSelf: 'flex-start',
-                          fontSize: 18,
-                          marginTop: 20,
-                        }}
-                        tx={`${error?.response?.data?.Message}`}
-                      />
-                    )}
-                    <Button
-                      title="login.continue-as-visitor"
-                      style={[styles.continueAsVisitor, {width: width * 0.9}]}
-                      color={colors.secondary}
-                      onPress={() => {}}
+                          </View>
+                          <Image
+                            source={selectedFlag.imageUrl}
+                            style={[styles.flag, styles.introNumber]}
+                            resizeMode="contain"
+                          />
+                        </Pressable>
+                      }
+                      containerStyle={styles.inputContainer}
                     />
-                    <Spacer />
+                    {errors.phoneNumber && (
+                      <Text
+                        variant="error"
+                        color={colors.red}
+                        style={styles.errorMessage}>
+                        {errors.phoneNumber}
+                      </Text>
+                    )}
+                  </View>
+                  <View style={styles.feildContainer}>
+                    <InputField
+                      value={values.password}
+                      onChangeText={handleChange('password')}
+                      onBlur={handleBlur('password')}
+                      placeholder={t('common.password')}
+                      secureTextEntry={!isPasswordShow}
+                      rightIcon={
+                        <Pressable style={styles.row} onPress={showPassword}>
+                          <View style={styles.introNumber} />
+                          <VisibilityEyeIcon style={styles.introNumber} />
+                        </Pressable>
+                      }
+                      containerStyle={styles.inputContainer}
+                    />
+                    {errors.password && (
+                      <Text
+                        variant="error"
+                        color={colors.red}
+                        style={styles.errorMessage}>
+                        {errors.password}
+                      </Text>
+                    )}
                   </View>
                 </View>
-              );
-            }}
+                <Text
+                  tx="common.forget-password"
+                  center
+                  variant="mediumRegular"
+                  onPress={showPasswordModal}
+                />
+                <View style={styles.buttonsContainer}>
+                  <View style={[styles.row, styles.loginMethods]}>
+                    <Button
+                      title="login.login"
+                      style={[styles.submitLogin, {width: width * 0.5}]}
+                      onPress={handleSubmit}
+                      isLoading={isLoading}
+                    />
+                    <View style={styles.row}>
+                      <View style={styles.socailButtonContainer}>
+                        <FacebookIcon />
+                      </View>
+                      <View style={styles.socailButtonContainer}>
+                        <GoogleIcon />
+                      </View>
+                    </View>
+                  </View>
+                  {isError && (
+                    <Text
+                      variant="backend_error"
+                      color={colors.red}
+                      style={{
+                        alignSelf: 'flex-start',
+                        fontSize: 18,
+                        marginTop: 20,
+                      }}
+                      tx={`${error?.response?.data?.Message}`}
+                    />
+                  )}
+                  <Button
+                    title="login.continue-as-visitor"
+                    style={[styles.continueAsVisitor, {width: width * 0.9}]}
+                    color={colors.secondary}
+                    onPress={showAnonymousModal}
+                  />
+                  <Spacer />
+                </View>
+              </View>
+            )}
           </Formik>
+          <AnonymousModal
+            visibleAnonymousModal={isAnonymousModalOpened}
+            setvisibleAnonymousModal={setIsAnonymousModalOpened}
+          />
+          <ResetPasswordModal
+            visibleResetPasswordModal={isResetPassModalOpened}
+            setvisibleResetPasswordModal={setIsResetPassModalOpened}
+            success={onCodeSent}
+          />
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
     </ScrollView>
@@ -334,6 +362,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     backgroundColor: colors.white,
+    paddingHorizontal: spacing.normal - 1,
   },
   inputsContainer: {
     marginTop: -topFieldsSpace,
@@ -382,7 +411,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: spacing.large,
+    paddingHorizontal: spacing.normal - 1,
   },
   goBackArrow: {
     transform: [{rotate: '180deg'}],
