@@ -54,6 +54,10 @@ const ShowSection = ({title, coloredTitle, data}: IShowSection) => {
         </View> */}
         <FlatList
           data={data}
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          style={{marginHorizontal: -15}}
+          contentContainerStyle={{paddingHorizontal: 15}}
           keyExtractor={(_, index) => index.toString()}
           horizontal
           renderItem={({item}) => <ProductCard {...item} />}

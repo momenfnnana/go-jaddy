@@ -11,6 +11,7 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  ImageSourcePropType,
 } from 'react-native';
 import {LoginMain, PalestineFlag} from 'assets/images';
 import LinearGradient from 'react-native-linear-gradient';
@@ -42,7 +43,7 @@ interface IinitialValues {
   password: string;
 }
 interface IFlag {
-  imageUrl: ReactNode;
+  imageUrl: ImageSourcePropType;
   introructionNumber: string;
 }
 interface ILoginNavigation

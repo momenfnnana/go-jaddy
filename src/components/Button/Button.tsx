@@ -22,7 +22,7 @@ const Button: React.FC<buttomProps> = ({
   return (
     <Pressable
       onPress={onPress}
-      style={[styles.pressable, style]}
+      style={StyleSheet.flatten([styles.pressable, style])}
       disabled={isLoading}>
       <Text
         center

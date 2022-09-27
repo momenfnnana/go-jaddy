@@ -32,6 +32,8 @@ const CategoriesCarasoule = ({items}: CategoriesCarasoule) => {
           data={column1Data}
           // scrollEnabled={false}
           horizontal
+          style={{marginHorizontal: -15}}
+          contentContainerStyle={{marginHorizontal: 15}}
           renderItem={({item}) => (
             <View style={[styles.item, {width: CONTAINER_WIDTH}]}>
               <Image
@@ -137,7 +139,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.white,
     borderRadius: spacing.small + 2,
-    margin: spacing.small + 2,
+    // margin: spacing.small + 2,
+    marginVertical: spacing.small + 2,
+    marginRight: spacing.small + 2,
     padding: spacing.tiny + 1,
   },
   name: {
