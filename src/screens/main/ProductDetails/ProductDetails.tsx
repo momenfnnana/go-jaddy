@@ -62,7 +62,6 @@ const ProductDetails = ({}: IProductDetails) => {
     refetch,
   } = useQuery(['getProductDetails'], () => getProductDetails(1));
   const [product, setProduct] = useState<IProductImages>();
-  console.log({isLoading});
 
   if (isLoading) {
     return <Loader containerStyle={styles.loaderStyle} />;
