@@ -60,7 +60,12 @@
     "firstName": "First Name",
     "lastName": "Last Name",
     "email": "Email Address",
-    "userName": "User Name"
+    "userName": "User Name",
+    "customerStoreName": "Customer Store Name",
+    "retrive-password": "Retrive password",
+    "retrive-password-description": "Enter the recovery code sent to the mobile number used in the account, then a new password",
+    "code": "Code",
+    "something-went-wrong": "Something went wrong"
   },
   "carasoule": {
     "name": "clothes title goes here"
