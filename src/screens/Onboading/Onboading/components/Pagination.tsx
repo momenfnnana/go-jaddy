@@ -2,8 +2,9 @@ import {RouteProp, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Button, Text} from 'components';
 import SecondaryButton from 'components/SecondaryButton';
+import {readLanguage} from 'constants';
 import {AuthRoutes} from 'navigators/RoutesTypes';
-import React, {useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Animated,
   Pressable,
@@ -12,6 +13,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import {string} from 'yup';
 import {ISliderListProps} from '../helpers/types';
 import DotIndicator from './DotIndicator';
 
@@ -30,9 +32,26 @@ const Pagination: React.FC<ISliderListProps> = ({
 }) => {
   const {width, height} = useWindowDimensions();
   const {navigate} = useNavigation<IProfileNavigation>();
+  const [isAr, setAr] = useState<boolean>(false);
   const safeData = data ?? [];
   const safeScrollX = scrollX ?? useRef(new Animated.Value(0)).current;
   const safeCurrentIndex = currentIndex ?? 0;
+
+  useEffect(() => {
+    readLanguage().then(lang => setAr(lang == 'ar'));
+  }, []);
+
+  const langCondetion = () => {
+    if (isAr) {
+      return {main: currentIndex! != 0, setCurr: currentIndex! - 1};
+    } else {
+      return {
+        main: currentIndex! < data?.length! - 1,
+        setCurr: currentIndex! + 1,
+      };
+    }
+  };
+
   return (
     <View style={[styles.container, {width: 0.9 * width}, style]}>
       <DotIndicator
@@ -42,13 +61,13 @@ const Pagination: React.FC<ISliderListProps> = ({
         style={{...styles.dotIndicator, marginBottom: height / 6}}
       />
       <SafeAreaView>
-        {currentIndex! < data?.length! - 1 ? (
+        {langCondetion().main ? (
           <View style={[styles.containerButtons, {width: width}]}>
             <SecondaryButton
               onPress={() => {
-                if (currentIndex! < data?.length! - 1) {
+                if (langCondetion()) {
                   flatRef.current.scrollToIndex({
-                    index: currentIndex! + 1,
+                    index: langCondetion().setCurr,
                     animated: true,
                   });
                 } else {
