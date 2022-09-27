@@ -23,7 +23,8 @@
     "next": "التالي",
     "skip": "تخطي",
     "onboardingBtn": "تسوقي الآن",
-    "languageBtn": "حفظ ومتابعة"
+    "languageBtn": "حفظ ومتابعة",
+    "continue": "متابعة"
   },
   "languageModel": {
     "title": "اختر اللغة",
@@ -36,11 +37,16 @@
     "login": "دخول",
     "continue-as-visitor": "اكمال ك زائر",
     "new-user": "مستخدم جديد",
-    "register": "تسجيل"
+    "register": "تسجيل",
+    "anonymous-login": "الدخول كزائر",
+    "anonymous-login-description": "أهلا بك، يرجى اعلامنا باسمك كاملا ورقم جوالك قبل المتابعة كزائر، سعداء بك",
+    "forget-password": "نسيت كلمة المرور",
+    "forget-password-description": "هل نسيت كلمة المرور؟ لا مشكلة يمكنك ارجاع البريد الالكتروني المسجل لاستلام كود الاستعادة"
   },
   "common": {
     "phone-numebr": "رقم الهاتف",
     "password": "كلمة المرور",
-    "forget-password": "نسيت كلمة المرور"
+    "forget-password": "نسيت كلمة المرور",
+    "userName": "اسم المستخدم"
   }
 }

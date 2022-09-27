@@ -23,7 +23,8 @@
     "next": "next",
     "skip": "skip",
     "onboardingBtn": "shop now",
-    "languageBtn": "Save and continue"
+    "languageBtn": "Save and continue",
+    "continue": "Continue"
   },
   "languageModel": {
     "title": "choose the language",
@@ -36,7 +37,11 @@
     "login": "Login",
     "continue-as-visitor": "Continue as a visitor",
     "new-user": "New user",
-    "register": "Register"
+    "register": "Register",
+    "anonymous-login": "Anonymous login",
+    "anonymous-login-description": "Welcome, please let us know your full name and mobile number before continuing as a visitor, we are happy with you",
+    "forget-password": "Forget Password",
+    "forget-password-description": "did you forget your password? No problem, you can return the registered email to receive the recovery code"
   },
   "register": {
     "clientAccount": "Client Account",
@@ -54,7 +59,8 @@
     "see-more": "See more",
     "firstName": "First Name",
     "lastName": "Last Name",
-    "email": "Email Address"
+    "email": "Email Address",
+    "userName": "User Name"
   },
   "carasoule": {
     "name": "clothes title goes here"
