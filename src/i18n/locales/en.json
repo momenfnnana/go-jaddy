@@ -18,6 +18,10 @@
     "best": "Best",
     "selling": "Selling"
   },
+  "search": {
+    "search-input": "Search in store",
+    "search-result-for": "Search result for:"
+  },
   "product-details": {
     "select-color": "Select color"
   }
