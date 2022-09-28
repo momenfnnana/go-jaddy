@@ -88,11 +88,8 @@ const VerifyAccountModal = ({
   useEffect(() => {
     if (value.length == CELL_COUNT) {
       mutate({email, verificationCode: value});
-      console.log('firstsss');
     }
   }, [value]);
-
-  console.log({value});
 
   return (
     <ScrollView>

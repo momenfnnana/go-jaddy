@@ -43,7 +43,6 @@ const Search = () => {
   if (isError) {
     return <NetworkErrorScreen onPress={() => mutate(searchText)} />;
   }
-  console.log({searchResults: data?.data?.TopProducts?.Items});
 
   return (
     <View style={styles.container}>
