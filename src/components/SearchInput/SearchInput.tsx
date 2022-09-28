@@ -1,16 +1,25 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, TextInput, ViewStyle} from 'react-native';
+import {View, StyleSheet, TextInput, ViewStyle, Pressable} from 'react-native';
 import {colors, spacing} from 'theme';
 import {t} from 'i18next';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {HomeRoutes} from 'navigators/RoutesTypes';
 
 interface ISearchInput {
   containerStyle: ViewStyle;
 }
+interface IHomeNavigation
+  extends NativeStackNavigationProp<HomeRoutes, 'Home'> {}
 const SearchInput = ({containerStyle}: ISearchInput) => {
   const [searchInput, setSearchInput] = useState<string>('');
+  const {navigate} = useNavigation<IHomeNavigation>();
+  const onPressIn = () => {
+    navigate('SearchScreen');
+  };
   return (
-    <View style={[styles.container, containerStyle]}>
+    <Pressable onPressIn={onPressIn} style={[styles.container, containerStyle]}>
       <AntDesign
         name="search1"
         size={22}
@@ -21,8 +30,10 @@ const SearchInput = ({containerStyle}: ISearchInput) => {
         placeholder={t('common.search_in_store')}
         value={searchInput}
         onChangeText={setSearchInput}
+        editable={false}
+        onPressIn={onPressIn}
       />
-    </View>
+    </Pressable>
   );
 };
 
