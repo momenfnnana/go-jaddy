@@ -7,7 +7,8 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "release-android": "./gradlew assembleRelease -x bundleReleaseJsAndAssets"
   },
   "dependencies": {
     "@react-native-community/netinfo": "^9.3.1",
