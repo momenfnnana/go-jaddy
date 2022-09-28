@@ -10,6 +10,7 @@ import React from 'react';
 import {View, ImageBackground, StyleSheet, Pressable} from 'react-native';
 import {IProductInterface} from 'screens/main/Home/types';
 import {colors, spacing} from 'theme';
+import {BASE_URL} from 'utils/Axios';
 
 interface IProductNaviagtion
   extends NativeStackNavigationProp<HomeRoutes, 'Home'> {}
@@ -17,38 +18,46 @@ interface IHome extends NativeStackScreenProps<HomeRoutes, 'Home'> {}
 
 const ProductCard = (props: IProductInterface) => {
   const {
-    title,
-    imageUrl,
-    isHaveDiscount,
-    discountValue,
-    acttualPrice,
-    prevPrice,
-    currency,
-    rate,
-    productColors,
-    isNews,
-    isFav,
+    // title,
+    Image,
+    Price,
+    Badges,
+    AddedToCart,
+    Name,
+    RatingSum,
+    // isHaveDiscount,
+    // discountValue,
+    // acttualPrice,
+    // prevPrice,
+    // currency,
+    // rate,
+    // productColors,
+    // isNews,
+    // isFav,
   } = props;
+
   const {navigate} = useNavigation<IProductNaviagtion>();
   return (
     <Pressable
       onPress={() => navigate('ProductDetails', {...props})}
       style={styles.container}>
-      <ImageBackground source={imageUrl} style={styles.Imagecontainer}>
+      <ImageBackground
+        source={{uri: `${BASE_URL}${Image.File?.url}`}}
+        style={styles.Imagecontainer}>
         <View style={styles.topIconsContainer}>
           <FavoriteIcon stroke={colors.tabsColor} />
-          {isHaveDiscount && (
+          {Price?.HasDiscount && (
             <View style={styles.discountIcon}>
               <DiscountIcon />
               <Text
-                text={discountValue}
+                text={`${Price?.SavingPercent}%`}
                 variant="smallBold"
                 color={colors.white}
               />
             </View>
           )}
         </View>
-        {isNews && (
+        {Badges[0]?.Label === 'New' && (
           <View style={styles.newsContainer}>
             <Text tx="home.news" color={colors.white} />
           </View>
@@ -56,44 +65,54 @@ const ProductCard = (props: IProductInterface) => {
       </ImageBackground>
       <View style={styles.row}>
         <Text
-          text={title}
+          text={Name}
           variant="xSmallRegular"
           color={colors.tabsColor}
           numberOfLines={2}
           style={{width: '80%'}}
         />
         <View style={styles.priceContainer}>
-          <Text
+          {/* <Text
             text={prevPrice}
             variant="xSmallLight"
             style={styles.prevPrice}
             color={colors.grayMainBolder}
-          />
-          <Text text={acttualPrice} variant="smallBold" color={colors.orange} />
+          /> */}
           <Text
+            text={Price?.Price}
+            variant="smallBold"
+            color={colors.orange}
+            style={{flex: 1, width: 16}}
+            numberOfLines={1}
+          />
+          {/* <Text
             text={currency}
             variant="xSmallRegular"
             color={colors.tabsColor}
             style={styles.currency}
-          />
+          /> */}
         </View>
       </View>
       <View style={styles.rateAndColorsContainer}>
         <StarFilledIcon color={colors.orange} />
         <Text
-          text={rate.toString()}
+          text={RatingSum.toString()}
           variant="xSmallRegular"
           style={styles.rate}
         />
         <View style={styles.verticalLine} />
         <View style={styles.colorsContainer}>
-          {productColors.length &&
-            productColors.map((item, index) => (
+          {props?.ColorAttributes &&
+            props?.ColorAttributes &&
+            props?.ColorAttributes.map((item, index) => (
               <View
                 key={index.toString()}
                 style={[
                   styles.colorItem,
-                  {backgroundColor: item, left: spacing.smaller * (index + 1)},
+                  {
+                    backgroundColor: item,
+                    left: spacing.smaller * (index + 1),
+                  },
                 ]}
               />
             ))}
