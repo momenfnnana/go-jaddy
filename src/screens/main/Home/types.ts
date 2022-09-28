@@ -18,4 +18,12 @@ export interface IProductInterface {
   isHaveDiscount: boolean;
   discountValue: string;
   imageUrl: ImageSourcePropType;
+
+
+  Image: any;
+  Price: any;
+  Badges: any;
+  AddedToCart: any;
+  Name: any;
+  RatingSum: any;
 }
