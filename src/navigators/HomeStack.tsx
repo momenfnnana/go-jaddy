@@ -1,7 +1,7 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AdidasIcon} from 'assets/icons';
 import React from 'react';
-import {HomeScreen, ProductDetailsScreen} from 'screens';
+import {HomeScreen, ProductDetailsScreen, SearchScreen} from 'screens';
 import {colors} from 'theme';
 import {HomeRoutes} from './RoutesTypes';
 
@@ -28,6 +28,7 @@ const HomeStack = () => {
           isFav: false,
         }}
       />
+      <Stack.Screen component={SearchScreen} name="SearchScreen" />
     </Stack.Navigator>
   );
 };
