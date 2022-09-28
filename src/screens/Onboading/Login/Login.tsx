@@ -37,6 +37,7 @@ import {UserContext} from 'context/UserContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AnonymousModal from './components/AnonymousModal';
 import ResetPasswordModal from './components/ForgetPasswordModal';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface IinitialValues {
   phoneNumber: string;
@@ -160,65 +161,93 @@ const Login = () => {
   }, [isSuccess]);
 
   return (
-    <ScrollView keyboardDismissMode="interactive">
-      <TouchableWithoutFeedback onPress={closeKeyboard}>
-        <KeyboardAvoidingView>
-          <LinearGradient
-            colors={[GredientFrom, GredientTo]}
-            style={styles.linearGradient}>
-            <View style={[styles.headerContainer, {marginTop: top}]}>
-              {canGoBack() && (
-                <Pressable style={styles.goBackContainer} onPress={goBack}>
-                  <FontAwesome
-                    name="long-arrow-right"
-                    size={25}
-                    color={colors.arrowColor}
-                    style={styles.goBackArrow}
-                  />
-                </Pressable>
-              )}
-              <Pressable
-                onPress={goRegister}
-                style={styles.registerTextContainer}>
-                <Text
-                  tx="login.new-user"
-                  variant="mediumRegular"
-                  style={styles.registerText}
-                />
-                <Text
-                  tx="login.register"
-                  variant="mediumBold"
-                  style={styles.registerText}
+    <KeyboardAvoidingView
+      style={styles.cont}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 27}>
+      <ScrollView>
+        <LinearGradient
+          colors={[GredientFrom, GredientTo]}
+          style={styles.linearGradient}>
+          <View style={[styles.headerContainer, {marginTop: top}]}>
+            {canGoBack() && (
+              <Pressable style={styles.goBackContainer} onPress={goBack}>
+                <FontAwesome
+                  name="long-arrow-right"
+                  size={25}
+                  color={colors.arrowColor}
+                  style={styles.goBackArrow}
                 />
               </Pressable>
-            </View>
-            <Image
-              source={LoginMain}
-              style={[styles.mainImage, mainImageStyle]}
-              resizeMode="contain"
-            />
-            <View style={styles.row}>
+            )}
+            <Pressable
+              onPress={goRegister}
+              style={styles.registerTextContainer}>
               <Text
-                tx="login.welcome"
-                color={colors.white}
-                variant="largeBold"
-                style={styles.welcomeGoJaddy}
+                tx="login.new-user"
+                variant="mediumRegular"
+                style={styles.registerText}
               />
-              <GojaddyLoginIcon style={styles.welcomeGoJaddy} />
-            </View>
-          </LinearGradient>
-          <Formik
-            initialValues={initialValues}
-            onSubmit={doLogin}
-            validationSchema={loginSchema}>
-            {({handleChange, handleBlur, handleSubmit, values, errors}) => (
-              <View style={styles.formContainer}>
-                <View style={styles.inputsContainer}>
-                  <View style={styles.feildContainer}>
-                    <InputField
+              <Text
+                tx="login.register"
+                variant="mediumBold"
+                style={styles.registerText}
+              />
+            </Pressable>
+          </View>
+          <Image
+            source={LoginMain}
+            style={[styles.mainImage, mainImageStyle]}
+            resizeMode="contain"
+          />
+          <View style={styles.row}>
+            <Text
+              tx="login.welcome"
+              color={colors.white}
+              variant="largeBold"
+              style={styles.welcomeGoJaddy}
+            />
+            <GojaddyLoginIcon style={styles.welcomeGoJaddy} />
+          </View>
+        </LinearGradient>
+        <Formik
+          initialValues={initialValues}
+          onSubmit={doLogin}
+          validationSchema={loginSchema}>
+          {({handleChange, handleBlur, handleSubmit, values, errors}) => (
+            <View style={styles.formContainer}>
+              <View style={styles.inputsContainer}>
+                <View style={styles.feildContainer}>
+                  <InputField
+                    value={values.phoneNumber}
+                    keyboardType="phone-pad"
+                    onChangeText={handleChange('phoneNumber')}
+                    onBlur={handleBlur('phoneNumber')}
+                    error={errors.phoneNumber}
+                    disabledRight
+                    rightIcon={
+                      <Pressable style={[styles.row]}>
+                        <Text
+                          text={selectedFlag.introructionNumber}
+                          variant="smallRegular"
+                          color={colors.brouwnLight}
+                          style={{fontSize: 11}}
+                        />
+                        <Image
+                          source={selectedFlag.imageUrl}
+                          style={[styles.flag, styles.introNumber]}
+                          resizeMode="center"
+                        />
+                      </Pressable>
+                    }
+                    containerStyle={styles.inputContainer}
+                  />
+                  {/* <InputField
                       value={values.phoneNumber}
+                      keyboardType="phone-pad"
                       onChangeText={handleChange('phoneNumber')}
                       onBlur={handleBlur('phoneNumber')}
+                      disabledRight
                       rightIcon={
                         <Pressable style={styles.row}>
                           <View style={styles.introNumber}>
@@ -235,94 +264,95 @@ const Login = () => {
                           />
                         </Pressable>
                       }
-                      containerStyle={styles.inputContainer}
                       error={errors.phoneNumber}
-                    />
-                  </View>
-                  <View style={styles.feildContainer}>
-                    <InputField
-                      value={values.password}
-                      onChangeText={handleChange('password')}
-                      onBlur={handleBlur('password')}
-                      placeholder={t('common.password')}
-                      secureTextEntry={!isPasswordShow}
-                      rightIcon={
-                        <Pressable style={styles.row} onPress={showPassword}>
-                          <View style={styles.introNumber} />
-                          <VisibilityEyeIcon style={styles.introNumber} />
-                        </Pressable>
-                      }
-                      containerStyle={styles.inputContainer}
-                      error={errors.password}
-                    />
-                  </View>
+                    /> */}
                 </View>
-                <Text
-                  tx="common.forget-password"
-                  center
-                  variant="mediumRegular"
-                  onPress={showPasswordModal}
-                />
-                <View style={styles.buttonsContainer}>
-                  <View
-                    style={[
-                      styles.row,
-                      {
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginTop: spacing.huge,
-                      },
-                    ]}>
-                    <Button
-                      title="login.login"
-                      style={styles.submitLogin}
-                      onPress={handleSubmit}
-                      isLoading={isLoading}
-                    />
-                    <View style={styles.row}>
-                      <View style={styles.socailButtonContainer}>
-                        <FacebookIcon />
-                      </View>
-                      <View style={styles.socailButtonContainer}>
-                        <GoogleIcon />
-                      </View>
-                    </View>
-                  </View>
-                  {isError && (
-                    <Text
-                      variant="backend_error"
-                      color={colors.red}
-                      style={{
-                        alignSelf: 'flex-start',
-                        fontSize: 18,
-                        marginTop: 20,
-                      }}
-                      tx={`${error?.response?.data?.Message}`}
-                    />
-                  )}
-                  <Button
-                    title="login.continue-as-visitor"
-                    style={styles.continueAsVisitor}
-                    color={colors.secondary}
-                    onPress={showAnonymousModal}
+                <View style={styles.feildContainer}>
+                  <InputField
+                    value={values.password}
+                    onChangeText={handleChange('password')}
+                    onBlur={handleBlur('password')}
+                    placeholder={t('common.password')}
+                    secureTextEntry={!isPasswordShow}
+                    onPressRightIcon={showPassword}
+                    rightIcon={
+                      <MaterialCommunityIcons
+                        onPress={showPassword}
+                        name={isPasswordShow ? 'eye' : 'eye-off'}
+                        size={18}
+                      />
+                    }
+                    containerStyle={styles.inputContainer}
+                    error={errors.password}
                   />
-                  <Spacer />
                 </View>
               </View>
-            )}
-          </Formik>
-          <AnonymousModal
-            visibleAnonymousModal={isAnonymousModalOpened}
-            setvisibleAnonymousModal={setIsAnonymousModalOpened}
-          />
-          <ResetPasswordModal
-            visibleResetPasswordModal={isResetPassModalOpened}
-            setvisibleResetPasswordModal={setIsResetPassModalOpened}
-            success={onCodeSent}
-          />
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
-    </ScrollView>
+              <Text
+                tx="common.forget-password"
+                center
+                variant="mediumRegular"
+                onPress={showPasswordModal}
+              />
+              <View style={styles.buttonsContainer}>
+                <View
+                  style={[
+                    styles.row,
+                    {
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginTop: spacing.huge,
+                    },
+                  ]}>
+                  <Button
+                    title="login.login"
+                    style={styles.submitLogin}
+                    onPress={handleSubmit}
+                    isLoading={isLoading}
+                  />
+                  <View style={styles.row}>
+                    <View style={styles.socailButtonContainer}>
+                      <FacebookIcon />
+                    </View>
+                    <View style={styles.socailButtonContainer}>
+                      <GoogleIcon />
+                    </View>
+                  </View>
+                </View>
+                {isError && (
+                  <Text
+                    variant="backend_error"
+                    color={colors.red}
+                    style={{
+                      alignSelf: 'flex-start',
+                      fontSize: 18,
+                      marginTop: 20,
+                    }}
+                    tx={`${error?.response?.data?.Message}`}
+                  />
+                )}
+                <Button
+                  variant="Secondary"
+                  title="login.continue-as-visitor"
+                  style={styles.continueAsVisitor}
+                  color={colors.secondary}
+                  onPress={showAnonymousModal}
+                />
+                <Spacer />
+              </View>
+            </View>
+          )}
+        </Formik>
+        <AnonymousModal
+          visibleAnonymousModal={isAnonymousModalOpened}
+          setvisibleAnonymousModal={setIsAnonymousModalOpened}
+        />
+        <ResetPasswordModal
+          visibleResetPasswordModal={isResetPassModalOpened}
+          setvisibleResetPasswordModal={setIsResetPassModalOpened}
+          success={onCodeSent}
+        />
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -331,6 +361,11 @@ export default Login;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  cont: {
+    flex: 1,
+    backgroundColor: colors.white,
+    justifyContent: 'space-between',
   },
   mainImage: {
     alignSelf: 'center',

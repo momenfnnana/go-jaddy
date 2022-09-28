@@ -7,13 +7,15 @@ import {StatusBar, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Loader} from 'components';
 import {UserContext} from 'context/UserContext';
+import {useQuery} from '@tanstack/react-query';
+import {getSettings} from 'services/Auth';
 
 const Stack = createNativeStackNavigator<MainNavigator>();
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const {userData} = useContext(UserContext);
-
+  const {userData, setSettings} = useContext(UserContext);
+  const {data, isSuccess, isError, error} = useQuery(['settings'], getSettings);
   useEffect(() => {
     (async () => {
       const accessToken = await AsyncStorage.getItem('accessToken');
@@ -21,6 +23,11 @@ const App = () => {
       setLoading(false);
     })();
   }, [userData]);
+
+  useEffect(() => {
+    isSuccess && setSettings(data.data);
+    console.log({'data settings: ': data?.data});
+  }, [isSuccess]);
 
   if (loading) {
     return <Loader style={styles.loader} />;

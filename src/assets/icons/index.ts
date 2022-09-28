@@ -22,3 +22,4 @@ export {default as CategoriesIcon} from './svg/categories.svg';
 export {default as StoresIcon} from './svg/stores.svg';
 export {default as ProfileIcon} from './svg/profile.svg';
 export {default as RetrivePasswordIcon} from './svg/retrive-password.svg';
+export {default as VerifyAccountImage} from './svg/verifyAccountModal.svg';
