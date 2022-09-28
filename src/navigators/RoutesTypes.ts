@@ -11,6 +11,7 @@ export type BottomTabsRoutes = {
 export type HomeRoutes = {
   Home: undefined;
   ProductDetails: IProductInterface;
+  SearchScreen: undefined;
 };
 
 export type AuthRoutes = {
