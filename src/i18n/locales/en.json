@@ -67,6 +67,8 @@
     "retrive-password": "Retrive password",
     "retrive-password-description": "Enter the recovery code sent to the mobile number used in the account, then a new password",
     "code": "Code",
+    "verifyAccount": "Verify Account",
+    "verifyModalText": "Please type the verification code sent to",
     "something-went-wrong": "Something went wrong"
   },
   "carasoule": {

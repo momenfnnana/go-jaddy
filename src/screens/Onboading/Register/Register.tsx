@@ -43,6 +43,7 @@ const phoneRegExp =
 
 const loginSchema = Yup.object().shape({
   firstName: Yup.string().required('first name is required'),
+  storeName: Yup.string().required('store name is required'),
   lastName: Yup.string().required('last name is required'),
   email: Yup.string().email().required('email is required'),
   phoneNumber: Yup.string()
@@ -62,8 +63,10 @@ const Register = () => {
   const [isSeller, setSeller] = useState(true);
   const [isPasswordShow, setIsPasswordShown] = useState<boolean>(false);
   const [isCPasswordShow, setIsCPasswordShown] = useState<boolean>(false);
+  const [verifyModalShow, setVerifyModalShow] = useState<boolean>(false);
   const {setUserData} = useContext(UserContext);
   const [image, setImage] = useState({});
+  const [email, setEmail] = useState<string>('asdasd@asda.cd');
   const {top, bottom} = useSafeAreaInsets();
   // const [data, setData÷÷] = useState({});
   const [selectedFlag, setSelectedFlag] = useState<IFlag>({
@@ -72,7 +75,7 @@ const Register = () => {
   });
   const onRegisterHandle = (values: any) => {
     const data = new FormData();
-
+    setEmail(values.email);
     data.append('CustomerType', isSeller ? 'Seller' : 'Buyer');
     data.append('FirstName', values.firstName);
     data.append('LastName', values.lastName);
@@ -126,7 +129,7 @@ const Register = () => {
       setUserData({
         ...data?.data,
       });
-      Alert.alert(JSON.stringify(data.data));
+      setVerifyModalShow(true);
     }
   }, [data]);
 
@@ -346,19 +349,19 @@ const Register = () => {
                   onChangeText={handleChange('phoneNumber')}
                   onBlur={handleBlur('phoneNumber')}
                   error={errors.phoneNumber}
+                  disabledRight
                   rightIcon={
-                    <Pressable style={styles.row}>
-                      <View style={styles.introNumber}>
-                        <Text
-                          text={selectedFlag.introructionNumber}
-                          variant="smallRegular"
-                          color={colors.brouwnLight}
-                        />
-                      </View>
+                    <Pressable style={[styles.row]}>
+                      <Text
+                        text={selectedFlag.introructionNumber}
+                        variant="smallRegular"
+                        color={colors.brouwnLight}
+                        style={{fontSize: 11}}
+                      />
                       <Image
                         source={selectedFlag.imageUrl}
                         style={[styles.flag, styles.introNumber]}
-                        resizeMode="contain"
+                        resizeMode="center"
                       />
                     </Pressable>
                   }
@@ -380,6 +383,7 @@ const Register = () => {
                   onBlur={handleBlur('password')}
                   secureTextEntry={!isPasswordShow}
                   error={errors.password}
+                  onPressRightIcon={showPassword}
                   rightIcon={
                     <MaterialCommunityIcons
                       onPress={showPassword}
@@ -396,6 +400,7 @@ const Register = () => {
                   onBlur={handleBlur('confirmPassword')}
                   secureTextEntry={!isCPasswordShow}
                   error={errors.confirmPassword}
+                  onPressRightIcon={showCPassword}
                   rightIcon={
                     <MaterialCommunityIcons
                       onPress={showCPassword}
@@ -478,10 +483,10 @@ const Register = () => {
             </View>
           </View>
         </View>
-        {/* </SafeAreaView> */}
         <VerifyAccountModal
-          isVisible={true}
-          // onBackdropPress={onBackdropPress}
+          onClose={() => setVerifyModalShow(false)}
+          isVisible={verifyModalShow}
+          email={email}
         />
       </ScrollView>
     </KeyboardAvoidingView>
@@ -517,8 +522,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   introNumber: {
-    maxWidth: ICON_WIDTH,
-    minWidth: ICON_WIDTH,
+    // flex: 1,
   },
   linearGradient: {
     backgroundColor: '#D9DFFF',
@@ -533,8 +537,9 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xxxLarge,
   },
   flag: {
-    width: SIZE,
-    height: SIZE,
+    // flex: 1,
+    width: 30,
+    height: 30,
   },
 
   formContainer: {

@@ -1,15 +1,9 @@
 import React, {ReactNode} from 'react';
-import {
-  View,
-  StyleSheet,
-  TextInput,
-  TextInputProps,
-  useWindowDimensions,
-  ViewStyle,
-} from 'react-native';
+import {StyleSheet, TextInputProps, ViewStyle} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {colors, spacing} from 'theme';
-import Text from 'components/Text';
+import {colors, font, spacing} from 'theme';
+import {Text} from 'components';
+import {TextInput} from 'react-native-paper';
 
 interface IInputField extends TextInputProps {
   rightIcon?: ReactNode;
@@ -18,6 +12,10 @@ interface IInputField extends TextInputProps {
   placeholder?: string;
   error?: string;
   textColor?: string;
+  onPressRightIcon?: () => void;
+  disabledRight?: boolean;
+  disabledLeft?: boolean;
+  onPressLeftIcon?: () => void;
 }
 
 const InputField = ({
@@ -27,28 +25,46 @@ const InputField = ({
   placeholder,
   error,
   textColor,
+  onPressRightIcon,
+  disabledRight,
+  disabledLeft,
+  onPressLeftIcon,
   ...rest
 }: IInputField) => {
   const {t} = useTranslation();
-  const {width} = useWindowDimensions();
   return (
     <>
-      <View
-        style={[
-          styles.containerStyle,
-          {justifyContent: rightIcon ? 'space-between' : 'center'},
-          containerStyle,
-        ]}>
-        <View>{leftIcon && leftIcon}</View>
-        <TextInput
-          placeholder={placeholder ? t(placeholder) : t('common.phone-numebr')}
-          style={[styles.textInput, {flex: 1, color: textColor}]}
-          autoCapitalize="none"
-          autoComplete="off"
-          {...rest}
-        />
-        <View>{rightIcon && rightIcon}</View>
-      </View>
+      <TextInput
+        mode="outlined"
+        theme={{
+          colors: {
+            background: colors.white,
+            primary: colors.secondary,
+          },
+          fonts: {regular: {fontFamily: font.regular}},
+        }}
+        label={placeholder ? t(placeholder) : t('common.phone-numebr')}
+        placeholder={placeholder ? t(placeholder) : t('common.phone-numebr')}
+        style={[styles.textInput, {flex: 1}]}
+        autoCapitalize="none"
+        {...rest}
+        right={
+          <TextInput.Icon
+            disabled={disabledRight}
+            size={40}
+            name={() => rightIcon}
+            onPressRightIcon={onPressRightIcon}
+          />
+        }
+        left={
+          <TextInput.Icon
+            disabled={disabledLeft}
+            size={40}
+            name={() => leftIcon}
+            onPressRightIcon={onPressLeftIcon}
+          />
+        }
+      />
       {error && (
         <Text
           variant="error"
@@ -63,7 +79,9 @@ const InputField = ({
 
 export default InputField;
 const styles = StyleSheet.create({
-  textInput: {},
+  textInput: {
+    marginBottom: 15,
+  },
   containerStyle: {
     borderColor: colors.reloadColor,
     borderWidth: 1,
