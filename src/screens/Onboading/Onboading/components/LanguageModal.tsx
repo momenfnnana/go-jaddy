@@ -1,4 +1,5 @@
 import {
+  I18nManager,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -15,6 +16,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {AuthRoutes} from 'navigators/RoutesTypes';
 import i18n from 'i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNRestart from 'react-native-restart';
 
 interface ILanguageModalProps {
   style?: ViewStyle;
@@ -33,10 +35,21 @@ const LanguageModal: React.FC<ILanguageModalProps> = ({
   setVisibleLangModal,
 }) => {
   const {navigate} = useNavigation<IOnboardingNavigation>();
-  const confirmLanguage = () => {
+  const confirmLanguage = async () => {
     i18n.changeLanguage(language);
-    AsyncStorage.setItem('languageId', language);
+    AsyncStorage.setItem('languageId', language!);
     navigate('Login');
+    if (language == 'en') {
+      if (I18nManager.isRTL) {
+        await I18nManager.forceRTL(false);
+        RNRestart.Restart();
+      }
+    } else {
+      if (!I18nManager.isRTL) {
+        await I18nManager.forceRTL(true);
+        RNRestart.Restart();
+      }
+    }
   };
   return (
     <>

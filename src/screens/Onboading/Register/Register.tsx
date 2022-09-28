@@ -11,6 +11,7 @@ import {
   Platform,
   ImageSourcePropType,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import React, {ReactNode, useContext, useEffect, useState} from 'react';
 import {RegisterHeader, RegisterLogo, ShareImage} from './images';
@@ -81,7 +82,8 @@ const Register = () => {
     data.append('Password', values.password);
     data.append('ConfirmPassword', values.confirmPassword);
     if (isSeller) {
-      data.append('CustomerStoreName', 'sdef');
+      console.log('enter');
+      data.append('CustomerStoreName', values.storeName);
       data.append('StoreImage', {
         uri: image.uri,
         type: image.type,
@@ -97,7 +99,7 @@ const Register = () => {
       Password: values.password,
       ConfirmPassword: values.confirmPassword,
     };
-    console.log({data});
+
     mutate(data);
   };
   const {mutate, isLoading, isError, error, isSuccess, data} = useMutation(
@@ -126,6 +128,7 @@ const Register = () => {
       setUserData({
         ...data?.data,
       });
+      Alert.alert(JSON.stringify(data.data));
     }
   }, [data]);
 
@@ -150,7 +153,6 @@ const Register = () => {
         let type = response?.assets[0]?.type;
         ImageResizer.createResizedImage(localUri, 120, 120, 'PNG', 100, 0)
           .then(response => {
-            console.log('ImageResizer : ', response);
             setImage({
               uri: response?.uri,
               name: response?.name,
@@ -421,6 +423,7 @@ const Register = () => {
                       onPress={handleSubmit}
                       title="register.newRegister"
                       style={styles.submitLogin}
+                      isLoading={isLoading}
                     />
                     <View style={styles.row}>
                       <View style={styles.socailButtonContainer}>
@@ -431,6 +434,18 @@ const Register = () => {
                       </View>
                     </View>
                   </View>
+                  {isError && (
+                    <Text
+                      variant="backend_error"
+                      color={colors.red}
+                      style={{
+                        alignSelf: 'flex-start',
+                        fontSize: 18,
+                        marginTop: 20,
+                      }}
+                      tx={`${error?.response?.data?.Message}`}
+                    />
+                  )}
                 </View>
               </>
             );

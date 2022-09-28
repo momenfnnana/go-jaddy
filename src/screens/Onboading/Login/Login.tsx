@@ -84,7 +84,8 @@ const Login = () => {
     useState<boolean>(false);
   const [isResetPassModalOpened, setIsResetPassModalOpened] =
     useState<boolean>(false);
-  const [isSetPassModalOpened, setSetPassModalOpened] = useState<boolean>(false);
+  const [isSetPassModalOpened, setSetPassModalOpened] =
+    useState<boolean>(false);
   const mainImageStyle: ImageStyle = {
     width: width * 0.9,
     height: height * 0.5,
@@ -278,10 +279,18 @@ const Login = () => {
                   onPress={showPasswordModal}
                 />
                 <View style={styles.buttonsContainer}>
-                  <View style={[styles.row, styles.loginMethods]}>
+                  <View
+                    style={[
+                      styles.row,
+                      {
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginTop: spacing.huge,
+                      },
+                    ]}>
                     <Button
                       title="login.login"
-                      style={[styles.submitLogin, {width: width * 0.5}]}
+                      style={styles.submitLogin}
                       onPress={handleSubmit}
                       isLoading={isLoading}
                     />
@@ -308,7 +317,7 @@ const Login = () => {
                   )}
                   <Button
                     title="login.continue-as-visitor"
-                    style={[styles.continueAsVisitor, {width: width * 0.9}]}
+                    style={styles.continueAsVisitor}
                     color={colors.secondary}
                     onPress={showAnonymousModal}
                   />
@@ -371,10 +380,10 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginBottom: spacing.medium - 2,
   },
-  submitLogin: {},
+  submitLogin: {
+    flex: 1,
+  },
   buttonsContainer: {
-    paddingHorizontal: spacing.xxLarge * 1,
-    width: '100%',
     alignItems: 'center',
   },
   socailButtonContainer: {
