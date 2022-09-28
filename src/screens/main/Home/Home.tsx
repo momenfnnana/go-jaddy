@@ -1,5 +1,12 @@
-import React, {ReactNode} from 'react';
-import {StyleSheet, View, Platform, ScrollView, Image} from 'react-native';
+import React, {useEffect} from 'react';
+import {
+  StyleSheet,
+  View,
+  Platform,
+  ScrollView,
+  Image,
+  RefreshControl,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {
   NativeStackNavigationProp,
@@ -7,138 +14,25 @@ import {
 } from '@react-navigation/native-stack';
 import {useTranslation} from 'react-i18next';
 import {BottomTabsRoutes} from 'navigators/RoutesTypes';
-import {
-  MainHeader,
-  Text,
-  SearchInput,
-  ScreenContainer,
-  Loader,
-} from 'components';
-import {colors, spacing} from 'theme';
+import {MainHeader, SearchInput, Loader} from 'components';
+import {spacing} from 'theme';
 import {Carasoule, ShowSection} from './components';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {AdidasIcon, BannerImage} from 'assets/icons';
 import CategoriesCarasoule from './components/CategoriesCarasoule';
-import {ICategories, IProductInterface} from './types';
-import {ProductImage} from 'assets/icons';
 import {useQuery} from '@tanstack/react-query';
-import axios from 'axios';
-import {getStores} from 'services/Home';
-import NetworkErrorScreen from 'screens/NetworkErrorScreen';
+import {
+  getStores,
+  getSlider,
+  getRecentAdded,
+  getAdvertisements,
+  getBestSellers,
+} from 'services/Home';
+import {NetworkErrorScreen} from 'screens';
+import {BASE_URL} from 'utils/Axios';
 
 interface IHomeNavigation
   extends NativeStackNavigationProp<BottomTabsRoutes, 'Home'> {}
 interface IHome extends NativeStackScreenProps<BottomTabsRoutes, 'Home'> {}
-
-const categories: ICategories[] = [
-  {
-    imageUrl: AdidasIcon,
-    name: 'Adidas',
-  },
-  {
-    imageUrl: AdidasIcon,
-    name: 'Adidas',
-  },
-  {
-    imageUrl: AdidasIcon,
-    name: 'Adidas',
-  },
-  {
-    imageUrl: AdidasIcon,
-    name: 'Adidas',
-  },
-  {
-    imageUrl: AdidasIcon,
-    name: 'Adidas',
-  },
-  {
-    imageUrl: AdidasIcon,
-    name: 'Adidas',
-  },
-  {
-    imageUrl: AdidasIcon,
-    name: 'Adidas',
-  },
-  {
-    imageUrl: AdidasIcon,
-    name: 'Adidas',
-  },
-  {
-    imageUrl: AdidasIcon,
-    name: 'Adidas',
-  },
-  {
-    imageUrl: AdidasIcon,
-    name: 'Adidas',
-  },
-  {
-    imageUrl: AdidasIcon,
-    name: 'Adidas',
-  },
-  {
-    imageUrl: AdidasIcon,
-    name: 'Adidas',
-  },
-];
-
-const data: IProductInterface[] = [
-  {
-    id: 1,
-    isFav: true,
-    title: 'Monki Utility ميدي فستان القميص باللون الكحلي',
-    acttualPrice: '59',
-    prevPrice: '80',
-    currency: 'ILS',
-    rate: 4.5,
-    productColors: [colors.red, colors.blue, colors.red, colors.blue],
-    isNews: false,
-    isHaveDiscount: false,
-    discountValue: '20%',
-    imageUrl: ProductImage,
-  },
-  {
-    id: 1,
-    isFav: false,
-    title: 'Monki Utility ميدي فستان القميص باللون الكحلي',
-    acttualPrice: '59',
-    prevPrice: '80',
-    currency: 'ILS',
-    rate: 4.5,
-    productColors: [colors.red, colors.blue, colors.red, colors.blue],
-    isNews: true,
-    isHaveDiscount: true,
-    discountValue: '20%',
-    imageUrl: ProductImage,
-  },
-  {
-    id: 1,
-    isFav: false,
-    title: 'Monki Utility ميدي فستان القميص باللون الكحلي',
-    acttualPrice: '59',
-    prevPrice: '80',
-    currency: 'ILS',
-    rate: 4.5,
-    productColors: [colors.red, colors.blue, colors.red, colors.blue],
-    isNews: true,
-    isHaveDiscount: true,
-    discountValue: '20%',
-    imageUrl: ProductImage,
-  },
-  {
-    id: 1,
-    isFav: false,
-    title: 'Monki Utility ميدي فستان القميص باللون الكحلي',
-    acttualPrice: '59',
-    prevPrice: '80',
-    currency: 'ILS',
-    rate: 4.5,
-    productColors: [colors.red, colors.blue, colors.red, colors.blue],
-    isNews: true,
-    isHaveDiscount: true,
-    discountValue: '20%',
-    imageUrl: ProductImage,
-  },
-];
 
 const Home = (props: IHome) => {
   const navigation = useNavigation<IHomeNavigation>();
@@ -146,26 +40,102 @@ const Home = (props: IHome) => {
   const {top} = useSafeAreaInsets();
 
   const {
-    isLoading,
+    isLoading: isLoadingStores,
     data: storesData,
-    isError,
-    refetch,
-  } = useQuery(['getStores'], getStores);
-  if (isLoading) {
+    isError: isErrorStore,
+    refetch: refetchStore,
+    isRefetching: isRefetchingrefetchStore,
+  } = useQuery(['getStores'], getStores, {
+    enabled: false,
+  });
+  const {
+    isLoading: isLoadingSlider,
+    data: sliderData,
+    isError: isErrorSlider,
+    refetch: refetchSlider,
+    isRefetching: isRefetchingrefetchSlider,
+  } = useQuery(['getSlider'], getSlider, {
+    enabled: false,
+  });
+  const {
+    isLoading: isLoadingRecentAdded,
+    data: recentAdded,
+    isError: isErrorRecentAdded,
+    refetch: refetchRecentAdded,
+    isRefetching: isRefetchingrefetchRecentAdded,
+  } = useQuery(['getRecentAdded'], getRecentAdded, {
+    enabled: false,
+  });
+  const {
+    isLoading: isLoadingAdvertisements,
+    data: advertisements,
+    isError: isErrorAdvertisements,
+    refetch: refetchAdvertisements,
+    isRefetching: isRefetchingrefetchAdvertisements,
+  } = useQuery(['getAdvertisements'], getAdvertisements, {
+    enabled: false,
+  });
+  const {
+    isLoading: isLoadinggetBestSellers,
+    data: bestSellers,
+    isError: isErrorgetBestSellers,
+    refetch: refetchgetBestSellers,
+    isRefetching: isRefetchinggetBestSellers,
+  } = useQuery(['getBestSellers'], getBestSellers, {
+    enabled: false,
+  });
+
+  const getAllData = () => {
+    refetchSlider();
+    refetchStore();
+    refetchRecentAdded();
+    refetchAdvertisements();
+    refetchgetBestSellers();
+  };
+
+  const onRefresh = React.useCallback(() => {
+    getAllData();
+  }, []);
+
+  useEffect(() => {
+    getAllData();
+  }, []);
+
+  if (
+    isLoadingStores ||
+    isLoadingSlider ||
+    isLoadingRecentAdded ||
+    isLoadingAdvertisements ||
+    isLoadinggetBestSellers
+  ) {
     return <Loader containerStyle={styles.loaderStyle} />;
   }
 
-  if (isError) {
-    return <NetworkErrorScreen onPress={refetch} />;
+  if (isErrorStore) {
+    return <NetworkErrorScreen onPress={refetchStore} />;
   }
 
   return (
     <View style={{flex: 1}}>
       <MainHeader />
-      <ScreenContainer withPadding>
-        <SearchInput containerStyle={styles.searchInputContainer} />
-        <ScrollView>
+      <SearchInput containerStyle={styles.searchInputContainer} />
+      <View style={{flex: 1}}>
+        <ScrollView
+          contentContainerStyle={styles.scrollViewContainerStyle}
+          refreshControl={
+            <RefreshControl
+              refreshing={
+                isRefetchingrefetchStore ||
+                isRefetchingrefetchSlider ||
+                isRefetchingrefetchRecentAdded ||
+                isRefetchingrefetchAdvertisements ||
+                isRefetchinggetBestSellers
+              }
+              onRefresh={onRefresh}
+            />
+          }>
           <Carasoule
+            data={sliderData?.data?.Sliders}
             containerStyle={{
               marginTop:
                 -top +
@@ -178,13 +148,21 @@ const Home = (props: IHome) => {
           <ShowSection
             title="home.arrival"
             coloredTitle="home.news"
-            data={data}
+            data={recentAdded?.data?.ProductSummary?.Items}
+            showSeeMore={false}
           />
-          <Image source={BannerImage} style={styles.bannerImage} />
+          {advertisements?.data?.Advertisements?.map(({MobileImage}, index) => (
+            <Image
+              key={index}
+              source={{uri: `${BASE_URL}${MobileImage?.File?.url}`}}
+              style={styles.bannerImage}
+            />
+          ))}
           <ShowSection
             title="home.best"
             coloredTitle="home.selling"
-            data={data}
+            data={bestSellers?.data?.ProductSummary?.Items}
+            showSeeMore={false}
           />
         </ScrollView>
       </ScreenContainer>
@@ -196,15 +174,14 @@ export default Home;
 
 const styles = StyleSheet.create({
   searchInputContainer: {
-    position: 'absolute',
-    width: '100%',
-    alignSelf: 'center',
-    top: -spacing.xxxLarge,
+    marginHorizontal: spacing.normal - 1,
+    marginTop: -spacing.large,
+    marginBottom: spacing.large,
   },
   bannerImage: {
-    width: '100%',
-    resizeMode: 'contain',
-    maxHeight: 100,
+    height: 100,
+    resizeMode: 'cover',
+    marginHorizontal: -(spacing.normal - 1),
   },
   paddingSection: {
     paddingHorizontal: spacing.normal - 1,
@@ -213,5 +190,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  scrollViewContainerStyle: {
+    paddingHorizontal: spacing.normal - 1,
+    paddingVertical: spacing.normal - 1,
   },
 });
