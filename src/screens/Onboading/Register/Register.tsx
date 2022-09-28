@@ -31,6 +31,7 @@ import {UserContext} from 'context/UserContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImageResizer from 'react-native-image-resizer';
 import {launchImageLibrary} from 'react-native-image-picker';
+import {VerifyAccountModal} from './components';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface IFlag {
@@ -481,6 +482,11 @@ const Register = () => {
             </View>
           </View>
         </View>
+        {/* </SafeAreaView> */}
+        <VerifyAccountModal
+          isVisible={true}
+          // onBackdropPress={onBackdropPress}
+        />
       </ScrollView>
     </KeyboardAvoidingView>
   );

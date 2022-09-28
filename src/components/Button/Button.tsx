@@ -10,6 +10,7 @@ interface buttomProps {
   onPress?: any;
   color?: string;
   isLoading?: boolean;
+  variant?: 'Primary' | 'Secondary';
 }
 
 const Button: React.FC<buttomProps> = ({
@@ -18,11 +19,21 @@ const Button: React.FC<buttomProps> = ({
   onPress,
   color,
   isLoading,
+  variant,
 }) => {
+
   return (
     <Pressable
       onPress={onPress}
-      style={StyleSheet.flatten([styles.pressable, style])}
+      style={StyleSheet.flatten([
+        styles.pressable,
+        style,
+        {
+          backgroundColor: variant !== 'Secondary' ? colors.blue : colors.white,
+          borderColor: variant !== 'Secondary' ? colors.blue : colors.secondary,
+          borderWidth: 1,
+        },
+      ])}
       disabled={isLoading}>
       <Text
         center
@@ -42,7 +53,6 @@ const styles = StyleSheet.create({
   pressable: {
     flexDirection: 'row',
     borderRadius: spacing.xxLarge + 2,
-    backgroundColor: colors.blue,
     paddingHorizontal: spacing.large,
     paddingVertical: spacing.small + 2,
     alignItems: 'center',

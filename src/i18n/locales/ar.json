@@ -47,6 +47,10 @@
     "phone-numebr": "رقم الهاتف",
     "password": "كلمة المرور",
     "forget-password": "نسيت كلمة المرور",
-    "userName": "اسم المستخدم"
+    "userName": "اسم المستخدم",
+    "retrive-password": "استعادة كلمة المرور",
+    "retrive-password-description": "أدخل رمز الاستعادة المرسل على رقم الجوال المستخدم في الحساب ثم كلمة مرور جديدة",
+    "code": "الكود",
+    "something-went-wrong": "حصلت مشكلة ما؟"
   }
 }

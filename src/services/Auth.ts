@@ -8,3 +8,7 @@ export const doLogin_service = (data: any) => {
 export const reset_password = (data: any) => {
   return axios.post(`${BASE_URL}/api/custom/account/ResetPassword`, data);
 };
+
+export const postChangePassword = (data: any) => {
+  return axios.post(`${BASE_URL}/api/custom/account/ResetPassword`, data);
+};
