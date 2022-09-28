@@ -43,6 +43,16 @@
     "forget-password": "نسيت كلمة المرور",
     "forget-password-description": "هل نسيت كلمة المرور؟ لا مشكلة يمكنك ارجاع البريد الالكتروني المسجل لاستلام كود الاستعادة"
   },
+  "home": {
+    "arrival": "Arrival",
+    "news": "News",
+    "best": "Best",
+    "selling": "Selling"
+  },
+  "search": {
+    "search-input": "ابحث في المتاجر",
+    "search-result-for": "نتيجة البحث عن:"
+  },
   "common": {
     "phone-numebr": "رقم الهاتف",
     "password": "كلمة المرور",

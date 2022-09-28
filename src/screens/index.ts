@@ -5,6 +5,7 @@ export {
   CategoriesScreen,
   StoresScreen,
   CartScreen,
+  SearchScreen,
 } from './main';
 export {
   OnboardingScreen,

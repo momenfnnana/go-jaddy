@@ -70,8 +70,6 @@ const Register = () => {
     imageUrl: PalestineFlag,
     introructionNumber: '970',
   });
-
-  console.log({isSeller});
   const onRegisterHandle = (values: any) => {
     const data = new FormData();
 
@@ -122,7 +120,6 @@ const Register = () => {
   const showCPassword = () => {
     setIsCPasswordShown(currentValue => !currentValue);
   };
-  console.log({sss: error});
 
   useEffect(() => {
     if (isSuccess) {
@@ -148,7 +145,6 @@ const Register = () => {
     launchImageLibrary(options, response => {
       if (response.didCancel) {
       } else {
-        console.log({image: response?.assets[0]});
         let localUri = response?.assets[0]?.uri;
         let filename = response?.assets[0]?.fileName;
         let type = response?.assets[0]?.type;

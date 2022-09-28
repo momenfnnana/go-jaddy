@@ -34,7 +34,6 @@ const VerifyAccountModal = ({
   const {t} = useTranslation();
   const [isPasswordShow, setIsPasswordShown] = useState<boolean>(false);
   const onsubmit = (values: any) => {
-    console.log({values});
     //pass values here
     // mutate()
   };

@@ -7,3 +7,4 @@ export {default as MainHeader} from './MainHeader';
 export {default as SearchInput} from './SearchInput';
 export {default as ProductCard} from './ProductCard';
 export {default as Loader} from './Loader';
+export {default as SearchHeader} from './SearchHeader';

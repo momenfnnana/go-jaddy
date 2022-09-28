@@ -13,16 +13,20 @@ import Text from 'components/Text';
 
 interface IInputField extends TextInputProps {
   rightIcon?: ReactNode;
+  leftIcon?: ReactNode;
   containerStyle?: ViewStyle;
   placeholder?: string;
   error?: string;
+  textColor?: string;
 }
 
 const InputField = ({
   rightIcon,
+  leftIcon,
   containerStyle,
   placeholder,
   error,
+  textColor,
   ...rest
 }: IInputField) => {
   const {t} = useTranslation();
@@ -35,10 +39,12 @@ const InputField = ({
           {justifyContent: rightIcon ? 'space-between' : 'center'},
           containerStyle,
         ]}>
+        <View>{leftIcon && leftIcon}</View>
         <TextInput
           placeholder={placeholder ? t(placeholder) : t('common.phone-numebr')}
-          style={[styles.textInput, {flex: 1}]}
+          style={[styles.textInput, {flex: 1, color: textColor}]}
           autoCapitalize="none"
+          autoComplete="off"
           {...rest}
         />
         <View>{rightIcon && rightIcon}</View>

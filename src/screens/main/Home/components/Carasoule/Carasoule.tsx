@@ -10,34 +10,19 @@ import {
 import {CarasouleOneIcon} from 'assets/icons';
 import {Text} from 'components';
 import {colors, spacing} from 'theme';
+import {BASE_URL} from 'utils/Axios';
 
 interface IIndicators {
   activeIndex: number;
+  data: any[];
 }
 
 interface ICarasoule {
   containerStyle: ViewStyle;
+  data: any[];
 }
 
-const data = [
-  {
-    imageUrl: CarasouleOneIcon,
-    name: 'carasoule.name',
-    id: 1,
-  },
-  {
-    imageUrl: CarasouleOneIcon,
-    name: 'carasoule.name',
-    id: 2,
-  },
-  {
-    imageUrl: CarasouleOneIcon,
-    name: 'carasoule.name',
-    id: 3,
-  },
-];
-
-const Indicators = ({activeIndex}: IIndicators) => {
+const Indicators = ({activeIndex, data}: IIndicators) => {
   const {height} = useWindowDimensions();
   return (
     <FlatList
@@ -67,7 +52,7 @@ const Indicators = ({activeIndex}: IIndicators) => {
   );
 };
 
-const Carasoule = ({containerStyle}: ICarasoule) => {
+const Carasoule = ({containerStyle, data}: ICarasoule) => {
   const {width, height} = useWindowDimensions();
   const itemWidth = width - spacing.normal - 1;
   const [activeIndex, setActiveIndex] = useState<number>(0);
@@ -111,21 +96,25 @@ const Carasoule = ({containerStyle}: ICarasoule) => {
         style={flatListStyle}
         snapToInterval={width - 30}
         onScroll={scrollHandler}
-        renderItem={({item: {imageUrl, name, id}}) => (
-          <ImageBackground source={imageUrl} style={customStyle}>
-            <View style={[styles.titleContainer, customTitleContainer]}>
-              <View style={styles.tab} />
-              <Text
-                tx={name}
-                variant="smallBold"
-                color={colors.white}
-                style={styles.title}
-              />
-            </View>
-          </ImageBackground>
-        )}
+        renderItem={({item: {imageUrl, Description, Image}}) => {
+          return (
+            <ImageBackground
+              source={{uri: `${BASE_URL}${Image?.File?.url}`}}
+              style={customStyle}>
+              <View style={[styles.titleContainer, customTitleContainer]}>
+                <View style={styles.tab} />
+                <Text
+                  tx={Description}
+                  variant="smallBold"
+                  color={colors.white}
+                  style={styles.title}
+                />
+              </View>
+            </ImageBackground>
+          );
+        }}
       />
-      <Indicators activeIndex={activeIndex} />
+      <Indicators activeIndex={activeIndex} data={data} />
     </View>
   );
 };
