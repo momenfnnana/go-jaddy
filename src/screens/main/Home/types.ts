@@ -6,7 +6,7 @@ export interface ICategories {
   name: string;
 }
 export interface IProductInterface {
-  id: number;
+  Id: number;
   isFav: boolean;
   title: string;
   acttualPrice: string;
