@@ -1,6 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import {Loader, ProductCard, SearchHeader, Text} from 'components';
-import {FlatList, Pressable, StyleSheet, View} from 'react-native';
+import {
+  Loader,
+  ProductCard,
+  RowProductCard,
+  SearchHeader,
+  Text,
+} from 'components';
+import {
+  FlatList,
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {GridViewIcon, ListViewIcon} from 'assets/icons';
 import {colors, spacing} from 'theme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -36,6 +49,10 @@ const Search = () => {
     }
   };
 
+  const DismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   if (isLoading) {
     return <Loader containerStyle={styles.loaderStyle} />;
   }
@@ -45,57 +62,68 @@ const Search = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <SearchHeader
-        value={searchText}
-        setValue={setSearchText}
-        onSubmitEditing={SearchHandler}
-      />
-      <View style={[styles.row, styles.resultsHeader]}>
-        <View style={styles.row}>
-          <Text tx="search.search-result-for" variant="smallRegular" />
-          <Text text={` ${searchText}`} variant="smallBold" />
+    <TouchableWithoutFeedback onPress={DismissKeyboard}>
+      <View style={styles.container}>
+        <SearchHeader
+          value={searchText}
+          setValue={setSearchText}
+          onSubmitEditing={SearchHandler}
+        />
+        <View style={[styles.row, styles.resultsHeader]}>
+          <View style={styles.row}>
+            <Text tx="search.search-result-for" variant="smallRegular" />
+            <Text text={` ${searchText}`} variant="smallBold" />
+          </View>
+          <View style={[styles.row, styles.viewFilters]}>
+            <Pressable
+              style={[
+                styles.viewIconContainer,
+                {
+                  backgroundColor:
+                    viewType === 'list' ? colors.secondary : undefined,
+                },
+              ]}
+              onPress={() => showListHandler('list')}>
+              <Feather
+                name="list"
+                size={18}
+                color={viewType === 'list' ? colors.white : colors.grayMain}
+              />
+            </Pressable>
+            <Pressable
+              style={[
+                styles.viewIconContainer,
+                {
+                  backgroundColor:
+                    viewType === 'grid' ? colors.secondary : undefined,
+                },
+              ]}
+              onPress={() => showListHandler('grid')}>
+              <Ionicons
+                name="grid-outline"
+                size={18}
+                color={viewType === 'grid' ? colors.grayMain : colors.white}
+              />
+            </Pressable>
+          </View>
         </View>
-        <View style={[styles.row, styles.viewFilters]}>
-          <Pressable
-            style={[
-              styles.viewIconContainer,
-              {
-                backgroundColor:
-                  viewType === 'list' ? colors.secondary : undefined,
-              },
-            ]}
-            onPress={() => showListHandler('list')}>
-            <Feather
-              name="list"
-              size={18}
-              color={viewType === 'list' ? colors.white : colors.grayMain}
-            />
-          </Pressable>
-          <Pressable
-            style={[
-              styles.viewIconContainer,
-              {
-                backgroundColor:
-                  viewType === 'grid' ? colors.secondary : undefined,
-              },
-            ]}
-            onPress={() => showListHandler('grid')}>
-            <Ionicons
-              name="grid-outline"
-              size={18}
-              color={viewType === 'grid' ? colors.grayMain : colors.white}
-            />
-          </Pressable>
-        </View>
+        <FlatList
+          data={data?.data?.TopProducts?.Items}
+          keyExtractor={item => item?.Id}
+          contentContainerStyle={{
+            paddingHorizontal: spacing.medium - 2,
+          }}
+          numColumns={2}
+          renderItem={({item}) =>
+            viewType === 'grid' ? (
+              <ProductCard {...item} />
+            ) : (
+              <RowProductCard {...item} />
+            )
+          }
+        />
       </View>
-      <FlatList
-        data={data?.data?.TopProducts?.Items}
-        keyExtractor={item => item?.Id}
-        numColumns={2}
-        renderItem={({item}) => <ProductCard {...item} />}
-      />
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
