@@ -6,7 +6,7 @@ import {colors, spacing} from 'theme';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {CartIcon, FilterIcon} from 'assets/icons';
-import InputField from 'components/InputField';
+import {SearchInput} from './components';
 
 const GO_BACK_SIZE = 36;
 const ICON_SIZE = 20;
@@ -32,7 +32,7 @@ const SearchHeader = ({setValue, value, onSubmitEditing}: ISearchHeader) => {
           color={colors.white}
         />
       </Pressable>
-      <InputField
+      <SearchInput
         containerStyle={styles.inputField}
         placeholderTextColor={colors.white}
         placeholder={'search.search-input'}
