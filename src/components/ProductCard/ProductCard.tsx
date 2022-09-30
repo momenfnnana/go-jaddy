@@ -42,7 +42,7 @@ const ProductCard = (props: IProductInterface) => {
       onPress={() => navigate('ProductDetails', {...props})}
       style={styles.container}>
       <ImageBackground
-        source={{uri: `${BASE_URL}${Image.File?.url}`}}
+        source={{uri: `${BASE_URL}${Image?.Url}`}}
         style={styles.Imagecontainer}>
         <View style={styles.topIconsContainer}>
           <FavoriteIcon stroke={colors.tabsColor} />
