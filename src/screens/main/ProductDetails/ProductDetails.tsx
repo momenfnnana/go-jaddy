@@ -53,14 +53,14 @@ let IMAGE_CONTAINER = 57;
 
 const ProductDetails = ({}: IProductDetails) => {
   const {params} = useRoute<IProfileNavigation>();
-  const {} = params;
+  const {Id} = params;
   const {width, height} = useWindowDimensions();
   const {
     isLoading,
     data: productData,
     isError,
     refetch,
-  } = useQuery(['getProductDetails'], () => getProductDetails(1));
+  } = useQuery(['getProductDetails'], () => getProductDetails(Id));
   const [product, setProduct] = useState<IProductImages>();
 
   if (isLoading) {
