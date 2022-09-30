@@ -5,6 +5,6 @@ export {default as InputField} from './InputField';
 export {default as Spacer} from './Spacer';
 export {default as MainHeader} from './MainHeader';
 export {default as SearchInput} from './SearchInput';
-export {default as ProductCard} from './ProductCard';
+export {ProductCard, RowProductCard} from './ProductCard';
 export {default as Loader} from './Loader';
 export {default as SearchHeader} from './SearchHeader';
