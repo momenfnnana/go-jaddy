@@ -96,23 +96,21 @@ const Carasoule = ({containerStyle, data}: ICarasoule) => {
         style={flatListStyle}
         snapToInterval={width - 30}
         onScroll={scrollHandler}
-        renderItem={({item: {imageUrl, Description, Image}}) => {
-          return (
-            <ImageBackground
-              source={{uri: `${BASE_URL}${Image?.File?.url}`}}
-              style={customStyle}>
-              <View style={[styles.titleContainer, customTitleContainer]}>
-                <View style={styles.tab} />
-                <Text
-                  tx={Description}
-                  variant="smallBold"
-                  color={colors.white}
-                  style={styles.title}
-                />
-              </View>
-            </ImageBackground>
-          );
-        }}
+        renderItem={({item: {imageUrl, Description, Image}}) => (
+          <ImageBackground
+            source={{uri: `${BASE_URL}${Image?.Url}`}}
+            style={customStyle}>
+            <View style={[styles.titleContainer, customTitleContainer]}>
+              <View style={styles.tab} />
+              <Text
+                tx={Description}
+                variant="smallBold"
+                color={colors.white}
+                style={styles.title}
+              />
+            </View>
+          </ImageBackground>
+        )}
       />
       <Indicators activeIndex={activeIndex} data={data} />
     </View>

@@ -38,7 +38,7 @@ const CategoriesCarasoule = ({items}: CategoriesCarasoule) => {
             <View style={[styles.item, {width: CONTAINER_WIDTH}]}>
               <Image
                 source={{
-                  uri: `${BASE_URL}${item.Image?.File?.url}`,
+                  uri: `${BASE_URL}${item.Image?.Url}`,
                 }}
                 resizeMode="contain"
                 style={{height: SIZE, width: SIZE}}
