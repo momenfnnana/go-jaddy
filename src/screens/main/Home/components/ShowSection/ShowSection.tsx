@@ -3,8 +3,6 @@ import React from 'react';
 import {ProductCard, Text} from 'components';
 import {colors, spacing} from 'theme';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {IProductInterface} from '../../types';
-import {GoNextArrowIcon} from 'assets/icons';
 
 interface IHeader {
   title: string;
@@ -18,6 +16,7 @@ interface IShowSection {
   data: any[];
   showSeeMore: boolean;
 }
+
 const Header = ({title, coloredTitle, showSeeMore}: IHeader) => {
   return (
     <View style={styles.headerContainer}>
