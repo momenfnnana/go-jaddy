@@ -10,12 +10,11 @@ import {LogoBG, LogoSplash, SplashBG} from 'assets/images';
 import {useNavigation} from '@react-navigation/native';
 import {AuthRoutes} from 'navigators/RoutesTypes';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-
-interface ISplashNavigation extends NativeStackNavigationProp<AuthRoutes> {}
+import {AuthNavigationsType} from 'navigators/NavigationsTypes';
 
 const Splash = () => {
   const {width, height} = useWindowDimensions();
-  const {navigate} = useNavigation<ISplashNavigation>();
+  const {navigate} = useNavigation<AuthNavigationsType>();
 
   useEffect(() => {
     (() => {

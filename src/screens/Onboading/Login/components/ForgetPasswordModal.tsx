@@ -17,6 +17,7 @@ import * as Yup from 'yup';
 import {useTranslation} from 'react-i18next';
 import {useMutation} from '@tanstack/react-query';
 import {reset_password} from 'services/Auth';
+import {AuthNavigationsType} from 'navigators/NavigationsTypes';
 
 interface IResetPasswordModalProps {
   style?: ViewStyle;
@@ -25,7 +26,6 @@ interface IResetPasswordModalProps {
   success?: (lang: boolean) => void;
 }
 
-interface IOnboardingNavigation extends NativeStackNavigationProp<AuthRoutes> {}
 interface IinitialValues {
   email: string;
 }
@@ -45,7 +45,7 @@ const ResetPasswordModal: React.FC<IResetPasswordModalProps> = ({
   setvisibleResetPasswordModal,
   success,
 }) => {
-  const {navigate} = useNavigation<IOnboardingNavigation>();
+  const {navigate} = useNavigation<AuthNavigationsType>();
   const {t} = useTranslation();
   const onSubmitLogin = (values: any) => {
     const data = {

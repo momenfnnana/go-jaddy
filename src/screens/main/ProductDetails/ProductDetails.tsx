@@ -21,13 +21,7 @@ import {getProductDetails} from 'services/Home';
 import {BASE_URL} from 'utils/Axios';
 import {colors, spacing} from 'theme';
 import {DiscountIcon} from 'assets/icons';
-
-interface IProfileNavigation
-  extends NativeStackNavigationProp<HomeRoutes, 'ProductDetails'>,
-    RouteProp<HomeRoutes, 'ProductDetails'> {}
-
-interface IProductDetails
-  extends NativeStackScreenProps<HomeRoutes, 'ProductDetails'> {}
+import {HomeNavigationsType} from 'navigators/NavigationsTypes';
 
 interface IProductImages {
   id: number;
@@ -51,8 +45,8 @@ interface IProductImages {
 
 let IMAGE_CONTAINER = 57;
 
-const ProductDetails = ({}: IProductDetails) => {
-  const {params} = useRoute<IProfileNavigation>();
+const ProductDetails = ({}: HomeNavigationsType) => {
+  const {params} = useRoute<HomeNavigationsType>();
   const {} = params;
   const {width, height} = useWindowDimensions();
   const {

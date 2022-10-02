@@ -3,6 +3,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Button, Text} from 'components';
 import SecondaryButton from 'components/SecondaryButton';
 import {readLanguage} from 'constants';
+import {AuthNavigationsType} from 'navigators/NavigationsTypes';
 import {AuthRoutes} from 'navigators/RoutesTypes';
 import React, {useEffect, useRef, useState} from 'react';
 import {
@@ -17,10 +18,6 @@ import {string} from 'yup';
 import {ISliderListProps} from '../helpers/types';
 import DotIndicator from './DotIndicator';
 
-interface IProfileNavigation
-  extends NativeStackNavigationProp<AuthRoutes, 'Onboarding'>,
-    RouteProp<AuthRoutes, 'Onboarding'> {}
-
 const Pagination: React.FC<ISliderListProps> = ({
   style,
   data,
@@ -31,7 +28,7 @@ const Pagination: React.FC<ISliderListProps> = ({
   setVisibleLangModal,
 }) => {
   const {width, height} = useWindowDimensions();
-  const {navigate} = useNavigation<IProfileNavigation>();
+  const {navigate} = useNavigation<AuthNavigationsType>();
   const [isAr, setAr] = useState<boolean>(false);
   const safeData = data ?? [];
   const safeScrollX = scrollX ?? useRef(new Animated.Value(0)).current;

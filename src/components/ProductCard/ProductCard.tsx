@@ -5,16 +5,13 @@ import {
 } from '@react-navigation/native-stack';
 import {DiscountIcon, FavoriteIcon, StarFilledIcon} from 'assets/icons';
 import {Text} from 'components';
+import {HomeNavigationsType} from 'navigators/NavigationsTypes';
 import {HomeRoutes} from 'navigators/RoutesTypes';
 import React from 'react';
 import {View, ImageBackground, StyleSheet, Pressable} from 'react-native';
 import {IProductInterface} from 'screens/main/Home/types';
 import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
-
-interface IProductNaviagtion
-  extends NativeStackNavigationProp<HomeRoutes, 'Home'> {}
-interface IHome extends NativeStackScreenProps<HomeRoutes, 'Home'> {}
 
 const ProductCard = (props: IProductInterface) => {
   const {
@@ -36,7 +33,7 @@ const ProductCard = (props: IProductInterface) => {
     // isFav,
   } = props;
 
-  const {navigate} = useNavigation<IProductNaviagtion>();
+  const {navigate} = useNavigation<HomeNavigationsType>();
   return (
     <Pressable
       onPress={() => navigate('ProductDetails', {...props})}

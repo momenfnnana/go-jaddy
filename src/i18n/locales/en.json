@@ -87,6 +87,9 @@
   "product-details": {
     "select-color": "Select color"
   },
+  "category": {
+    "title": "Category"
+  },
   "api": {
     "account": {
       "login": {

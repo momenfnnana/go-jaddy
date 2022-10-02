@@ -6,15 +6,14 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeRoutes} from 'navigators/RoutesTypes';
+import {HomeNavigationsType} from 'navigators/NavigationsTypes';
 
 interface ISearchInput {
   containerStyle: ViewStyle;
 }
-interface IHomeNavigation
-  extends NativeStackNavigationProp<HomeRoutes, 'Home'> {}
 const SearchInput = ({containerStyle}: ISearchInput) => {
   const [searchInput, setSearchInput] = useState<string>('');
-  const {navigate} = useNavigation<IHomeNavigation>();
+  const {navigate} = useNavigation<HomeNavigationsType>();
   const onPressIn = () => {
     navigate('SearchScreen');
   };

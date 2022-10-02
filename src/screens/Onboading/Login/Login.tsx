@@ -38,6 +38,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AnonymousModal from './components/AnonymousModal';
 import ResetPasswordModal from './components/ForgetPasswordModal';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {HomeNavigationsType} from 'navigators/NavigationsTypes';
 
 interface IinitialValues {
   phoneNumber: string;
@@ -47,9 +48,7 @@ interface IFlag {
   imageUrl: ImageSourcePropType;
   introructionNumber: string;
 }
-interface ILoginNavigation
-  extends NativeStackNavigationProp<AuthRoutes, 'Login'>,
-    RouteProp<AuthRoutes, 'Login'> {}
+
 const SIZE = 18;
 export const ICON_WIDTH = 30;
 const topFieldsSpace = 20;
@@ -73,7 +72,7 @@ const loginSchema = Yub.object().shape({
 const Login = () => {
   const {width, height} = useWindowDimensions();
   const {top} = useSafeAreaInsets();
-  const {navigate, canGoBack, goBack} = useNavigation<ILoginNavigation>();
+  const {navigate, canGoBack, goBack} = useNavigation<HomeNavigationsType>();
   const {t} = useTranslation();
   const {setUserData} = useContext(UserContext);
   const [selectedFlag, setSelectedFlag] = useState<IFlag>({

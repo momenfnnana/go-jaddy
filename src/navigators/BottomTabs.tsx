@@ -58,6 +58,7 @@ const BottomTabs = () => {
           tabBarIcon: ({focused}) => (
             <CategoriesIcon stroke={getColor(focused)} />
           ),
+          headerShown: false,
         }}
       />
       <Tab.Screen

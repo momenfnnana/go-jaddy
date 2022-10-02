@@ -40,8 +40,10 @@ const InputField = ({
           colors: {
             background: colors.white,
             primary: colors.secondary,
+            placeholder: colors.gray[400],
           },
           fonts: {regular: {fontFamily: font.regular}},
+          roundness: 8,
         }}
         label={placeholder ? t(placeholder) : t('common.phone-numebr')}
         placeholder={placeholder ? t(placeholder) : t('common.phone-numebr')}
@@ -49,20 +51,24 @@ const InputField = ({
         autoCapitalize="none"
         {...rest}
         right={
-          <TextInput.Icon
-            disabled={disabledRight}
-            size={40}
-            name={() => rightIcon}
-            onPressRightIcon={onPressRightIcon}
-          />
+          rightIcon && (
+            <TextInput.Icon
+              disabled={disabledRight}
+              size={40}
+              name={() => rightIcon}
+              onPressRightIcon={onPressRightIcon}
+            />
+          )
         }
         left={
-          <TextInput.Icon
-            disabled={disabledLeft}
-            size={40}
-            name={() => leftIcon}
-            onPressRightIcon={onPressLeftIcon}
-          />
+          leftIcon && (
+            <TextInput.Icon
+              disabled={disabledLeft}
+              size={40}
+              name={() => leftIcon}
+              onPressRightIcon={onPressLeftIcon}
+            />
+          )
         }
       />
       {error && (
