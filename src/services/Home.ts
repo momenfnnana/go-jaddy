@@ -1,6 +1,10 @@
 import axios from 'axios';
 import {BASE_URL} from 'utils/Axios';
 
+interface IgetSearchResults {
+  searchText: string;
+  CurrencyId: string;
+}
 export const getStores = () =>
   axios(`${BASE_URL}/api/custom/stores/HomeStores`);
 
@@ -21,5 +25,7 @@ export const getAdvertisements = () =>
 export const getBestSellers = () =>
   axios(`${BASE_URL}/api/custom/products/BestSellers`);
 
-export const getSearchResults = (trem: string) =>
-  axios(`${BASE_URL}/api/custom/search/ByTerm?term=${trem}`);
+export const getSearchResults = ({searchText, CurrencyId}: IgetSearchResults) =>
+  axios(`${BASE_URL}/api/custom/search/ByTerm?term=${searchText}`, {
+    headers: {CurrencyId: CurrencyId},
+  });
