@@ -19,11 +19,13 @@ export interface IProductInterface {
   discountValue: string;
   imageUrl: ImageSourcePropType;
 
-
   Image: any;
   Price: any;
-  Badges: any;
+  Badges: any[];
   AddedToCart: any;
-  Name: any;
+  Name: string;
   RatingSum: any;
+  CategoryName: string;
+  SupportMultiWishlists: string;
+  WishlistEnabled: boolean;
 }
