@@ -37,9 +37,10 @@ const BottomTabs = () => {
 
   return (
     <Tab.Navigator
-      screenOptions={({route}) => ({
+      screenOptions={() => ({
         tabBarActiveTintColor: colors.danger,
         tabBarInactiveTintColor: colors.gray[800],
+        tabBarHideOnKeyboard: true,
       })}>
       <Tab.Screen
         name="Home"
