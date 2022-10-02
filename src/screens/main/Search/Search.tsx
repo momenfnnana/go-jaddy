@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {
   Loader,
   ProductCard,
@@ -21,12 +21,17 @@ import Feather from 'react-native-vector-icons/Feather';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {getSearchResults} from 'services/Home';
 import NetworkErrorScreen from 'screens/NetworkErrorScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {UserContext} from 'context/UserContext';
 
 const FILTER_ICON_SIZE = 26;
 type IshowListHandler = 'list' | 'grid';
 const Search = () => {
+  const {settings} = useContext(UserContext);
   const [searchText, setSearchText] = useState<string>('');
   const [viewType, setViewType] = useState<IshowListHandler>('grid');
+  const [currency, setCurrency] = useState<any>({});
+
   const showListHandler = (value: IshowListHandler) => {
     setViewType(value);
   };
@@ -44,8 +49,11 @@ const Search = () => {
   );
 
   const SearchHandler = () => {
-    if (searchText.length > 2) {
-      mutate(searchText);
+    if (
+      searchText.length >
+      parseInt(settings?.SearchSettings?.InstantSearchTermMinLength)
+    ) {
+      mutate({searchText, CurrencyId: currency?.Id});
     }
   };
 
@@ -53,12 +61,24 @@ const Search = () => {
     Keyboard.dismiss();
   };
 
+  useEffect(() => {
+    (async () => {
+      const currency_data = await AsyncStorage.getItem('currency');
+      const convertedData = JSON.parse(currency_data);
+      setCurrency(convertedData);
+    })();
+  }, []);
+
   if (isLoading) {
     return <Loader containerStyle={styles.loaderStyle} />;
   }
 
   if (isError) {
-    return <NetworkErrorScreen onPress={() => mutate(searchText)} />;
+    return (
+      <NetworkErrorScreen
+        onPress={() => mutate({searchText, CurrencyId: currency?.Id})}
+      />
+    );
   }
 
   return (
@@ -68,6 +88,7 @@ const Search = () => {
           value={searchText}
           setValue={setSearchText}
           onSubmitEditing={SearchHandler}
+          autoFocus={true}
         />
         <View style={[styles.row, styles.resultsHeader]}>
           <View style={styles.row}>
@@ -108,7 +129,7 @@ const Search = () => {
           </View>
         </View>
         <FlatList
-          data={data?.data?.TopProducts?.Items}
+          data={data?.data?.ProductsModel?.Items}
           keyExtractor={item => item?.Id}
           contentContainerStyle={{
             paddingHorizontal: spacing.medium - 2,
@@ -118,7 +139,14 @@ const Search = () => {
             viewType === 'grid' ? (
               <ProductCard {...item} />
             ) : (
-              <RowProductCard {...item} />
+              <RowProductCard
+                {...item}
+                currency={currency}
+                WishlistEnabled={data?.data?.ProductsModel?.WishlistEnabled}
+                SupportMultiWishlists={
+                  settings?.ShoppingCartSettings?.SupportMultiWishlists
+                }
+              />
             )
           }
         />
