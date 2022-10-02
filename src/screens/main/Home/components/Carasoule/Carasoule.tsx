@@ -96,9 +96,11 @@ const Carasoule = ({containerStyle, data}: ICarasoule) => {
         style={flatListStyle}
         snapToInterval={width - 30}
         onScroll={scrollHandler}
-        renderItem={({item: {imageUrl, Description, Image}}) => (
+        renderItem={({
+          item: {imageUrl, Description, Image, MobileImage, ...rest},
+        }) => (
           <ImageBackground
-            source={{uri: `${BASE_URL}${Image?.Url}`}}
+            source={{uri: `${BASE_URL}${MobileImage?.Url}`}}
             style={customStyle}>
             <View style={[styles.titleContainer, customTitleContainer]}>
               <View style={styles.tab} />
