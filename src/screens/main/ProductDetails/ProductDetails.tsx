@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   View,
   StyleSheet,
@@ -7,8 +7,11 @@ import {
   ImageBackground,
   ImageBackgroundProps,
   FlatList,
+  ScrollView,
+  ViewStyle,
+  Pressable,
 } from 'react-native';
-import {RouteProp, useRoute} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
@@ -21,8 +24,9 @@ import {getProductDetails} from 'services/Home';
 import {BASE_URL} from 'utils/Axios';
 import {colors, spacing} from 'theme';
 import {DiscountIcon} from 'assets/icons';
+import {useCurrency} from 'hook/useCurrency';
 
-interface IProfileNavigation
+interface IProductNavigation
   extends NativeStackNavigationProp<HomeRoutes, 'ProductDetails'>,
     RouteProp<HomeRoutes, 'ProductDetails'> {}
 
@@ -52,7 +56,8 @@ interface IProductImages {
 let IMAGE_CONTAINER = 57;
 
 const ProductDetails = ({}: IProductDetails) => {
-  const {params} = useRoute<IProfileNavigation>();
+  const {params} = useRoute<IProductNavigation>();
+  const {navigate} = useNavigation<IProductNavigation>();
   const {Id} = params;
   const {width, height} = useWindowDimensions();
   const {
@@ -61,7 +66,7 @@ const ProductDetails = ({}: IProductDetails) => {
     isError,
     refetch,
   } = useQuery(['getProductDetails'], () => getProductDetails(Id));
-  const [product, setProduct] = useState<IProductImages>();
+  const {currency} = useCurrency();
 
   if (isLoading) {
     return <Loader containerStyle={styles.loaderStyle} />;
@@ -88,15 +93,17 @@ const ProductDetails = ({}: IProductDetails) => {
     productData.data?.Product?.MediaGalleryModel?.Files[
       productData.data?.Product?.MediaGalleryModel?.GalleryStartIndex
     ];
+  const Product = productData.data?.Product;
+  console.log({OldPrice: Product?.StoreImage?.Url});
 
   const mainImage: ImageBackgroundProps = {
-    height: height * 0.53,
-    // flexDirection:'flex-end'
-  };
+    flex: 0.5,
+  } as ViewStyle;
+
   return (
-    <View>
+    <ScrollView contentContainerStyle={{flex: 1}}>
       <ImageBackground
-        source={{uri: `${BASE_URL}${GalleryStartIndex?.url}`}}
+        source={{uri: `${BASE_URL}${Product?.Images[0]?.Url}`}}
         style={mainImage}>
         <FlatList
           data={imagesList}
@@ -125,49 +132,56 @@ const ProductDetails = ({}: IProductDetails) => {
         )}
       </ImageBackground>
       <View style={styles.contentContainer}>
-        <View style={styles.row}>
+        <View style={[styles.row, styles.justifyBetween]}>
           <Text
-            text={Name}
+            text={Product?.Name}
             color={colors.tabsColor}
             variant="largeBold"
             numberOfLines={1}
           />
-          <Image
-            source={{uri: `${BASE_URL}${Brands[0]?.Image?.File?.url}`}}
-            style={styles.brandImage}
-          />
-        </View>
-        <View style={styles.row}>
-          {!ShowSku && (
-            <Text color={colors.black} variant="mediumLight">
-              {Sku}
-            </Text>
+          {Product?.StoreId !== 0 && (
+            <Pressable
+            // onPress={()=>navigate('')}
+            >
+              <Image
+                source={{uri: `${BASE_URL}${Product?.StoreImage?.Url}`}}
+                style={[styles.storeImage, styles.storeWidth]}
+              />
+            </Pressable>
           )}
         </View>
         <View style={styles.row}>
+          {Product?.ShowSku && (
+            <Text color={colors.black} variant="mediumLight">
+              {Product?.Sku}
+            </Text>
+          )}
+        </View>
+        <View style={[styles.row, styles.justifyBetween]}>
           <Text
-            text={ShortDescription}
+            text={Product?.ShortDescription}
             color={colors.tabsColor}
             variant="mediumRegular"
-            style={{width: width * 0.7}}
           />
-          <View>
+          <View style={[styles.priceContainer, styles.storeWidth]}>
             <Text
-              text={Price}
-              color={colors.tabsColor}
-              variant="mediumRegular"
+              text={Product?.ProductPrice?.Price}
+              color={colors.orange}
+              variant="xLargeBold"
               numberOfLines={1}
             />
-            <Text
-              text={OldPrice}
-              color={colors.grayMain}
-              variant="mediumRegular"
-              style={styles.oldPrice}
-              numberOfLines={1}
-            />
+            <View style={styles.row}>
+              <Text
+                text={Product?.ProductPrice?.OldPrice?.toString()}
+                color={colors.grayMain}
+                variant="mediumRegular"
+                style={styles.oldPrice}
+                numberOfLines={1}
+              />
+              <Text text={currency?.Symbol} />
+            </View>
           </View>
         </View>
-
         <View style={styles.row}>
           <Text
             tx="product-details.select-color"
@@ -176,7 +190,7 @@ const ProductDetails = ({}: IProductDetails) => {
           />
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -221,17 +235,28 @@ const styles = StyleSheet.create({
     left: spacing.normal - 1,
   },
   discountPercentage: {},
-  brandImage: {
-    width: 100,
+  storeImage: {
     height: 41,
     resizeMode: 'contain',
-    marginTop: spacing.normal,
   },
   oldPrice: {
     textDecorationLine: 'line-through',
     textDecorationStyle: 'solid',
+    marginHorizontal: spacing.tiny,
   },
   contentContainer: {
+    flex: 0.5,
     paddingHorizontal: spacing.normal,
+    marginTop: spacing.normal,
+  },
+  priceContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  justifyBetween: {
+    justifyContent: 'space-between',
+  },
+  storeWidth: {
+    width: 50,
   },
 });
