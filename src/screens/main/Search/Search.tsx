@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   Loader,
   ProductCard,
@@ -14,15 +14,14 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {GridViewIcon, ListViewIcon} from 'assets/icons';
 import {colors, spacing} from 'theme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
-import {useMutation, useQuery} from '@tanstack/react-query';
+import {useMutation} from '@tanstack/react-query';
 import {getSearchResults} from 'services/Home';
 import NetworkErrorScreen from 'screens/NetworkErrorScreen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {UserContext} from 'context/UserContext';
+import {useCurrency} from 'hook/useCurrency';
 
 const FILTER_ICON_SIZE = 26;
 type IshowListHandler = 'list' | 'grid';
@@ -30,8 +29,7 @@ const Search = () => {
   const {settings} = useContext(UserContext);
   const [searchText, setSearchText] = useState<string>('');
   const [viewType, setViewType] = useState<IshowListHandler>('grid');
-  const [currency, setCurrency] = useState<any>({});
-
+  const {currency} = useCurrency();
   const showListHandler = (value: IshowListHandler) => {
     setViewType(value);
   };
@@ -60,14 +58,6 @@ const Search = () => {
   const DismissKeyboard = () => {
     Keyboard.dismiss();
   };
-
-  useEffect(() => {
-    (async () => {
-      const currency_data = await AsyncStorage.getItem('currency');
-      const convertedData = JSON.parse(currency_data);
-      setCurrency(convertedData);
-    })();
-  }, []);
 
   if (isLoading) {
     return <Loader containerStyle={styles.loaderStyle} />;
