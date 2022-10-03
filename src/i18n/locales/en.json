@@ -85,7 +85,8 @@
     "search-result-for": "Search result for:"
   },
   "product-details": {
-    "select-color": "Select color"
+    "select-color": "Select color",
+    "category": "Category"
   },
   "category": {
     "title": "Category"

@@ -5,6 +5,10 @@ export const getSettings = () => {
   return axios.get(`${BASE_URL}/api/custom/settings`);
 };
 
+export const getCurrencies = () => {
+  return axios.get(`${BASE_URL}/api/custom/currencies`);
+};
+
 export const doLogin_service = (data: any) => {
   return axios.post(`${BASE_URL}/api/custom/account/login`, data);
 };

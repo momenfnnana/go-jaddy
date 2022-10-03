@@ -153,7 +153,7 @@ const Home = (props: IHome) => {
           {advertisements?.data?.Advertisements?.map(({MobileImage}, index) => (
             <Image
               key={index}
-              source={{uri: `${BASE_URL}${MobileImage?.File?.url}`}}
+              source={{uri: `${BASE_URL}${MobileImage?.Url}`}}
               style={styles.bannerImage}
             />
           ))}

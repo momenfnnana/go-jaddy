@@ -84,7 +84,6 @@ const Register = () => {
     data.append('Password', values.password);
     data.append('ConfirmPassword', values.confirmPassword);
     if (isSeller) {
-      console.log('enter');
       data.append('CustomerStoreName', values.storeName);
       data.append('StoreImage', {
         uri: image.uri,

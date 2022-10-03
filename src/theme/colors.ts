@@ -21,6 +21,7 @@ const secondaryPalette = {
   secondaryLight2: '#A4C1C8',
   secondaryLight3: '#D1E0E3',
   secondaryBackground: '#EDF3F4',
+  secondaryBackground2: '#F5F5F5',
 };
 
 const redPalette = {

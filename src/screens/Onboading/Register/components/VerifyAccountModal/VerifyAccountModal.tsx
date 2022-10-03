@@ -99,8 +99,6 @@ const VerifyAccountModal = ({
     }
   }, [value]);
 
-  console.log({value});
-
   return (
     <ScrollView>
       <KeyboardAvoidingView

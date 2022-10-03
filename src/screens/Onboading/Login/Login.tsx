@@ -95,13 +95,6 @@ const Login = () => {
     navigate('Register');
   };
 
-  const doLogin = (values: any) => {
-    const data = {
-      PhoneNumber: values.phoneNumber,
-      Password: values.password,
-    };
-    mutate(data);
-  };
   const {mutate, isLoading, isError, error, isSuccess, data} = useMutation(
     doLogin_service,
     {
@@ -113,6 +106,15 @@ const Login = () => {
       },
     },
   );
+
+  const doLogin = (values: any) => {
+    const data = {
+      PhoneNumber: values.phoneNumber,
+      Password: values.password,
+    };
+    mutate(data);
+  };
+
   const showPassword = () => {
     setIsPasswordShown(currentValue => !currentValue);
   };

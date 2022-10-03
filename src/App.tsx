@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Loader} from 'components';
 import {UserContext} from 'context/UserContext';
 import {useQuery} from '@tanstack/react-query';
-import {getSettings} from 'services/Auth';
+import {getCurrencies, getSettings} from 'services/Auth';
 
 const Stack = createNativeStackNavigator<MainNavigator>();
 const App = () => {
@@ -16,6 +16,10 @@ const App = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const {userData, setSettings} = useContext(UserContext);
   const {data, isSuccess, isError, error} = useQuery(['settings'], getSettings);
+  const {data: currenciesData, isLoading: isLoadingCurrencies} = useQuery(
+    ['currencies'],
+    getCurrencies,
+  );
   useEffect(() => {
     (async () => {
       const accessToken = await AsyncStorage.getItem('accessToken');
@@ -23,12 +27,20 @@ const App = () => {
       setLoading(false);
     })();
   }, [userData]);
+  useEffect(() => {
+    if (currenciesData?.data?.Currencies?.length) {
+      AsyncStorage.setItem(
+        'currency',
+        JSON.stringify(currenciesData?.data?.Currencies[0]),
+      );
+    }
+  }, [currenciesData]);
 
   useEffect(() => {
     isSuccess && setSettings(data.data);
   }, [isSuccess]);
 
-  if (loading) {
+  if (loading || isLoadingCurrencies) {
     return <Loader style={styles.loader} />;
   }
 

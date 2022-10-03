@@ -53,6 +53,17 @@
     "search-input": "ابحث في المتاجر",
     "search-result-for": "نتيجة البحث عن:"
   },
+  "product-details": {
+    "select-color": "اختر اللون",
+    "category": "التصنيف"
+  },
+  "api": {
+    "account": {
+      "login": {
+        "usernotfound": "*مستخدم غير موجود"
+      }
+    }
+  },
   "common": {
     "phone-numebr": "رقم الهاتف",
     "password": "كلمة المرور",

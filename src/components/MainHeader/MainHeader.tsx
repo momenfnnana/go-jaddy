@@ -27,7 +27,6 @@ const MainHeader = () => {
         onPress={async () => {
           await AsyncStorage.removeItem('accessToken');
           setUserData({});
-          console.log('ssss');
         }}>
         <View style={styles.notificationIconContainer}>
           <NotificationIcon width={SIZE} />

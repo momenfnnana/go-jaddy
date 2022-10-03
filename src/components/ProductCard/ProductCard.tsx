@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/native-stack';
 import {DiscountIcon, FavoriteIcon, StarFilledIcon} from 'assets/icons';
 import {Text} from 'components';
-import {HomeNavigationsType} from 'navigators/NavigationsTypes';
+import {useCurrency} from 'hook/useCurrency';
 import {HomeRoutes} from 'navigators/RoutesTypes';
 import React from 'react';
 import {View, ImageBackground, StyleSheet, Pressable} from 'react-native';
@@ -13,51 +13,53 @@ import {IProductInterface} from 'screens/main/Home/types';
 import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
 
+interface IProductNaviagtion
+  extends NativeStackNavigationProp<HomeRoutes, 'Home'> {}
+
 const ProductCard = (props: IProductInterface) => {
   const {
-    // title,
-    Image,
+    Image: ImageResponse,
     Price,
     Badges,
-    AddedToCart,
     Name,
     RatingSum,
-    // isHaveDiscount,
-    // discountValue,
-    // acttualPrice,
-    // prevPrice,
-    // currency,
-    // rate,
-    // productColors,
-    // isNews,
-    // isFav,
+    CategoryName,
+    SupportMultiWishlists,
+    WishlistEnabled,
   } = props;
+  const {currency} = useCurrency();
+  const {navigate} = useNavigation<IProductNaviagtion>();
+  const DiscountBadge = Badges.find(item => item?.Style === 5);
+  const isNewBadge = Badges.find(item => item?.Style === 2);
 
-  const {navigate} = useNavigation<HomeNavigationsType>();
   return (
     <Pressable
       onPress={() => navigate('ProductDetails', {...props})}
       style={styles.container}>
       <ImageBackground
-        source={{uri: `${BASE_URL}${Image.File?.url}`}}
+        source={{uri: `${BASE_URL}${ImageResponse?.Url}`}}
         style={styles.Imagecontainer}>
         <View style={styles.topIconsContainer}>
-          <FavoriteIcon stroke={colors.tabsColor} />
-          {Price?.HasDiscount && (
+          {SupportMultiWishlists && WishlistEnabled && (
+            <FavoriteIcon stroke={colors.tabsColor} />
+          )}
+          {Price?.HasDiscount && DiscountBadge?.Label && (
             <View style={styles.discountIcon}>
               <DiscountIcon />
               <Text
-                text={`${Price?.SavingPercent}%`}
-                variant="smallBold"
+                variant="xSmallLight"
+                text={DiscountBadge?.Label}
                 color={colors.white}
               />
             </View>
           )}
         </View>
-        {Badges[0]?.Label === 'New' && (
-          <View style={styles.newsContainer}>
-            <Text tx="home.news" color={colors.white} />
-          </View>
+        {isNewBadge && (
+          <Text
+            style={styles.isNewBadge}
+            variant="xSmallLight"
+            text={isNewBadge?.Label}
+          />
         )}
       </ImageBackground>
       <View style={styles.row}>
@@ -82,12 +84,12 @@ const ProductCard = (props: IProductInterface) => {
             style={{flex: 1, width: 16}}
             numberOfLines={1}
           />
-          {/* <Text
-            text={currency}
+          <Text
+            text={currency?.Symbol}
             variant="xSmallRegular"
             color={colors.tabsColor}
             style={styles.currency}
-          /> */}
+          />
         </View>
       </View>
       <View style={styles.rateAndColorsContainer}>
@@ -98,7 +100,7 @@ const ProductCard = (props: IProductInterface) => {
           style={styles.rate}
         />
         <View style={styles.verticalLine} />
-        <View style={styles.colorsContainer}>
+        {/* <View style={styles.colorsContainer}>
           {props?.ColorAttributes &&
             props?.ColorAttributes &&
             props?.ColorAttributes.map((item, index) => (
@@ -113,7 +115,7 @@ const ProductCard = (props: IProductInterface) => {
                 ]}
               />
             ))}
-        </View>
+        </View> */}
       </View>
     </Pressable>
   );
@@ -192,5 +194,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     borderWidth: 1,
     borderColor: colors.white,
+  },
+  isNewBadge: {
+    backgroundColor: colors.orange,
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
+    color: colors.white,
+    paddingHorizontal: spacing.smaller,
+    paddingVertical: spacing.tiny,
+    borderRadius: 5,
+    overflow: 'hidden',
   },
 });

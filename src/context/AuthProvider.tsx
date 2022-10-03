@@ -1,5 +1,5 @@
 import {createContext, ReactNode, useEffect, useState} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useLanguage} from 'hook/useLanguage';
 
 interface Header {
   languageId: string;
@@ -13,14 +13,12 @@ const AuthContext = createContext<Header>({
 
 const AuthProvider = ({children}: IHeaderProvider) => {
   const [languageId, setLanguageId] = useState<string>('');
+  const {language} = useLanguage();
   useEffect(() => {
-    const language = AsyncStorage.getItem('language');
-    language.then((res: string | null) => {
-      if (res) {
-        setLanguageId(res);
-      }
-    });
-  }, []);
+    if (language) {
+      setLanguageId(language);
+    }
+  }, [language]);
 
   return (
     <AuthContext.Provider value={{languageId}}>{children}</AuthContext.Provider>
