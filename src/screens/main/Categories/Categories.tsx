@@ -1,8 +1,8 @@
 import {useRoute, useNavigation} from '@react-navigation/native';
-import {useQuery} from '@tanstack/react-query';
+import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
 import {Text} from 'components';
 import ArrowIcon from 'components/Arrow';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
   View,
   Pressable,
@@ -20,47 +20,136 @@ import {
   CategoryNavigationsType,
   ICategories,
 } from 'navigators/NavigationsTypes';
+import {ActivityIndicator} from 'react-native-paper';
 
 const Categories = (props: ICategories) => {
   const {top} = useSafeAreaInsets();
   const {width} = useWindowDimensions();
   const {params} = useRoute<CategoryNavigationsType>();
-  const {push} = useNavigation<CategoryNavigationsType>();
-  const [isLoading, setisLoading] = useState(true);
+  const {push, pop, goBack, canGoBack} =
+    useNavigation<CategoryNavigationsType>();
+  const [isLoading, setLoading] = useState(true);
+  const [isFetchingNextPage, setFetchingNextPage] = useState(false);
+  const [data, setData] = useState<any>([]);
+
   const {
     data: PerantCatData,
     isLoading: isLoadingPerantCat,
     isSuccess: isSuccessPernat,
     isError: isErrorPerant,
     error: errorPerant,
+    fetchStatus,
+    hasNextPage: hasNextPagePerant,
+    fetchNextPage: fetchNextPagePerant,
     refetch: refetchPerantCategories,
-  } = useQuery(
-    ['perantCategories'],
-    () => getPerantCategories({pageSize: 20, page: 1}),
-    {enabled: false},
-  );
+    isFetchingNextPage: isFetchingNextPagePerant,
+  } = useInfiniteQuery(['perantCategories'], getPerantCategories, {
+    enabled: false,
+    getNextPageParam: lastPage => {
+      if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
+        return lastPage?.data?.Page + 1;
+      }
+      return null;
+    },
+  });
 
   const {
     data: SubCatData,
     isLoading: isLoadingSubCat,
     refetch: refetchSub,
-  } = useQuery(
+    isSuccess: isSuccessSubCat,
+    hasNextPage: hasNextPageSub,
+    fetchNextPage: fetchNextPageSub,
+    isFetchingNextPage: isFetchingNextPageSub,
+  } = useInfiniteQuery(
     ['subCategories'],
-    () => getSubCategories({pageSize: 20, page: 1}),
-    {enabled: false},
+    ({pageParam}) => getSubCategories({categoryId: params.id, pageParam}),
+    {
+      enabled: false,
+      getNextPageParam: lastPage => {
+        if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
+          return lastPage?.data?.Page + 1;
+        }
+        return null;
+      },
+    },
   );
+
+  useLayoutEffect(() => {
+    props.navigation.setOptions({
+      headerLeft: () =>
+        params?.hasSubCategory ? (
+          <Pressable
+            onPress={() => pop()}
+            style={{
+              backgroundColor: colors.white + 18,
+              padding: 10,
+              borderRadius: 5,
+            }}>
+            <ArrowIcon />
+          </Pressable>
+        ) : null,
+    });
+  }, []);
 
   useEffect(() => {
     if (params?.hasSubCategory == true) {
+      console.log('params?.id: ', params?.id);
       refetchSub();
     } else {
       refetchPerantCategories();
     }
-  }, []);
+  }, [params?.id]);
+
+  useEffect(() => {
+    if (params?.hasSubCategory == true) {
+      setLoading(isLoadingSubCat);
+    } else {
+      setLoading(isLoadingPerantCat);
+    }
+  }, [isLoadingPerantCat, isLoadingSubCat, params?.id]);
+
+  useEffect(() => {
+    if (params?.hasSubCategory == true) {
+      setFetchingNextPage(isFetchingNextPageSub);
+    } else {
+      setFetchingNextPage(isFetchingNextPagePerant);
+    }
+  }, [isFetchingNextPagePerant, isFetchingNextPageSub]);
+
+  useEffect(() => {
+    if (params?.hasSubCategory == true) {
+      if (isSuccessSubCat) {
+        const newData = SubCatData?.pages
+          .map(page => page.data.Categories)
+          .flat();
+        setData(newData);
+      }
+    } else {
+      if (isSuccessPernat) {
+        const newData = PerantCatData?.pages
+          .map(page => page.data.Categories)
+          .flat();
+        setData(newData);
+      }
+    }
+  }, [isSuccessSubCat, isSuccessPernat, params?.id]);
+
+  const loadMore = () => {
+    if (params?.hasSubCategory == true) {
+      if (hasNextPageSub) {
+        fetchNextPageSub();
+      }
+    } else {
+      if (hasNextPagePerant) {
+        fetchNextPagePerant();
+      }
+    }
+  };
 
   return (
     <View style={{flex: 1}}>
-      <View
+      {/* <View
         style={{
           backgroundColor: colors.primary,
           paddingTop: top + 5,
@@ -71,10 +160,13 @@ const Categories = (props: ICategories) => {
           alignItems: 'center',
         }}>
         <Pressable
+          onPress={() => pop()}
+          disabled={!canGoBack()}
           style={{
             backgroundColor: colors.white + 18,
             padding: 10,
             borderRadius: 5,
+            opacity: canGoBack() ? 1 : 0,
           }}>
           <ArrowIcon />
         </Pressable>
@@ -92,16 +184,19 @@ const Categories = (props: ICategories) => {
           }}>
           <ArrowIcon />
         </Pressable>
-      </View>
+      </View> */}
       <FlatList
+        onEndReached={loadMore}
+        onEndReachedThreshold={0.3}
         keyExtractor={(i, _) => _.toString()}
         horizontal={false}
-        data={
-          isLoadingSubCat || isLoadingPerantCat
-            ? [1, 2, 4, 5, 6]
-            : PerantCatData?.data.Categories || SubCatData?.data.Categories
-        }
+        data={isLoading ? [1, 2, 4, 5, 6] : data}
         numColumns={2}
+        ListFooterComponent={
+          isFetchingNextPage
+            ? () => <ActivityIndicator size={'small'} color={colors.primary} />
+            : null
+        }
         contentContainerStyle={{
           paddingHorizontal: spacing.content,
           justifyContent: 'space-between',
@@ -110,7 +205,12 @@ const Categories = (props: ICategories) => {
         renderItem={({item}) => {
           return (
             <Pressable
-              disabled={isLoadingSubCat || isLoadingPerantCat}
+              onPress={() =>
+                item.HasSubCategories
+                  ? push('Categories', {hasSubCategory: true, id: item.Id})
+                  : loadMore()
+              }
+              disabled={isLoading}
               key={Math.random() * 8}
               style={{
                 width: width / 2 - 30,
@@ -123,7 +223,7 @@ const Categories = (props: ICategories) => {
                 marginBottom: 10,
                 marginLeft: 10,
               }}>
-              {isLoadingSubCat || isLoadingPerantCat ? (
+              {isLoading ? (
                 <>
                   <FadeLoading
                     style={{
@@ -142,7 +242,7 @@ const Categories = (props: ICategories) => {
                         }}
                       />
                     }
-                    visible={isLoadingSubCat || isLoadingPerantCat}
+                    visible={isLoading}
                     animated
                     primaryColor={colors.gray[300]}
                     secondaryColor={colors.border}
@@ -161,7 +261,7 @@ const Categories = (props: ICategories) => {
                         }}
                       />
                     }
-                    visible={isLoadingSubCat || isLoadingPerantCat}
+                    visible={isLoading}
                     animated
                     primaryColor={colors.gray[300]}
                     secondaryColor={colors.border}

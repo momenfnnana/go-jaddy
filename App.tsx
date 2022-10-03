@@ -55,19 +55,21 @@ export default function App() {
       </QueryClientProvider>
     );
   }
-  return (
-    <View style={[styles.container, {direction: isAr ? 'rtl' : 'ltr'}]}>
-      <UserProvider>
-        <LanguageProvider>
-          <AuthProvider>
-            <QueryClientProvider client={queryClient}>
-              <AppIndex />
-            </QueryClientProvider>
-          </AuthProvider>
-        </LanguageProvider>
-      </UserProvider>
-    </View>
-  );
+
+  if (isConnected)
+    return (
+      <View style={[styles.container, {direction: isAr ? 'rtl' : 'ltr'}]}>
+        <UserProvider>
+          <LanguageProvider>
+            <AuthProvider>
+              <QueryClientProvider client={queryClient}>
+                <AppIndex />
+              </QueryClientProvider>
+            </AuthProvider>
+          </LanguageProvider>
+        </UserProvider>
+      </View>
+    );
 }
 
 const styles = StyleSheet.create({

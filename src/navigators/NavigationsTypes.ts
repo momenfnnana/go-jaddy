@@ -18,7 +18,7 @@ export interface HomeNavigationsType
     RouteProp<BottomTabsRoutes> {}
 
 export interface CategoryNavigationsType
-  extends NativeStackNavigationProp<HomeRoutes>,
+  extends NativeStackNavigationProp<CategotyRoutes>,
     RouteProp<CategotyRoutes> {}
 
 export interface IHome

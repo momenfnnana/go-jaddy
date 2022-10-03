@@ -18,6 +18,7 @@ import {useNavigationOptions} from './NavigationOptions';
 import {colors} from 'theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import HomeStack from './HomeStack';
+import CategoriesStack from './CategoryStack';
 
 interface IUser {
   id: string;
@@ -52,7 +53,7 @@ const BottomTabs = () => {
         }}
       />
       <Tab.Screen
-        component={CategoriesScreen}
+        component={CategoriesStack}
         name="Categories"
         options={{
           tabBarIcon: ({focused}) => (

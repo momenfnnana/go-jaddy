@@ -26,7 +26,6 @@ const App = () => {
 
   useEffect(() => {
     isSuccess && setSettings(data.data);
-    console.log({'data settings: ': data?.data});
   }, [isSuccess]);
 
   if (loading) {
