@@ -14,7 +14,7 @@ export const spacing = {
   xxLarge: 28,
   xxxLarge: 34,
   huge: 40,
-  content: 20,
+  content: 15,
 };
 
 export type SpacingTypes = keyof typeof spacing;

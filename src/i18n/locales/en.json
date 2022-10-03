@@ -88,6 +88,9 @@
     "select-color": "Select color",
     "category": "Category"
   },
+  "category": {
+    "title": "Category"
+  },
   "api": {
     "account": {
       "login": {

@@ -12,11 +12,10 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {Button, Text} from 'components';
 import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {AuthRoutes} from 'navigators/RoutesTypes';
 import i18n from 'i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNRestart from 'react-native-restart';
+import {AuthNavigationsType} from 'navigators/NavigationsTypes';
 
 interface ILanguageModalProps {
   style?: ViewStyle;
@@ -26,15 +25,13 @@ interface ILanguageModalProps {
   setVisibleLangModal?: (lang: boolean) => void;
 }
 
-interface IOnboardingNavigation extends NativeStackNavigationProp<AuthRoutes> {}
-
 const LanguageModal: React.FC<ILanguageModalProps> = ({
   language,
   visibleLangModal,
   setLanguage,
   setVisibleLangModal,
 }) => {
-  const {navigate} = useNavigation<IOnboardingNavigation>();
+  const {navigate} = useNavigation<AuthNavigationsType>();
   const confirmLanguage = async () => {
     i18n.changeLanguage(language);
     AsyncStorage.setItem('languageId', language!);

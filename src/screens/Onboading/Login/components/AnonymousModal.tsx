@@ -17,6 +17,7 @@ import {Formik} from 'formik';
 import * as Yub from 'yup';
 import {useTranslation} from 'react-i18next';
 import {PalestineFlag} from 'assets/images';
+import {AuthNavigationsType} from 'navigators/NavigationsTypes';
 
 interface IAnonymousModalProps {
   style?: ViewStyle;
@@ -26,7 +27,6 @@ interface IAnonymousModalProps {
   setvisibleAnonymousModal?: (lang: boolean) => void;
 }
 
-interface IOnboardingNavigation extends NativeStackNavigationProp<AuthRoutes> {}
 interface IinitialValues {
   phoneNumber: string;
   userName: string;
@@ -52,7 +52,7 @@ const AnonymousModal: React.FC<IAnonymousModalProps> = ({
   visibleAnonymousModal,
   setvisibleAnonymousModal,
 }) => {
-  const {navigate} = useNavigation<IOnboardingNavigation>();
+  const {navigate} = useNavigation<AuthNavigationsType>();
   const {t} = useTranslation();
   const [selectedFlag, setSelectedFlag] = useState<IFlag>({
     imageUrl: PalestineFlag,

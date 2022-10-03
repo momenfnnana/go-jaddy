@@ -43,7 +43,6 @@ const phoneRegExp =
 
 const loginSchema = Yup.object().shape({
   firstName: Yup.string().required('first name is required'),
-  storeName: Yup.string().required('store name is required'),
   lastName: Yup.string().required('last name is required'),
   email: Yup.string().email().required('email is required'),
   phoneNumber: Yup.string()
@@ -66,9 +65,9 @@ const Register = () => {
   const [verifyModalShow, setVerifyModalShow] = useState<boolean>(false);
   const {setUserData} = useContext(UserContext);
   const [image, setImage] = useState({});
-  const [email, setEmail] = useState<string>('asdasd@asda.cd');
+  const [email, setEmail] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
   const {top, bottom} = useSafeAreaInsets();
-  // const [data, setData÷÷] = useState({});
   const [selectedFlag, setSelectedFlag] = useState<IFlag>({
     imageUrl: PalestineFlag,
     introructionNumber: '970',
@@ -76,6 +75,7 @@ const Register = () => {
   const onRegisterHandle = (values: any) => {
     const data = new FormData();
     setEmail(values.email);
+    setPhoneNumber(values.phoneNumber);
     data.append('CustomerType', isSeller ? 'Seller' : 'Buyer');
     data.append('FirstName', values.firstName);
     data.append('LastName', values.lastName);
@@ -482,11 +482,14 @@ const Register = () => {
             </View>
           </View>
         </View>
-        <VerifyAccountModal
-          onClose={() => setVerifyModalShow(false)}
-          isVisible={verifyModalShow}
-          email={email}
-        />
+        {verifyModalShow && (
+          <VerifyAccountModal
+            onClose={() => setVerifyModalShow(false)}
+            isVisible={verifyModalShow}
+            email={email}
+            phoneNumber={phoneNumber}
+          />
+        )}
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -502,9 +505,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     justifyContent: 'space-between',
   },
-  goBackArrow: {
-    // transform: [{rotate: '180deg'}],
-  },
+  goBackArrow: {},
   goBackContainer: {
     width: GO_BACK_SIZE,
     height: GO_BACK_SIZE,
@@ -512,7 +513,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.gray[400],
     justifyContent: 'center',
     alignItems: 'center',
-    // alignSelf: 'flex-end',
     marginLeft: 20,
     marginTop: 20,
     zIndex: 10,
@@ -520,9 +520,7 @@ const styles = StyleSheet.create({
   mainImage: {
     alignSelf: 'center',
   },
-  introNumber: {
-    // flex: 1,
-  },
+  introNumber: {},
   linearGradient: {
     backgroundColor: '#D9DFFF',
   },
@@ -536,7 +534,6 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xxxLarge,
   },
   flag: {
-    // flex: 1,
     width: 30,
     height: 30,
   },

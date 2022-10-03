@@ -14,6 +14,16 @@ export type HomeRoutes = {
   SearchScreen: undefined;
 };
 
+interface CategoryParams {
+  hasSubCategory: boolean;
+  id: number;
+}
+
+export type CategotyRoutes = {
+  Categories: CategoryParams;
+  CategoryDetails: CategoryParams;
+};
+
 export type AuthRoutes = {
   Onboarding: undefined;
   Login: undefined;

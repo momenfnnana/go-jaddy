@@ -6,16 +6,13 @@ import {
 import {DiscountIcon, FavoriteIcon, StarFilledIcon} from 'assets/icons';
 import {Text} from 'components';
 import {useCurrency} from 'hook/useCurrency';
+import {HomeNavigationsType} from 'navigators/NavigationsTypes';
 import {HomeRoutes} from 'navigators/RoutesTypes';
 import React from 'react';
 import {View, ImageBackground, StyleSheet, Pressable} from 'react-native';
 import {IProductInterface} from 'screens/main/Home/types';
 import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
-
-interface IProductNaviagtion
-  extends NativeStackNavigationProp<HomeRoutes, 'Home'> {}
-interface IHome extends NativeStackScreenProps<HomeRoutes, 'Home'> {}
 
 const ProductCard = (props: IProductInterface) => {
   const {
@@ -29,7 +26,7 @@ const ProductCard = (props: IProductInterface) => {
     WishlistEnabled,
   } = props;
   const {currency} = useCurrency();
-  const {navigate} = useNavigation<IProductNaviagtion>();
+  const {navigate} = useNavigation<HomeNavigationsType>();
   const DiscountBadge = Badges.find(item => item?.Style === 5);
   const isNewBadge = Badges.find(item => item?.Style === 2);
 

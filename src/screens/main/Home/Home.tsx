@@ -29,13 +29,12 @@ import {
 } from 'services/Home';
 import {NetworkErrorScreen} from 'screens';
 import {BASE_URL} from 'utils/Axios';
+import {HomeNavigationsType} from 'navigators/NavigationsTypes';
 
-interface IHomeNavigation
-  extends NativeStackNavigationProp<BottomTabsRoutes, 'Home'> {}
 interface IHome extends NativeStackScreenProps<BottomTabsRoutes, 'Home'> {}
 
 const Home = (props: IHome) => {
-  const navigation = useNavigation<IHomeNavigation>();
+  const navigation = useNavigation<HomeNavigationsType>();
   const {t} = useTranslation();
   const {top} = useSafeAreaInsets();
 

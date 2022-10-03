@@ -24,22 +24,30 @@ import {
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
 import {useTimer} from 'react-timer-hook';
+import {AuthNavigationsType} from 'navigators/NavigationsTypes';
+import {useNavigation} from '@react-navigation/native';
 
 const CELL_COUNT = 4;
+
+function n(num: number, len = 2) {
+  return `${num}`.padStart(len, '0');
+}
 
 interface IVerifyAccountModal {
   isVisible: boolean;
   email: string;
+  phoneNumber: string;
   onClose: () => void;
 }
 const VerifyAccountModal = ({
   isVisible,
   onClose,
   email,
+  phoneNumber,
 }: IVerifyAccountModal) => {
   const {width} = useWindowDimensions();
+  const {navigate} = useNavigation<AuthNavigationsType>();
   const onsubmit = (values: any) => {
-    //pass values here
     // mutate()
   };
   const [value, setValue] = useState('');
@@ -81,7 +89,7 @@ const VerifyAccountModal = ({
 
   useEffect(() => {
     if (isSuccess) {
-      Alert.alert(JSON.stringify({...data.data}));
+      navigate('Login');
     }
   }, [data]);
 
@@ -126,7 +134,7 @@ const VerifyAccountModal = ({
               style={styles.description}
             />
             <Text
-              tx={email}
+              tx={phoneNumber}
               variant="mediumExtraBold"
               center
               style={styles.email}
@@ -155,7 +163,7 @@ const VerifyAccountModal = ({
               center
               variant="mediumRegular"
               color={colors.red}
-              tx={` ${minutes} : ${seconds} `}
+              tx={` ${n(minutes, 2)} : ${n(seconds, 2)} `}
             />
           </View>
         </Modal>
