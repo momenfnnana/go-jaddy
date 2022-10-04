@@ -25,6 +25,7 @@ const RowProductCard = (props: IProductInterface) => {
       <View style={styles.imageContainer}>
         <ImageBackground
           source={{uri: `${BASE_URL}${ImageResponse?.Url}`}}
+          resizeMode="contain"
           style={styles.image}>
           {SupportMultiWishlists && WishlistEnabled && (
             <FavoriteIcon stroke={colors.tabsColor} />
@@ -111,6 +112,7 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     padding: 5,
+    backgroundColor: colors.white,
   },
   imageContainer: {
     flex: 0.25,

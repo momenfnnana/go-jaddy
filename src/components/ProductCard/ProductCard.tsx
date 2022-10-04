@@ -38,6 +38,7 @@ const ProductCard = (props: IProductInterface) => {
       style={styles.container}>
       <ImageBackground
         source={{uri: `${BASE_URL}${ImageResponse?.Url}`}}
+        resizeMode="contain"
         style={styles.Imagecontainer}>
         <View style={styles.topIconsContainer}>
           {SupportMultiWishlists && WishlistEnabled && (
@@ -132,6 +133,7 @@ const styles = StyleSheet.create({
   Imagecontainer: {
     width: 165,
     height: 201,
+    backgroundColor: colors.white,
   },
   topIconsContainer: {
     position: 'absolute',

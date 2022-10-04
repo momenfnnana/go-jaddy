@@ -3,6 +3,7 @@ import {IProductInterface} from 'screens/main/Home/types';
 export type BottomTabsRoutes = {
   Home: undefined;
   Categories: undefined;
+  CategoryDetails: undefined;
   Stores: undefined;
   Cart: undefined;
   Profile: {userId: string};
@@ -15,12 +16,12 @@ export type HomeRoutes = {
 };
 
 interface CategoryParams {
-  hasSubCategory: boolean;
+  title: string;
   id: number;
 }
 
 export type CategotyRoutes = {
-  Categories: CategoryParams;
+  Categories: undefined;
   CategoryDetails: CategoryParams;
 };
 

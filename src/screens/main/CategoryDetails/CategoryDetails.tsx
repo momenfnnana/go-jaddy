@@ -2,7 +2,7 @@ import {useRoute, useNavigation} from '@react-navigation/native';
 import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
 import {Text} from 'components';
 import ArrowIcon from 'components/Arrow';
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useLayoutEffect} from 'react';
 import {
   View,
   Pressable,
@@ -11,42 +11,65 @@ import {
   Image,
 } from 'react-native';
 import {FadeLoading} from 'react-native-fade-loading';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {getPerantCategories, getSubCategories} from 'services/Category';
+import {getCategoryProducts, getSubCategories} from 'services/Category';
 
 import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
 import {
   CategoryNavigationsType,
-  ICategories,
+  ICategoryDetails,
 } from 'navigators/NavigationsTypes';
 import {ActivityIndicator} from 'react-native-paper';
 
-const Categories = (props: ICategories) => {
-  const {top} = useSafeAreaInsets();
+const Categories = (props: ICategoryDetails) => {
   const {width} = useWindowDimensions();
   const {params} = useRoute<CategoryNavigationsType>();
   const {push, pop, goBack, canGoBack} =
     useNavigation<CategoryNavigationsType>();
 
+  // const {data: CategoryProductsData} = useQuery(
+  //   ['getCategoryProducts'],
+  //   getCategoryProducts,
+  // );
+
+  // console.log({CategoryProductsData});
+
   const {
     data,
     isLoading,
     isSuccess,
-    isError,
-    error,
     hasNextPage,
     fetchNextPage,
-    refetch,
     isFetchingNextPage,
-  } = useInfiniteQuery(['perantCategories'], getPerantCategories, {
-    getNextPageParam: lastPage => {
-      if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
-        return lastPage?.data?.Page + 1;
-      }
-      return null;
+  } = useInfiniteQuery(
+    ['subCategories'],
+    ({pageParam}) => getSubCategories({categoryId: params?.id, pageParam}),
+    {
+      getNextPageParam: lastPage => {
+        if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
+          return lastPage?.data?.Page + 1;
+        }
+        return null;
+      },
     },
-  });
+  );
+
+  useLayoutEffect(() => {
+    props.navigation.setOptions({
+      title: params?.title,
+      headerLeft: () => (
+        <Pressable
+          onPress={() => pop()}
+          style={{
+            backgroundColor: colors.white + 18,
+            padding: 10,
+            borderRadius: 5,
+          }}>
+          <ArrowIcon />
+        </Pressable>
+      ),
+    });
+  }, []);
 
   const loadMore = () => {
     if (hasNextPage) {
@@ -54,46 +77,8 @@ const Categories = (props: ICategories) => {
     }
   };
 
-  console.log({hasNextPage});
-
   return (
     <View style={{flex: 1}}>
-      {/* <View
-        style={{
-          backgroundColor: colors.primary,
-          paddingTop: top + 5,
-          paddingBottom: 10,
-          paddingHorizontal: spacing.content,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}>
-        <Pressable
-          onPress={() => pop()}
-          disabled={!canGoBack()}
-          style={{
-            backgroundColor: colors.white + 18,
-            padding: 10,
-            borderRadius: 5,
-            opacity: canGoBack() ? 1 : 0,
-          }}>
-          <ArrowIcon />
-        </Pressable>
-        <Text
-          tx="category.title"
-          color={colors.white}
-          variant="mediumRegular"
-        />
-        <Pressable
-          style={{
-            backgroundColor: colors.white + 18,
-            padding: 10,
-            borderRadius: 5,
-            opacity: 0,
-          }}>
-          <ArrowIcon />
-        </Pressable>
-      </View> */}
       <FlatList
         onEndReached={loadMore}
         onEndReachedThreshold={0.3}

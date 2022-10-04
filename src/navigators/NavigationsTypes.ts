@@ -26,3 +26,6 @@ export interface IHome
 
 export interface ICategories
   extends NativeStackScreenProps<BottomTabsRoutes, 'Categories'> {}
+
+export interface ICategoryDetails
+  extends NativeStackScreenProps<BottomTabsRoutes, 'CategoryDetails'> {}

@@ -92,6 +92,7 @@ const Search = () => {
                 {
                   backgroundColor:
                     viewType === 'list' ? colors.secondary : undefined,
+                  marginRight: 10,
                 },
               ]}
               onPress={() => showListHandler('list')}>
@@ -113,7 +114,7 @@ const Search = () => {
               <Ionicons
                 name="grid-outline"
                 size={18}
-                color={viewType === 'grid' ? colors.grayMain : colors.white}
+                color={viewType === 'grid' ? colors.white : colors.grayMain}
               />
             </Pressable>
           </View>
@@ -150,6 +151,7 @@ export default Search;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.white,
   },
   row: {
     flexDirection: 'row',
@@ -157,11 +159,11 @@ const styles = StyleSheet.create({
   },
   viewFilters: {
     backgroundColor: colors.gray[1000],
-    paddingVertical: spacing.small,
+    paddingVertical: spacing.tiny,
     paddingHorizontal: spacing.tiny,
     borderRadius: spacing.large,
     justifyContent: 'space-between',
-    flex: 0.3,
+    // flex: 0.3,
   },
   viewIconContainer: {
     width: FILTER_ICON_SIZE,
