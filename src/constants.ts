@@ -8,3 +8,8 @@ export const readLanguage = async () => {
   const languageId = await AsyncStorage.getItem('languageId');
   return languageId;
 };
+
+export const readAccessToken = async () => {
+  const token = await AsyncStorage.getItem('accessToken');
+  return token;
+};
