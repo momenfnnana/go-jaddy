@@ -58,8 +58,8 @@ const GredientFrom = '#AFB2B500';
 const GredientTo = '#231D2590';
 
 const initialValues: IinitialValues = {
-  phoneNumber: '',
-  password: '',
+  phoneNumber: '121234567891011',
+  password: 'Password$1',
 };
 const loginSchema = Yub.object().shape({
   phoneNumber: Yub.number()
@@ -155,9 +155,9 @@ const Login = () => {
         UserPhoneNumber,
         UserType,
       });
-      if (!RememberMe) {
-        AsyncStorage.setItem('accessToken', AccessToken);
-      }
+      // if (!RememberMe) {
+      (async () => await AsyncStorage.setItem('accessToken', AccessToken))();
+      // }
     }
   }, [isSuccess]);
 

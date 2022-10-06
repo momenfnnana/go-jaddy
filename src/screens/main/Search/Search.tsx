@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   Loader,
   ProductCard,
@@ -17,22 +17,55 @@ import {
 import {colors, spacing} from 'theme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
-import {useMutation} from '@tanstack/react-query';
+import {useInfiniteQuery, useMutation} from '@tanstack/react-query';
 import {getSearchResults} from 'services/Home';
 import NetworkErrorScreen from 'screens/NetworkErrorScreen';
 import {UserContext} from 'context/UserContext';
 import {useCurrency} from 'hook/useCurrency';
+import {useRoute} from '@react-navigation/native';
+import {HomeNavigationsType} from 'navigators/NavigationsTypes';
+import {getCategoryProducts} from 'services/Category';
 
 const FILTER_ICON_SIZE = 26;
 type IshowListHandler = 'list' | 'grid';
 const Search = () => {
   const {settings} = useContext(UserContext);
   const [searchText, setSearchText] = useState<string>('');
+  const {params} = useRoute<HomeNavigationsType>();
   const [viewType, setViewType] = useState<IshowListHandler>('grid');
   const {currency} = useCurrency();
   const showListHandler = (value: IshowListHandler) => {
     setViewType(value);
   };
+
+  const {
+    data: Products,
+    isRefetching: isRefetchingProductsCategory,
+    refetch: refetchProductsCategory,
+    isLoading: isLoadingProductsCategory,
+    remove,
+  } = useInfiniteQuery(
+    ['productsCategory'],
+    ({pageParam}) =>
+      getCategoryProducts({pageParam, categoryId: (params as any).categoryId}),
+    {
+      enabled: false,
+      getNextPageParam: lastPage => {
+        if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
+          return lastPage?.data?.Page + 1;
+        }
+        return null;
+      },
+    },
+  );
+
+  useEffect(() => {
+    if ((params as any)?.paramsType == 'category') {
+      refetchProductsCategory();
+      DismissKeyboard();
+    }
+    return () => remove();
+  }, [params]);
 
   const {mutate, isLoading, isError, error, isSuccess, data} = useMutation(
     getSearchResults,
@@ -59,7 +92,11 @@ const Search = () => {
     Keyboard.dismiss();
   };
 
-  if (isLoading) {
+  if (
+    isLoading ||
+    (params?.paramsType == 'category' &&
+      (isRefetchingProductsCategory || isLoadingProductsCategory))
+  ) {
     return <Loader containerStyle={styles.loaderStyle} />;
   }
 
@@ -70,6 +107,12 @@ const Search = () => {
       />
     );
   }
+
+  // console.log({
+  //   'Products?.pages: ': JSON.stringify(
+  //     Products?.pages[0]?.data.ProductsModel,
+  //   ),
+  // });
 
   return (
     <TouchableWithoutFeedback onPress={DismissKeyboard}>
@@ -83,7 +126,10 @@ const Search = () => {
         <View style={[styles.row, styles.resultsHeader]}>
           <View style={styles.row}>
             <Text tx="search.search-result-for" variant="smallRegular" />
-            <Text text={` ${searchText}`} variant="smallBold" />
+            <Text
+              text={` ${searchText || (params as any)?.title}`}
+              variant="smallBold"
+            />
           </View>
           <View style={[styles.row, styles.viewFilters]}>
             <Pressable
@@ -119,17 +165,37 @@ const Search = () => {
             </Pressable>
           </View>
         </View>
-        <FlatList
-          data={data?.data?.ProductsModel?.Items}
-          keyExtractor={item => item?.Id}
-          contentContainerStyle={{
-            paddingHorizontal: spacing.medium - 2,
-          }}
-          numColumns={2}
-          renderItem={({item}) =>
-            viewType === 'grid' ? (
-              <ProductCard {...item} />
-            ) : (
+        {viewType === 'grid' ? (
+          <FlatList
+            key={'_'}
+            data={
+              data?.data?.ProductsModel?.Items ||
+              Products?.pages
+                .map(page => (page as any)?.data.ProductsModel.Items)
+                .flat()
+            }
+            keyExtractor={item => item?.Id}
+            contentContainerStyle={{
+              paddingHorizontal: spacing.medium - 2,
+            }}
+            numColumns={2}
+            renderItem={({item}) => <ProductCard {...item} />}
+          />
+        ) : (
+          <FlatList
+            key={'#'}
+            data={
+              data?.data?.ProductsModel?.Items ||
+              Products?.pages
+                .map(page => (page as any)?.data.ProductsModel.Items)
+                .flat()
+            }
+            keyExtractor={item => item?.Id}
+            contentContainerStyle={{
+              paddingHorizontal: spacing.medium - 2,
+            }}
+            numColumns={1}
+            renderItem={({item}) => (
               <RowProductCard
                 {...item}
                 currency={currency}
@@ -138,9 +204,9 @@ const Search = () => {
                   settings?.ShoppingCartSettings?.SupportMultiWishlists
                 }
               />
-            )
-          }
-        />
+            )}
+          />
+        )}
       </View>
     </TouchableWithoutFeedback>
   );

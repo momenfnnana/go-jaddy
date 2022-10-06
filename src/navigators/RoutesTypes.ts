@@ -1,10 +1,10 @@
-import {IProductInterface} from 'screens/main/Home/types';
+import {IProductInterface, ISearchInterface} from 'screens/main/Home/types';
 
 export type BottomTabsRoutes = {
-  Home: undefined;
-  Categories: undefined;
+  HomeStack: undefined;
+  CategoriesStack: undefined;
   CategoryDetails: {title: ''; id: -1};
-  Stores: undefined;
+  StoresStack: undefined;
   Cart: undefined;
   Profile: {userId: string};
 };
@@ -12,7 +12,7 @@ export type BottomTabsRoutes = {
 export type HomeRoutes = {
   Home: undefined;
   ProductDetails: IProductInterface;
-  SearchScreen: undefined;
+  SearchScreen: ISearchInterface;
 };
 
 interface CategoryParams {

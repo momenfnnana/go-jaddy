@@ -64,7 +64,7 @@ export default SearchHeader;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 0.1,
+    // flex: 0.1,
     backgroundColor: colors.primary,
     justifyContent: 'space-around',
     alignItems: 'flex-end',

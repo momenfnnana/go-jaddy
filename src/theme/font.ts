@@ -1,4 +1,8 @@
 const type = {
+  // regular: 'almarai_regular',
+  // light: 'almarai_light',
+  // bold: 'almarai_bold',
+  // extraBold: 'almarai_extra_bold',
   regular: 'Almarai-Regular',
   light: 'Almarai-Light',
   bold: 'Almarai-Bold',

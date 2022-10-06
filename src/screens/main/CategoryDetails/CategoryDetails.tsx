@@ -24,7 +24,7 @@ import {ActivityIndicator} from 'react-native-paper';
 const Categories = (props: ICategoryDetails) => {
   const {width} = useWindowDimensions();
   const {params} = useRoute<CategoryNavigationsType>();
-  const {push, pop, goBack, canGoBack} =
+  const {push, pop, goBack, canGoBack, navigate} =
     useNavigation<CategoryNavigationsType>();
 
   const {
@@ -99,7 +99,14 @@ const Categories = (props: ICategoryDetails) => {
               onPress={() =>
                 item.HasSubCategories
                   ? push('CategoryDetails', {title: item.Name, id: item.Id})
-                  : loadMore()
+                  : navigate('HomeStack', {
+                      screen: 'SearchScreen',
+                      params: {
+                        categoryId: item.Id,
+                        title: item.Name,
+                        paramsType: 'category',
+                      },
+                    })
               }
               disabled={isLoading}
               key={Math.random() * 8}

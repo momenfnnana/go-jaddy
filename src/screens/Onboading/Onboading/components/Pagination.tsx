@@ -83,7 +83,7 @@ const Pagination: React.FC<ISliderListProps> = ({
         ) : (
           <Button
             onPress={() => setVisibleLangModal!(true)}
-            style={{width: width - 50}}
+            style={{width: width - 50, marginBottom: 10}}
             title="buttons.onboardingBtn"
           />
         )}
@@ -104,6 +104,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
+    marginBottom: 10,
   },
 });
 export default Pagination;

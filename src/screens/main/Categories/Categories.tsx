@@ -26,8 +26,7 @@ const Categories = (props: ICategories) => {
   const {top} = useSafeAreaInsets();
   const {width} = useWindowDimensions();
   const {params} = useRoute<CategoryNavigationsType>();
-  const {push, pop, goBack, canGoBack} =
-    useNavigation<CategoryNavigationsType>();
+  const {push, navigate} = useNavigation<CategoryNavigationsType>();
 
   const {
     data,
@@ -121,7 +120,14 @@ const Categories = (props: ICategories) => {
               onPress={() =>
                 item.HasSubCategories
                   ? push('CategoryDetails', {title: item.Name, id: item.Id})
-                  : loadMore()
+                  : navigate('HomeStack', {
+                      screen: 'SearchScreen',
+                      params: {
+                        categoryId: item.Id,
+                        title: item.Name,
+                        paramsType: 'category',
+                      },
+                    })
               }
               disabled={isLoading}
               key={Math.random() * 8}

@@ -40,31 +40,34 @@ const BottomTabs = () => {
         tabBarHideOnKeyboard: true,
       })}>
       <Tab.Screen
-        name="Home"
+        name="HomeStack"
         component={HomeStack}
         options={{
           tabBarIcon: ({focused}) => (
             <HomeIcon stroke={getColor(focused)} fill={getColor(focused)} />
           ),
           headerShown: false,
+          tabBarLabel: 'Home',
         }}
       />
       <Tab.Screen
         component={CategoriesStack}
-        name="Categories"
+        name="CategoriesStack"
         options={{
           tabBarIcon: ({focused}) => (
             <CategoriesIcon stroke={getColor(focused)} />
           ),
           headerShown: false,
+          tabBarLabel: 'Categories',
         }}
       />
       <Tab.Screen
         component={StoresStack}
-        name="Stores"
+        name="StoresStack"
         options={{
           tabBarIcon: ({focused}) => <StoresIcon stroke={getColor(focused)} />,
           headerShown: false,
+          tabBarLabel: 'Stores',
         }}
       />
       <Tab.Screen

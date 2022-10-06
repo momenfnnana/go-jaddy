@@ -6,8 +6,5 @@ interface StoresParams {
   onlyFollowed?: boolean;
 }
 
-export const getAllStores = ({pageParam, onlyFollowed}: StoresParams) =>
-  axios(`${BASE_URL}/api/custom/stores/AllStores`, {
-    method: 'get',
-    params: {page: pageParam, onlyFollowed},
-  });
+export const getAllStores = ({pageParam = 1}: StoresParams) =>
+  axios(`${BASE_URL}/api/custom/stores/AllStores?page=${pageParam}`);

@@ -34,21 +34,14 @@ const Stores = (props: IStores) => {
     isFetchingNextPage,
   } = useInfiniteQuery(
     ['AllStores'],
-    ({pageParam}) =>
-      typeStores !== 'all'
-        ? getAllStores({
-            pageParam,
-            onlyFollowed: true,
-          })
-        : getAllStores({
-            pageParam,
-          }),
+    getAllStores,
+
     {
       getNextPageParam: lastPage => {
         if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
           return lastPage?.data?.Page + 1;
         }
-        return null;
+        return;
       },
     },
   );
@@ -67,58 +60,6 @@ const Stores = (props: IStores) => {
 
   return (
     <View style={{flex: 1}}>
-      <View
-        style={{
-          flexDirection: 'row',
-          paddingHorizontal: 25,
-          marginTop: 20,
-        }}>
-        <Pressable
-          onPress={() => setTypeStores('all')}
-          style={{
-            flex: 1,
-            paddingVertical: 10,
-            borderRadius: 6,
-            backgroundColor: typeStores == 'all' ? '#F3FBFF' : undefined,
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderWidth: 1,
-            borderColor:
-              typeStores != 'all' ? colors.reloadColor : colors.transparent,
-          }}>
-          <Text
-            tx="stores.allStores"
-            variant="smallBold"
-            center
-            color={typeStores == 'all' ? colors.primary : colors.brouwnLight}
-          />
-        </Pressable>
-        <View style={{width: 10, height: 2}} />
-        <Pressable
-          onPress={() => setTypeStores('followed')}
-          style={{
-            flex: 1,
-            paddingVertical: 10,
-            borderRadius: 6,
-            backgroundColor: typeStores == 'followed' ? '#F3FBFF' : undefined,
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderWidth: 1,
-            borderColor:
-              typeStores != 'followed'
-                ? colors.reloadColor
-                : colors.transparent,
-          }}>
-          <Text
-            tx="stores.FollowedStores"
-            variant="smallBold"
-            center
-            color={
-              typeStores == 'followed' ? colors.primary : colors.brouwnLight
-            }
-          />
-        </Pressable>
-      </View>
       <FlatList
         onEndReached={loadMore}
         onEndReachedThreshold={0.3}
@@ -130,6 +71,63 @@ const Stores = (props: IStores) => {
             : data?.pages.map(page => page.data.Stores).flat()
         }
         numColumns={2}
+        ListHeaderComponent={() => (
+          <View
+            style={{
+              flexDirection: 'row',
+              paddingHorizontal: 10,
+              marginBottom: 20,
+            }}>
+            <Pressable
+              onPress={() => setTypeStores('all')}
+              style={{
+                flex: 1,
+                paddingVertical: 10,
+                borderRadius: 6,
+                backgroundColor: typeStores == 'all' ? '#F3FBFF' : undefined,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderWidth: 1,
+                borderColor:
+                  typeStores != 'all' ? colors.reloadColor : colors.transparent,
+              }}>
+              <Text
+                tx="stores.allStores"
+                variant="smallBold"
+                center
+                color={
+                  typeStores == 'all' ? colors.primary : colors.brouwnLight
+                }
+              />
+            </Pressable>
+            <View style={{width: 10, height: 2}} />
+            <Pressable
+              onPress={() => setTypeStores('followed')}
+              style={{
+                flex: 1,
+                paddingVertical: 10,
+                borderRadius: 6,
+                backgroundColor:
+                  typeStores == 'followed' ? '#F3FBFF' : undefined,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderWidth: 1,
+                borderColor:
+                  typeStores != 'followed'
+                    ? colors.reloadColor
+                    : colors.transparent,
+              }}>
+              <Text
+                tx="stores.FollowedStores"
+                variant="smallBold"
+                center
+                color={
+                  typeStores == 'followed' ? colors.primary : colors.brouwnLight
+                }
+              />
+            </Pressable>
+          </View>
+        )}
         ListFooterComponent={
           isFetchingNextPage
             ? () => <ActivityIndicator size={'small'} color={colors.primary} />
