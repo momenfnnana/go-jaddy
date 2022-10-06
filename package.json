@@ -8,7 +8,8 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "release-android": "cd android && ./gradlew assembleRelease -x bundleReleaseJsAndAssets"
+    "release-android": "cd android && ./gradlew assembleRelease",
+    "link": "npx react-native-asset"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.10",
