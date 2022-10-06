@@ -6,6 +6,7 @@ import {
 import {DiscountIcon, FavoriteIcon, StarFilledIcon} from 'assets/icons';
 import {Text} from 'components';
 import {useCurrency} from 'hook/useCurrency';
+import {HomeNavigationsType} from 'navigators/NavigationsTypes';
 import {HomeRoutes} from 'navigators/RoutesTypes';
 import React from 'react';
 import {View, ImageBackground, StyleSheet, Pressable} from 'react-native';
@@ -28,7 +29,7 @@ const ProductCard = (props: IProductInterface) => {
     WishlistEnabled,
   } = props;
   const {currency} = useCurrency();
-  const {navigate} = useNavigation<IProductNaviagtion>();
+  const {navigate} = useNavigation<HomeNavigationsType>();
   const DiscountBadge = Badges.find(item => item?.Style === 5);
   const isNewBadge = Badges.find(item => item?.Style === 2);
 

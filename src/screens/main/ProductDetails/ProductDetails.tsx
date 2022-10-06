@@ -32,6 +32,7 @@ interface IProductNavigation
 
 interface IProductDetails
   extends NativeStackScreenProps<HomeRoutes, 'ProductDetails'> {}
+import {HomeNavigationsType} from 'navigators/NavigationsTypes';
 
 interface IProductImages {
   id: number;
