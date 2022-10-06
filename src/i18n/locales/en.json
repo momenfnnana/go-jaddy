@@ -91,6 +91,11 @@
   "category": {
     "title": "Category"
   },
+  "stores": {
+    "title": "Stores",
+    "allStores": "All Stores",
+    "FollowedStores": "Followed Stores"
+  },
   "api": {
     "account": {
       "login": {

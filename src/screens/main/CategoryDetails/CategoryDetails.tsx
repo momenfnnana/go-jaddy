@@ -13,7 +13,7 @@ import {
 import {FadeLoading} from 'react-native-fade-loading';
 import {getCategoryProducts, getSubCategories} from 'services/Category';
 
-import {colors, spacing} from 'theme';
+import {colors, font, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
 import {
   CategoryNavigationsType,
@@ -26,13 +26,6 @@ const Categories = (props: ICategoryDetails) => {
   const {params} = useRoute<CategoryNavigationsType>();
   const {push, pop, goBack, canGoBack} =
     useNavigation<CategoryNavigationsType>();
-
-  // const {data: CategoryProductsData} = useQuery(
-  //   ['getCategoryProducts'],
-  //   getCategoryProducts,
-  // );
-
-  // console.log({CategoryProductsData});
 
   const {
     data,
@@ -62,10 +55,10 @@ const Categories = (props: ICategoryDetails) => {
           onPress={() => pop()}
           style={{
             backgroundColor: colors.white + 18,
-            padding: 10,
+            padding: 8,
             borderRadius: 5,
           }}>
-          <ArrowIcon />
+          <ArrowIcon size={20} />
         </Pressable>
       ),
     });

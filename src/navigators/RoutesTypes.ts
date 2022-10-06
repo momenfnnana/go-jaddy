@@ -3,7 +3,7 @@ import {IProductInterface} from 'screens/main/Home/types';
 export type BottomTabsRoutes = {
   Home: undefined;
   Categories: undefined;
-  CategoryDetails: undefined;
+  CategoryDetails: {title: ''; id: -1};
   Stores: undefined;
   Cart: undefined;
   Profile: {userId: string};
@@ -23,6 +23,11 @@ interface CategoryParams {
 export type CategotyRoutes = {
   Categories: undefined;
   CategoryDetails: CategoryParams;
+};
+
+export type StoresRoutes = {
+  Stores: undefined;
+  Storess?: undefined;
 };
 
 export type AuthRoutes = {

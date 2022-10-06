@@ -1,10 +1,5 @@
 import React, {useCallback} from 'react';
-import {
-  CartScreen,
-  CategoriesScreen,
-  ProfileScreen,
-  StoresScreen,
-} from 'screens';
+import {CartScreen, ProfileScreen} from 'screens';
 import {BottomTabsRoutes} from './RoutesTypes';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
@@ -19,6 +14,7 @@ import {colors} from 'theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import HomeStack from './HomeStack';
 import CategoriesStack from './CategoryStack';
+import StoresStack from './StoresStack';
 
 interface IUser {
   id: string;
@@ -64,10 +60,11 @@ const BottomTabs = () => {
         }}
       />
       <Tab.Screen
-        component={StoresScreen}
+        component={StoresStack}
         name="Stores"
         options={{
           tabBarIcon: ({focused}) => <StoresIcon stroke={getColor(focused)} />,
+          headerShown: false,
         }}
       />
       <Tab.Screen

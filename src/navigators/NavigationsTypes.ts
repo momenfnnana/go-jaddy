@@ -8,6 +8,7 @@ import {
   BottomTabsRoutes,
   CategotyRoutes,
   HomeRoutes,
+  StoresRoutes,
 } from './RoutesTypes';
 
 export interface AuthNavigationsType
@@ -26,6 +27,11 @@ export interface IHome
 
 export interface ICategories
   extends NativeStackScreenProps<BottomTabsRoutes, 'Categories'> {}
+
+export interface IStores
+  extends NativeStackScreenProps<BottomTabsRoutes, 'Stores'>,
+    RouteProp<StoresRoutes>,
+    NativeStackNavigationProp<StoresRoutes> {}
 
 export interface ICategoryDetails
   extends NativeStackScreenProps<BottomTabsRoutes, 'CategoryDetails'> {}
