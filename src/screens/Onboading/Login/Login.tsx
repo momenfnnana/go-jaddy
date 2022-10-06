@@ -39,6 +39,7 @@ import AnonymousModal from './components/AnonymousModal';
 import ResetPasswordModal from './components/ForgetPasswordModal';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {HomeNavigationsType} from 'navigators/NavigationsTypes';
+import axios from 'axios';
 
 interface IinitialValues {
   phoneNumber: string;
@@ -156,6 +157,7 @@ const Login = () => {
         UserType,
       });
       if (!RememberMe) {
+        axios.defaults.headers.common['AccessToken'] = `${AccessToken}`;
         AsyncStorage.setItem('accessToken', AccessToken);
       }
     }
