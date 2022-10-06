@@ -1,4 +1,11 @@
 {
+  "screens-tabs": {
+    "home": "الرئيسية",
+    "categories": "التصنيفات",
+    "stores": "المتاجر",
+    "cart": "السلة",
+    "profile": "حسابي"
+  },
   "header": {},
   "what_to_add": "What to add?",
   "internet": {
@@ -55,7 +62,24 @@
   },
   "product-details": {
     "select-color": "اختر اللون",
-    "category": "التصنيف"
+    "category": "التصنيف",
+    "available-quantity": "الكمية المتوفرة",
+    "add-to-cart": "أضف للسلـة",
+    "ratings": "التقييمات",
+    "notify-me": "أعملني عند توفر الكمية؟",
+    "all": "الكل",
+    "with-images": "مع صور",
+    "related": "متعلقة",
+    "products": "منتجات",
+    "you-may-like": "قد تعجبك"
+  },
+  "category": {
+    "title": "التصنيفات"
+  },
+  "whishlist": {
+    "add": "أضف العنصر للمفضلة",
+    "add-hint": "اختر الكوليكشن الذي تريد إضافة المنتج عليه، يمكنك انشاء كوليشن جديد",
+    "add-collection": "إضافة كوليكشن جديد"
   },
   "api": {
     "account": {
@@ -72,6 +96,7 @@
     "retrive-password": "استعادة كلمة المرور",
     "retrive-password-description": "أدخل رمز الاستعادة المرسل على رقم الجوال المستخدم في الحساب ثم كلمة مرور جديدة",
     "code": "الكود",
-    "something-went-wrong": "حصلت مشكلة ما؟"
+    "something-went-wrong": "حصلت مشكلة ما؟",
+    "search_in_store": "ابحث في المتجر"
   }
 }

@@ -1,4 +1,11 @@
 {
+  "screens-tabs": {
+    "home": "Home",
+    "categories": "Categories",
+    "stores": "Stores",
+    "cart": "Cart",
+    "profile": "Profile"
+  },
   "header": {},
   "what_to_add": "What to add?",
   "internet": {
@@ -86,10 +93,24 @@
   },
   "product-details": {
     "select-color": "Select color",
-    "category": "Category"
+    "category": "Category",
+    "available-quantity": "Available quantity",
+    "add-to-cart": "Add to cart",
+    "ratings": "Ratings",
+    "notify-me": "Notify mo on available?",
+    "all": "All",
+    "with-images": "With images",
+    "related": "Related",
+    "products": "Products",
+    "you-may-like": "You may like"
   },
   "category": {
     "title": "Category"
+  },
+  "whishlist": {
+    "add": "Add to wishlist",
+    "add-hint": "Choose the collection you want to add the product to, you can create a new collage",
+    "add-collection": "Add new collection"
   },
   "api": {
     "account": {
