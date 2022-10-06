@@ -20,3 +20,17 @@ export const getSubCategories = ({
   axios(
     `${BASE_URL}/api/custom/category/SubCategories?categoryId=${categoryId}&pageSize=10&page=${pageParam}`,
   );
+
+export const getCategoryProducts = ({
+  pageParam = 1,
+  categoryId,
+}: CategoriesParams) =>
+  axios(`${BASE_URL}/api/custom/category/CategoryProducts`, {
+    method: 'post',
+    data: {
+      CategoryId: categoryId,
+      Term: '',
+      Page: pageParam,
+      PageSize: 5,
+    },
+  });

@@ -1,7 +1,12 @@
 import {DiscountIcon, FavoriteIcon} from 'assets/icons';
 import Text from 'components/Text';
 import React from 'react';
-import {View, StyleSheet, ImageBackground} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ImageBackground,
+  useWindowDimensions,
+} from 'react-native';
 import {IProductInterface} from 'screens/main/Home/types';
 import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
@@ -19,12 +24,13 @@ const RowProductCard = (props: IProductInterface) => {
   } = props;
   const DiscountBadge = Badges.find(item => item?.Style === 5);
   const isNewBadge = Badges.find(item => item?.Style === 2);
-
+  const {width} = useWindowDimensions();
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         <ImageBackground
           source={{uri: `${BASE_URL}${ImageResponse?.Url}`}}
+          resizeMode="contain"
           style={styles.image}>
           {SupportMultiWishlists && WishlistEnabled && (
             <FavoriteIcon stroke={colors.tabsColor} />
@@ -113,6 +119,7 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     padding: 5,
+    backgroundColor: colors.white,
   },
   imageContainer: {
     flex: 0.25,

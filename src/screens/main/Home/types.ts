@@ -18,7 +18,6 @@ export interface IProductInterface {
   isHaveDiscount: boolean;
   discountValue: string;
   imageUrl: ImageSourcePropType;
-
   Image: any;
   Price: any;
   Badges: any[];
@@ -28,4 +27,10 @@ export interface IProductInterface {
   CategoryName: string;
   SupportMultiWishlists: string;
   WishlistEnabled: boolean;
+}
+
+export interface ISearchInterface {
+  categoryId?: number;
+  title?: string;
+  paramsType?: string;
 }

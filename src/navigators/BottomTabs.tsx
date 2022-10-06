@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {CartScreen, ProfileScreen, StoresScreen} from 'screens';
+import {CartScreen, ProfileScreen} from 'screens';
 import {BottomTabsRoutes} from './RoutesTypes';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
@@ -13,6 +13,7 @@ import {useTranslation} from 'react-i18next';
 import {colors, font} from 'theme';
 import HomeStack from './HomeStack';
 import CategoriesStack from './CategoryStack';
+import StoresStack from './StoresStack';
 
 interface IUser {
   id: string;
@@ -37,7 +38,7 @@ const BottomTabs = () => {
         tabBarLabelStyle: {fontFamily: font.regular},
       })}>
       <Tab.Screen
-        name="Home"
+        name="HomeStack"
         component={HomeStack}
         options={{
           tabBarIcon: ({focused}) => (
@@ -49,7 +50,7 @@ const BottomTabs = () => {
       />
       <Tab.Screen
         component={CategoriesStack}
-        name="Categories"
+        name="CategoriesStack"
         options={{
           tabBarIcon: ({focused}) => (
             <CategoriesIcon stroke={getColor(focused)} />
@@ -59,11 +60,12 @@ const BottomTabs = () => {
         }}
       />
       <Tab.Screen
-        component={StoresScreen}
-        name="Stores"
+        component={StoresStack}
+        name="StoresStack"
         options={{
           tabBarIcon: ({focused}) => <StoresIcon stroke={getColor(focused)} />,
           title: t('screens-tabs.stores'),
+          headerShown: false,
         }}
       />
       <Tab.Screen

@@ -21,7 +21,6 @@ const Button: React.FC<buttomProps> = ({
   isLoading,
   variant,
 }) => {
-
   return (
     <Pressable
       onPress={onPress}
@@ -42,7 +41,7 @@ const Button: React.FC<buttomProps> = ({
         color={color || colors.white}
         style={styles.textStyle}
       />
-      {isLoading && <Loader size="small" />}
+      {isLoading && <Loader size="small" color={colors.white} />}
     </Pressable>
   );
 };

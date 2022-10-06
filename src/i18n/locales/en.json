@@ -112,6 +112,11 @@
     "add-hint": "Choose the collection you want to add the product to, you can create a new collage",
     "add-collection": "Add new collection"
   },
+  "stores": {
+    "title": "Stores",
+    "allStores": "All Stores",
+    "FollowedStores": "Followed Stores"
+  },
   "api": {
     "account": {
       "login": {

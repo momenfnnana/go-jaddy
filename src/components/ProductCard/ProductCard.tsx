@@ -14,6 +14,9 @@ import {IProductInterface} from 'screens/main/Home/types';
 import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
 
+interface IProductNaviagtion
+  extends NativeStackNavigationProp<HomeRoutes, 'Home'> {}
+
 const ProductCard = (props: IProductInterface) => {
   const {
     Image: ImageResponse,
@@ -36,8 +39,8 @@ const ProductCard = (props: IProductInterface) => {
       style={styles.container}>
       <ImageBackground
         source={{uri: `${BASE_URL}${ImageResponse?.Url}`}}
-        style={styles.Imagecontainer}
-        resizeMode="cover">
+        resizeMode="contain"
+        style={styles.Imagecontainer}>
         <View style={styles.topIconsContainer}>
           {SupportMultiWishlists && WishlistEnabled && (
             <FavoriteIcon stroke={colors.tabsColor} />
@@ -134,7 +137,9 @@ const styles = StyleSheet.create({
     width: 165,
   },
   Imagecontainer: {
-    flex: 1,
+    width: 165,
+    height: 201,
+    backgroundColor: colors.white,
   },
   topIconsContainer: {
     position: 'absolute',

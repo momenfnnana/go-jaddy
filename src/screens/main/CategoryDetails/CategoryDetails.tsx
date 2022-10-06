@@ -1,7 +1,8 @@
-import {useNavigation} from '@react-navigation/native';
-import {useInfiniteQuery} from '@tanstack/react-query';
+import {useRoute, useNavigation} from '@react-navigation/native';
+import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
 import {Text} from 'components';
-import React, {useEffect, useState} from 'react';
+import ArrowIcon from 'components/Arrow';
+import React, {useLayoutEffect} from 'react';
 import {
   View,
   Pressable,
@@ -10,53 +11,64 @@ import {
   Image,
 } from 'react-native';
 import {FadeLoading} from 'react-native-fade-loading';
-import {colors, spacing} from 'theme';
-import {BASE_URL} from 'utils/Axios';
-import {CategoryNavigationsType, IStores} from 'navigators/NavigationsTypes';
-import {ActivityIndicator} from 'react-native-paper';
-import {getAllStores} from 'services/Stores';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {getCategoryProducts, getSubCategories} from 'services/Category';
 
-const Stores = (props: IStores) => {
+import {colors, font, spacing} from 'theme';
+import {BASE_URL} from 'utils/Axios';
+import {
+  CategoryNavigationsType,
+  ICategoryDetails,
+} from 'navigators/NavigationsTypes';
+import {ActivityIndicator} from 'react-native-paper';
+
+const Categories = (props: ICategoryDetails) => {
   const {width} = useWindowDimensions();
-  const {push} = useNavigation<IStores>();
-  const [typeStores, setTypeStores] = useState('all');
+  const {params} = useRoute<CategoryNavigationsType>();
+  const {push, pop, goBack, canGoBack, navigate} =
+    useNavigation<CategoryNavigationsType>();
+
   const {
     data,
     isLoading,
     isSuccess,
-    isError,
-    error,
     hasNextPage,
     fetchNextPage,
-    refetch,
-    isFetching,
     isFetchingNextPage,
   } = useInfiniteQuery(
-    ['AllStores'],
-    getAllStores,
-
+    ['subCategories'],
+    ({pageParam}) => getSubCategories({categoryId: params?.id, pageParam}),
     {
       getNextPageParam: lastPage => {
         if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
           return lastPage?.data?.Page + 1;
         }
-        return;
+        return null;
       },
     },
   );
 
-  // console.log({isFetching});
+  useLayoutEffect(() => {
+    props.navigation.setOptions({
+      title: params?.title,
+      headerLeft: () => (
+        <Pressable
+          onPress={() => pop()}
+          style={{
+            backgroundColor: colors.white + 18,
+            padding: 8,
+            borderRadius: 5,
+          }}>
+          <ArrowIcon size={20} />
+        </Pressable>
+      ),
+    });
+  }, []);
 
   const loadMore = () => {
     if (hasNextPage) {
       fetchNextPage();
     }
   };
-
-  useEffect(() => {
-    refetch();
-  }, [typeStores]);
 
   return (
     <View style={{flex: 1}}>
@@ -68,66 +80,9 @@ const Stores = (props: IStores) => {
         data={
           isLoading
             ? [1, 2, 4, 5, 6]
-            : data?.pages.map(page => page.data.Stores).flat()
+            : data?.pages.map(page => page.data.Categories).flat()
         }
         numColumns={2}
-        ListHeaderComponent={() => (
-          <View
-            style={{
-              flexDirection: 'row',
-              paddingHorizontal: 10,
-              marginBottom: 20,
-            }}>
-            <Pressable
-              onPress={() => setTypeStores('all')}
-              style={{
-                flex: 1,
-                paddingVertical: 10,
-                borderRadius: 6,
-                backgroundColor: typeStores == 'all' ? '#F3FBFF' : undefined,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderWidth: 1,
-                borderColor:
-                  typeStores != 'all' ? colors.reloadColor : colors.transparent,
-              }}>
-              <Text
-                tx="stores.allStores"
-                variant="smallBold"
-                center
-                color={
-                  typeStores == 'all' ? colors.primary : colors.brouwnLight
-                }
-              />
-            </Pressable>
-            <View style={{width: 10, height: 2}} />
-            <Pressable
-              onPress={() => setTypeStores('followed')}
-              style={{
-                flex: 1,
-                paddingVertical: 10,
-                borderRadius: 6,
-                backgroundColor:
-                  typeStores == 'followed' ? '#F3FBFF' : undefined,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderWidth: 1,
-                borderColor:
-                  typeStores != 'followed'
-                    ? colors.reloadColor
-                    : colors.transparent,
-              }}>
-              <Text
-                tx="stores.FollowedStores"
-                variant="smallBold"
-                center
-                color={
-                  typeStores == 'followed' ? colors.primary : colors.brouwnLight
-                }
-              />
-            </Pressable>
-          </View>
-        )}
         ListFooterComponent={
           isFetchingNextPage
             ? () => <ActivityIndicator size={'small'} color={colors.primary} />
@@ -141,9 +96,18 @@ const Stores = (props: IStores) => {
         renderItem={({item}) => {
           return (
             <Pressable
-              onPress={() => {
-                // push('CategoryDetails', {title: item.Name, id: item.Id});
-              }}
+              onPress={() =>
+                item.HasSubCategories
+                  ? push('CategoryDetails', {title: item.Name, id: item.Id})
+                  : navigate('HomeStack', {
+                      screen: 'SearchScreen',
+                      params: {
+                        categoryId: item.Id,
+                        title: item.Name,
+                        paramsType: 'category',
+                      },
+                    })
+              }
               disabled={isLoading}
               key={Math.random() * 8}
               style={{
@@ -207,9 +171,11 @@ const Stores = (props: IStores) => {
                   <View
                     style={{
                       padding: 10,
-                      width: 80,
-                      height: 80,
-                      position: 'relative',
+                      width: 60,
+                      height: 60,
+                      borderRadius: 8,
+                      borderWidth: 1,
+                      borderColor: colors.border,
                       marginBottom: 5,
                     }}>
                     <Image
@@ -217,26 +183,6 @@ const Stores = (props: IStores) => {
                       source={{uri: `${BASE_URL + item?.Image.Url}`}}
                       resizeMode={'contain'}
                     />
-                    {item.Trusted && (
-                      <View
-                        style={{
-                          position: 'absolute',
-                          bottom: 0,
-                          left: 0,
-                          height: 16,
-                          width: 16,
-                          borderRadius: 8,
-                          backgroundColor: colors.secondary,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}>
-                        <MaterialCommunityIcons
-                          name="shield-check"
-                          color={colors.white}
-                          size={11}
-                        />
-                      </View>
-                    )}
                   </View>
                   <Text
                     tx={item.Name}
@@ -253,4 +199,4 @@ const Stores = (props: IStores) => {
   );
 };
 
-export default Stores;
+export default Categories;

@@ -33,6 +33,7 @@ import ImageResizer from 'react-native-image-resizer';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {VerifyAccountModal} from './components';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import axios from 'axios';
 
 interface IFlag {
   imageUrl: ImageSourcePropType;
@@ -56,15 +57,26 @@ const loginSchema = Yup.object().shape({
     .oneOf([Yup.ref('password'), null], 'Passwords must match'),
 });
 
+interface camiraImage {
+  uri: string;
+  type: string;
+  name: string;
+}
+
 const Register = () => {
+  const {settings} = useContext(UserContext);
   const {width, height} = useWindowDimensions();
   const {canGoBack, goBack} = useNavigation();
-  const [isSeller, setSeller] = useState(true);
+  const [isSeller, setSeller] = useState(false);
   const [isPasswordShow, setIsPasswordShown] = useState<boolean>(false);
   const [isCPasswordShow, setIsCPasswordShown] = useState<boolean>(false);
   const [verifyModalShow, setVerifyModalShow] = useState<boolean>(false);
   const {setUserData} = useContext(UserContext);
-  const [image, setImage] = useState({});
+  const [image, setImage] = useState<camiraImage>({
+    name: '',
+    type: '',
+    uri: '',
+  });
   const [email, setEmail] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const {top, bottom} = useSafeAreaInsets();
@@ -91,15 +103,6 @@ const Register = () => {
         name: image.name,
       });
     }
-    const datas = {
-      CustomerType: isSeller ? 'Seller' : 'Buyer',
-      FirstName: values.firstName,
-      LastName: values.lastName,
-      PhoneNumber: values.phoneNumber,
-      Email: values.email,
-      Password: values.password,
-      ConfirmPassword: values.confirmPassword,
-    };
 
     mutate(data);
   };
@@ -128,12 +131,21 @@ const Register = () => {
       setUserData({
         ...data?.data,
       });
-      setVerifyModalShow(true);
+      if (
+        (settings as any).CustomerSettings.UserRegistrationType == 'Standard'
+      ) {
+        AsyncStorage.setItem('accessToken', data.data.AccessToken);
+        axios.defaults.headers.common[
+          'AccessToken'
+        ] = `${data.data.AccessToken}`;
+      } else {
+        setVerifyModalShow(true);
+      }
     }
   }, [data]);
 
   const useLibraryHandler = async () => {
-    const options = {
+    const options: any = {
       title: null,
       takePhotoButtonTitle: 'Take photo',
       chooseFromLibraryButtonTitle: 'Choose from library',
@@ -144,12 +156,13 @@ const Register = () => {
       aspectY: 1,
       quality: 0.6,
     };
+
     launchImageLibrary(options, response => {
       if (response.didCancel) {
       } else {
-        let localUri = response?.assets[0]?.uri;
-        let filename = response?.assets[0]?.fileName;
-        let type = response?.assets[0]?.type;
+        let localUri = (response as any).assets[0]?.uri;
+        let filename = (response as any).assets[0]?.fileName;
+        let type = (response as any).assets[0]?.type;
         ImageResizer.createResizedImage(localUri, 120, 120, 'PNG', 100, 0)
           .then(response => {
             setImage({
@@ -444,7 +457,7 @@ const Register = () => {
                         fontSize: 18,
                         marginTop: 20,
                       }}
-                      tx={`${error?.response?.data?.Message}`}
+                      tx={`${(error as any).response?.data?.Message}`}
                     />
                   )}
                 </View>

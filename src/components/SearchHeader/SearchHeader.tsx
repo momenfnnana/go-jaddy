@@ -31,7 +31,7 @@ const SearchHeader = ({
     <View style={[{paddingTop: top}, styles.container]}>
       <StatusBar barStyle="light-content" />
       <Pressable style={styles.goBackContainer} onPress={goBack}>
-        <ArrowIcon />
+        <ArrowIcon size={ICON_SIZE} color={colors.white} />
       </Pressable>
       <SearchInput
         autoFocus={autoFocus}
@@ -64,7 +64,7 @@ export default SearchHeader;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 0.1,
+    // flex: 0.1,
     backgroundColor: colors.primary,
     justifyContent: 'space-around',
     alignItems: 'flex-end',

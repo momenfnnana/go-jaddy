@@ -26,25 +26,19 @@ const Categories = (props: ICategories) => {
   const {top} = useSafeAreaInsets();
   const {width} = useWindowDimensions();
   const {params} = useRoute<CategoryNavigationsType>();
-  const {push, pop, goBack, canGoBack} =
-    useNavigation<CategoryNavigationsType>();
-  const [isLoading, setLoading] = useState(true);
-  const [isFetchingNextPage, setFetchingNextPage] = useState(false);
-  const [data, setData] = useState<any>([]);
+  const {push, navigate} = useNavigation<CategoryNavigationsType>();
 
   const {
-    data: PerantCatData,
-    isLoading: isLoadingPerantCat,
-    isSuccess: isSuccessPernat,
-    isError: isErrorPerant,
-    error: errorPerant,
-    fetchStatus,
-    hasNextPage: hasNextPagePerant,
-    fetchNextPage: fetchNextPagePerant,
-    refetch: refetchPerantCategories,
-    isFetchingNextPage: isFetchingNextPagePerant,
+    data,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+    hasNextPage,
+    fetchNextPage,
+    refetch,
+    isFetchingNextPage,
   } = useInfiniteQuery(['perantCategories'], getPerantCategories, {
-    enabled: false,
     getNextPageParam: lastPage => {
       if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
         return lastPage?.data?.Page + 1;
@@ -53,99 +47,13 @@ const Categories = (props: ICategories) => {
     },
   });
 
-  const {
-    data: SubCatData,
-    isLoading: isLoadingSubCat,
-    refetch: refetchSub,
-    isSuccess: isSuccessSubCat,
-    hasNextPage: hasNextPageSub,
-    fetchNextPage: fetchNextPageSub,
-    isFetchingNextPage: isFetchingNextPageSub,
-  } = useInfiniteQuery(
-    ['subCategories'],
-    ({pageParam}) => getSubCategories({categoryId: params.id, pageParam}),
-    {
-      enabled: false,
-      getNextPageParam: lastPage => {
-        if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
-          return lastPage?.data?.Page + 1;
-        }
-        return null;
-      },
-    },
-  );
-
-  useLayoutEffect(() => {
-    props.navigation.setOptions({
-      headerLeft: () =>
-        params?.hasSubCategory ? (
-          <Pressable
-            onPress={() => pop()}
-            style={{
-              backgroundColor: colors.white + 18,
-              padding: 10,
-              borderRadius: 5,
-            }}>
-            <ArrowIcon />
-          </Pressable>
-        ) : null,
-    });
-  }, []);
-
-  useEffect(() => {
-    if (params?.hasSubCategory == true) {
-      console.log('params?.id: ', params?.id);
-      refetchSub();
-    } else {
-      refetchPerantCategories();
-    }
-  }, [params?.id]);
-
-  useEffect(() => {
-    if (params?.hasSubCategory == true) {
-      setLoading(isLoadingSubCat);
-    } else {
-      setLoading(isLoadingPerantCat);
-    }
-  }, [isLoadingPerantCat, isLoadingSubCat, params?.id]);
-
-  useEffect(() => {
-    if (params?.hasSubCategory == true) {
-      setFetchingNextPage(isFetchingNextPageSub);
-    } else {
-      setFetchingNextPage(isFetchingNextPagePerant);
-    }
-  }, [isFetchingNextPagePerant, isFetchingNextPageSub]);
-
-  useEffect(() => {
-    if (params?.hasSubCategory == true) {
-      if (isSuccessSubCat) {
-        const newData = SubCatData?.pages
-          .map(page => page.data.Categories)
-          .flat();
-        setData(newData);
-      }
-    } else {
-      if (isSuccessPernat) {
-        const newData = PerantCatData?.pages
-          .map(page => page.data.Categories)
-          .flat();
-        setData(newData);
-      }
-    }
-  }, [isSuccessSubCat, isSuccessPernat, params?.id]);
-
   const loadMore = () => {
-    if (params?.hasSubCategory == true) {
-      if (hasNextPageSub) {
-        fetchNextPageSub();
-      }
-    } else {
-      if (hasNextPagePerant) {
-        fetchNextPagePerant();
-      }
+    if (hasNextPage) {
+      fetchNextPage();
     }
   };
+
+  console.log({hasNextPage});
 
   return (
     <View style={{flex: 1}}>
@@ -190,7 +98,11 @@ const Categories = (props: ICategories) => {
         onEndReachedThreshold={0.3}
         keyExtractor={(i, _) => _.toString()}
         horizontal={false}
-        data={isLoading ? [1, 2, 4, 5, 6] : data}
+        data={
+          isLoading
+            ? [1, 2, 4, 5, 6]
+            : data?.pages.map(page => page.data.Categories).flat()
+        }
         numColumns={2}
         ListFooterComponent={
           isFetchingNextPage
@@ -207,8 +119,15 @@ const Categories = (props: ICategories) => {
             <Pressable
               onPress={() =>
                 item.HasSubCategories
-                  ? push('Categories', {hasSubCategory: true, id: item.Id})
-                  : loadMore()
+                  ? push('CategoryDetails', {title: item.Name, id: item.Id})
+                  : navigate('HomeStack', {
+                      screen: 'SearchScreen',
+                      params: {
+                        categoryId: item.Id,
+                        title: item.Name,
+                        paramsType: 'category',
+                      },
+                    })
               }
               disabled={isLoading}
               key={Math.random() * 8}

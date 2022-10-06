@@ -11,6 +11,7 @@ import {t} from 'i18next';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import {HomeNavigationsType} from 'navigators/NavigationsTypes';
+import {useLanguage} from 'hook/useLanguage';
 
 interface ISearchInput {
   containerStyle: ViewStyle;
@@ -18,9 +19,12 @@ interface ISearchInput {
 const SearchInput = ({containerStyle}: ISearchInput) => {
   const [searchInput, setSearchInput] = useState<string>('');
   const {navigate} = useNavigation<HomeNavigationsType>();
+  const {language} = useLanguage();
   const onPressIn = () => {
     navigate('SearchScreen');
   };
+  console.log({language});
+
   return (
     <Pressable onPressIn={onPressIn} style={[styles.container, containerStyle]}>
       <AntDesign
@@ -35,7 +39,10 @@ const SearchInput = ({containerStyle}: ISearchInput) => {
         onChangeText={setSearchInput}
         editable={false}
         onPressIn={onPressIn}
-        style={styles.input}
+        style={[
+          styles.input,
+          {textAlign: language === 'ar' ? 'right' : 'left'},
+        ]}
       />
     </Pressable>
   );

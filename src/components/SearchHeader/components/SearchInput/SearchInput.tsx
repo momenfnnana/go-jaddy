@@ -10,6 +10,7 @@ import {
 import {useTranslation} from 'react-i18next';
 import {colors, font, spacing} from 'theme';
 import Text from 'components/Text';
+import {useLanguage} from 'hook/useLanguage';
 
 interface ISearchInput extends TextInputProps {
   rightIcon?: ReactNode;
@@ -31,6 +32,7 @@ const SearchInput = ({
 }: ISearchInput) => {
   const {t} = useTranslation();
   const {width} = useWindowDimensions();
+  const {language} = useLanguage();
   return (
     <>
       <View
@@ -42,7 +44,14 @@ const SearchInput = ({
         <View>{leftIcon && leftIcon}</View>
         <TextInput
           placeholder={placeholder ? t(placeholder) : t('common.phone-numebr')}
-          style={[styles.textInput, {flex: 1, color: textColor}]}
+          style={[
+            styles.textInput,
+            {
+              flex: 1,
+              color: textColor,
+              textAlign: language == 'ar' ? 'right' : 'left',
+            },
+          ]}
           autoCapitalize="none"
           autoComplete="off"
           {...rest}
@@ -63,9 +72,7 @@ const SearchInput = ({
 
 export default SearchInput;
 const styles = StyleSheet.create({
-  textInput: {
-    fontFamily: font.regular,
-  },
+  textInput: {fontFamily: font.regular},
   containerStyle: {
     borderColor: colors.reloadColor,
     borderWidth: 1,

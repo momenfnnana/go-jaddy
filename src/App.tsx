@@ -3,7 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AuthStack, HomeStack} from 'navigators';
 import {MainNavigator} from 'navigators/RoutesTypes';
-import {StatusBar, StyleSheet} from 'react-native';
+import {StatusBar, StyleSheet, useWindowDimensions} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Loader} from 'components';
 import {UserContext} from 'context/UserContext';
@@ -15,6 +15,7 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const {userData, setSettings} = useContext(UserContext);
+  const {height, width} = useWindowDimensions();
   const {
     data,
     isSuccess,
@@ -56,7 +57,7 @@ const App = () => {
   }, [currenciesData, data?.data]);
 
   if (loading || isLoadingCurrencies || isLoadingSettings) {
-    return <Loader style={styles.loader} />;
+    return <Loader style={[styles.loader, {height, width}]} />;
   }
 
   return (
@@ -79,7 +80,6 @@ export default App;
 
 const styles = StyleSheet.create({
   loader: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
