@@ -3,7 +3,6 @@ import {View, StyleSheet} from 'react-native';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider as LanguageProvider} from 'context/reducer';
-
 import AppIndex from 'App';
 import {NetworkErrorScreen} from 'screens';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
@@ -14,6 +13,7 @@ import en from 'i18n/locales/en.json';
 import ar from 'i18n/locales/ar.json';
 import {readLanguage} from 'constants';
 import {UserProvider} from 'context/UserContext';
+import 'axiosConfig';
 
 const resources = {
   en: {
