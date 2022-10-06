@@ -36,7 +36,8 @@ const ProductCard = (props: IProductInterface) => {
       style={styles.container}>
       <ImageBackground
         source={{uri: `${BASE_URL}${ImageResponse?.Url}`}}
-        style={styles.Imagecontainer}>
+        style={styles.Imagecontainer}
+        resizeMode="cover">
         <View style={styles.topIconsContainer}>
           {SupportMultiWishlists && WishlistEnabled && (
             <FavoriteIcon stroke={colors.tabsColor} />
@@ -66,20 +67,24 @@ const ProductCard = (props: IProductInterface) => {
           variant="xSmallRegular"
           color={colors.tabsColor}
           numberOfLines={2}
-          style={{width: '80%'}}
+          style={styles.productName}
         />
         <View style={styles.priceContainer}>
-          {/* <Text
-            text={prevPrice}
-            variant="xSmallLight"
-            style={styles.prevPrice}
-            color={colors.grayMainBolder}
-          /> */}
+          {Price?.HasDiscount ? (
+            <Text
+              text={Price?.RegularPrice?.toString()}
+              variant="xSmallLight"
+              style={styles.prevPrice}
+              color={colors.grayMainBolder}
+              numberOfLines={1}
+            />
+          ) : (
+            <View style={{height: spacing.normal}} />
+          )}
           <Text
             text={Price?.Price}
             variant="smallBold"
             color={colors.orange}
-            style={{flex: 1, width: 16}}
             numberOfLines={1}
           />
           <Text
@@ -123,13 +128,13 @@ export default ProductCard;
 
 const styles = StyleSheet.create({
   container: {
-    width: 165,
     height: 268,
+    flex: 1,
     margin: 5,
+    width: 165,
   },
   Imagecontainer: {
-    width: 165,
-    height: 201,
+    flex: 1,
   },
   topIconsContainer: {
     position: 'absolute',
@@ -137,8 +142,8 @@ const styles = StyleSheet.create({
     top: spacing.medium + 2,
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: '90%',
-    alignSelf: 'center',
+    alignSelf: 'flex-start',
+    left: spacing.medium,
   },
   discountIcon: {
     backgroundColor: colors.orange,
@@ -161,10 +166,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  priceContainer: {},
+  priceContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
   prevPrice: {
     textDecorationLine: 'line-through',
     textDecorationStyle: 'solid',
+    lineHeight: spacing.normal,
   },
   currency: {
     textTransform: 'uppercase',
@@ -203,5 +212,8 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.tiny,
     borderRadius: 5,
     overflow: 'hidden',
+  },
+  productName: {
+    paddingRight: spacing.large,
   },
 });

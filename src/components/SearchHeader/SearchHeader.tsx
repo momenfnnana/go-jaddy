@@ -7,6 +7,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {CartIcon, FilterIcon} from 'assets/icons';
 import {SearchInput} from './components';
+import ArrowIcon from 'components/Arrow';
 
 const GO_BACK_SIZE = 36;
 const ICON_SIZE = 20;
@@ -29,14 +30,8 @@ const SearchHeader = ({
   return (
     <View style={[{paddingTop: top}, styles.container]}>
       <StatusBar barStyle="light-content" />
-      <Pressable
-        style={[styles.goBackContainer, {transform: [{rotate: '180deg'}]}]}
-        onPress={goBack}>
-        <FontAwesome
-          name="long-arrow-right"
-          size={ICON_SIZE}
-          color={colors.white}
-        />
+      <Pressable style={styles.goBackContainer} onPress={goBack}>
+        <ArrowIcon />
       </Pressable>
       <SearchInput
         autoFocus={autoFocus}

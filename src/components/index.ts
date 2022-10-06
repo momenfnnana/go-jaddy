@@ -8,3 +8,5 @@ export {default as SearchInput} from './SearchInput';
 export {ProductCard, RowProductCard} from './ProductCard';
 export {default as Loader} from './Loader';
 export {default as SearchHeader} from './SearchHeader';
+export {default as ShowSection} from './ShowSection';
+export {default as Modal} from './Modal';

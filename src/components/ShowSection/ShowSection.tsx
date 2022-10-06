@@ -66,7 +66,6 @@ const ShowSection = ({
         </View> */}
         <FlatList
           data={data}
-          pagingEnabled
           showsHorizontalScrollIndicator={false}
           style={{marginHorizontal: -15}}
           contentContainerStyle={{paddingHorizontal: 15}}

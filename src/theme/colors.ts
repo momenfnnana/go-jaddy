@@ -1,11 +1,14 @@
 const white = '#FFFFFF';
+const simiWhite = '#F3FBFF';
 const black = '#000000';
 const tabsColor = '#121212';
 const reloadColor = '#DEDEDE';
 const arrowColor = '#747474';
 const arrowBackgroundColor = '#0000000A';
+const arrowBackgroundColor2 = '#2929297F';
 const grayMain = '#C4C4C4';
 const grayMainBolder = '#C8C8C8';
+const inactiveStar = '#C7C7CC';
 
 const primaryPalette = {
   primary: '#0232EB', // Main
@@ -82,6 +85,7 @@ export type ColorStatus = keyof typeof statusPalette;
 
 export const colors = {
   white,
+  simiWhite,
   transparentWhite: 'rgba(255, 255, 255, 0.2)',
   transparent: 'rgba(0, 0, 0, 0)',
   backdrop: 'rgba(0, 0, 0, 0.4)',
@@ -108,9 +112,11 @@ export const colors = {
   reloadColor,
   arrowColor,
   arrowBackgroundColor,
+  arrowBackgroundColor2,
   black,
   grayMain,
   grayMainBolder,
+  inactiveStar,
 };
 
 export type ColorsTypes = keyof typeof colors;

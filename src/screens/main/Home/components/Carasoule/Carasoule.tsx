@@ -11,6 +11,7 @@ import {CarasouleOneIcon} from 'assets/icons';
 import {Text} from 'components';
 import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
+import {useLanguage} from 'hook/useLanguage';
 
 interface IIndicators {
   activeIndex: number;
@@ -24,6 +25,8 @@ interface ICarasoule {
 
 const Indicators = ({activeIndex, data}: IIndicators) => {
   const {height} = useWindowDimensions();
+  const {language} = useLanguage();
+
   return (
     <FlatList
       data={data}
@@ -31,6 +34,7 @@ const Indicators = ({activeIndex, data}: IIndicators) => {
       keyExtractor={(_, index) => index.toString()}
       style={[styles.indicatorsContainer, {maxHeight: height * 0.2}]}
       scrollEnabled={false}
+      inverted={language === 'ar'}
       renderItem={({index}) => {
         const itemWidth =
           activeIndex === index ? spacing.small * 3 : spacing.small;

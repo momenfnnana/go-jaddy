@@ -113,7 +113,7 @@ const Search = () => {
               <Ionicons
                 name="grid-outline"
                 size={18}
-                color={viewType === 'grid' ? colors.grayMain : colors.white}
+                color={viewType === 'grid' ? colors.white : colors.grayMain}
               />
             </Pressable>
           </View>
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.tiny,
     borderRadius: spacing.large,
     justifyContent: 'space-between',
-    flex: 0.3,
+    flex: 0.25,
   },
   viewIconContainer: {
     width: FILTER_ICON_SIZE,

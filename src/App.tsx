@@ -15,7 +15,13 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const {userData, setSettings} = useContext(UserContext);
-  const {data, isSuccess, isError, error} = useQuery(['settings'], getSettings);
+  const {
+    data,
+    isSuccess,
+    isError,
+    error,
+    isLoading: isLoadingSettings,
+  } = useQuery(['settings'], getSettings);
   const {data: currenciesData, isLoading: isLoadingCurrencies} = useQuery(
     ['currencies'],
     getCurrencies,
@@ -40,7 +46,16 @@ const App = () => {
     isSuccess && setSettings(data.data);
   }, [isSuccess]);
 
-  if (loading || isLoadingCurrencies) {
+  useEffect(() => {
+    if (currenciesData?.data?.Currencies?.length && data?.data) {
+      AsyncStorage.setItem(
+        'currency',
+        JSON.stringify(currenciesData?.data?.Currencies[0]),
+      );
+    }
+  }, [currenciesData, data?.data]);
+
+  if (loading || isLoadingCurrencies || isLoadingSettings) {
     return <Loader style={styles.loader} />;
   }
 

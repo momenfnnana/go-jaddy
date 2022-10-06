@@ -1,17 +1,6 @@
-import React from 'react';
-import {
-  View,
-  StyleSheet,
-  Image,
-  useWindowDimensions,
-  ImageBackground,
-  ImageBackgroundProps,
-  FlatList,
-  ScrollView,
-  ViewStyle,
-  Pressable,
-} from 'react-native';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet, Image, FlatList} from 'react-native';
+import {RouteProp, useRoute} from '@react-navigation/native';
 import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
@@ -23,8 +12,12 @@ import NetworkErrorScreen from 'screens/NetworkErrorScreen';
 import {getProductDetails} from 'services/Home';
 import {BASE_URL} from 'utils/Axios';
 import {colors, spacing} from 'theme';
-import {DiscountIcon} from 'assets/icons';
 import {useCurrency} from 'hook/useCurrency';
+import {ListFooterComponent, ListHeaderComponent} from './components';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {ShowSection} from '../Home/components';
+import axios from 'axios';
+import moment from 'moment';
 
 interface IProductNavigation
   extends NativeStackNavigationProp<HomeRoutes, 'ProductDetails'>,
@@ -32,7 +25,6 @@ interface IProductNavigation
 
 interface IProductDetails
   extends NativeStackScreenProps<HomeRoutes, 'ProductDetails'> {}
-import {HomeNavigationsType} from 'navigators/NavigationsTypes';
 
 interface IProductImages {
   id: number;
@@ -54,144 +46,130 @@ interface IProductImages {
   dimensions: string;
 }
 
-let IMAGE_CONTAINER = 57;
+let PageSize: number = 10;
 
 const ProductDetails = ({}: IProductDetails) => {
   const {params} = useRoute<IProductNavigation>();
-  const {navigate} = useNavigation<IProductNavigation>();
   const {Id} = params;
-  const {width, height} = useWindowDimensions();
+  const [selectedFilter, setSelectedFilter] = useState<any>();
+  const [Page, setPage] = useState<number>(1);
+  const [reviews, setReviews] = useState<any[]>();
+  const [hasNextPage, setHasNextPage] = useState<boolean>(true);
   const {
     isLoading,
     data: productData,
     isError,
     refetch,
+    isRefetching,
   } = useQuery(['getProductDetails'], () => getProductDetails(Id));
-  const {currency} = useCurrency();
 
-  if (isLoading) {
+  useEffect(() => {
+    const data = {
+      Page,
+      PageSize,
+      ProductId: Id,
+      Ratings: [],
+      WithImageOnly: selectedFilter === 'with-images',
+    };
+    (async () => {
+      await axios
+        .post(`${BASE_URL}/api/custom/products/ProductReviews`, data)
+        .then(res => {
+          setReviews(res.data);
+          if (Page < res?.ProductReviews?.TotalPages) {
+            setHasNextPage(false);
+          }
+        })
+        .catch(error => {
+          console.log({error});
+        });
+    })();
+  }, [Page]);
+
+  if (isLoading || isRefetching) {
     return <Loader containerStyle={styles.loaderStyle} />;
   }
 
   if (isError) {
     return <NetworkErrorScreen onPress={refetch} />;
   }
-  const imagesList: IProductImages[] =
-    productData.data?.Product?.MediaGalleryModel?.Files;
-  const ShowDiscountBadge: boolean =
-    productData.data?.Product?.ShowDiscountBadge;
-  const ProductPrice = productData.data?.Product?.ProductPrice;
-  const SavingPercent: number = ProductPrice?.SavingPercent;
-  const Price: string = ProductPrice?.Price;
-  const OldPrice: string = ProductPrice?.OldPrice;
-  const ShortDescription: string = productData.data?.Product?.ShortDescription;
-  const Name: string = productData.data?.Product?.Name;
-  const Brands: any[] = productData.data?.Product?.Brands;
-  const ShowSku: boolean = productData.data?.Product?.ShowSku;
-  const Sku: string = productData.data?.Product?.Sku;
 
-  const GalleryStartIndex: number =
-    productData.data?.Product?.MediaGalleryModel?.Files[
-      productData.data?.Product?.MediaGalleryModel?.GalleryStartIndex
-    ];
-  const Product = productData.data?.Product;
-  console.log({OldPrice: Product?.StoreImage?.Url});
+  const Product = productData?.data?.Product;
+  const RelatedProductsModel = Product?.RelatedProductsModel;
+  const AlsoPurchasedModel = Product?.AlsoPurchasedModel;
 
-  const mainImage: ImageBackgroundProps = {
-    flex: 0.5,
-  } as ViewStyle;
-
-  return (
-    <ScrollView contentContainerStyle={{flex: 1}}>
-      <ImageBackground
-        source={{uri: `${BASE_URL}${Product?.Images[0]?.Url}`}}
-        style={mainImage}>
-        <FlatList
-          data={imagesList}
-          keyExtractor={(_, index) => index.toString()}
-          style={styles.flatList}
-          renderItem={({item}) => {
-            return (
-              <View style={styles.imagesRowContainer}>
-                <Image
-                  source={{uri: `${BASE_URL}${item.url}`}}
-                  style={styles.imagesRow}
-                />
-              </View>
-            );
-          }}
-        />
-        {ShowDiscountBadge && (
-          <View style={styles.discountPercentageContainer}>
-            <DiscountIcon />
-            <Text
-              style={styles.discountPercentage}
-              color={colors.white}
-              text={`${SavingPercent}%`}
-            />
-          </View>
-        )}
-      </ImageBackground>
-      <View style={styles.contentContainer}>
-        <View style={[styles.row, styles.justifyBetween]}>
-          <Text
-            text={Product?.Name}
-            color={colors.tabsColor}
-            variant="largeBold"
-            numberOfLines={1}
+  const renderReviews = ({item}) => {
+    return (
+      <View style={[styles.reviewItem, styles.contentContainer]}>
+        <View style={[styles.row, {alignItems: 'flex-start'}]}>
+          <Image
+            source={{uri: `${BASE_URL}${item?.CustomerAvatar?.Url}`}}
+            style={styles.customerReviewAvatar}
           />
-          {Product?.StoreId !== 0 && (
-            <Pressable
-            // onPress={()=>navigate('')}
-            >
-              <Image
-                source={{uri: `${BASE_URL}${Product?.StoreImage?.Url}`}}
-                style={[styles.storeImage, styles.storeWidth]}
-              />
-            </Pressable>
-          )}
-        </View>
-        <View style={styles.row}>
-          {Product?.ShowSku && (
-            <Text color={colors.black} variant="mediumLight">
-              {Product?.Sku}
-            </Text>
-          )}
-        </View>
-        <View style={[styles.row, styles.justifyBetween]}>
-          <Text
-            text={Product?.ShortDescription}
-            color={colors.tabsColor}
-            variant="mediumRegular"
-          />
-          <View style={[styles.priceContainer, styles.storeWidth]}>
-            <Text
-              text={Product?.ProductPrice?.Price}
-              color={colors.orange}
-              variant="xLargeBold"
-              numberOfLines={1}
-            />
+          <View>
             <View style={styles.row}>
               <Text
-                text={Product?.ProductPrice?.OldPrice?.toString()}
-                color={colors.grayMain}
-                variant="mediumRegular"
-                style={styles.oldPrice}
-                numberOfLines={1}
+                tx={item?.CustomerName}
+                style={styles.customerName}
+                variant="smallLight"
+                color={colors.arrowBackgroundColor2}
               />
-              <Text text={currency?.Symbol} />
+              {[0, 1, 2, 3, 4].map((_, index) => {
+                return (
+                  <AntDesign
+                    name="star"
+                    color={
+                      index < item?.Rating ? colors.orange : colors.reloadColor
+                    }
+                    key={index}
+                  />
+                );
+              })}
+            </View>
+            <View style={styles.rateContent}>
+              <Text
+                tx={item?.ReviewText}
+                variant="smallRegular"
+                color={colors.tabsColor}
+              />
+              {item?.ReviewImage?.Url?.length && (
+                <Image
+                  source={{uri: `${BASE_URL}${item?.ReviewImage?.Url}`}}
+                  style={styles.reviewImage}
+                />
+              )}
+              <Text
+                tx={item?.WrittenOnStr}
+                variant="xSmallLight"
+                color={colors.arrowColor}
+                style={styles.reviewDate}
+              />
             </View>
           </View>
         </View>
-        <View style={styles.row}>
-          <Text
-            tx="product-details.select-color"
-            color={colors.tabsColor}
-            variant="mediumBold"
-          />
-        </View>
       </View>
-    </ScrollView>
+    );
+  };
+  return (
+    <FlatList
+      ListHeaderComponent={
+        <ListHeaderComponent
+          Product={Product}
+          Id={Id}
+          selectedFilter={selectedFilter}
+          setSelectedFilter={setSelectedFilter}
+        />
+      }
+      data={reviews?.ProductReviews?.Items}
+      keyExtractor={(_, index) => index.toString}
+      renderItem={renderReviews}
+      ListFooterComponent={
+        <ListFooterComponent
+          AlsoPurchasedModel={AlsoPurchasedModel}
+          RelatedProductsModel={RelatedProductsModel}
+        />
+      }
+    />
   );
 };
 
@@ -207,57 +185,32 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  flatList: {
-    position: 'absolute',
-    bottom: 16,
-    backgroundColor: 'red',
-    marginLeft: 72,
-  },
-  imagesRowContainer: {
-    width: IMAGE_CONTAINER,
-    height: IMAGE_CONTAINER,
-    borderWidth: 2,
-    borderColor: colors.orange,
-    padding: 1,
-  },
-  imagesRow: {
-    width: '100%',
-    height: '100%',
-  },
-  discountPercentageContainer: {
-    backgroundColor: colors.orangeDark,
-    width: 38,
-    height: 49,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: spacing.tiny + 1,
-    position: 'absolute',
-    bottom: -spacing.medium,
-    left: spacing.normal - 1,
-  },
-  discountPercentage: {},
-  storeImage: {
-    height: 41,
-    resizeMode: 'contain',
-  },
-  oldPrice: {
-    textDecorationLine: 'line-through',
-    textDecorationStyle: 'solid',
-    marginHorizontal: spacing.tiny,
-  },
   contentContainer: {
-    flex: 0.5,
+    flex: 1,
     paddingHorizontal: spacing.normal,
     marginTop: spacing.normal,
   },
-  priceContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+  reviewItem: {
+    marginTop: spacing.medium,
   },
-  justifyBetween: {
-    justifyContent: 'space-between',
+  customerReviewAvatar: {
+    height: 51,
+    width: 51,
+    borderRadius: 51 * 0.5,
+    marginRight: spacing.smaller,
   },
-  storeWidth: {
-    width: 50,
+  customerName: {
+    marginHorizontal: spacing.smaller,
+  },
+  rateContent: {
+    marginHorizontal: spacing.smaller,
+  },
+  reviewDate: {
+    marginTop: spacing.tiny,
+  },
+  reviewImage: {
+    height: 77,
+    width: 75,
+    marginVertical: spacing.medium,
   },
 });

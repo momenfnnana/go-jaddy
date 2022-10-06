@@ -1,10 +1,5 @@
 import React, {useCallback} from 'react';
-import {
-  CartScreen,
-  CategoriesScreen,
-  ProfileScreen,
-  StoresScreen,
-} from 'screens';
+import {CartScreen, ProfileScreen, StoresScreen} from 'screens';
 import {BottomTabsRoutes} from './RoutesTypes';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
@@ -14,9 +9,8 @@ import {
   ProfileIcon,
   StoresIcon,
 } from 'assets/icons';
-import {useNavigationOptions} from './NavigationOptions';
-import {colors} from 'theme';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useTranslation} from 'react-i18next';
+import {colors, font} from 'theme';
 import HomeStack from './HomeStack';
 import CategoriesStack from './CategoryStack';
 
@@ -25,9 +19,7 @@ interface IUser {
 }
 const Tab = createBottomTabNavigator<BottomTabsRoutes>();
 const BottomTabs = () => {
-  const {headerOptions} = useNavigationOptions();
-  const {bottom} = useSafeAreaInsets();
-
+  const {t} = useTranslation();
   const user: IUser = {
     id: '1',
   };
@@ -42,6 +34,7 @@ const BottomTabs = () => {
         tabBarActiveTintColor: colors.danger,
         tabBarInactiveTintColor: colors.gray[800],
         tabBarHideOnKeyboard: true,
+        tabBarLabelStyle: {fontFamily: font.regular},
       })}>
       <Tab.Screen
         name="Home"
@@ -51,6 +44,7 @@ const BottomTabs = () => {
             <HomeIcon stroke={getColor(focused)} fill={getColor(focused)} />
           ),
           headerShown: false,
+          title: t('screens-tabs.home'),
         }}
       />
       <Tab.Screen
@@ -61,6 +55,7 @@ const BottomTabs = () => {
             <CategoriesIcon stroke={getColor(focused)} />
           ),
           headerShown: false,
+          title: t('screens-tabs.categories'),
         }}
       />
       <Tab.Screen
@@ -68,6 +63,7 @@ const BottomTabs = () => {
         name="Stores"
         options={{
           tabBarIcon: ({focused}) => <StoresIcon stroke={getColor(focused)} />,
+          title: t('screens-tabs.stores'),
         }}
       />
       <Tab.Screen
@@ -75,6 +71,7 @@ const BottomTabs = () => {
         name="Cart"
         options={{
           tabBarIcon: ({focused}) => <CartIcon stroke={getColor(focused)} />,
+          title: t('screens-tabs.cart'),
         }}
       />
       <Tab.Screen
@@ -82,6 +79,7 @@ const BottomTabs = () => {
         name="Profile"
         options={{
           tabBarIcon: ({focused}) => <ProfileIcon stroke={getColor(focused)} />,
+          title: t('screens-tabs.profile'),
         }}
         initialParams={{userId: user.id}}
       />

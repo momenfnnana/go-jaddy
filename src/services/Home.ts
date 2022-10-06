@@ -5,6 +5,13 @@ interface IgetSearchResults {
   searchText: string;
   CurrencyId: string;
 }
+interface IgetReviews {
+  ProductId: number | string;
+  PageSize: number | string;
+  Page: number | string;
+  WithImageOnly: boolean;
+  Ratings?: number | string[];
+}
 export const getStores = () =>
   axios(`${BASE_URL}/api/custom/stores/HomeStores`);
 
@@ -16,6 +23,18 @@ export const getRecentAdded = () =>
 
 export const getProductDetails = (id: number) =>
   axios(`${BASE_URL}/api/custom/products/ProductDetails?productId=${id}`);
+
+export const getReviews = (data: IgetReviews) =>
+  axios.post(`${BASE_URL}/api/custom/products/ProductReviews`, data);
+
+export const getWishlists = () =>
+  axios(`${BASE_URL}/api/custom/customer/Wishlists`);
+
+export const postCreateWishlist = (name: string) =>
+  axios.post(`${BASE_URL}/api/custom/wishlist/CreateWishlist?name=${name}`);
+
+export const subscribeProduct = (id: number) =>
+  axios.post(`${BASE_URL}/api/custom/products/BackInStockSubscribe?id=${id}`);
 
 export const getAdvertisements = () =>
   axios(

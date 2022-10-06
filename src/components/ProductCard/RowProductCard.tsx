@@ -72,12 +72,14 @@ const RowProductCard = (props: IProductInterface) => {
         </View>
       </View>
       <View style={styles.priceContainer}>
-        <Text
-          text={Price?.RegularPrice}
-          variant="xSmallLight"
-          style={styles.prevPrice}
-          color={colors.grayMainBolder}
-        />
+        {Price?.HasDiscount && (
+          <Text
+            text={Price?.RegularPrice}
+            variant="xSmallLight"
+            style={styles.prevPrice}
+            color={colors.grayMainBolder}
+          />
+        )}
         <Text
           text={Price?.Price}
           variant="mediumBold"

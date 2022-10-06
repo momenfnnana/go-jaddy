@@ -1,11 +1,15 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, TextInput, ViewStyle, Pressable} from 'react-native';
-import {colors, spacing} from 'theme';
+import {
+  StyleSheet,
+  TextInput,
+  ViewStyle,
+  Pressable,
+  Platform,
+} from 'react-native';
+import {colors, font, spacing} from 'theme';
 import {t} from 'i18next';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {HomeRoutes} from 'navigators/RoutesTypes';
 import {HomeNavigationsType} from 'navigators/NavigationsTypes';
 
 interface ISearchInput {
@@ -31,6 +35,7 @@ const SearchInput = ({containerStyle}: ISearchInput) => {
         onChangeText={setSearchInput}
         editable={false}
         onPressIn={onPressIn}
+        style={styles.input}
       />
     </Pressable>
   );
@@ -43,11 +48,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingVertical: spacing.medium,
+    paddingVertical: Platform.OS === 'ios' ? spacing.medium : spacing.tiny,
     borderRadius: spacing.small + 2,
     paddingHorizontal: spacing.medium,
   },
   searchIcon: {
     marginRight: spacing.small + 1,
+  },
+  input: {
+    flex: 1,
+    fontFamily: font.regular,
   },
 });

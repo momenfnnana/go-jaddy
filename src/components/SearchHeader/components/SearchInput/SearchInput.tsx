@@ -8,7 +8,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {colors, spacing} from 'theme';
+import {colors, font, spacing} from 'theme';
 import Text from 'components/Text';
 
 interface ISearchInput extends TextInputProps {
@@ -63,7 +63,9 @@ const SearchInput = ({
 
 export default SearchInput;
 const styles = StyleSheet.create({
-  textInput: {},
+  textInput: {
+    fontFamily: font.regular,
+  },
   containerStyle: {
     borderColor: colors.reloadColor,
     borderWidth: 1,

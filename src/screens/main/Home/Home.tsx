@@ -8,15 +8,12 @@ import {
   RefreshControl,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {
-  NativeStackNavigationProp,
-  NativeStackScreenProps,
-} from '@react-navigation/native-stack';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useTranslation} from 'react-i18next';
 import {BottomTabsRoutes} from 'navigators/RoutesTypes';
-import {MainHeader, SearchInput, Loader} from 'components';
+import {MainHeader, SearchInput, Loader, ShowSection} from 'components';
 import {spacing} from 'theme';
-import {Carasoule, ShowSection} from './components';
+import {Carasoule} from './components';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CategoriesCarasoule from './components/CategoriesCarasoule';
 import {useQuery} from '@tanstack/react-query';
@@ -34,7 +31,6 @@ import {HomeNavigationsType} from 'navigators/NavigationsTypes';
 interface IHome extends NativeStackScreenProps<BottomTabsRoutes, 'Home'> {}
 
 const Home = (props: IHome) => {
-  const navigation = useNavigation<HomeNavigationsType>();
   const {t} = useTranslation();
   const {top} = useSafeAreaInsets();
 
