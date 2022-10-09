@@ -193,9 +193,9 @@ const ListHeaderComponent = ({
   //     onBackdropPress();
   //   }
   // }, [isLoadingAddToWishlist, isSuccessAddToWishlist]);
-  if (isLoadingWishlists || isRefetchingWishlists) {
-    return <Loader size={'small'} style={styles.collectionsLoader} />;
-  }
+  // if (isLoadingWishlists || isRefetchingWishlists) {
+  //   return <Loader size={'small'} style={styles.collectionsLoader} />;
+  // }
   const mainImage = {
     height: height * 0.5,
   } as ViewStyle;

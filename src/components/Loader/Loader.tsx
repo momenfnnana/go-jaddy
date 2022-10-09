@@ -8,10 +8,21 @@ import {
 
 interface ILoader extends ActivityIndicatorProps {
   containerStyle?: ViewStyle;
+  isPageLoading?: boolean;
 }
-const Loader = ({size, containerStyle, ...rest}: ILoader) => {
+const Loader = ({
+  size,
+  containerStyle,
+  isPageLoading = false,
+  ...rest
+}: ILoader) => {
   return (
-    <View style={containerStyle}>
+    <View
+      style={
+        isPageLoading
+          ? {flex: 1, justifyContent: 'center', alignItems: 'center'}
+          : containerStyle
+      }>
       <ActivityIndicator size={size || 'large'} {...rest} />
     </View>
   );

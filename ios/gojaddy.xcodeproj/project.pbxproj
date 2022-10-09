@@ -12,11 +12,8 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		38C0BD3EF5B9472694061E3B /* Almarai-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97EE735676CF4F6DB9B99B59 /* Almarai-ExtraBold.ttf */; };
 		7699B88040F8A987B510C191 /* libPods-gojaddy-gojaddyTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-gojaddy-gojaddyTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		8D791C62F2C04C538EA9A55C /* Almarai-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E426E50D7F354130AA29971F /* Almarai-Regular.ttf */; };
-		8F13CAF277C44C999017AEA0 /* Almarai-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9BA7FC25903B43FA865B703E /* Almarai-Light.ttf */; };
 		AF990F0028DA2578005630CC /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF990EF028DA2578005630CC /* Fontisto.ttf */; };
 		AF990F0128DA2578005630CC /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF990EF128DA2578005630CC /* Octicons.ttf */; };
 		AF990F0228DA2578005630CC /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF990EF228DA2578005630CC /* Feather.ttf */; };
@@ -33,7 +30,10 @@
 		AF990F0D28DA2578005630CC /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF990EFD28DA2578005630CC /* EvilIcons.ttf */; };
 		AF990F0E28DA2578005630CC /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF990EFE28DA2578005630CC /* SimpleLineIcons.ttf */; };
 		AF990F0F28DA2578005630CC /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF990EFF28DA2578005630CC /* MaterialIcons.ttf */; };
-		F92A85D3145F486691E39066 /* Almarai-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BD7F25DA4B5C41D287705895 /* Almarai-Bold.ttf */; };
+		E2048F5928EF5AED0075B8EA /* almarai_extra_bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2048F5528EF5AED0075B8EA /* almarai_extra_bold.ttf */; };
+		E2048F5A28EF5AED0075B8EA /* almarai_light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2048F5628EF5AED0075B8EA /* almarai_light.ttf */; };
+		E2048F5B28EF5AED0075B8EA /* almarai_bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2048F5728EF5AED0075B8EA /* almarai_bold.ttf */; };
+		E2048F5C28EF5AED0075B8EA /* almarai_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2048F5828EF5AED0075B8EA /* almarai_regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,8 +63,6 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-gojaddy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-gojaddy.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = gojaddy/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-gojaddy-gojaddyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-gojaddy-gojaddyTests.release.xcconfig"; path = "Target Support Files/Pods-gojaddy-gojaddyTests/Pods-gojaddy-gojaddyTests.release.xcconfig"; sourceTree = "<group>"; };
-		97EE735676CF4F6DB9B99B59 /* Almarai-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Almarai-ExtraBold.ttf"; path = "../src/assets/fonts/Almarai-ExtraBold.ttf"; sourceTree = "<group>"; };
-		9BA7FC25903B43FA865B703E /* Almarai-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Almarai-Light.ttf"; path = "../src/assets/fonts/Almarai-Light.ttf"; sourceTree = "<group>"; };
 		AF990EF028DA2578005630CC /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
 		AF990EF128DA2578005630CC /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
 		AF990EF228DA2578005630CC /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Feather.ttf; sourceTree = "<group>"; };
@@ -81,8 +79,14 @@
 		AF990EFD28DA2578005630CC /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
 		AF990EFE28DA2578005630CC /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		AF990EFF28DA2578005630CC /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
-		BD7F25DA4B5C41D287705895 /* Almarai-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Almarai-Bold.ttf"; path = "../src/assets/fonts/Almarai-Bold.ttf"; sourceTree = "<group>"; };
-		E426E50D7F354130AA29971F /* Almarai-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Almarai-Regular.ttf"; path = "../src/assets/fonts/Almarai-Regular.ttf"; sourceTree = "<group>"; };
+		E2048F5528EF5AED0075B8EA /* almarai_extra_bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = almarai_extra_bold.ttf; path = ../src/assets/fonts/almarai_extra_bold.ttf; sourceTree = "<group>"; };
+		E2048F5628EF5AED0075B8EA /* almarai_light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = almarai_light.ttf; path = ../src/assets/fonts/almarai_light.ttf; sourceTree = "<group>"; };
+		E2048F5728EF5AED0075B8EA /* almarai_bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = almarai_bold.ttf; path = ../src/assets/fonts/almarai_bold.ttf; sourceTree = "<group>"; };
+		E2048F5828EF5AED0075B8EA /* almarai_regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = almarai_regular.ttf; path = ../src/assets/fonts/almarai_regular.ttf; sourceTree = "<group>"; };
+		E2048F5D28EF5B7E0075B8EA /* almarai_bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = almarai_bold.ttf; path = ../src/assets/fonts/almarai_bold.ttf; sourceTree = "<group>"; };
+		E2048F5E28EF5B7E0075B8EA /* almarai_light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = almarai_light.ttf; path = ../src/assets/fonts/almarai_light.ttf; sourceTree = "<group>"; };
+		E2048F5F28EF5B7E0075B8EA /* almarai_regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = almarai_regular.ttf; path = ../src/assets/fonts/almarai_regular.ttf; sourceTree = "<group>"; };
+		E2048F6028EF5B7E0075B8EA /* almarai_extra_bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = almarai_extra_bold.ttf; path = ../src/assets/fonts/almarai_extra_bold.ttf; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -150,10 +154,10 @@
 		3C11503C094B46F0AABDA38F /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				BD7F25DA4B5C41D287705895 /* Almarai-Bold.ttf */,
-				97EE735676CF4F6DB9B99B59 /* Almarai-ExtraBold.ttf */,
-				9BA7FC25903B43FA865B703E /* Almarai-Light.ttf */,
-				E426E50D7F354130AA29971F /* Almarai-Regular.ttf */,
+				E2048F5728EF5AED0075B8EA /* almarai_bold.ttf */,
+				E2048F5528EF5AED0075B8EA /* almarai_extra_bold.ttf */,
+				E2048F5628EF5AED0075B8EA /* almarai_light.ttf */,
+				E2048F5828EF5AED0075B8EA /* almarai_regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -168,6 +172,10 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				E2048F5D28EF5B7E0075B8EA /* almarai_bold.ttf */,
+				E2048F6028EF5B7E0075B8EA /* almarai_extra_bold.ttf */,
+				E2048F5E28EF5B7E0075B8EA /* almarai_light.ttf */,
+				E2048F5F28EF5B7E0075B8EA /* almarai_regular.ttf */,
 				13B07FAE1A68108700A75B9A /* gojaddy */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* gojaddyTests */,
@@ -319,6 +327,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2048F5B28EF5AED0075B8EA /* almarai_bold.ttf in Resources */,
+				E2048F5A28EF5AED0075B8EA /* almarai_light.ttf in Resources */,
+				E2048F5C28EF5AED0075B8EA /* almarai_regular.ttf in Resources */,
+				E2048F5928EF5AED0075B8EA /* almarai_extra_bold.ttf in Resources */,
 				AF990F0628DA2578005630CC /* AntDesign.ttf in Resources */,
 				AF990F0728DA2578005630CC /* Foundation.ttf in Resources */,
 				AF990F0C28DA2578005630CC /* Zocial.ttf in Resources */,
@@ -330,13 +342,9 @@
 				AF990F0B28DA2578005630CC /* FontAwesome.ttf in Resources */,
 				AF990F0828DA2578005630CC /* Ionicons.ttf in Resources */,
 				AF990F0328DA2578005630CC /* Entypo.ttf in Resources */,
-				F92A85D3145F486691E39066 /* Almarai-Bold.ttf in Resources */,
 				AF990F0428DA2578005630CC /* FontAwesome5_Brands.ttf in Resources */,
 				AF990F0928DA2578005630CC /* FontAwesome5_Solid.ttf in Resources */,
-				38C0BD3EF5B9472694061E3B /* Almarai-ExtraBold.ttf in Resources */,
 				AF990F0D28DA2578005630CC /* EvilIcons.ttf in Resources */,
-				8F13CAF277C44C999017AEA0 /* Almarai-Light.ttf in Resources */,
-				8D791C62F2C04C538EA9A55C /* Almarai-Regular.ttf in Resources */,
 				AF990F0028DA2578005630CC /* Fontisto.ttf in Resources */,
 				AF990F0528DA2578005630CC /* MaterialCommunityIcons.ttf in Resources */,
 				AF990F0A28DA2578005630CC /* FontAwesome5_Regular.ttf in Resources */,

@@ -19,6 +19,9 @@ interface CategoryParams {
   title: string;
   id: number;
 }
+interface StoreParams {
+  storeId: number;
+}
 
 export type CategotyRoutes = {
   Categories: undefined;
@@ -27,7 +30,7 @@ export type CategotyRoutes = {
 
 export type StoresRoutes = {
   Stores: undefined;
-  Storess?: undefined;
+  StoresDetails?: StoreParams;
 };
 
 export type AuthRoutes = {

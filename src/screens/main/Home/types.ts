@@ -1,5 +1,9 @@
 import {ReactNode} from 'react';
-import {ImageBackgroundProps, ImageSourcePropType} from 'react-native';
+import {
+  ImageBackgroundProps,
+  ImageSourcePropType,
+  ViewStyle,
+} from 'react-native';
 
 export interface ICategories {
   imageUrl: ImageSourcePropType;
@@ -27,6 +31,13 @@ export interface IProductInterface {
   CategoryName: string;
   SupportMultiWishlists: string;
   WishlistEnabled: boolean;
+  styleContainer: ViewStyle;
+}
+
+export interface ISearchInterface {
+  categoryId?: number;
+  title?: string;
+  paramsType?: string;
 }
 
 export interface ISearchInterface {

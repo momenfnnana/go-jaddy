@@ -119,6 +119,19 @@
     "allStores": "All Stores",
     "FollowedStores": "Followed Stores"
   },
+  "storeDetails": {
+    "search": "Search in",
+    "rating": "Ratings",
+    "follow": "Follow",
+    "followed": "Followed",
+    "tabs": {
+      "mainTab": "Main",
+      "newTab": "New",
+      "offerTab": "Offers",
+      "categoriesTab": "categories"
+    }
+  },
+
   "api": {
     "account": {
       "login": {
