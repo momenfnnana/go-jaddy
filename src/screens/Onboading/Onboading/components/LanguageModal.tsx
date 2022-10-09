@@ -48,6 +48,8 @@ const LanguageModal: React.FC<ILanguageModalProps> = ({
       }
     }
   };
+  console.log({language});
+  
   return (
     <>
       {visibleLangModal && (

@@ -1,3 +1,4 @@
+import React, {ReactNode, useEffect, useState} from 'react';
 import {
   FlatList,
   Pressable,
@@ -7,7 +8,6 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import React, {useEffect} from 'react';
 import {colors, spacing} from 'theme';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {Button, InputField, Text, Loader} from 'components';
@@ -23,7 +23,9 @@ import {AuthNavigationsType} from 'navigators/NavigationsTypes';
 import RNModal from 'react-native-modal';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {postCreateWishlist} from 'services/Home';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+import {postAddToWishlist, postCreateWishlist} from 'services/Home';
+import {BASE_URL} from 'utils/Axios';
 
 interface IResetPasswordModalProps {
   style?: ViewStyle;
@@ -33,23 +35,19 @@ interface IResetPasswordModalProps {
   data: any[];
   isVisible: boolean;
   onBackdropPress: () => void;
+  forceRefetch?: () => void;
   isLoading: boolean;
+  ProductId: number | string;
+  title: string;
+  description: string;
+  children: ReactNode;
 }
 
-interface IinitialValues {
-  email: string;
-}
+
 const ICON_WIDTH = 30;
 const SIZE = 18;
 
-const initialValues: IinitialValues = {
-  email: '',
-};
-const loginSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('must be valid email address')
-    .required('email is required'),
-});
+
 const Modal: React.FC<IResetPasswordModalProps> = ({
   visibleResetPasswordModal,
   setvisibleResetPasswordModal,
@@ -58,39 +56,21 @@ const Modal: React.FC<IResetPasswordModalProps> = ({
   isVisible,
   onBackdropPress,
   isLoading,
+  forceRefetch,
+  ProductId,
+  title,
+  description,
+  children,
 }) => {
   const {height, width} = useWindowDimensions();
   const {bottom} = useSafeAreaInsets();
 
-  const {
-    mutate,
-    isLoading: isLoadingCreateWishList,
-    isError,
-    error,
-    isSuccess,
-    data: newWishlistData,
-  } = useMutation(postCreateWishlist, {
-    onSuccess: data => {
-      return data;
-    },
-    onError: error => {
-      return error;
-    },
-  });
-
-  const addCollectionHandler = () => {
-    mutate('asasd');
-  };
-
-  if (isLoading === true) {
-    return <Loader size={'small'} style={styles.loader} />;
-  }
   return (
     <RNModal isVisible={isVisible} onBackdropPress={onBackdropPress}>
       <View
         style={[
           styles.container,
-          {height: height * 0.5, width, bottom: -bottom},
+          {height: height * 0.5, width, bottom: -bottom, paddingBottom: bottom},
         ]}>
         <View style={styles.contentConteiner}>
           <AntDesign
@@ -100,80 +80,15 @@ const Modal: React.FC<IResetPasswordModalProps> = ({
             style={styles.closeBtn}
             onPress={onBackdropPress}
           />
+          <Text tx={title} variant="mediumBold" color={colors.tabsColor} />
           <Text
-            tx="whishlist.add"
-            variant="mediumBold"
-            color={colors.tabsColor}
-          />
-          <Text
-            tx="whishlist.add-hint"
+            tx={description}
             variant="smallRegular"
             color={colors.tabsColor + 70}
             style={styles.titleHint}
           />
         </View>
-        {data?.length > 0 ? (
-          <FlatList
-            data={data}
-            keyExtractor={(_, index) => index.toString()}
-            ListHeaderComponent={
-              <Pressable
-                onPress={addCollectionHandler}
-                style={[styles.addCollectionBtnContainer, styles.row]}
-                disabled={isLoadingCreateWishList}>
-                <View style={styles.addCollectionBtn}>
-                  {isLoadingCreateWishList ? (
-                    <Loader size={'small'} color={colors.white} />
-                  ) : (
-                    <AntDesign name="plus" color={colors.white} size={25} />
-                  )}
-                </View>
-                <Text
-                  tx="whishlist.add-collection"
-                  variant="mediumBold"
-                  color={colors.primary}
-                  style={styles.collectionName}
-                />
-              </Pressable>
-            }
-            renderItem={() => (
-              <Pressable style={[styles.addCollectionBtnContainer, styles.row]}>
-                <View style={styles.addCollectionBtn}>
-                  {isLoadingCreateWishList ? (
-                    <Loader size={'small'} color={colors.white} />
-                  ) : (
-                    <AntDesign name="plus" color={colors.white} size={25} />
-                  )}
-                </View>
-                <Text
-                  tx="whishlist.add-collection"
-                  variant="mediumBold"
-                  color={colors.primary}
-                  style={styles.collectionName}
-                />
-              </Pressable>
-            )}
-          />
-        ) : (
-          <Pressable
-            onPress={addCollectionHandler}
-            style={[styles.addCollectionBtnContainer, styles.row]}
-            disabled={isLoadingCreateWishList}>
-            <View style={styles.addCollectionBtn}>
-              {isLoadingCreateWishList ? (
-                <Loader size={'small'} color={colors.white} />
-              ) : (
-                <AntDesign name="plus" color={colors.white} size={25} />
-              )}
-            </View>
-            <Text
-              tx="whishlist.add-collection"
-              variant="mediumBold"
-              color={colors.primary}
-              style={styles.collectionName}
-            />
-          </Pressable>
-        )}
+        {children}
       </View>
     </RNModal>
   );
@@ -190,7 +105,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     position: 'absolute',
     alignSelf: 'center',
-    bottom: 0,
     borderRadius: spacing.small,
   },
   contentConteiner: {
@@ -208,24 +122,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: spacing.large,
   },
-  addCollectionBtnContainer: {
-    paddingHorizontal: spacing.xxxLarge,
-    marginTop: spacing.normal,
-  },
-  addCollectionBtn: {
-    backgroundColor: colors.primary,
-    borderRadius: spacing.medium - 2,
-    height: 43,
-    width: 43,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  collectionName: {
-    marginHorizontal: spacing.normal,
-  },
   loader: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  addCollectionInput: {
+    height: spacing.huge,
   },
 });

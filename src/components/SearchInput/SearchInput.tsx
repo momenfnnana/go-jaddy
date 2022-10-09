@@ -23,7 +23,6 @@ const SearchInput = ({containerStyle}: ISearchInput) => {
   const onPressIn = () => {
     navigate('SearchScreen');
   };
-  console.log({language});
 
   return (
     <Pressable onPressIn={onPressIn} style={[styles.container, containerStyle]}>

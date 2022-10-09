@@ -33,6 +33,9 @@ export const getWishlists = () =>
 export const postCreateWishlist = (name: string) =>
   axios.post(`${BASE_URL}/api/custom/wishlist/CreateWishlist?name=${name}`);
 
+export const postAddToWishlist = (data: any) =>
+  axios.post(`${BASE_URL}/api/custom/wishlist/AddToWishlist`, data);
+
 export const subscribeProduct = (id: number) =>
   axios.post(`${BASE_URL}/api/custom/products/BackInStockSubscribe?id=${id}`);
 

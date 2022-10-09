@@ -1,5 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Image, FlatList} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Image,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {
   NativeStackNavigationProp,
@@ -51,7 +58,7 @@ let PageSize: number = 10;
 const ProductDetails = ({}: IProductDetails) => {
   const {params} = useRoute<IProductNavigation>();
   const {Id} = params;
-  const [selectedFilter, setSelectedFilter] = useState<any>();
+  const [selectedFilter, setSelectedFilter] = useState<string[]>([]);
   const [Page, setPage] = useState<number>(1);
   const [reviews, setReviews] = useState<any[]>();
   const [hasNextPage, setHasNextPage] = useState<boolean>(true);
@@ -69,7 +76,7 @@ const ProductDetails = ({}: IProductDetails) => {
       PageSize,
       ProductId: Id,
       Ratings: [],
-      WithImageOnly: selectedFilter === 'with-images',
+      WithImageOnly: selectedFilter?.includes('with-images'),
     };
     (async () => {
       await axios
@@ -150,26 +157,31 @@ const ProductDetails = ({}: IProductDetails) => {
       </View>
     );
   };
+
   return (
-    <FlatList
-      ListHeaderComponent={
-        <ListHeaderComponent
-          Product={Product}
-          Id={Id}
-          selectedFilter={selectedFilter}
-          setSelectedFilter={setSelectedFilter}
-        />
-      }
-      data={reviews?.ProductReviews?.Items}
-      keyExtractor={(_, index) => index.toString}
-      renderItem={renderReviews}
-      ListFooterComponent={
-        <ListFooterComponent
-          AlsoPurchasedModel={AlsoPurchasedModel}
-          RelatedProductsModel={RelatedProductsModel}
-        />
-      }
-    />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <FlatList
+        ListHeaderComponent={
+          <ListHeaderComponent
+            Product={Product}
+            ProductId={Id}
+            selectedFilter={selectedFilter}
+            setSelectedFilter={setSelectedFilter}
+          />
+        }
+        data={reviews?.ProductReviews?.Items}
+        keyExtractor={(_, index) => index.toString}
+        renderItem={renderReviews}
+        ListFooterComponent={
+          <ListFooterComponent
+            AlsoPurchasedModel={AlsoPurchasedModel}
+            RelatedProductsModel={RelatedProductsModel}
+            ProductId={Id}
+          />
+        }
+      />
+    </KeyboardAvoidingView>
   );
 };
 

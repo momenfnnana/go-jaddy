@@ -11,6 +11,7 @@ import {
 import data from '../data/data';
 import {ISliderDataSource} from '../helpers/types';
 import * as RNLocalize from 'react-native-localize';
+import {useLanguage} from 'hook/useLanguage';
 
 interface ISliderListProps {
   style?: ViewStyle;
@@ -32,8 +33,9 @@ const Slider: React.FC<{style?: ViewStyle; children?: React.ReactNode}> = ({
   const scrollX = useRef(new Animated.Value(0)).current;
   const flatRef = useRef(null);
   const {width} = useWindowDimensions();
+  const {language: Language} = useLanguage();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [language, setLanguage] = useState(localLanguage);
+  const [language, setLanguage] = useState(Language || localLanguage);
   const [visibleLangModal, setVisibleLangModal] = useState(false);
 
   const childrenWithProps = React.Children.map(
