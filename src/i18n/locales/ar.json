@@ -71,7 +71,8 @@
     "with-images": "مع صور",
     "related": "متعلقة",
     "products": "منتجات",
-    "you-may-like": "قد تعجبك"
+    "you-may-like": "قد تعجبك",
+    "rate-product": "تقييم المنتج"
   },
   "category": {
     "title": "التصنيفات"
@@ -79,7 +80,8 @@
   "whishlist": {
     "add": "أضف العنصر للمفضلة",
     "add-hint": "اختر الكوليكشن الذي تريد إضافة المنتج عليه، يمكنك انشاء كوليشن جديد",
-    "add-collection": "إضافة كوليكشن جديد"
+    "add-collection": "إضافة كوليكشن جديد",
+    "collection-name": "اسم القائمة"
   },
   "api": {
     "account": {
