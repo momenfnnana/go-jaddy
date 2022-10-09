@@ -176,10 +176,18 @@ const Search = () => {
             }
             keyExtractor={item => item?.Id}
             contentContainerStyle={{
-              paddingHorizontal: spacing.medium - 2,
+              paddingTop: spacing.large,
+              paddingHorizontal: spacing.content,
             }}
             numColumns={2}
-            renderItem={({item}) => <ProductCard {...item} />}
+            renderItem={({item, index}) => (
+              <ProductCard
+                styleContainer={{
+                  marginRight: index % 2 == 0 ? 10 : 0,
+                }}
+                {...item}
+              />
+            )}
           />
         ) : (
           <FlatList

@@ -16,10 +16,11 @@ import {CategoryNavigationsType, IStores} from 'navigators/NavigationsTypes';
 import {ActivityIndicator} from 'react-native-paper';
 import {getAllStores} from 'services/Stores';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import StoreDetails from '../StoreDetails/StoreDetails';
 
 const Stores = (props: IStores) => {
   const {width} = useWindowDimensions();
-  const {push} = useNavigation<IStores>();
+  const {navigate} = useNavigation<IStores>();
   const [typeStores, setTypeStores] = useState('all');
   const {
     data,
@@ -142,7 +143,7 @@ const Stores = (props: IStores) => {
           return (
             <Pressable
               onPress={() => {
-                // push('CategoryDetails', {title: item.Name, id: item.Id});
+                navigate('StoresDetails', {storeId: item?.Id});
               }}
               disabled={isLoading}
               key={Math.random() * 8}

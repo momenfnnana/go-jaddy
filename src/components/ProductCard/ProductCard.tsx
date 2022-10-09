@@ -9,7 +9,13 @@ import {useCurrency} from 'hook/useCurrency';
 import {HomeNavigationsType} from 'navigators/NavigationsTypes';
 import {HomeRoutes} from 'navigators/RoutesTypes';
 import React from 'react';
-import {View, ImageBackground, StyleSheet, Pressable} from 'react-native';
+import {
+  View,
+  ImageBackground,
+  StyleSheet,
+  Pressable,
+  useWindowDimensions,
+} from 'react-native';
 import {IProductInterface} from 'screens/main/Home/types';
 import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
@@ -27,16 +33,17 @@ const ProductCard = (props: IProductInterface) => {
     CategoryName,
     SupportMultiWishlists,
     WishlistEnabled,
+    styleContainer,
   } = props;
   const {currency} = useCurrency();
   const {navigate} = useNavigation<HomeNavigationsType>();
   const DiscountBadge = Badges.find(item => item?.Style === 5);
   const isNewBadge = Badges.find(item => item?.Style === 2);
-
+  const {width} = useWindowDimensions();
   return (
     <Pressable
       onPress={() => navigate('ProductDetails', {...props})}
-      style={styles.container}>
+      style={[styles.container, {width: width / 2 - 20}, styleContainer]}>
       <ImageBackground
         source={{uri: `${BASE_URL}${ImageResponse?.Url}`}}
         resizeMode="contain"
@@ -69,8 +76,10 @@ const ProductCard = (props: IProductInterface) => {
           text={Name}
           variant="xSmallRegular"
           color={colors.tabsColor}
-          numberOfLines={2}
-          style={{width: '80%'}}
+          numberOfLines={1}
+          // adjustsFontSizeToFit
+          lineBreakMode="clip"
+          style={{flex: 1}}
         />
         <View style={styles.priceContainer}>
           {/* <Text
@@ -127,12 +136,15 @@ export default ProductCard;
 
 const styles = StyleSheet.create({
   container: {
-    width: 165,
+    // width: 165,
     height: 268,
-    margin: 5,
+    // margin: 5,
+    marginBottom: 10,
+    paddingHorizontal: 8,
   },
   Imagecontainer: {
-    width: 165,
+    // width: 165,
+    width: '100%',
     height: 201,
     backgroundColor: colors.white,
   },
@@ -142,7 +154,7 @@ const styles = StyleSheet.create({
     top: spacing.medium + 2,
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: '90%',
+    width: '100%',
     alignSelf: 'center',
   },
   discountIcon: {
@@ -202,7 +214,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.orange,
     position: 'absolute',
     bottom: 10,
-    left: 10,
+    // left: 10,
     color: colors.white,
     paddingHorizontal: spacing.smaller,
     paddingVertical: spacing.tiny,

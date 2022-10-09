@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {ReactNode} from 'react';
 import {View, StyleSheet, StatusBar, Pressable, Platform} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, spacing} from 'theme';
@@ -14,9 +14,13 @@ const ICON_SIZE = 20;
 
 interface ISearchHeader {
   value: string;
-  setValue: (value: string) => string;
-  onSubmitEditing: () => {};
-  autoFocus: boolean;
+  setValue: (value: string) => void;
+  onSubmitEditing: () => void;
+  autoFocus?: boolean;
+  filterIcon?: boolean;
+  Footer?: ReactNode;
+  RightIcon?: any;
+  placeholder?: string;
 }
 
 const SearchHeader = ({
@@ -24,38 +28,53 @@ const SearchHeader = ({
   value,
   onSubmitEditing,
   autoFocus = false,
+  Footer,
+  filterIcon = true,
+  RightIcon,
+  placeholder = 'search.search-input',
 }: ISearchHeader) => {
   const {top} = useSafeAreaInsets();
   const {goBack} = useNavigation();
   return (
-    <View style={[{paddingTop: top}, styles.container]}>
+    <View
+      style={{
+        paddingTop: top,
+        backgroundColor: colors.primary,
+        paddingHorizontal: spacing.smaller,
+        paddingBottom: spacing.medium,
+      }}>
       <StatusBar barStyle="light-content" />
-      <Pressable style={styles.goBackContainer} onPress={goBack}>
-        <ArrowIcon size={ICON_SIZE} color={colors.white} />
-      </Pressable>
-      <SearchInput
-        autoFocus={autoFocus}
-        containerStyle={styles.inputField}
-        placeholderTextColor={colors.white}
-        placeholder={'search.search-input'}
-        textColor={colors.white}
-        value={value}
-        onChangeText={setValue}
-        onSubmitEditing={onSubmitEditing}
-        rightIcon={
-          <Pressable style={styles.filterContainer}>
-            <FilterIcon />
-          </Pressable>
-        }
-        leftIcon={
-          <Pressable style={styles.searchIconContainer}>
-            <AntDesign name="search1" size={ICON_SIZE} color={colors.white} />
-          </Pressable>
-        }
-      />
-      <Pressable style={styles.goBackContainer}>
-        <CartIcon stroke={colors.white} />
-      </Pressable>
+      <View style={styles.container}>
+        <Pressable style={styles.goBackContainer} onPress={goBack}>
+          <ArrowIcon size={ICON_SIZE} color={colors.white} />
+        </Pressable>
+        <SearchInput
+          autoFocus={autoFocus}
+          containerStyle={styles.inputField}
+          placeholderTextColor={colors.white}
+          placeholder={placeholder}
+          textColor={colors.white}
+          value={value}
+          onChangeText={setValue}
+          onSubmitEditing={onSubmitEditing}
+          rightIcon={
+            filterIcon && (
+              <Pressable style={styles.filterContainer}>
+                <FilterIcon />
+              </Pressable>
+            )
+          }
+          leftIcon={
+            <Pressable style={styles.searchIconContainer}>
+              <AntDesign name="search1" size={ICON_SIZE} color={colors.white} />
+            </Pressable>
+          }
+        />
+        <Pressable style={styles.goBackContainer}>
+          {RightIcon ? RightIcon : <CartIcon stroke={colors.white} />}
+        </Pressable>
+      </View>
+      {Footer}
     </View>
   );
 };
@@ -65,12 +84,9 @@ export default SearchHeader;
 const styles = StyleSheet.create({
   container: {
     // flex: 0.1,
-    backgroundColor: colors.primary,
     justifyContent: 'space-around',
     alignItems: 'flex-end',
     flexDirection: 'row',
-    paddingHorizontal: spacing.smaller,
-    paddingBottom: spacing.medium,
   },
   goBackContainer: {
     width: GO_BACK_SIZE,
