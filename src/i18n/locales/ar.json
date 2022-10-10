@@ -72,7 +72,9 @@
     "related": "متعلقة",
     "products": "منتجات",
     "you-may-like": "قد تعجبك",
-    "rate-product": "تقييم المنتج"
+    "product-rating": "تقييم المنتج",
+    "rate-product": "قيم المنتج",
+    "rate-field": "ملاحظات (اختياري)"
   },
   "category": {
     "title": "التصنيفات"
@@ -99,6 +101,8 @@
     "retrive-password-description": "أدخل رمز الاستعادة المرسل على رقم الجوال المستخدم في الحساب ثم كلمة مرور جديدة",
     "code": "الكود",
     "something-went-wrong": "حصلت مشكلة ما؟",
-    "search_in_store": "ابحث في المتجر"
+    "search_in_store": "ابحث في المتجر",
+    "send": "إرسال",
+    "load-more": "تحميل المزيد"
   }
 }

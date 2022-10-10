@@ -12,6 +12,7 @@ interface buttomProps {
   isLoading?: boolean;
   variant?: 'Primary' | 'Secondary';
   icon?: ReactNode;
+  disabled?: boolean;
 }
 
 const Button: React.FC<buttomProps> = ({
@@ -22,6 +23,7 @@ const Button: React.FC<buttomProps> = ({
   isLoading,
   variant,
   icon,
+  disabled = false,
 }) => {
   return (
     <Pressable
@@ -35,7 +37,7 @@ const Button: React.FC<buttomProps> = ({
           borderWidth: 1,
         },
       ])}
-      disabled={isLoading}>
+      disabled={isLoading || disabled}>
       {icon && icon}
       <Text
         center

@@ -12,6 +12,13 @@ interface StoreDetailsParams {
   pageParam?: number;
 }
 
+interface IgetReviewStore {
+  storeId: number | string | any;
+  WithImageOnly: boolean;
+  Ratings?: number[] | string[];
+  pageParam?: number;
+}
+
 export const getAllStores = ({pageParam = 1}: StoresParams) =>
   axios(`${BASE_URL}/api/custom/stores/AllStores?page=${pageParam}`);
 
@@ -41,3 +48,20 @@ export const getStoreOfferProducts = ({
   axios(
     `${BASE_URL}/api/custom/stores/StoreHasDiscountProducts?storeId=${storeId}&page=${pageParam}&pageSize=10`,
   );
+
+export const getStoreReviews = ({
+  pageParam = 1,
+  storeId,
+  Ratings,
+  WithImageOnly,
+}: IgetReviewStore) =>
+  axios(`${BASE_URL}/api/custom/stores/StoreReviews`, {
+    method: 'post',
+    data: {
+      Page: pageParam,
+      PageSize: 5,
+      storeId,
+      Ratings,
+      WithImageOnly,
+    },
+  });

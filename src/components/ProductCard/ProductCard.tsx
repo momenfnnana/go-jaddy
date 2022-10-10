@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useNavigationState} from '@react-navigation/native';
 import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
@@ -36,13 +36,23 @@ const ProductCard = (props: IProductInterface) => {
     styleContainer,
   } = props;
   const {currency} = useCurrency();
-  const {navigate} = useNavigation<HomeNavigationsType>();
+  const {navigate, setParams} = useNavigation<HomeNavigationsType>();
+  const routes = useNavigationState(state => state.routes);
+
   const DiscountBadge = Badges.find(item => item?.Style === 5);
   const isNewBadge = Badges.find(item => item?.Style === 2);
   const {width} = useWindowDimensions();
+  const currentRoute = routes[routes.length - 1].name;
+
+  const navigateToProduct = () => {
+    if (currentRoute === 'ProductDetails') {
+      setParams({...props});
+    }
+    navigate('ProductDetails', {...props});
+  };
   return (
     <Pressable
-      onPress={() => navigate('ProductDetails', {...props})}
+      onPress={navigateToProduct}
       style={[styles.container, {width: width / 2 - 20}, styleContainer]}>
       <ImageBackground
         source={{uri: `${BASE_URL}${ImageResponse?.Url}`}}

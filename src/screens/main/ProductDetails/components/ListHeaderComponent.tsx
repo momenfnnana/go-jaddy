@@ -44,6 +44,9 @@ interface IListHeaderComponent {
   ProductId: number;
   selectedFilter: string[];
   setSelectedFilter: (value: any) => void;
+  ratingFilters: string[];
+  setRatingFilters: (value: any) => void;
+  isRefetchingReviews: boolean;
 }
 interface IinitialValues {
   collectionName: string;
@@ -66,6 +69,9 @@ const ListHeaderComponent = ({
   ProductId,
   selectedFilter,
   setSelectedFilter,
+  ratingFilters,
+  setRatingFilters,
+  isRefetchingReviews,
 }: IListHeaderComponent) => {
   const {navigate, goBack, canGoBack} = useNavigation<IProductNavigation>();
   const {productsNumber, setProductsNumber} = useContext(CartContext);
@@ -123,12 +129,22 @@ const ListHeaderComponent = ({
   };
 
   const onPressFilter = (value: string) => {
-    if (!selectedFilter.includes(value)) {
-      const newlist = [...selectedFilter, value];
-      setSelectedFilter(newlist);
+    if (value === 'all' || value === 'with-images') {
+      if (!selectedFilter.includes(value)) {
+        const newlist = [...selectedFilter, value];
+        setSelectedFilter(newlist);
+      } else {
+        const newlist = selectedFilter.filter(item => item !== value);
+        setSelectedFilter(newlist);
+      }
+      return;
+    }
+    if (!ratingFilters.includes(value)) {
+      const newlist = [...ratingFilters, value];
+      setRatingFilters(newlist);
     } else {
-      const newlist = selectedFilter.filter(item => item !== value);
-      setSelectedFilter(newlist);
+      const newlist = ratingFilters.filter(item => item !== value);
+      setRatingFilters(newlist);
     }
   };
 
@@ -184,19 +200,6 @@ const ListHeaderComponent = ({
     });
   };
 
-  // useEffect(() => {
-  //   if (isSuccess === true && !isLoading) {
-  //     forceRefetch();
-  //   }
-  // }, [isSuccess, isLoading]);
-  // useEffect(() => {
-  //   if (isSuccessAddToWishlist === true && !isLoadingAddToWishlist) {
-  //     onBackdropPress();
-  //   }
-  // }, [isLoadingAddToWishlist, isSuccessAddToWishlist]);
-  // if (isLoadingWishlists || isRefetchingWishlists) {
-  //   return <Loader size={'small'} style={styles.collectionsLoader} />;
-  // }
   const mainImage = {
     height: height * 0.5,
   } as ViewStyle;
@@ -204,7 +207,6 @@ const ListHeaderComponent = ({
     justifyContent: 'center',
     alignItems: 'center',
   } as ViewStyle;
-  console.log({Product});
 
   return (
     <View>
@@ -383,136 +385,131 @@ const ListHeaderComponent = ({
           </Pressable>
         </View>
         {DisplayProductReviews === true && (
-          // <>
-          //   <View style={[styles.ratingsContainer, styles.row]}>
-          //     <View style={styles.row}>
-          //       <Text tx="product-details.ratings" variant="mediumBold" />
-          //       <Text
-          //         text={ReviewOverview?.TotalReviews?.toString()}
-          //         variant="mediumBold"
-          //         style={styles.totalRatings}
-          //       />
-          //     </View>
-          //     <View style={[styles.ratingTotal, styles.row]}>
-          //       <StarFilledIcon color={colors.orangeDark} />
-          //       <Text
-          //         text={ReviewOverview?.RatingSum?.toString()}
-          //         color={colors.orangeDark}
-          //         style={styles.ratingSum}
-          //         variant="smallRegular"
-          //       />
-          //     </View>
-          //   </View>
-          //   <View style={styles.ratingFiltersContainer}>
-          //     <Pressable
-          //       style={[
-          //         styles.filterItem,
-          //         {
-          //           backgroundColor: selectedFilter.includes('all')
-          //             ? colors.secondary
-          //             : colors.simiWhite,
-          //         },
-          //       ]}
-          //       onPress={() => onPressFilter('all')}>
-          //       <Text
-          //         tx="product-details.all"
-          //         color={
-          //           selectedFilter.includes('all') ? colors.white : colors.black
-          //         }
-          //       />
-          //     </Pressable>
-          //     <Pressable
-          //       style={[
-          //         styles.filterItem,
-          //         {
-          //           backgroundColor: selectedFilter.includes('with-images')
-          //             ? colors.secondary
-          //             : colors.simiWhite,
-          //         },
-          //       ]}
-          //       onPress={() => onPressFilter('with-images')}>
-          //       <Text
-          //         tx="product-details.with-images"
-          //         color={
-          //           selectedFilter.includes('with-images')
-          //             ? colors.white
-          //             : colors.black
-          //         }
-          //       />
-          //     </Pressable>
-          //     {[0, 1, 2, 3, 4].map((item, index) => {
-          //       const itemsArray = [];
-          //       switch (index) {
-          //         case 0:
-          //           itemsArray.push(item);
-          //           break;
-          //         case 1:
-          //           itemsArray.push(item);
-          //           itemsArray.push(item);
-          //           break;
-          //         case 2:
-          //           itemsArray.push(item);
-          //           itemsArray.push(item);
-          //           itemsArray.push(item);
-          //           break;
-          //         case 3:
-          //           itemsArray.push(item);
-          //           itemsArray.push(item);
-          //           itemsArray.push(item);
-          //           itemsArray.push(item);
-          //           break;
-          //         case 4:
-          //           itemsArray.push(item);
-          //           itemsArray.push(item);
-          //           itemsArray.push(item);
-          //           itemsArray.push(item);
-          //           itemsArray.push(item);
-          //           break;
+          <>
+            <View style={[styles.ratingsContainer, styles.row]}>
+              <View style={styles.row}>
+                <Text tx="product-details.ratings" variant="mediumBold" />
+                <Text
+                  text={ReviewOverview?.TotalReviews?.toString()}
+                  variant="mediumBold"
+                  style={styles.totalRatings}
+                />
+              </View>
+              <View style={[styles.ratingTotal, styles.row]}>
+                <StarFilledIcon color={colors.orangeDark} />
+                <Text
+                  text={ReviewOverview?.RatingSum?.toString()}
+                  color={colors.orangeDark}
+                  style={styles.ratingSum}
+                  variant="smallRegular"
+                />
+              </View>
+            </View>
+            <View style={styles.ratingFiltersContainer}>
+              <Pressable
+                style={[
+                  styles.filterItem,
+                  {
+                    backgroundColor: selectedFilter.includes('all')
+                      ? colors.secondary
+                      : colors.simiWhite,
+                  },
+                ]}
+                onPress={() => onPressFilter('all')}>
+                <Text
+                  tx="product-details.all"
+                  color={
+                    selectedFilter.includes('all') ? colors.white : colors.black
+                  }
+                />
+              </Pressable>
+              <Pressable
+                style={[
+                  styles.filterItem,
+                  {
+                    backgroundColor: selectedFilter.includes('with-images')
+                      ? colors.secondary
+                      : colors.simiWhite,
+                  },
+                ]}
+                onPress={() => onPressFilter('with-images')}>
+                <Text
+                  tx="product-details.with-images"
+                  color={
+                    selectedFilter.includes('with-images')
+                      ? colors.white
+                      : colors.black
+                  }
+                />
+              </Pressable>
+              {[0, 1, 2, 3, 4].map((item, index) => {
+                const itemsArray = [];
+                switch (index) {
+                  case 0:
+                    itemsArray.push(item);
+                    break;
+                  case 1:
+                    itemsArray.push(item);
+                    itemsArray.push(item);
+                    break;
+                  case 2:
+                    itemsArray.push(item);
+                    itemsArray.push(item);
+                    itemsArray.push(item);
+                    break;
+                  case 3:
+                    itemsArray.push(item);
+                    itemsArray.push(item);
+                    itemsArray.push(item);
+                    itemsArray.push(item);
+                    break;
+                  case 4:
+                    itemsArray.push(item);
+                    itemsArray.push(item);
+                    itemsArray.push(item);
+                    itemsArray.push(item);
+                    itemsArray.push(item);
+                    break;
 
-          //         default:
-          //           break;
-          //       }
+                  default:
+                    break;
+                }
 
-          //       return (
-          //         <Pressable
-          //           style={[
-          //             styles.filterItem,
-          //             {
-          //               backgroundColor: selectedFilter.includes(
-          //                 (index + 1).toString(),
-          //               )
-          //                 ? colors.secondary
-          //                 : colors.simiWhite,
-          //             },
-          //           ]}
-          //           key={item}
-          //           onPress={() => onPressFilter((item + 1).toString())}>
-          //           <View style={styles.row}>
-          //             {itemsArray.map((_, subIndex) => (
-          //               <AntDesign
-          //                 name="star"
-          //                 color={
-          //                   selectedFilter.includes((index + 1).toString())
-          //                     ? colors.white
-          //                     : colors.reloadColor
-          //                 }
-          //                 key={subIndex}
-          //               />
-          //             ))}
-          //           </View>
-          //         </Pressable>
-          //       );
-          //     })}
-          //   </View>
-          // </>
-          <RatingFiltters
-            selectedFilter={selectedFilter}
-            setSelectedFilter={setSelectedFilter}
-            RatingSum={ReviewOverview?.RatingSum}
-            TotalReviews={ReviewOverview?.TotalReviews}
-          />
+                return (
+                  <Pressable
+                    style={[
+                      styles.filterItem,
+                      {
+                        backgroundColor: ratingFilters.includes(
+                          (index + 1).toString(),
+                        )
+                          ? colors.secondary
+                          : colors.simiWhite,
+                      },
+                    ]}
+                    key={item}
+                    onPress={() => onPressFilter((item + 1).toString())}>
+                    <View style={styles.row}>
+                      {itemsArray.map((_, subIndex) => (
+                        <AntDesign
+                          name="star"
+                          color={
+                            ratingFilters.includes((index + 1).toString())
+                              ? colors.white
+                              : colors.reloadColor
+                          }
+                          key={subIndex}
+                        />
+                      ))}
+                    </View>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </>
         )}
       </View>
+      {isRefetchingReviews && <Loader size={'small'} color={colors.secondary} />}
       <Modal
         isVisible={isAddToCollectionShown}
         onBackdropPress={onCloseAddToCollection}
@@ -523,9 +520,9 @@ const ListHeaderComponent = ({
         description="whishlist.add-hint">
         {isLoadingWishlists ? (
           <Loader size={'small'} style={styles.collectionsLoader} />
-        ) : wishlistsData?.data?.length > 0 ? (
+        ) : wishlistsData?.data?.Wishlists?.length > 0 ? (
           <FlatList
-            data={wishlistsData?.data}
+            data={wishlistsData?.data?.Wishlists}
             keyExtractor={(_, index) => index.toString()}
             ListHeaderComponent={
               <View style={styles.addCollectionBtnContainer}>

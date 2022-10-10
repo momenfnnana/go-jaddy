@@ -18,21 +18,64 @@ import {
   getStoreDetails,
   getStoreNewProducts,
   getStoreOfferProducts,
+  getStoreReviews,
 } from 'services/Stores';
 import NetworkErrorScreen from 'screens/NetworkErrorScreen';
 import {BASE_URL} from 'utils/Axios';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useTranslation} from 'react-i18next';
 import {RatingFiltters} from 'components/RatingFilters';
+import {ReviewList} from 'components/ReviewList';
+
+export interface Ifiltter {
+  withImage: boolean;
+  ratings: string[];
+}
 
 const StoreDetails = () => {
   const {params} = useRoute<IStores>();
   const [searchText, setSearchText] = useState<string>('');
   const [tab, setTab] = useState<number>(0);
   const [isFollowed, setFollowed] = useState<boolean>(false);
-  const [selectedFilter, setSelectedFilter] = useState<string[]>([]);
+  const [selectedFilter, setSelectedFilter] = useState<Ifiltter>({
+    ratings: [],
+    withImage: false,
+  });
+
   const {t} = useTranslation();
   const {width} = useWindowDimensions();
+
+  const {
+    data: storeReviewsData,
+    isLoading: isLoadingStoreReviews,
+    isError: isErrorStoreReviews,
+    hasNextPage: hasNextPageStoreReviews,
+    fetchNextPage: fetchNextPageStoreReviews,
+    refetch: refetchStoreReviews,
+    isFetchingNextPage: isFetchingNextPageStoreReviews,
+    isRefetching: isRefetchingStoreReviews,
+  } = useInfiniteQuery(
+    ['perantCategories'],
+    ({pageParam}) =>
+      getStoreReviews({
+        pageParam,
+        storeId: params?.storeId,
+        WithImageOnly: selectedFilter.withImage,
+        Ratings: selectedFilter.ratings,
+      }),
+    {
+      getNextPageParam: lastPage => {
+        if (
+          lastPage?.data?.ProductReviews?.Page <
+          lastPage?.data?.ProductReviews?.TotalPages
+        ) {
+          return lastPage?.data?.ProductReviews?.Page + 1;
+        }
+        return null;
+      },
+    },
+  );
+
   const {
     isLoading: isLoadingStoreDetails,
     data: storeDetailsData,
@@ -117,6 +160,10 @@ const StoreDetails = () => {
       },
     },
   );
+
+  useEffect(() => {
+    refetchStoreReviews();
+  }, [selectedFilter]);
 
   const SearchHandler = () => {
     // if (
@@ -462,12 +509,25 @@ const StoreDetails = () => {
         />
       )}
       {tab == 4 && (
-        <RatingFiltters
-          style={{paddingHorizontal: spacing.content}}
-          setSelectedFilter={setSelectedFilter}
-          selectedFilter={selectedFilter}
-          RatingSum={storeDetailsData.data.ReviewOverview.RatingSum}
-          TotalReviews={storeDetailsData.data.ReviewOverview.TotalReviews}
+        <FlatList
+          ListHeaderComponent={
+            <RatingFiltters
+              style={{paddingHorizontal: spacing.content}}
+              setSelectedFilter={setSelectedFilter}
+              selectedFilter={selectedFilter}
+              RatingSum={storeDetailsData.data.ReviewOverview.RatingSum}
+              TotalReviews={storeDetailsData.data.ReviewOverview.TotalReviews}
+            />
+          }
+          renderItem={ReviewList}
+          data={storeReviewsData?.pages
+            .map(page => page.data.StoreReviews.Items)
+            .flat()}
+          ListFooterComponent={
+            isFetchingNextPageStoreReviews || isLoadingStoreReviews ? (
+              <Loader size={'small'} color={colors.primary} />
+            ) : null
+          }
         />
       )}
     </View>

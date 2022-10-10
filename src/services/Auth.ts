@@ -21,8 +21,9 @@ export const postChangePassword = (data: any) => {
   return axios.post(`${BASE_URL}/api/custom/account/ResetPassword`, data);
 };
 
-export const verificationCode = (params: any) => {
-  return axios.get(`${BASE_URL}/api/custom/account/CreateAccountVerification`, {
+export const verificationCode = (params: any) =>
+  axios.get(`${BASE_URL}/api/custom/account/CreateAccountVerification`, {
     params,
   });
-};
+
+export const getLanguages = () => axios.get(`${BASE_URL}/api/custom/languages`);

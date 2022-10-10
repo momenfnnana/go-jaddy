@@ -76,7 +76,9 @@
     "code": "Code",
     "verifyAccount": "Verify Account",
     "verifyModalText": "Please type the verification code sent to",
-    "something-went-wrong": "Something went wrong"
+    "something-went-wrong": "Something went wrong",
+    "send": "Send",
+    "load-more": "Load more"
   },
   "carasoule": {
     "name": "clothes title goes here"
@@ -103,7 +105,9 @@
     "related": "Related",
     "products": "Products",
     "you-may-like": "You may like",
-    "rate-product": "Rate product"
+    "product-rating": "Rate product",
+    "rate-product": "Rate product",
+    "rate-field": "Documents (optional)"
   },
   "category": {
     "title": "Category"

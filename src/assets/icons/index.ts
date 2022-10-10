@@ -26,3 +26,4 @@ export {default as FilterIcon} from './svg/filter-icon.svg';
 export {default as ListViewIcon} from './svg/list-view-icon.svg';
 export {default as GridViewIcon} from './svg/grid-view-icon.svg';
 export {default as VerifyAccountImage} from './svg/verifyAccountModal.svg';
+export {default as UploadImageIcon} from './svg/upload-image.svg';

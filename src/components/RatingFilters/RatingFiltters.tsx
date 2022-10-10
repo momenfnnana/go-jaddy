@@ -4,9 +4,10 @@ import {colors, spacing} from 'theme';
 import Text from 'components/Text';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {StarFilledIcon} from 'assets/icons';
+import {Ifiltter} from 'screens/main/StoreDetails/StoreDetails';
 
 interface IRatingFiltters {
-  selectedFilter: string[];
+  selectedFilter: Ifiltter;
   setSelectedFilter: (value: any) => void;
   TotalReviews?: any;
   RatingSum?: any;
@@ -21,13 +22,36 @@ const RatingFiltters = ({
   style,
 }: IRatingFiltters) => {
   const onPressFilter = (value: string) => {
-    if (!selectedFilter.includes(value)) {
-      const newlist = [...selectedFilter, value];
-      setSelectedFilter(newlist);
-    } else {
-      const newlist = selectedFilter.filter(item => item !== value);
-      setSelectedFilter(newlist);
+    if (value === 'all') {
+      if (!selectedFilter.withImage && selectedFilter.ratings.length !== 5) {
+        setSelectedFilter({
+          withImage: true,
+          ratings: [1, 2, 3, 4, 5],
+        });
+      } else {
+        setSelectedFilter({
+          withImage: false,
+          ratings: [],
+        });
+      }
+      return;
     }
+    if (value === 'with-images') {
+      setSelectedFilter({
+        ...selectedFilter,
+        withImage: !selectedFilter.withImage,
+      });
+      return;
+    }
+    selectedFilter.ratings.includes(value)
+      ? setSelectedFilter({
+          ...selectedFilter,
+          ratings: selectedFilter.ratings.filter(rate => rate !== value),
+        })
+      : setSelectedFilter({
+          ...selectedFilter,
+          ratings: [...selectedFilter.ratings, value],
+        });
   };
 
   return (
@@ -56,22 +80,27 @@ const RatingFiltters = ({
           style={[
             styles.filterItem,
             {
-              backgroundColor: selectedFilter.includes('all')
-                ? colors.secondary
-                : colors.simiWhite,
+              backgroundColor:
+                selectedFilter.ratings.length === 5 && selectedFilter.withImage
+                  ? colors.secondary
+                  : colors.simiWhite,
             },
           ]}
           onPress={() => onPressFilter('all')}>
           <Text
             tx="product-details.all"
-            color={selectedFilter.includes('all') ? colors.white : colors.black}
+            color={
+              selectedFilter.withImage && selectedFilter.ratings.length === 5
+                ? colors.white
+                : colors.black
+            }
           />
         </Pressable>
         <Pressable
           style={[
             styles.filterItem,
             {
-              backgroundColor: selectedFilter.includes('with-images')
+              backgroundColor: selectedFilter.withImage
                 ? colors.secondary
                 : colors.simiWhite,
             },
@@ -79,11 +108,7 @@ const RatingFiltters = ({
           onPress={() => onPressFilter('with-images')}>
           <Text
             tx="product-details.with-images"
-            color={
-              selectedFilter.includes('with-images')
-                ? colors.white
-                : colors.black
-            }
+            color={selectedFilter.withImage ? colors.white : colors.black}
           />
         </Pressable>
         {[0, 1, 2, 3, 4].map((item, index) => {
@@ -124,21 +149,21 @@ const RatingFiltters = ({
               style={[
                 styles.filterItem,
                 {
-                  backgroundColor: selectedFilter.includes(
-                    (index + 1).toString(),
+                  backgroundColor: selectedFilter.ratings.includes(
+                    (index + 1) as any,
                   )
                     ? colors.secondary
                     : colors.simiWhite,
                 },
               ]}
               key={item}
-              onPress={() => onPressFilter((item + 1).toString())}>
+              onPress={() => onPressFilter((item + 1) as any)}>
               <View style={styles.row}>
                 {itemsArray.map((_, subIndex) => (
                   <AntDesign
                     name="star"
                     color={
-                      selectedFilter.includes((index + 1).toString())
+                      selectedFilter.ratings.includes((index + 1) as any)
                         ? colors.white
                         : colors.reloadColor
                     }
