@@ -1,4 +1,4 @@
-import {FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, useWindowDimensions, View} from 'react-native';
 import React from 'react';
 import {ProductCard, Text} from 'components';
 import {colors, spacing} from 'theme';
@@ -53,6 +53,7 @@ const ShowSection = ({
   data,
   showSeeMore,
 }: IShowSection) => {
+  const {width} = useWindowDimensions();
   return (
     <View style={styles.container}>
       <Header
@@ -71,7 +72,9 @@ const ShowSection = ({
           contentContainerStyle={{paddingHorizontal: 15}}
           keyExtractor={(_, index) => index.toString()}
           horizontal
-          renderItem={({item}) => <ProductCard {...item} />}
+          renderItem={({item}) => (
+            <ProductCard styleContainer={{width: width / 2.2 - 20}} {...item} />
+          )}
         />
       </View>
     </View>

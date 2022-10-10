@@ -34,6 +34,7 @@ import {useTranslation} from 'react-i18next';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import {RatingFiltters} from 'components/RatingFilters';
 
 interface IProductNavigation
   extends NativeStackNavigationProp<HomeRoutes, 'ProductDetails'>,
@@ -382,128 +383,134 @@ const ListHeaderComponent = ({
           </Pressable>
         </View>
         {DisplayProductReviews === true && (
-          <>
-            <View style={[styles.ratingsContainer, styles.row]}>
-              <View style={styles.row}>
-                <Text tx="product-details.ratings" variant="mediumBold" />
-                <Text
-                  text={ReviewOverview?.TotalReviews?.toString()}
-                  variant="mediumBold"
-                  style={styles.totalRatings}
-                />
-              </View>
-              <View style={[styles.ratingTotal, styles.row]}>
-                <StarFilledIcon color={colors.orangeDark} />
-                <Text
-                  text={ReviewOverview?.RatingSum?.toString()}
-                  color={colors.orangeDark}
-                  style={styles.ratingSum}
-                  variant="smallRegular"
-                />
-              </View>
-            </View>
-            <View style={styles.ratingFiltersContainer}>
-              <Pressable
-                style={[
-                  styles.filterItem,
-                  {
-                    backgroundColor: selectedFilter.includes('all')
-                      ? colors.secondary
-                      : colors.simiWhite,
-                  },
-                ]}
-                onPress={() => onPressFilter('all')}>
-                <Text
-                  tx="product-details.all"
-                  color={
-                    selectedFilter.includes('all') ? colors.white : colors.black
-                  }
-                />
-              </Pressable>
-              <Pressable
-                style={[
-                  styles.filterItem,
-                  {
-                    backgroundColor: selectedFilter.includes('with-images')
-                      ? colors.secondary
-                      : colors.simiWhite,
-                  },
-                ]}
-                onPress={() => onPressFilter('with-images')}>
-                <Text
-                  tx="product-details.with-images"
-                  color={
-                    selectedFilter.includes('with-images')
-                      ? colors.white
-                      : colors.black
-                  }
-                />
-              </Pressable>
-              {[0, 1, 2, 3, 4].map((item, index) => {
-                const itemsArray = [];
-                switch (index) {
-                  case 0:
-                    itemsArray.push(item);
-                    break;
-                  case 1:
-                    itemsArray.push(item);
-                    itemsArray.push(item);
-                    break;
-                  case 2:
-                    itemsArray.push(item);
-                    itemsArray.push(item);
-                    itemsArray.push(item);
-                    break;
-                  case 3:
-                    itemsArray.push(item);
-                    itemsArray.push(item);
-                    itemsArray.push(item);
-                    itemsArray.push(item);
-                    break;
-                  case 4:
-                    itemsArray.push(item);
-                    itemsArray.push(item);
-                    itemsArray.push(item);
-                    itemsArray.push(item);
-                    itemsArray.push(item);
-                    break;
+          // <>
+          //   <View style={[styles.ratingsContainer, styles.row]}>
+          //     <View style={styles.row}>
+          //       <Text tx="product-details.ratings" variant="mediumBold" />
+          //       <Text
+          //         text={ReviewOverview?.TotalReviews?.toString()}
+          //         variant="mediumBold"
+          //         style={styles.totalRatings}
+          //       />
+          //     </View>
+          //     <View style={[styles.ratingTotal, styles.row]}>
+          //       <StarFilledIcon color={colors.orangeDark} />
+          //       <Text
+          //         text={ReviewOverview?.RatingSum?.toString()}
+          //         color={colors.orangeDark}
+          //         style={styles.ratingSum}
+          //         variant="smallRegular"
+          //       />
+          //     </View>
+          //   </View>
+          //   <View style={styles.ratingFiltersContainer}>
+          //     <Pressable
+          //       style={[
+          //         styles.filterItem,
+          //         {
+          //           backgroundColor: selectedFilter.includes('all')
+          //             ? colors.secondary
+          //             : colors.simiWhite,
+          //         },
+          //       ]}
+          //       onPress={() => onPressFilter('all')}>
+          //       <Text
+          //         tx="product-details.all"
+          //         color={
+          //           selectedFilter.includes('all') ? colors.white : colors.black
+          //         }
+          //       />
+          //     </Pressable>
+          //     <Pressable
+          //       style={[
+          //         styles.filterItem,
+          //         {
+          //           backgroundColor: selectedFilter.includes('with-images')
+          //             ? colors.secondary
+          //             : colors.simiWhite,
+          //         },
+          //       ]}
+          //       onPress={() => onPressFilter('with-images')}>
+          //       <Text
+          //         tx="product-details.with-images"
+          //         color={
+          //           selectedFilter.includes('with-images')
+          //             ? colors.white
+          //             : colors.black
+          //         }
+          //       />
+          //     </Pressable>
+          //     {[0, 1, 2, 3, 4].map((item, index) => {
+          //       const itemsArray = [];
+          //       switch (index) {
+          //         case 0:
+          //           itemsArray.push(item);
+          //           break;
+          //         case 1:
+          //           itemsArray.push(item);
+          //           itemsArray.push(item);
+          //           break;
+          //         case 2:
+          //           itemsArray.push(item);
+          //           itemsArray.push(item);
+          //           itemsArray.push(item);
+          //           break;
+          //         case 3:
+          //           itemsArray.push(item);
+          //           itemsArray.push(item);
+          //           itemsArray.push(item);
+          //           itemsArray.push(item);
+          //           break;
+          //         case 4:
+          //           itemsArray.push(item);
+          //           itemsArray.push(item);
+          //           itemsArray.push(item);
+          //           itemsArray.push(item);
+          //           itemsArray.push(item);
+          //           break;
 
-                  default:
-                    break;
-                }
+          //         default:
+          //           break;
+          //       }
 
-                return (
-                  <Pressable
-                    style={[
-                      styles.filterItem,
-                      {
-                        backgroundColor: selectedFilter.includes(
-                          (index + 1).toString(),
-                        )
-                          ? colors.secondary
-                          : colors.simiWhite,
-                      },
-                    ]}
-                    key={item}
-                    onPress={() => onPressFilter((item + 1).toString())}>
-                    <View style={styles.row}>
-                      {itemsArray.map((_, subIndex) => (
-                        <AntDesign
-                          name="star"
-                          color={
-                            selectedFilter.includes((index + 1).toString())
-                              ? colors.white
-                              : colors.reloadColor
-                          }
-                          key={subIndex}
-                        />
-                      ))}
-                    </View>
-                  </Pressable>
-                );
-              })}
-            </View>
-          </>
+          //       return (
+          //         <Pressable
+          //           style={[
+          //             styles.filterItem,
+          //             {
+          //               backgroundColor: selectedFilter.includes(
+          //                 (index + 1).toString(),
+          //               )
+          //                 ? colors.secondary
+          //                 : colors.simiWhite,
+          //             },
+          //           ]}
+          //           key={item}
+          //           onPress={() => onPressFilter((item + 1).toString())}>
+          //           <View style={styles.row}>
+          //             {itemsArray.map((_, subIndex) => (
+          //               <AntDesign
+          //                 name="star"
+          //                 color={
+          //                   selectedFilter.includes((index + 1).toString())
+          //                     ? colors.white
+          //                     : colors.reloadColor
+          //                 }
+          //                 key={subIndex}
+          //               />
+          //             ))}
+          //           </View>
+          //         </Pressable>
+          //       );
+          //     })}
+          //   </View>
+          // </>
+          <RatingFiltters
+            selectedFilter={selectedFilter}
+            setSelectedFilter={setSelectedFilter}
+            RatingSum={ReviewOverview?.RatingSum}
+            TotalReviews={ReviewOverview?.TotalReviews}
+          />
         )}
       </View>
       <Modal

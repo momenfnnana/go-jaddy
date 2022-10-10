@@ -76,7 +76,7 @@ const ProductCard = (props: IProductInterface) => {
           text={Name}
           variant="xSmallRegular"
           color={colors.tabsColor}
-          numberOfLines={1}
+          numberOfLines={2}
           // adjustsFontSizeToFit
           lineBreakMode="clip"
           style={{flex: 1}}
@@ -140,17 +140,14 @@ export default ProductCard;
 
 const styles = StyleSheet.create({
   container: {
-    // width: 165,
     height: 268,
-    // margin: 5,
     marginBottom: 10,
-    paddingHorizontal: 8,
+    marginRight: 10,
   },
   Imagecontainer: {
-    // width: 165,
-    width: '100%',
     height: 201,
     backgroundColor: colors.white,
+    paddingHorizontal: spacing.small,
   },
   topIconsContainer: {
     position: 'absolute',
@@ -160,6 +157,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     alignSelf: 'center',
+    // paddingHorizontal: spacing.small,
   },
   discountIcon: {
     backgroundColor: colors.orange,
@@ -183,7 +181,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   priceContainer: {
-    flex: 1,
+    // flex: 1,
     alignItems: 'center',
   },
   prevPrice: {
@@ -219,10 +217,10 @@ const styles = StyleSheet.create({
     borderColor: colors.white,
   },
   isNewBadge: {
-    backgroundColor: colors.orange,
+    backgroundColor: colors.red,
     position: 'absolute',
-    bottom: 10,
-    // left: 10,
+    bottom: spacing.small,
+    left: spacing.small,
     color: colors.white,
     paddingHorizontal: spacing.smaller,
     paddingVertical: spacing.tiny,

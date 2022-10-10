@@ -32,7 +32,12 @@ export const getStoreNewProducts = ({
 }: StoreDetailsParams) =>
   axios(
     `${BASE_URL}/api/custom/stores/StoreNewProducts?storeId=${storeId}&page=${pageParam}&pageSize=10`,
-    {
-      // params: {storeId, page: pageParam, pageSize: 10},
-    },
+  );
+
+export const getStoreOfferProducts = ({
+  pageParam = 1,
+  storeId,
+}: StoreDetailsParams) =>
+  axios(
+    `${BASE_URL}/api/custom/stores/StoreHasDiscountProducts?storeId=${storeId}&page=${pageParam}&pageSize=10`,
   );

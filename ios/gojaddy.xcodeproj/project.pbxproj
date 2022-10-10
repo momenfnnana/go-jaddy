@@ -30,10 +30,10 @@
 		AF990F0D28DA2578005630CC /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF990EFD28DA2578005630CC /* EvilIcons.ttf */; };
 		AF990F0E28DA2578005630CC /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF990EFE28DA2578005630CC /* SimpleLineIcons.ttf */; };
 		AF990F0F28DA2578005630CC /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF990EFF28DA2578005630CC /* MaterialIcons.ttf */; };
-		E2048F5928EF5AED0075B8EA /* almarai_extra_bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2048F5528EF5AED0075B8EA /* almarai_extra_bold.ttf */; };
-		E2048F5A28EF5AED0075B8EA /* almarai_light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2048F5628EF5AED0075B8EA /* almarai_light.ttf */; };
-		E2048F5B28EF5AED0075B8EA /* almarai_bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2048F5728EF5AED0075B8EA /* almarai_bold.ttf */; };
-		E2048F5C28EF5AED0075B8EA /* almarai_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2048F5828EF5AED0075B8EA /* almarai_regular.ttf */; };
+		E2C3263328F423690026C805 /* Almarai-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2C3262F28F423690026C805 /* Almarai-Bold.ttf */; };
+		E2C3263428F423690026C805 /* Almarai-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2C3263028F423690026C805 /* Almarai-Light.ttf */; };
+		E2C3263528F423690026C805 /* Almarai-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2C3263128F423690026C805 /* Almarai-ExtraBold.ttf */; };
+		E2C3263628F423690026C805 /* Almarai-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2C3263228F423690026C805 /* Almarai-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,14 +79,10 @@
 		AF990EFD28DA2578005630CC /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
 		AF990EFE28DA2578005630CC /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		AF990EFF28DA2578005630CC /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
-		E2048F5528EF5AED0075B8EA /* almarai_extra_bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = almarai_extra_bold.ttf; path = ../src/assets/fonts/almarai_extra_bold.ttf; sourceTree = "<group>"; };
-		E2048F5628EF5AED0075B8EA /* almarai_light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = almarai_light.ttf; path = ../src/assets/fonts/almarai_light.ttf; sourceTree = "<group>"; };
-		E2048F5728EF5AED0075B8EA /* almarai_bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = almarai_bold.ttf; path = ../src/assets/fonts/almarai_bold.ttf; sourceTree = "<group>"; };
-		E2048F5828EF5AED0075B8EA /* almarai_regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = almarai_regular.ttf; path = ../src/assets/fonts/almarai_regular.ttf; sourceTree = "<group>"; };
-		E2048F5D28EF5B7E0075B8EA /* almarai_bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = almarai_bold.ttf; path = ../src/assets/fonts/almarai_bold.ttf; sourceTree = "<group>"; };
-		E2048F5E28EF5B7E0075B8EA /* almarai_light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = almarai_light.ttf; path = ../src/assets/fonts/almarai_light.ttf; sourceTree = "<group>"; };
-		E2048F5F28EF5B7E0075B8EA /* almarai_regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = almarai_regular.ttf; path = ../src/assets/fonts/almarai_regular.ttf; sourceTree = "<group>"; };
-		E2048F6028EF5B7E0075B8EA /* almarai_extra_bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = almarai_extra_bold.ttf; path = ../src/assets/fonts/almarai_extra_bold.ttf; sourceTree = "<group>"; };
+		E2C3262F28F423690026C805 /* Almarai-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Almarai-Bold.ttf"; path = "../src/assets/fonts/Almarai-Bold.ttf"; sourceTree = "<group>"; };
+		E2C3263028F423690026C805 /* Almarai-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Almarai-Light.ttf"; path = "../src/assets/fonts/Almarai-Light.ttf"; sourceTree = "<group>"; };
+		E2C3263128F423690026C805 /* Almarai-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Almarai-ExtraBold.ttf"; path = "../src/assets/fonts/Almarai-ExtraBold.ttf"; sourceTree = "<group>"; };
+		E2C3263228F423690026C805 /* Almarai-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Almarai-Regular.ttf"; path = "../src/assets/fonts/Almarai-Regular.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -154,10 +150,10 @@
 		3C11503C094B46F0AABDA38F /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				E2048F5728EF5AED0075B8EA /* almarai_bold.ttf */,
-				E2048F5528EF5AED0075B8EA /* almarai_extra_bold.ttf */,
-				E2048F5628EF5AED0075B8EA /* almarai_light.ttf */,
-				E2048F5828EF5AED0075B8EA /* almarai_regular.ttf */,
+				E2C3262F28F423690026C805 /* Almarai-Bold.ttf */,
+				E2C3263128F423690026C805 /* Almarai-ExtraBold.ttf */,
+				E2C3263028F423690026C805 /* Almarai-Light.ttf */,
+				E2C3263228F423690026C805 /* Almarai-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -172,10 +168,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				E2048F5D28EF5B7E0075B8EA /* almarai_bold.ttf */,
-				E2048F6028EF5B7E0075B8EA /* almarai_extra_bold.ttf */,
-				E2048F5E28EF5B7E0075B8EA /* almarai_light.ttf */,
-				E2048F5F28EF5B7E0075B8EA /* almarai_regular.ttf */,
 				13B07FAE1A68108700A75B9A /* gojaddy */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* gojaddyTests */,
@@ -327,19 +319,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E2048F5B28EF5AED0075B8EA /* almarai_bold.ttf in Resources */,
-				E2048F5A28EF5AED0075B8EA /* almarai_light.ttf in Resources */,
-				E2048F5C28EF5AED0075B8EA /* almarai_regular.ttf in Resources */,
-				E2048F5928EF5AED0075B8EA /* almarai_extra_bold.ttf in Resources */,
 				AF990F0628DA2578005630CC /* AntDesign.ttf in Resources */,
+				E2C3263628F423690026C805 /* Almarai-Regular.ttf in Resources */,
 				AF990F0728DA2578005630CC /* Foundation.ttf in Resources */,
 				AF990F0C28DA2578005630CC /* Zocial.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				E2C3263428F423690026C805 /* Almarai-Light.ttf in Resources */,
 				AF990F0E28DA2578005630CC /* SimpleLineIcons.ttf in Resources */,
 				AF990F0F28DA2578005630CC /* MaterialIcons.ttf in Resources */,
+				E2C3263528F423690026C805 /* Almarai-ExtraBold.ttf in Resources */,
 				AF990F0128DA2578005630CC /* Octicons.ttf in Resources */,
 				AF990F0B28DA2578005630CC /* FontAwesome.ttf in Resources */,
+				E2C3263328F423690026C805 /* Almarai-Bold.ttf in Resources */,
 				AF990F0828DA2578005630CC /* Ionicons.ttf in Resources */,
 				AF990F0328DA2578005630CC /* Entypo.ttf in Resources */,
 				AF990F0428DA2578005630CC /* FontAwesome5_Brands.ttf in Resources */,

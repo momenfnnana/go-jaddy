@@ -57,42 +57,6 @@ const Categories = (props: ICategories) => {
 
   return (
     <View style={{flex: 1}}>
-      {/* <View
-        style={{
-          backgroundColor: colors.primary,
-          paddingTop: top + 5,
-          paddingBottom: 10,
-          paddingHorizontal: spacing.content,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}>
-        <Pressable
-          onPress={() => pop()}
-          disabled={!canGoBack()}
-          style={{
-            backgroundColor: colors.white + 18,
-            padding: 10,
-            borderRadius: 5,
-            opacity: canGoBack() ? 1 : 0,
-          }}>
-          <ArrowIcon />
-        </Pressable>
-        <Text
-          tx="category.title"
-          color={colors.white}
-          variant="mediumRegular"
-        />
-        <Pressable
-          style={{
-            backgroundColor: colors.white + 18,
-            padding: 10,
-            borderRadius: 5,
-            opacity: 0,
-          }}>
-          <ArrowIcon />
-        </Pressable>
-      </View> */}
       <FlatList
         onEndReached={loadMore}
         onEndReachedThreshold={0.3}

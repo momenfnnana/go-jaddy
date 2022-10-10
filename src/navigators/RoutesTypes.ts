@@ -1,7 +1,7 @@
 import {IProductInterface, ISearchInterface} from 'screens/main/Home/types';
 
 export type BottomTabsRoutes = {
-  HomeStack: undefined;
+  HomeStack: undefined & any;
   CategoriesStack: undefined;
   CategoryDetails: {title: ''; id: -1};
   StoresStack: undefined;

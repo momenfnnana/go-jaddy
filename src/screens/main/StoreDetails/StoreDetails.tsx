@@ -17,18 +17,20 @@ import {
   getStoreCategories,
   getStoreDetails,
   getStoreNewProducts,
+  getStoreOfferProducts,
 } from 'services/Stores';
 import NetworkErrorScreen from 'screens/NetworkErrorScreen';
 import {BASE_URL} from 'utils/Axios';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useTranslation} from 'react-i18next';
-import {ActivityIndicator} from 'react-native-paper';
+import {RatingFiltters} from 'components/RatingFilters';
 
 const StoreDetails = () => {
   const {params} = useRoute<IStores>();
   const [searchText, setSearchText] = useState<string>('');
   const [tab, setTab] = useState<number>(0);
   const [isFollowed, setFollowed] = useState<boolean>(false);
+  const [selectedFilter, setSelectedFilter] = useState<string[]>([]);
   const {t} = useTranslation();
   const {width} = useWindowDimensions();
   const {
@@ -90,8 +92,31 @@ const StoreDetails = () => {
       },
     },
   );
-
-  console.log({hasNextPageNew});
+  const {
+    isLoading: isLoadingStoreOffer,
+    data: StoreOfferData,
+    isError: isErrorStoreOffer,
+    refetch: refetchStoreOffer,
+    isRefetching: isRefetchingrefetchStoreOffer,
+    remove: removeStoreOffer,
+    hasNextPage: hasNextPageOffer,
+    isFetchingNextPage: isFetchingNextPageOffer,
+    fetchNextPage: fetchNextPageOffer,
+  } = useInfiniteQuery(
+    ['getStoreOfferTab'],
+    ({pageParam}) =>
+      getStoreOfferProducts({pageParam, storeId: params?.storeId}),
+    {
+      getNextPageParam: lastPage => {
+        if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
+          const next = lastPage?.data?.Page + 2;
+          console.log({next});
+          return next;
+        }
+        return null;
+      },
+    },
+  );
 
   const SearchHandler = () => {
     // if (
@@ -110,13 +135,15 @@ const StoreDetails = () => {
     return <NetworkErrorScreen />;
   }
 
-  // useEffect(() => {
-  //   return () => removeStoreDetails();
-  // }, []);
-
-  const loadMore = () => {
+  const loadMoreNew = () => {
     if (hasNextPageNew) {
       fetchNextPageNew();
+    }
+  };
+
+  const loadMoreOffers = () => {
+    if (hasNextPageOffer) {
+      fetchNextPageOffer();
     }
   };
 
@@ -213,7 +240,9 @@ const StoreDetails = () => {
                       />
                     ))}
                   </View>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Pressable
+                    onPress={() => setTab(4)}
+                    style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text
                       style={{lineHeight: 0}}
                       color={colors.white}
@@ -221,7 +250,7 @@ const StoreDetails = () => {
                       tx={` ${
                         storeDetailsData.data?.ReviewOverview?.RatingSum
                       }  (${
-                        storeDetailsData.data?.ReviewOverview?.RatingSum
+                        storeDetailsData.data?.ReviewOverview?.TotalReviews
                       }  ${t('storeDetails.rating')})`}
                     />
                     <MaterialIcon
@@ -230,7 +259,7 @@ const StoreDetails = () => {
                       size={13}
                       style={{lineHeight: 0}}
                     />
-                  </View>
+                  </Pressable>
                 </View>
               </View>
             </View>
@@ -311,6 +340,7 @@ const StoreDetails = () => {
       </View>
       {tab == 0 && (
         <FlatList
+          key={'#main'}
           data={StoreMainData?.pages.map(page => page.data.Categories).flat()}
           numColumns={2}
           keyExtractor={(item, index) => item.Id}
@@ -341,7 +371,8 @@ const StoreDetails = () => {
       )}
       {tab == 1 && (
         <FlatList
-          onEndReached={loadMore}
+          key={'#new'}
+          onEndReached={loadMoreNew}
           onEndReachedThreshold={0.7}
           contentContainerStyle={{
             paddingHorizontal: spacing.content,
@@ -362,11 +393,81 @@ const StoreDetails = () => {
           )}
           ListFooterComponent={
             isFetchingNextPageNew
-              ? () => (
-                  <ActivityIndicator size={'small'} color={colors.primary} />
-                )
+              ? () => <Loader size={'small'} color={colors.primary} />
               : null
           }
+        />
+      )}
+      {tab == 2 && (
+        <FlatList
+          key={'#Offers'}
+          onEndReached={loadMoreOffers}
+          onEndReachedThreshold={0.7}
+          contentContainerStyle={{
+            paddingHorizontal: spacing.content,
+            paddingTop: 20,
+          }}
+          numColumns={2}
+          data={StoreOfferData?.pages
+            .map(page => page.data.ProductSummary.Items)
+            .flat()}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item, index}) => (
+            <ProductCard
+              styleContainer={{
+                marginRight: index % 2 == 0 ? 10 : 0,
+              }}
+              {...item}
+            />
+          )}
+          ListFooterComponent={
+            isFetchingNextPageOffer
+              ? () => <Loader size={'small'} color={colors.primary} />
+              : null
+          }
+        />
+      )}
+      {tab == 3 && (
+        <FlatList
+          key={'#categories'}
+          data={StoreMainData?.pages.map(page => page.data.Categories).flat()}
+          numColumns={1}
+          keyExtractor={(item, index) => item.Id}
+          contentContainerStyle={{
+            paddingHorizontal: spacing.content,
+            paddingTop: 20,
+          }}
+          renderItem={({item, index}) => (
+            <Pressable
+              style={{
+                borderBottomWidth: 1,
+                paddingVertical: 10,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderBottomColor: colors.border,
+                marginBottom: 10,
+              }}>
+              <Text
+                tx={item.Name}
+                color={item.HasSubCategories ? colors.primary : colors.black}
+                variant="smallRegular"
+              />
+              <MaterialIcon
+                name="arrow-forward-ios"
+                color={item.HasSubCategories ? colors.primary : colors.black}
+              />
+            </Pressable>
+          )}
+        />
+      )}
+      {tab == 4 && (
+        <RatingFiltters
+          style={{paddingHorizontal: spacing.content}}
+          setSelectedFilter={setSelectedFilter}
+          selectedFilter={selectedFilter}
+          RatingSum={storeDetailsData.data.ReviewOverview.RatingSum}
+          TotalReviews={storeDetailsData.data.ReviewOverview.TotalReviews}
         />
       )}
     </View>
