@@ -12,11 +12,11 @@ import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import {useQuery} from '@tanstack/react-query';
+import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
 import {Loader, Text} from 'components';
 import {HomeRoutes} from 'navigators/RoutesTypes';
 import NetworkErrorScreen from 'screens/NetworkErrorScreen';
-import {getProductDetails} from 'services/Home';
+import {getProductDetails, getReviews} from 'services/Home';
 import {BASE_URL} from 'utils/Axios';
 import {colors, spacing} from 'theme';
 import {useCurrency} from 'hook/useCurrency';
@@ -53,15 +53,11 @@ interface IProductImages {
   dimensions: string;
 }
 
-let PageSize: number = 10;
-
 const ProductDetails = ({}: IProductDetails) => {
   const {params} = useRoute<IProductNavigation>();
   const {Id} = params;
   const [selectedFilter, setSelectedFilter] = useState<string[]>([]);
-  const [Page, setPage] = useState<number>(1);
-  const [reviews, setReviews] = useState<any[]>();
-  const [hasNextPage, setHasNextPage] = useState<boolean>(true);
+  const [ratingFilters, setRatingFilters] = useState<string[]>([]);
   const {
     isLoading,
     data: productData,
@@ -70,28 +66,44 @@ const ProductDetails = ({}: IProductDetails) => {
     isRefetching,
   } = useQuery(['getProductDetails'], () => getProductDetails(Id));
 
+  const {
+    data,
+    isLoading: isLoadingReviews,
+    isError: isErrorReviews,
+    hasNextPage: hasNextPageReviews,
+    fetchNextPage,
+    refetch: refetchReviews,
+    isFetchingNextPage,
+    isRefetching: isRefetchingReviews,
+  } = useInfiniteQuery(
+    ['perantCategories'],
+    ({pageParam}) =>
+      getReviews({
+        pageParam,
+        PageSize: 5,
+        ProductId: Id,
+        WithImageOnly: selectedFilter.includes('with-images'),
+        Ratings: ratingFilters,
+      }),
+    {
+      getNextPageParam: lastPage => {
+        if (
+          lastPage?.data?.ProductReviews?.Page <
+          lastPage?.data?.ProductReviews?.TotalPages
+        ) {
+          return lastPage?.data?.ProductReviews?.Page + 1;
+        }
+        return null;
+      },
+    },
+  );
+
   useEffect(() => {
-    const data = {
-      Page,
-      PageSize,
-      ProductId: Id,
-      Ratings: [],
-      WithImageOnly: selectedFilter?.includes('with-images'),
-    };
-    (async () => {
-      await axios
-        .post(`${BASE_URL}/api/custom/products/ProductReviews`, data)
-        .then(res => {
-          setReviews(res.data);
-          if (Page < res?.ProductReviews?.TotalPages) {
-            setHasNextPage(false);
-          }
-        })
-        .catch(error => {
-          console.log({error});
-        });
-    })();
-  }, [Page]);
+    refetchReviews();
+  }, [selectedFilter.length, ratingFilters.length]);
+  useEffect(() => {
+    refetch();
+  }, [Id]);
 
   if (isLoading || isRefetching) {
     return <Loader containerStyle={styles.loaderStyle} />;
@@ -104,6 +116,12 @@ const ProductDetails = ({}: IProductDetails) => {
   const Product = productData?.data?.Product;
   const RelatedProductsModel = Product?.RelatedProductsModel;
   const AlsoPurchasedModel = Product?.AlsoPurchasedModel;
+
+  const loadMore = () => {
+    if (hasNextPageReviews) {
+      fetchNextPage();
+    }
+  };
 
   const renderReviews = ({item}) => {
     return (
@@ -168,17 +186,28 @@ const ProductDetails = ({}: IProductDetails) => {
             ProductId={Id}
             selectedFilter={selectedFilter}
             setSelectedFilter={setSelectedFilter}
+            setRatingFilters={setRatingFilters}
+            ratingFilters={ratingFilters}
+            isRefetchingReviews={isLoadingReviews || isRefetchingReviews}
           />
         }
-        data={reviews?.ProductReviews?.Items}
+        data={data?.pages.map(page => page.data.ProductReviews?.Items).flat()}
         keyExtractor={(_, index) => index.toString}
         renderItem={renderReviews}
+        onEndReached={loadMore}
         ListFooterComponent={
-          <ListFooterComponent
-            AlsoPurchasedModel={AlsoPurchasedModel}
-            RelatedProductsModel={RelatedProductsModel}
-            ProductId={Id}
-          />
+          <>
+            {isFetchingNextPage ||
+              (isLoadingReviews && (
+                <Loader size={'small'} color={colors.primary} />
+              ))}
+            <ListFooterComponent
+              AlsoPurchasedModel={AlsoPurchasedModel}
+              RelatedProductsModel={RelatedProductsModel}
+              ProductId={Id}
+              productData={productData}
+            />
+          </>
         }
       />
     </KeyboardAvoidingView>

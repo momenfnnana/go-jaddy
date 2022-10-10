@@ -7,15 +7,18 @@ import {
   ViewStyle,
 } from 'react-native';
 import React from 'react';
-import {colors} from 'theme';
+import {colors, spacing} from 'theme';
 import Icon from 'react-native-vector-icons/AntDesign';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import {Button, Text} from 'components';
+import {Button, Loader, Text} from 'components';
 import {useNavigation} from '@react-navigation/native';
 import i18n from 'i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNRestart from 'react-native-restart';
 import {AuthNavigationsType} from 'navigators/NavigationsTypes';
+import {useQuery} from '@tanstack/react-query';
+import {getLanguages} from 'services/Auth';
+import {setAxiosLanguage} from 'axiosConfig';
 
 interface ILanguageModalProps {
   style?: ViewStyle;
@@ -32,6 +35,12 @@ const LanguageModal: React.FC<ILanguageModalProps> = ({
   setVisibleLangModal,
 }) => {
   const {navigate} = useNavigation<AuthNavigationsType>();
+
+  const {data, isSuccess, isError, error, isLoading} = useQuery(
+    ['settings'],
+    getLanguages,
+  );
+
   const confirmLanguage = async () => {
     i18n.changeLanguage(language);
     AsyncStorage.setItem('languageId', language!);
@@ -48,8 +57,11 @@ const LanguageModal: React.FC<ILanguageModalProps> = ({
       }
     }
   };
-  console.log({language});
-  
+  if (isLoading) {
+    return <Loader size={'small'} style={styles.loader} />;
+  }
+  console.log({data: data?.data?.Languages});
+
   return (
     <>
       {visibleLangModal && (
@@ -75,53 +87,48 @@ const LanguageModal: React.FC<ILanguageModalProps> = ({
                   color={colors.gray[500]}
                 />
               </View>
-              <Pressable
-                onPress={() => setLanguage!('ar')}
-                style={
-                  language == 'ar' ? styles.activeButn : styles.disabledButn
-                }>
-                <MaterialIcon
-                  name="radio-button-off"
-                  size={25}
-                  color={colors.white}
-                  style={{opacity: 0}}
-                />
-                <Text
-                  center
-                  color={language == 'ar' ? colors.white : '#000'}
-                  tx="languageModel.arBtn"
-                  variant={language == 'ar' ? 'largeBold' : 'largeRegular'}
-                />
-                <MaterialIcon
-                  name={`radio-button-${language == 'ar' ? 'on' : 'off'}`}
-                  size={25}
-                  color={language == 'ar' ? colors.white : colors.gray[500]}
-                />
-              </Pressable>
-              <Pressable
-                onPress={() => setLanguage!('en')}
-                style={[
-                  language == 'en' ? styles.activeButn : styles.disabledButn,
-                  {marginTop: 20},
-                ]}>
-                <MaterialIcon
-                  name="radio-button-off"
-                  size={25}
-                  color={colors.gray[500]}
-                  style={{opacity: 0}}
-                />
-                <Text
-                  center
-                  color={language == 'en' ? colors.white : '#000'}
-                  tx="languageModel.enBtn"
-                  variant={language == 'en' ? 'largeBold' : 'largeRegular'}
-                />
-                <MaterialIcon
-                  name={`radio-button-${language == 'en' ? 'on' : 'off'}`}
-                  size={25}
-                  color={language == 'en' ? colors.white : colors.gray[500]}
-                />
-              </Pressable>
+              {data?.data?.Languages?.map((item: any) => (
+                <Pressable
+                  onPress={() => {
+                    setAxiosLanguage(item.Id);
+                    setLanguage!(item?.CultureCode);
+                  }}
+                  style={
+                    language == item?.CultureCode
+                      ? styles.activeButn
+                      : styles.disabledButn
+                  }>
+                  <MaterialIcon
+                    name="radio-button-off"
+                    size={25}
+                    color={colors.white}
+                    style={{opacity: 0}}
+                  />
+                  <Text
+                    center
+                    color={
+                      language == item?.CultureCode ? colors.white : '#000'
+                    }
+                    tx={item?.Name}
+                    variant={
+                      language == item?.CultureCode
+                        ? 'largeBold'
+                        : 'largeRegular'
+                    }
+                  />
+                  <MaterialIcon
+                    name={`radio-button-${
+                      language == item?.CultureCode ? 'on' : 'off'
+                    }`}
+                    size={25}
+                    color={
+                      language == item?.CultureCode
+                        ? colors.white
+                        : colors.gray[500]
+                    }
+                  />
+                </Pressable>
+              ))}
               <Button
                 onPress={confirmLanguage}
                 title="buttons.languageBtn"
@@ -171,6 +178,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
+    marginTop: spacing.normal,
   },
   disabledButn: {
     paddingVertical: 10,
@@ -182,5 +190,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
+    marginTop: spacing.normal,
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

@@ -53,8 +53,6 @@ const Categories = (props: ICategories) => {
     }
   };
 
-  console.log({hasNextPage});
-
   return (
     <View style={{flex: 1}}>
       {/* <View

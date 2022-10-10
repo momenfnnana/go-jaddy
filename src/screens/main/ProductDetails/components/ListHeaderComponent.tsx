@@ -43,6 +43,9 @@ interface IListHeaderComponent {
   ProductId: number;
   selectedFilter: string[];
   setSelectedFilter: (value: any) => void;
+  ratingFilters: string[];
+  setRatingFilters: (value: any) => void;
+  isRefetchingReviews: boolean;
 }
 interface IinitialValues {
   collectionName: string;
@@ -65,6 +68,9 @@ const ListHeaderComponent = ({
   ProductId,
   selectedFilter,
   setSelectedFilter,
+  ratingFilters,
+  setRatingFilters,
+  isRefetchingReviews,
 }: IListHeaderComponent) => {
   const {navigate, goBack, canGoBack} = useNavigation<IProductNavigation>();
   const {productsNumber, setProductsNumber} = useContext(CartContext);
@@ -122,12 +128,22 @@ const ListHeaderComponent = ({
   };
 
   const onPressFilter = (value: string) => {
-    if (!selectedFilter.includes(value)) {
-      const newlist = [...selectedFilter, value];
-      setSelectedFilter(newlist);
+    if (value === 'all' || value === 'with-images') {
+      if (!selectedFilter.includes(value)) {
+        const newlist = [...selectedFilter, value];
+        setSelectedFilter(newlist);
+      } else {
+        const newlist = selectedFilter.filter(item => item !== value);
+        setSelectedFilter(newlist);
+      }
+      return;
+    }
+    if (!ratingFilters.includes(value)) {
+      const newlist = [...ratingFilters, value];
+      setRatingFilters(newlist);
     } else {
-      const newlist = selectedFilter.filter(item => item !== value);
-      setSelectedFilter(newlist);
+      const newlist = ratingFilters.filter(item => item !== value);
+      setRatingFilters(newlist);
     }
   };
 
@@ -183,19 +199,6 @@ const ListHeaderComponent = ({
     });
   };
 
-  // useEffect(() => {
-  //   if (isSuccess === true && !isLoading) {
-  //     forceRefetch();
-  //   }
-  // }, [isSuccess, isLoading]);
-  // useEffect(() => {
-  //   if (isSuccessAddToWishlist === true && !isLoadingAddToWishlist) {
-  //     onBackdropPress();
-  //   }
-  // }, [isLoadingAddToWishlist, isSuccessAddToWishlist]);
-  // if (isLoadingWishlists || isRefetchingWishlists) {
-  //   return <Loader size={'small'} style={styles.collectionsLoader} />;
-  // }
   const mainImage = {
     height: height * 0.5,
   } as ViewStyle;
@@ -203,7 +206,6 @@ const ListHeaderComponent = ({
     justifyContent: 'center',
     alignItems: 'center',
   } as ViewStyle;
-  console.log({Product});
 
   return (
     <View>
@@ -477,7 +479,7 @@ const ListHeaderComponent = ({
                     style={[
                       styles.filterItem,
                       {
-                        backgroundColor: selectedFilter.includes(
+                        backgroundColor: ratingFilters.includes(
                           (index + 1).toString(),
                         )
                           ? colors.secondary
@@ -491,7 +493,7 @@ const ListHeaderComponent = ({
                         <AntDesign
                           name="star"
                           color={
-                            selectedFilter.includes((index + 1).toString())
+                            ratingFilters.includes((index + 1).toString())
                               ? colors.white
                               : colors.reloadColor
                           }
@@ -506,6 +508,7 @@ const ListHeaderComponent = ({
           </>
         )}
       </View>
+      {isRefetchingReviews && <Loader size={'small'} color={colors.secondary} />}
       <Modal
         isVisible={isAddToCollectionShown}
         onBackdropPress={onCloseAddToCollection}
@@ -516,9 +519,9 @@ const ListHeaderComponent = ({
         description="whishlist.add-hint">
         {isLoadingWishlists ? (
           <Loader size={'small'} style={styles.collectionsLoader} />
-        ) : wishlistsData?.data?.length > 0 ? (
+        ) : wishlistsData?.data?.Wishlists?.length > 0 ? (
           <FlatList
-            data={wishlistsData?.data}
+            data={wishlistsData?.data?.Wishlists}
             keyExtractor={(_, index) => index.toString()}
             ListHeaderComponent={
               <View style={styles.addCollectionBtnContainer}>
