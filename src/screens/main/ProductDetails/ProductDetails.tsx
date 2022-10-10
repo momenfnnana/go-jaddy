@@ -194,7 +194,6 @@ const ProductDetails = ({}: IProductDetails) => {
         data={data?.pages.map(page => page.data.ProductReviews?.Items).flat()}
         keyExtractor={(_, index) => index.toString}
         renderItem={renderReviews}
-        onEndReached={loadMore}
         ListFooterComponent={
           <>
             {isFetchingNextPage ||
@@ -206,6 +205,8 @@ const ProductDetails = ({}: IProductDetails) => {
               RelatedProductsModel={RelatedProductsModel}
               ProductId={Id}
               productData={productData}
+              hasNextPageReviews={hasNextPageReviews}
+              loadMore={loadMore}
             />
           </>
         }
