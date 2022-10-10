@@ -11,9 +11,9 @@ import i18n from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import en from 'i18n/locales/en.json';
 import ar from 'i18n/locales/ar.json';
-import {readLanguage} from 'constants';
+import {readLanguage, readAccessToken} from 'constants';
 import {UserProvider} from 'context/UserContext';
-import 'axiosConfig';
+import {setAxiosAccessToken} from 'axiosConfig';
 
 const resources = {
   en: {
@@ -29,6 +29,11 @@ export default function App() {
   const queryClient = new QueryClient();
   const [isAr, setIsAr] = useState<boolean>(false);
   useEffect(() => {
+    readAccessToken().then(accessToken => {
+      if (accessToken) {
+        setAxiosAccessToken(accessToken);
+      }
+    });
     readLanguage().then((res: string | null) => {
       setIsAr(res === 'ar' ? true : false);
       i18n.use(initReactI18next).init({

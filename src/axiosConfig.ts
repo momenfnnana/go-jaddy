@@ -1,8 +1,8 @@
 import axios from 'axios';
-import {readAccessToken} from 'constants';
 
-readAccessToken().then(res => {
-  if (res) {
-    axios.defaults.headers.common['AccessToken'] = `${res}`;
-  }
-});
+export const setAxiosLanguage = (languageId: string) => {
+  axios.defaults.headers.common['LanguageId'] = languageId;
+};
+export const setAxiosAccessToken = (accessToken: string) => {
+  axios.defaults.headers.common['AccessToken'] = accessToken;
+};
