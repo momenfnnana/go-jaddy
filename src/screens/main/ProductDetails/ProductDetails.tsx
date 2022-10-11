@@ -146,6 +146,8 @@ const ProductDetails = ({}: IProductDetails) => {
               RelatedProductsModel={RelatedProductsModel}
               ProductId={Id}
               productData={productData}
+              hasNextPageReviews={hasNextPageReviews}
+              loadMore={loadMore}
             />
           </>
         }

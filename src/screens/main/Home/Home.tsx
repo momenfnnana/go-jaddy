@@ -106,10 +106,6 @@ const Home = (props: IHome) => {
     return <Loader containerStyle={styles.loaderStyle} />;
   }
 
-  if (isErrorStore) {
-    return <NetworkErrorScreen onPress={refetchStore} />;
-  }
-
   return (
     <View style={{flex: 1}}>
       <MainHeader />

@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View, StyleSheet, Pressable, Image} from 'react-native';
-import {Button, InputField, Modal, ShowSection, Switch} from 'components';
+import {Button, InputField, Modal, ShowSection, Switch, Text} from 'components';
 import {colors, spacing} from 'theme';
 import {StarFilledIcon, UploadImageIcon} from 'assets/icons';
 import {UserContext} from 'context/UserContext';
@@ -18,6 +18,8 @@ interface IListFooterComponent {
   AlsoPurchasedModel: any;
   ProductId: number | string;
   productData: any;
+  loadMore?: () => void;
+  hasNextPageReviews?: boolean;
 }
 interface ICameraImage {
   uri?: string;
@@ -42,6 +44,8 @@ const ListFooterComponent = ({
   AlsoPurchasedModel,
   ProductId,
   productData,
+  loadMore,
+  hasNextPageReviews,
 }: IListFooterComponent) => {
   const {settings} = useContext(UserContext);
   const {t} = useTranslation();
@@ -149,12 +153,15 @@ const ListFooterComponent = ({
 
   return (
     <View style={styles.contentContainer}>
-      <Button
-        title="common.load-more"
-        variant="Secondary"
-        color={colors.secondary}
-        onPress={() => {}}
-      />
+      {hasNextPageReviews && (
+        <Pressable style={styles.loadMoreContainer} onPress={loadMore}>
+          <Text
+            tx="common.load-more"
+            variant="smallRegular"
+            color={colors.secondary}
+          />
+        </Pressable>
+      )}
       {ReviewOverview?.AllowCustomerReviews &&
         !ReviewOverview?.CustomerAlreadyReviewedProduct &&
         ReviewOverview?.CustomerAlreadyPurchasedProduct && (
@@ -308,5 +315,17 @@ const styles = StyleSheet.create({
   },
   sendReviewBtn: {
     marginTop: spacing.xLarge,
+  },
+  loadMoreContainer: {
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '50%',
+    alignSelf: 'center',
+    borderRadius: spacing.xxLarge + 2,
+    paddingHorizontal: spacing.large,
+    paddingVertical: spacing.small + 2,
+    borderColor: colors.secondary,
+    backgroundColor: colors.white,
   },
 });

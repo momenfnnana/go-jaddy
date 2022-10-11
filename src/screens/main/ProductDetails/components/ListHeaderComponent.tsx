@@ -200,6 +200,12 @@ const ListHeaderComponent = ({
     });
   };
 
+  useEffect(() => {
+    if (!isLoadingAddToWishlist && isSuccessAddToWishlist) {
+      onCloseAddToCollection();
+    }
+  }, [isLoadingAddToWishlist, isSuccessAddToWishlist]);
+
   const mainImage = {
     height: height * 0.5,
   } as ViewStyle;
@@ -509,7 +515,9 @@ const ListHeaderComponent = ({
           </>
         )}
       </View>
-      {isRefetchingReviews && <Loader size={'small'} color={colors.secondary} />}
+      {isRefetchingReviews && (
+        <Loader size={'small'} color={colors.secondary} />
+      )}
       <Modal
         isVisible={isAddToCollectionShown}
         onBackdropPress={onCloseAddToCollection}

@@ -60,7 +60,6 @@ const LanguageModal: React.FC<ILanguageModalProps> = ({
   if (isLoading) {
     return <Loader size={'small'} style={styles.loader} />;
   }
-  console.log({data: data?.data?.Languages});
 
   return (
     <>
@@ -97,7 +96,8 @@ const LanguageModal: React.FC<ILanguageModalProps> = ({
                     language == item?.CultureCode
                       ? styles.activeButn
                       : styles.disabledButn
-                  }>
+                  }
+                  key={item?.Id}>
                   <MaterialIcon
                     name="radio-button-off"
                     size={25}

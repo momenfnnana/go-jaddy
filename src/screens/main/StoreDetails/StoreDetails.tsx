@@ -241,7 +241,8 @@ const StoreDetails = () => {
                   style={{width: '100%', height: '100%'}}
                   resizeMode="contain"
                   source={{
-                    uri: BASE_URL + storeDetailsData.data?.StoreInfo?.Image.Url,
+                    uri:
+                      BASE_URL + storeDetailsData.data?.StoreInfo?.Image?.Url,
                   }}
                 />
                 {storeDetailsData.data?.StoreInfo?.Trusted && (
@@ -275,6 +276,7 @@ const StoreDetails = () => {
                   <View style={{flexDirection: 'row', marginRight: 3}}>
                     {[...new Array(5)].map((item, index) => (
                       <FontAwesome
+                        key={index.toString()}
                         name="star"
                         size={11}
                         color={
@@ -343,7 +345,7 @@ const StoreDetails = () => {
         resizeMode="contain"
         style={{height: 100, width: '100%'}}
         source={{
-          uri: BASE_URL + storeDetailsData.data?.StoreInfo?.CoverImage.Url,
+          uri: BASE_URL + storeDetailsData.data?.StoreInfo?.CoverImage?.Url,
         }}
       />
       <View
@@ -390,7 +392,7 @@ const StoreDetails = () => {
           key={'#main'}
           data={StoreMainData?.pages.map(page => page.data.Categories).flat()}
           numColumns={2}
-          keyExtractor={(item, index) => item.Id}
+          keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={{
             paddingHorizontal: spacing.content,
             paddingTop: 20,
@@ -408,7 +410,7 @@ const StoreDetails = () => {
               }}>
               <Text tx={item.Name} variant="smallBold" />
               <Image
-                source={{uri: BASE_URL + item.Image.Url}}
+                source={{uri: BASE_URL + item.Image?.Url}}
                 style={{width: '100%', height: 90, marginTop: 10}}
                 resizeMode="contain"
               />
@@ -479,7 +481,7 @@ const StoreDetails = () => {
           key={'#categories'}
           data={StoreMainData?.pages.map(page => page.data.Categories).flat()}
           numColumns={1}
-          keyExtractor={(item, index) => item.Id}
+          keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={{
             paddingHorizontal: spacing.content,
             paddingTop: 20,
@@ -510,6 +512,7 @@ const StoreDetails = () => {
       )}
       {tab == 4 && (
         <FlatList
+          keyExtractor={(i, _) => _.toString()}
           ListHeaderComponent={
             <RatingFiltters
               style={{paddingHorizontal: spacing.content}}
