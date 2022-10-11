@@ -25,8 +25,9 @@ const ProductImagesList = ({
       style={[
         styles.imagesRowContainer,
         {
-          borderWidth: activeImageIndex === index ? 2 : undefined,
-          borderColor: activeImageIndex === index ? colors.orange : undefined,
+          borderWidth: 2,
+          borderColor:
+            activeImageIndex === index ? colors.orange : 'transparent',
         },
       ]}
       onPress={changeActiveIndex}>
