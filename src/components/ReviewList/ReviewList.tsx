@@ -5,7 +5,11 @@ import {BASE_URL} from 'utils/Axios';
 import Text from 'components/Text';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-const ReviewList = ({item}: any) => {
+interface IReviewList {
+  item: any;
+}
+
+const ReviewList = ({item}: IReviewList) => {
   return (
     <View style={[styles.reviewItem, styles.contentContainer]}>
       <View style={[styles.row, {alignItems: 'flex-start'}]}>
