@@ -11,3 +11,4 @@ export {default as SearchHeader} from './SearchHeader';
 export {default as ShowSection} from './ShowSection';
 export {default as Modal} from './Modal';
 export {default as Switch} from './Switch';
+export {default as ReviewList} from './ReviewList';
