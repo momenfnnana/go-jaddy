@@ -1,23 +1,17 @@
 import React, {useState, useEffect} from 'react';
-import {
-  StyleSheet,
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
+import {StyleSheet, ScrollView} from 'react-native';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
-import {Loader, Text} from 'components';
+import {Loader, ReviewList} from 'components';
 import {HomeRoutes} from 'navigators/RoutesTypes';
 import NetworkErrorScreen from 'screens/NetworkErrorScreen';
 import {getProductDetails, getReviews} from 'services/Home';
-import {colors, spacing} from 'theme';
+import {colors} from 'theme';
 import {ListFooterComponent, ListHeaderComponent} from './components';
-import {ReviewList} from 'components/ReviewList';
 
 interface IProductNavigation
   extends NativeStackNavigationProp<HomeRoutes, 'ProductDetails'>,
@@ -116,43 +110,35 @@ const ProductDetails = ({}: IProductDetails) => {
     }
   };
 
+  const reviewsList = data?.pages
+    .map(page => page.data?.ProductReviews?.Items)
+    .flat();
+
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <FlatList
-        ListHeaderComponent={
-          <ListHeaderComponent
-            Product={Product}
-            ProductId={Id}
-            selectedFilter={selectedFilter}
-            setSelectedFilter={setSelectedFilter}
-            setRatingFilters={setRatingFilters}
-            ratingFilters={ratingFilters}
-            isRefetchingReviews={isLoadingReviews || isRefetchingReviews}
-          />
-        }
-        data={data?.pages.map(page => page.data?.ProductReviews?.Items).flat()}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={ReviewList}
-        onEndReached={loadMore}
-        ListFooterComponent={
-          <>
-            {isFetchingNextPage ||
-              (isLoadingReviews && (
-                <Loader size={'small'} color={colors.primary} />
-              ))}
-            <ListFooterComponent
-              AlsoPurchasedModel={AlsoPurchasedModel}
-              RelatedProductsModel={RelatedProductsModel}
-              ProductId={Id}
-              productData={productData}
-              hasNextPageReviews={hasNextPageReviews}
-              loadMore={loadMore}
-            />
-          </>
-        }
+    <ScrollView>
+      <ListHeaderComponent
+        Product={Product}
+        ProductId={Id}
+        selectedFilter={selectedFilter}
+        setSelectedFilter={setSelectedFilter}
+        setRatingFilters={setRatingFilters}
+        ratingFilters={ratingFilters}
+        isRefetchingReviews={isLoadingReviews || isRefetchingReviews}
       />
-    </KeyboardAvoidingView>
+      {reviewsList?.map(item => (
+        <ReviewList key={item?.Id} item={item} />
+      ))}
+      {isFetchingNextPage ||
+        (isLoadingReviews && <Loader size={'small'} color={colors.primary} />)}
+      <ListFooterComponent
+        AlsoPurchasedModel={AlsoPurchasedModel}
+        RelatedProductsModel={RelatedProductsModel}
+        ProductId={Id}
+        productData={productData}
+        hasNextPageReviews={hasNextPageReviews}
+        loadMore={loadMore}
+      />
+    </ScrollView>
   );
 };
 
