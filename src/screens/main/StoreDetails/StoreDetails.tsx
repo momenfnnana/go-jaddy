@@ -1,5 +1,5 @@
 import {useRoute} from '@react-navigation/native';
-import {Loader, ProductCard, SearchHeader, Text} from 'components';
+import {Loader, ProductCard, SearchHeader, Text, ReviewList} from 'components';
 import {IStores} from 'navigators/NavigationsTypes';
 import React, {useEffect, useState} from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -25,7 +25,6 @@ import {BASE_URL} from 'utils/Axios';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useTranslation} from 'react-i18next';
 import {RatingFiltters} from 'components/RatingFilters';
-import {ReviewList} from 'components/ReviewList';
 
 export interface Ifiltter {
   withImage: boolean;
