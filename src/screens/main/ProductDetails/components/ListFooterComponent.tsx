@@ -117,8 +117,6 @@ const ListFooterComponent = ({
   const {
     mutate,
     isLoading: isLoadingAddingReview,
-    isError: isAddingReviewError,
-    error: addingReviewError,
     isSuccess: isAddingReviewSuccess,
     data,
   } = useMutation(postAddReview, {

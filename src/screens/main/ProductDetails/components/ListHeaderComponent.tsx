@@ -35,6 +35,7 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import {RatingFiltters} from 'components/RatingFilters';
+import {CategoryNavigationsType} from 'navigators/NavigationsTypes';
 
 interface IProductNavigation
   extends NativeStackNavigationProp<HomeRoutes, 'ProductDetails'>,
@@ -73,7 +74,8 @@ const ListHeaderComponent = ({
   setRatingFilters,
   isRefetchingReviews,
 }: IListHeaderComponent) => {
-  const {navigate, goBack, canGoBack} = useNavigation<IProductNavigation>();
+  const {navigate, goBack, canGoBack} =
+    useNavigation<CategoryNavigationsType>();
   const {productsNumber, setProductsNumber} = useContext(CartContext);
   const {top} = useSafeAreaInsets();
   const {height} = useWindowDimensions();
@@ -100,10 +102,7 @@ const ListHeaderComponent = ({
   const {
     isLoading: isLoadingWishlists,
     data: wishlistsData,
-    isError: isErrorWishlists,
     refetch: refetchWishlists,
-    isFetched: isFetchedWishlists,
-    isRefetching: isRefetchingWishlists,
     isSuccess: isLoadedWishlists,
   } = useQuery(['getWishlists'], getWishlists);
 
@@ -279,11 +278,18 @@ const ListHeaderComponent = ({
             color={colors.tabsColor}
             variant="largeBold"
             numberOfLines={1}
+            style={{flex: 1}}
           />
           {Product?.StoreId !== 0 && (
             <Pressable
-            // onPress={()=>navigate('')}
-            >
+              onPress={() =>
+                navigate('StoresStack', {
+                  screen: 'StoresDetails',
+                  params: {
+                    storeId: Product?.StoreId,
+                  },
+                })
+              }>
               <Image
                 source={{uri: `${BASE_URL}${Product?.StoreImage?.Url}`}}
                 style={[styles.storeImage, styles.storeWidth]}
