@@ -103,6 +103,7 @@ const AnonymousModal: React.FC<IAnonymousModalProps> = ({
                       onChangeText={handleChange('userName')}
                       onBlur={handleBlur('userName')}
                       placeholder={t('common.userName')}
+                      style={{}}
                     />
                     {errors.userName && (
                       <Text
@@ -117,6 +118,7 @@ const AnonymousModal: React.FC<IAnonymousModalProps> = ({
                       onChangeText={handleChange('phoneNumber')}
                       onBlur={handleBlur('phoneNumber')}
                       containerStyle={styles.inputContainerStyle}
+                      style={{}}
                       rightIcon={
                         <Pressable style={styles.row}>
                           <View style={styles.introNumber}>
