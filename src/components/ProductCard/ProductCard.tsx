@@ -191,8 +191,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   priceContainer: {
-    // flex: 1,
     alignItems: 'center',
+    marginLeft: spacing.tiny,
   },
   prevPrice: {
     textDecorationLine: 'line-through',
