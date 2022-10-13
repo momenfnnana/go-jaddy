@@ -107,7 +107,8 @@
     "you-may-like": "You may like",
     "product-rating": "Rate product",
     "rate-product": "Rate product",
-    "rate-field": "Documents (optional)"
+    "rate-field": "Documents (optional)",
+    "attach-image": "Attach image (optional)"
   },
   "category": {
     "title": "Category"
@@ -135,7 +136,19 @@
       "categoriesTab": "categories"
     }
   },
-
+  "profile": {
+    "welcome": "Welcome for you",
+    "notifications": "Notifications",
+    "favorite": "Favorite",
+    "about-app": "About the app",
+    "currency": "Currency",
+    "language": "Language",
+    "need-help": "Need help?"
+  },
+  "currencies": {
+    "shikel": "Shikel {{currency}}",
+    "dollar": "Dollar {{currency}}"
+  },
   "api": {
     "account": {
       "login": {

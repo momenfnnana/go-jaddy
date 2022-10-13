@@ -74,7 +74,17 @@
     "you-may-like": "قد تعجبك",
     "product-rating": "تقييم المنتج",
     "rate-product": "قيم المنتج",
-    "rate-field": "ملاحظات (اختياري)"
+    "rate-field": "ملاحظات (اختياري)",
+    "attach-image": "ارفاق صورة (اختياري)"
+  },
+  "profile": {
+    "welcome": "أهلا بك",
+    "notifications": "الاشعارات",
+    "favorite": "المفضلة",
+    "about-app": "عن التطبيق",
+    "currency": "العملة",
+    "language": "اللغة",
+    "need-help": "تحتاج مساعدة؟"
   },
   "category": {
     "title": "التصنيفات"
