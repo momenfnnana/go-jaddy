@@ -20,6 +20,7 @@ const CategoriesStack = () => {
   const {t} = useTranslation();
   return (
     <Stack.Navigator
+      initialRouteName="Categories"
       screenOptions={{
         headerStyle: {backgroundColor: colors.primary},
         headerTitleStyle: {fontFamily: font.regular, color: colors.white},

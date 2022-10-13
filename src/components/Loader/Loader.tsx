@@ -5,6 +5,7 @@ import {
   ActivityIndicatorProps,
   ViewStyle,
 } from 'react-native';
+import {colors} from 'theme';
 
 interface ILoader extends ActivityIndicatorProps {
   containerStyle?: ViewStyle;
@@ -23,7 +24,11 @@ const Loader = ({
           ? {flex: 1, justifyContent: 'center', alignItems: 'center'}
           : containerStyle
       }>
-      <ActivityIndicator size={size || 'large'} {...rest} />
+      <ActivityIndicator
+        color={colors.primary}
+        size={size || 'large'}
+        {...rest}
+      />
     </View>
   );
 };

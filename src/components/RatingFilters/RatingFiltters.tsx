@@ -23,18 +23,23 @@ const RatingFiltters = ({
 }: IRatingFiltters) => {
   const onPressFilter = (value: string) => {
     if (value === 'all') {
-      if (!selectedFilter.withImage && selectedFilter.ratings.length !== 5) {
-        setSelectedFilter({
-          withImage: true,
-          ratings: [1, 2, 3, 4, 5],
-        });
-      } else {
-        setSelectedFilter({
-          withImage: false,
-          ratings: [],
-        });
-      }
+      setSelectedFilter({
+        withImage: false,
+        ratings: [],
+      });
       return;
+      // if (!selectedFilter.withImage && selectedFilter.ratings.length !== 5) {
+      //   setSelectedFilter({
+      //     withImage: true,
+      //     ratings: [1, 2, 3, 4, 5],
+      //   });
+      // } else {
+      //   setSelectedFilter({
+      //     withImage: false,
+      //     ratings: [],
+      //   });
+      // }
+      // return;
     }
     if (value === 'with-images') {
       setSelectedFilter({
@@ -81,7 +86,7 @@ const RatingFiltters = ({
             styles.filterItem,
             {
               backgroundColor:
-                selectedFilter.ratings.length === 5 && selectedFilter.withImage
+                !selectedFilter.withImage && selectedFilter.ratings.length === 0
                   ? colors.secondary
                   : colors.simiWhite,
             },
@@ -90,7 +95,7 @@ const RatingFiltters = ({
           <Text
             tx="product-details.all"
             color={
-              selectedFilter.withImage && selectedFilter.ratings.length === 5
+              !selectedFilter.withImage && selectedFilter.ratings.length === 0
                 ? colors.white
                 : colors.black
             }

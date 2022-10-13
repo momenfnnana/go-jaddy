@@ -14,7 +14,11 @@ const ReviewList = ({item}: IReviewList) => {
     <View style={[styles.reviewItem, styles.contentContainer]}>
       <View style={[styles.row, {alignItems: 'flex-start'}]}>
         <Image
-          source={{uri: `${BASE_URL}${item?.CustomerAvatar?.Url}`}}
+          source={{
+            uri: item?.CustomerAvatar?.Url?.length
+              ? `${BASE_URL}${item?.CustomerAvatar?.Url}`
+              : 'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg',
+          }}
           style={styles.customerReviewAvatar}
         />
         <View>

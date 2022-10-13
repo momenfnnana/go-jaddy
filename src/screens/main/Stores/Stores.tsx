@@ -35,7 +35,8 @@ const Stores = (props: IStores) => {
     isFetchingNextPage,
   } = useInfiniteQuery(
     ['AllStores'],
-    getAllStores,
+    ({pageParam}) =>
+      getAllStores({pageParam, onlyFollowed: typeStores != 'all'}),
 
     {
       getNextPageParam: lastPage => {

@@ -41,8 +41,8 @@ const ProductCard = (props: IProductInterface) => {
   const [isAddToCollectionShown, setIsAddToCollectionShown] =
     useState<boolean>(false);
 
-  const DiscountBadge = Badges.find(item => item?.Style === 5);
-  const isNewBadge = Badges.find(item => item?.Style === 2);
+  const DiscountBadge = Badges?.find(item => item?.Style === 5);
+  const isNewBadge = Badges?.find(item => item?.Style === 2);
   const {width} = useWindowDimensions();
   const currentRoute = routes[routes.length - 1].name;
 
