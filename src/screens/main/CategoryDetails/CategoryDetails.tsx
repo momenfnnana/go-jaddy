@@ -21,10 +21,10 @@ import {
 } from 'navigators/NavigationsTypes';
 import {ActivityIndicator} from 'react-native-paper';
 
-const Categories = (props: ICategoryDetails) => {
+const CategoriesDetails = (props: ICategoryDetails) => {
   const {width} = useWindowDimensions();
   const {params} = useRoute<CategoryNavigationsType>();
-  const {push, pop, goBack, canGoBack, navigate} =
+  const {push, pop, goBack, canGoBack, replace, navigate} =
     useNavigation<CategoryNavigationsType>();
 
   const {
@@ -35,7 +35,7 @@ const Categories = (props: ICategoryDetails) => {
     fetchNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery(
-    ['subCategories'],
+    [`subCategories${params?.id}`],
     ({pageParam}) => getSubCategories({categoryId: params?.id, pageParam}),
     {
       getNextPageParam: lastPage => {
@@ -52,7 +52,7 @@ const Categories = (props: ICategoryDetails) => {
       title: params?.title,
       headerLeft: () => (
         <Pressable
-          onPress={() => pop()}
+          onPress={() => replace('Categories')}
           style={{
             backgroundColor: colors.white + 18,
             padding: 8,
@@ -199,4 +199,4 @@ const Categories = (props: ICategoryDetails) => {
   );
 };
 
-export default Categories;
+export default CategoriesDetails;

@@ -1,7 +1,7 @@
-import {useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {Loader, ProductCard, SearchHeader, Text, ReviewList} from 'components';
-import {IStores} from 'navigators/NavigationsTypes';
-import React, {useEffect, useState} from 'react';
+import {CategoryNavigationsType, IStores} from 'navigators/NavigationsTypes';
+import React, {useContext, useEffect, useState} from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   View,
@@ -14,17 +14,22 @@ import {colors, spacing} from 'theme';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
 import {
+  getRefreshFollowStore,
   getStoreCategories,
   getStoreDetails,
   getStoreNewProducts,
   getStoreOfferProducts,
   getStoreReviews,
+  getStoreSearchProducts,
 } from 'services/Stores';
 import NetworkErrorScreen from 'screens/NetworkErrorScreen';
 import {BASE_URL} from 'utils/Axios';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useTranslation} from 'react-i18next';
 import {RatingFiltters} from 'components/RatingFilters';
+import {UserContext} from 'context/UserContext';
+import CategoryItem from './components/categoryItem';
+import {screen} from '../../../theme/layout';
 
 export interface Ifiltter {
   withImage: boolean;
@@ -33,14 +38,17 @@ export interface Ifiltter {
 
 const StoreDetails = () => {
   const {params} = useRoute<IStores>();
+
   const [searchText, setSearchText] = useState<string>('');
+  const {push, pop, goBack, canGoBack, navigate} =
+    useNavigation<CategoryNavigationsType>();
   const [tab, setTab] = useState<number>(0);
   const [isFollowed, setFollowed] = useState<boolean>(false);
   const [selectedFilter, setSelectedFilter] = useState<Ifiltter>({
     ratings: [],
     withImage: false,
   });
-
+  const {settings} = useContext(UserContext);
   const {t} = useTranslation();
   const {width} = useWindowDimensions();
 
@@ -82,8 +90,39 @@ const StoreDetails = () => {
     refetch: refetchStoreDetails,
     isRefetching: isRefetchingrefetchStoreDetails,
     remove: removeStoreDetails,
-  } = useQuery(['getStoreDetails'], () =>
-    getStoreDetails({storeId: params?.storeId}),
+    isSuccess: isSuccessStoreDetails,
+  } = useQuery(
+    ['getStoreDetails'],
+    () => getStoreDetails({storeId: params?.storeId}),
+    {
+      onSuccess(data) {
+        setFollowed(data.data?.IsCustomerFollowingTheStore);
+      },
+    },
+  );
+
+  const {
+    isLoading: isLoadingrefreshFollowStore,
+    data: refreshFollowStoreData,
+    isError: isErrorrefreshFollowStore,
+    refetch: refetchrefreshFollowStore,
+    isRefetching: isRefetchingrefetchrefreshFollowStore,
+    remove: removerefreshFollowStore,
+    isSuccess: isSuccessrefreshFollowStore,
+  } = useQuery(
+    ['refreshFollowStore'],
+    () =>
+      getRefreshFollowStore({
+        storeId: params?.storeId as number,
+        isFollow: isFollowed,
+      }),
+    {
+      enabled: false,
+      onSuccess() {
+        console.log('first');
+        setFollowed(!isFollowed);
+      },
+    },
   );
 
   const {
@@ -126,8 +165,7 @@ const StoreDetails = () => {
     {
       getNextPageParam: lastPage => {
         if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
-          const next = lastPage?.data?.Page + 2;
-          console.log({next});
+          const next = lastPage?.data?.Page + 1;
           return next;
         }
         return null;
@@ -151,11 +189,44 @@ const StoreDetails = () => {
     {
       getNextPageParam: lastPage => {
         if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
-          const next = lastPage?.data?.Page + 2;
-          console.log({next});
+          const next = lastPage?.data?.Page + 1;
           return next;
         }
         return null;
+      },
+    },
+  );
+  const {
+    isLoading: isLoadingStoreSearch,
+    data: StoreSearchData,
+    isError: isErrorStoreSearch,
+    refetch: refetchStoreSearch,
+    isRefetching: isRefetchingrefetchStoreSearch,
+    remove: removeStoreSearch,
+    hasNextPage: hasNextPageSearch,
+    isFetchingNextPage: isFetchingNextPageSearch,
+    fetchNextPage: fetchNextPageSearch,
+    isSuccess: isSuccessSearch,
+  } = useInfiniteQuery(
+    ['getStoreSearchTab'],
+    ({pageParam}) =>
+      getStoreSearchProducts({
+        pageParam,
+        storeId: params?.storeId,
+        term: searchText,
+      }),
+    {
+      enabled: false,
+      getNextPageParam: lastPage => {
+        if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
+          const next = lastPage?.data?.Page + 1;
+          return next;
+        }
+        return null;
+      },
+      onSuccess() {
+        console.log('5 here');
+        setTab(5);
       },
     },
   );
@@ -167,9 +238,10 @@ const StoreDetails = () => {
   const SearchHandler = () => {
     // if (
     //   searchText.length >
-    //   parseInt(settings?.SearchSettings?.InstantSearchTermMinLength)
+    //   parseInt((settings as any)?.SearchSettings?.InstantSearchTermMinLength)
     // ) {
-    //   mutate({searchText, CurrencyId: currency?.Id});
+    setTab(5);
+    refetchStoreSearch();
     // }
   };
 
@@ -190,6 +262,12 @@ const StoreDetails = () => {
   const loadMoreOffers = () => {
     if (hasNextPageOffer) {
       fetchNextPageOffer();
+    }
+  };
+
+  const loadMoreSearch = () => {
+    if (hasNextPageSearch) {
+      fetchNextPageSearch();
     }
   };
 
@@ -312,7 +390,9 @@ const StoreDetails = () => {
               </View>
             </View>
             <Pressable
-              onPress={() => setFollowed(!isFollowed)}
+              onPress={() => {
+                refetchrefreshFollowStore();
+              }}
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -398,6 +478,24 @@ const StoreDetails = () => {
           }}
           renderItem={({item, index}) => (
             <Pressable
+              onPress={() =>
+                item.HasSubCategories
+                  ? navigate('CategoriesStack', {
+                      screen: 'CategoryDetails',
+                      params: {
+                        id: item.Id,
+                        title: item.Name,
+                      },
+                    })
+                  : navigate('HomeStack', {
+                      screen: 'SearchScreen',
+                      params: {
+                        categoryId: item.Id,
+                        title: item.Name,
+                        paramsType: 'category',
+                      },
+                    })
+              }
               style={{
                 borderRadius: 10,
                 borderWidth: 1,
@@ -485,28 +583,7 @@ const StoreDetails = () => {
             paddingHorizontal: spacing.content,
             paddingTop: 20,
           }}
-          renderItem={({item, index}) => (
-            <Pressable
-              style={{
-                borderBottomWidth: 1,
-                paddingVertical: 10,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderBottomColor: colors.border,
-                marginBottom: 10,
-              }}>
-              <Text
-                tx={item.Name}
-                color={item.HasSubCategories ? colors.primary : colors.black}
-                variant="smallRegular"
-              />
-              <MaterialIcon
-                name="arrow-forward-ios"
-                color={item.HasSubCategories ? colors.primary : colors.black}
-              />
-            </Pressable>
-          )}
+          renderItem={({item, index}) => <CategoryItem item={item} />}
         />
       )}
       {tab == 4 && (
@@ -532,6 +609,38 @@ const StoreDetails = () => {
           }
         />
       )}
+      {tab == 5 &&
+        (isSuccessSearch && !isLoadingStoreSearch ? (
+          <FlatList
+            keyExtractor={(i, _) => _.toString()}
+            key={'#Search'}
+            onEndReached={loadMoreSearch}
+            onEndReachedThreshold={0.7}
+            contentContainerStyle={{
+              paddingHorizontal: spacing.content,
+              paddingTop: 20,
+            }}
+            numColumns={2}
+            renderItem={({item, index}) => (
+              <ProductCard
+                styleContainer={{
+                  marginRight: index % 2 == 0 ? 10 : 0,
+                }}
+                {...item}
+              />
+            )}
+            data={StoreSearchData?.pages
+              .map(page => page.data.ProductSummary.Items)
+              .flat()}
+            ListFooterComponent={
+              isFetchingNextPageSearch || isLoadingStoreSearch ? (
+                <Loader size={'small'} color={colors.primary} />
+              ) : null
+            }
+          />
+        ) : (
+          <Loader size={'small'} color={colors.primary} />
+        ))}
     </View>
   );
 };

@@ -1,6 +1,6 @@
 import {useRoute, useNavigation} from '@react-navigation/native';
 import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
-import {Text} from 'components';
+import {Loader, Text} from 'components';
 import ArrowIcon from 'components/Arrow';
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
@@ -9,6 +9,7 @@ import {
   FlatList,
   useWindowDimensions,
   Image,
+  RefreshControl,
 } from 'react-native';
 import {FadeLoading} from 'react-native-fade-loading';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -38,6 +39,7 @@ const Categories = (props: ICategories) => {
     fetchNextPage,
     refetch,
     isFetchingNextPage,
+    isRefetching,
   } = useInfiniteQuery(['perantCategories'], getPerantCategories, {
     getNextPageParam: lastPage => {
       if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
@@ -53,9 +55,34 @@ const Categories = (props: ICategories) => {
     }
   };
 
+  useEffect(() => {
+    console.log('!!!!!');
+    refetch();
+  }, []);
+
+  const onRefresh = React.useCallback(() => {
+    refetch();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <Loader
+        size={'large'}
+        containerStyle={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      />
+    );
+  }
+
   return (
     <View style={{flex: 1}}>
       <FlatList
+        refreshControl={
+          <RefreshControl refreshing={isRefetching} onRefresh={onRefresh} />
+        }
         onEndReached={loadMore}
         onEndReachedThreshold={0.3}
         keyExtractor={(i, _) => _.toString()}

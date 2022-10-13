@@ -8,7 +8,7 @@ interface StoresParams {
 }
 
 interface StoreDetailsParams {
-  storeId: number & any;
+  storeId: number | any;
   pageParam?: number;
 }
 
@@ -19,8 +19,13 @@ interface IgetReviewStore {
   pageParam?: number;
 }
 
-export const getAllStores = ({pageParam = 1}: StoresParams) =>
-  axios(`${BASE_URL}/api/custom/stores/AllStores?page=${pageParam}`);
+export const getAllStores = ({
+  pageParam = 1,
+  onlyFollowed = false,
+}: StoresParams) =>
+  axios(`${BASE_URL}/api/custom/stores/AllStores`, {
+    params: {page: pageParam, onlyFollowed: onlyFollowed},
+  });
 
 export const getStoreDetails = ({storeId = 1}: StoreDetailsParams) =>
   axios(`${BASE_URL}/api/custom/stores/StoreDetials?storeId=${storeId}`);
@@ -49,6 +54,26 @@ export const getStoreOfferProducts = ({
     `${BASE_URL}/api/custom/stores/StoreHasDiscountProducts?storeId=${storeId}&page=${pageParam}&pageSize=10`,
   );
 
+interface StoreSearchParams {
+  storeId: number | any;
+  pageParam?: number;
+  term: string;
+}
+
+export const getStoreSearchProducts = ({
+  pageParam = 1,
+  storeId,
+  term,
+}: StoreSearchParams) =>
+  axios(`${BASE_URL}/api/custom/stores/SearchInStore`, {
+    params: {
+      page: pageParam,
+      storeId,
+      term,
+      pageSize: 10,
+    },
+  });
+
 export const getStoreReviews = ({
   pageParam = 1,
   storeId,
@@ -63,5 +88,22 @@ export const getStoreReviews = ({
       storeId,
       Ratings,
       WithImageOnly,
+    },
+  });
+
+interface IRefreshFollowStore {
+  storeId: number;
+  isFollow: boolean;
+}
+
+export const getRefreshFollowStore = ({
+  storeId,
+  isFollow,
+}: IRefreshFollowStore) =>
+  axios(`${BASE_URL}/api/custom/stores/RefreshFollowStatus`, {
+    method: 'post',
+    params: {
+      id: storeId,
+      isFollow,
     },
   });

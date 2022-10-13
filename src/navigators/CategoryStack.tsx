@@ -18,6 +18,7 @@ const CategoriesStack = () => {
   const {top} = useSafeAreaInsets();
   return (
     <Stack.Navigator
+      initialRouteName="Categories"
       screenOptions={{
         headerStyle: {backgroundColor: colors.primary},
         headerTitleStyle: {fontFamily: font.regular, color: colors.white},

@@ -11,14 +11,16 @@ import {Text} from 'components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {UserContext} from 'context/UserContext';
 import {HomeNavigationsType} from 'navigators/NavigationsTypes';
+import axios from 'axios';
 
 const Profile = (props: HomeNavigationsType) => {
   const {navigate} = useNavigation<HomeNavigationsType>();
   const {params} = useRoute<HomeNavigationsType>();
   const {userId} = params;
   const {setUserData} = useContext(UserContext);
-  const logoutHandler = () => {
-    AsyncStorage.clear();
+  const logoutHandler = async () => {
+    axios.defaults.headers.common['AccessToken'] = '';
+    await AsyncStorage.removeItem('accessToken');
     setUserData({});
   };
   return (
