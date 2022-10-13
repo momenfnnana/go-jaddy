@@ -15,6 +15,7 @@ interface IShowSection {
   coloredTitle: string;
   data: any[];
   showSeeMore: boolean;
+  WishlistEnabled: boolean;
 }
 
 const Header = ({title, coloredTitle, showSeeMore}: IHeader) => {
@@ -52,6 +53,7 @@ const ShowSection = ({
   coloredTitle,
   data,
   showSeeMore,
+  WishlistEnabled,
 }: IShowSection) => {
   const {width} = useWindowDimensions();
   return (
@@ -73,7 +75,11 @@ const ShowSection = ({
           keyExtractor={(_, index) => index.toString()}
           horizontal
           renderItem={({item}) => (
-            <ProductCard styleContainer={{width: width / 2.2 - 20}} {...item} />
+            <ProductCard
+              styleContainer={{width: width / 2.2 - 20}}
+              {...item}
+              WishlistEnabled={WishlistEnabled}
+            />
           )}
         />
       </View>

@@ -1,4 +1,4 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   ImageBackground,
@@ -8,11 +8,12 @@ import {
   FlatList,
   Image,
   StyleSheet,
+  Platform,
 } from 'react-native';
 import {RouteProp, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {DiscountIcon, StarFilledIcon} from 'assets/icons';
-import {InputField, Loader, Modal, Text} from 'components';
+import {CartIcon, DiscountIcon, ShareIcon, StarFilledIcon} from 'assets/icons';
+import {AddToFav, Loader, Text} from 'components';
 import ArrowIcon from 'components/Arrow';
 import {HomeRoutes} from 'navigators/RoutesTypes';
 import {colors, spacing} from 'theme';
@@ -24,17 +25,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useCurrency} from 'hook/useCurrency';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useMutation, useQuery} from '@tanstack/react-query';
-import {
-  getWishlists,
-  postAddToWishlist,
-  postCreateWishlist,
-} from 'services/Home';
-import {useTranslation} from 'react-i18next';
-import {Formik} from 'formik';
-import * as Yup from 'yup';
-import Fontisto from 'react-native-vector-icons/Fontisto';
-import {RatingFiltters} from 'components/RatingFilters';
+import LinearGradient from 'react-native-linear-gradient';
 import {CategoryNavigationsType} from 'navigators/NavigationsTypes';
 
 interface IProductNavigation
@@ -49,21 +40,11 @@ interface IListHeaderComponent {
   setRatingFilters: (value: any) => void;
   isRefetchingReviews: boolean;
 }
-interface IinitialValues {
-  collectionName: string;
-}
+
 enum productCounter {
   increase,
   descrease,
 }
-const CARD_SIZE = 43;
-
-const collectionsInitialValues: IinitialValues = {
-  collectionName: '',
-};
-const addCollectionSchema = Yup.object().shape({
-  collectionName: Yup.string().required('collection name is required'),
-});
 
 const ListHeaderComponent = ({
   Product,
@@ -80,9 +61,6 @@ const ListHeaderComponent = ({
   const {top} = useSafeAreaInsets();
   const {height} = useWindowDimensions();
   const {currency} = useCurrency();
-  const {t} = useTranslation();
-  const [showInput, setShowInput] = useState<boolean>(false);
-  const [selectedWishlist, setSelectedWishlist] = useState<number | string>();
   const [isLoadingImageBackground, setIsLoadingImageBackground] =
     useState<boolean>(true);
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
@@ -92,19 +70,11 @@ const ListHeaderComponent = ({
   const onLoadBackgroundEnd = () => {
     setIsLoadingImageBackground(false);
   };
-  const onCloseAddToCollection = () => {
-    setIsAddToCollectionShown(false);
-  };
   const onOpenAddToCollection = () => {
     setIsAddToCollectionShown(true);
   };
 
-  const {
-    isLoading: isLoadingWishlists,
-    data: wishlistsData,
-    refetch: refetchWishlists,
-    isSuccess: isLoadedWishlists,
-  } = useQuery(['getWishlists'], getWishlists);
+  const gradientColors = ['#00000070', '#ffffff00'];
 
   const ShowDiscountBadge: boolean = Product?.ShowDiscountBadge;
   const DisplayProductReviews: boolean = Product?.DisplayProductReviews;
@@ -148,62 +118,8 @@ const ListHeaderComponent = ({
   };
 
   const onPressHeart = () => {
-    refetchWishlists();
     onOpenAddToCollection();
   };
-
-  const {
-    mutate,
-    isLoading: isLoadingCreateWishList,
-    isError,
-    error,
-    isSuccess,
-    data: newWishlistData,
-  } = useMutation(postCreateWishlist, {
-    onSuccess: data => {
-      return data;
-    },
-    onError: error => {
-      return error;
-    },
-  });
-  const {
-    mutate: mutateAddToWishlist,
-    isLoading: isLoadingAddToWishlist,
-    isSuccess: isSuccessAddToWishlist,
-  } = useMutation(postAddToWishlist, {
-    onSuccess: data => {
-      return data;
-    },
-    onError: error => {
-      return error;
-    },
-  });
-
-  const showAddCollectionInput = () => {
-    setShowInput(currentState => !currentState);
-  };
-
-  const addCollectionHandler = (values: IinitialValues) => {
-    mutate(values.collectionName);
-  };
-
-  const addToWishlistHandler = (item: any) => {
-    setSelectedWishlist(item?.Id);
-    const NewWishlistName =
-      item?.WishlistLinesCount === 0 ? item?.Name : undefined;
-    mutateAddToWishlist({
-      ProductId,
-      SelectedWishlistId: item?.Id,
-      NewWishlistName,
-    });
-  };
-
-  useEffect(() => {
-    if (!isLoadingAddToWishlist && isSuccessAddToWishlist) {
-      onCloseAddToCollection();
-    }
-  }, [isLoadingAddToWishlist, isSuccessAddToWishlist]);
 
   const mainImage = {
     height: height * 0.5,
@@ -219,56 +135,68 @@ const ListHeaderComponent = ({
         source={{
           uri: `${BASE_URL}${Product?.Images[activeImageIndex]?.Url}`,
         }}
-        style={[
-          mainImage,
-          isLoadingImageBackground ? imageLoadingStyle : undefined,
-        ]}
         onLoadEnd={onLoadBackgroundEnd}>
-        {isLoadingImageBackground ? (
-          <Loader size="large" color={colors.primary + 50} />
-        ) : (
-          <>
-            {canGoBack() && (
-              <Pressable
-                onPress={() => goBack()}
-                style={{
-                  backgroundColor: colors.white + 18,
-                  padding: 10,
-                  borderRadius: 5,
-                  position: 'absolute',
-                  top: top,
-                  left: spacing.medium,
-                }}>
-                <ArrowIcon color={colors.white} />
-              </Pressable>
-            )}
-            <FlatList
-              data={Product?.Images}
-              keyExtractor={(_, index) => index.toString()}
-              style={styles.flatList}
-              contentContainerStyle={styles.contentContainerStyle}
-              showsHorizontalScrollIndicator={false}
-              horizontal
-              renderItem={({item, index}) => (
-                <ProductImagesList
-                  item={item}
-                  index={index}
-                  activeImageIndex={activeImageIndex}
-                  setActiveImageIndex={setActiveImageIndex}
-                />
+        <LinearGradient
+          colors={gradientColors}
+          style={[
+            styles.gradientColorContainer,
+            mainImage,
+            isLoadingImageBackground ? imageLoadingStyle : undefined,
+          ]}>
+          {isLoadingImageBackground ? (
+            <Loader size="large" color={colors.primary + 50} />
+          ) : (
+            <>
+              {canGoBack() && (
+                <Pressable
+                  onPress={() => goBack()}
+                  style={[
+                    styles.backIconContainer,
+                    {top: Platform.OS === 'android' ? spacing.smaller : top},
+                  ]}>
+                  <ArrowIcon color={colors.white} />
+                </Pressable>
               )}
-            />
-            {ShowDiscountBadge && (
-              <View style={styles.discountPercentageContainer}>
-                <DiscountIcon />
-                <Text
-                  variant="mediumRegular"
-                  color={colors.white}
-                  text={`${SavingPercent}%`}
-                />
+              <View
+                style={[
+                  styles.rightIcons,
+                  {top: Platform.OS === 'android' ? spacing.tiny : top},
+                ]}>
+                <Pressable style={styles.singleRightIcon}>
+                  <CartIcon stroke={colors.white} />
+                </Pressable>
+                <Pressable style={styles.singleRightIcon}>
+                  <ShareIcon color={colors.white} />
+                </Pressable>
               </View>
-            )}
-          </>
+              <FlatList
+                data={Product?.Images}
+                keyExtractor={(_, index) => index.toString()}
+                style={styles.flatList}
+                contentContainerStyle={styles.contentContainerStyle}
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                renderItem={({item, index}) => (
+                  <ProductImagesList
+                    item={item}
+                    index={index}
+                    activeImageIndex={activeImageIndex}
+                    setActiveImageIndex={setActiveImageIndex}
+                  />
+                )}
+              />
+            </>
+          )}
+        </LinearGradient>
+        {ShowDiscountBadge && (
+          <View style={styles.discountPercentageContainer}>
+            <DiscountIcon />
+            <Text
+              variant="mediumRegular"
+              color={colors.white}
+              text={`${SavingPercent}%`}
+            />
+          </View>
         )}
       </ImageBackground>
       <View style={styles.contentContainer}>
@@ -524,175 +452,11 @@ const ListHeaderComponent = ({
       {isRefetchingReviews && (
         <Loader size={'small'} color={colors.secondary} />
       )}
-      <Modal
-        isVisible={isAddToCollectionShown}
-        onBackdropPress={onCloseAddToCollection}
-        isLoading={isLoadedWishlists}
-        forceRefetch={refetchWishlists}
+      <AddToFav
+        isAddToCollectionShown={isAddToCollectionShown}
+        setIsAddToCollectionShown={setIsAddToCollectionShown}
         ProductId={ProductId}
-        title="whishlist.add"
-        description="whishlist.add-hint">
-        {isLoadingWishlists ? (
-          <Loader size={'small'} style={styles.collectionsLoader} />
-        ) : wishlistsData?.data?.Wishlists?.length > 0 ? (
-          <FlatList
-            data={wishlistsData?.data?.Wishlists}
-            keyExtractor={(_, index) => index.toString()}
-            ListHeaderComponent={
-              <View style={styles.addCollectionBtnContainer}>
-                <Formik
-                  initialValues={collectionsInitialValues}
-                  validationSchema={addCollectionSchema}
-                  onSubmit={addCollectionHandler}>
-                  {({
-                    values,
-                    handleChange,
-                    handleBlur,
-                    errors,
-                    handleSubmit,
-                  }) => (
-                    <>
-                      <Pressable
-                        onPress={showAddCollectionInput}
-                        style={styles.row}
-                        disabled={isLoadingCreateWishList}>
-                        <View style={styles.addCollectionBtn}>
-                          {
-                            <AntDesign
-                              name="plus"
-                              color={colors.white}
-                              size={25}
-                            />
-                          }
-                        </View>
-                        <Text
-                          tx="whishlist.add-collection"
-                          variant="mediumBold"
-                          color={colors.primary}
-                          style={styles.collectionName}
-                        />
-                      </Pressable>
-                      {showInput && (
-                        <InputField
-                          value={values.collectionName}
-                          onChangeText={handleChange('collectionName')}
-                          onBlur={handleBlur('collectionName')}
-                          placeholder={t('whishlist.collection-name')}
-                          style={{}}
-                          rightIcon={
-                            isLoadingCreateWishList ? (
-                              <Loader size={'small'} color={colors.primary} />
-                            ) : (
-                              <AntDesign
-                                onPress={handleSubmit}
-                                name={'check'}
-                                size={18}
-                                color={colors.primary}
-                              />
-                            )
-                          }
-                          error={errors.collectionName}
-                        />
-                      )}
-                    </>
-                  )}
-                </Formik>
-              </View>
-            }
-            renderItem={({item}) => {
-              return (
-                <Pressable
-                  onPress={() => addToWishlistHandler(item)}
-                  style={[styles.collectionRow, styles.row]}>
-                  <View style={styles.row}>
-                    <View style={styles.imageContainer}>
-                      <FlatList
-                        data={item?.Top4Products}
-                        keyExtractor={item => item?.Id}
-                        scrollEnabled={false}
-                        numColumns={2}
-                        renderItem={({item}) => (
-                          <Image
-                            source={{uri: `${BASE_URL}${item?.Image?.Url}`}}
-                            key={item.Id}
-                            style={{
-                              width: CARD_SIZE / 2,
-                              height: CARD_SIZE / 2,
-                            }}
-                          />
-                        )}
-                      />
-                    </View>
-                    <Text
-                      text={item?.Name}
-                      variant="smallRegular"
-                      color={colors.tabsColor}
-                      style={styles.collectionName}
-                    />
-                  </View>
-                  <Fontisto
-                    name={
-                      selectedWishlist === item?.Id
-                        ? 'radio-btn-active'
-                        : 'radio-btn-passive'
-                    }
-                    color={colors.red}
-                    size={18}
-                  />
-                </Pressable>
-              );
-            }}
-          />
-        ) : (
-          <View style={styles.addCollectionBtnContainer}>
-            <Formik
-              initialValues={collectionsInitialValues}
-              validationSchema={addCollectionSchema}
-              onSubmit={addCollectionHandler}>
-              {({values, handleChange, handleBlur, errors, handleSubmit}) => (
-                <>
-                  <Pressable
-                    onPress={showAddCollectionInput}
-                    style={[styles.row]}
-                    disabled={isLoadingCreateWishList}>
-                    <View style={styles.addCollectionBtn}>
-                      {<AntDesign name="plus" color={colors.white} size={25} />}
-                    </View>
-                    <Text
-                      tx="whishlist.add-collection"
-                      variant="mediumBold"
-                      color={colors.primary}
-                      style={styles.collectionName}
-                    />
-                  </Pressable>
-                  {showInput && (
-                    <InputField
-                      value={values.collectionName}
-                      onChangeText={handleChange('collectionName')}
-                      onBlur={handleBlur('collectionName')}
-                      placeholder={t('whishlist.collection-name')}
-                      style={{}}
-                      rightIcon={
-                        isLoadingCreateWishList ? (
-                          <Loader size={'small'} color={colors.primary} />
-                        ) : (
-                          <AntDesign
-                            onPress={handleSubmit}
-                            name={'check'}
-                            size={18}
-                            color={colors.primary}
-                          />
-                        )
-                      }
-                      error={errors.collectionName}
-                    />
-                  )}
-                </>
-              )}
-            </Formik>
-          </View>
-        )}
-      </Modal>
+      />
     </View>
   );
 };
@@ -718,6 +482,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: -spacing.medium,
     left: spacing.normal - 1,
+    zIndex: 2,
   },
   storeImage: {
     height: 41,
@@ -729,7 +494,6 @@ const styles = StyleSheet.create({
     marginHorizontal: spacing.tiny,
   },
   contentContainer: {
-    flex: 1,
     paddingHorizontal: spacing.normal,
     marginTop: spacing.normal,
   },
@@ -819,36 +583,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: spacing.medium,
   },
-  addCollectionBtnContainer: {
-    paddingHorizontal: spacing.xxxLarge,
-    marginTop: spacing.normal,
-  },
-  collectionName: {
-    marginHorizontal: spacing.normal,
-  },
-  collectionRow: {
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.xxxLarge,
-    marginTop: spacing.smaller,
-  },
-  imageContainer: {
-    borderRadius: spacing.medium - 2,
-    height: CARD_SIZE,
-    width: CARD_SIZE,
-    backgroundColor: colors.gray[300],
-    overflow: 'hidden',
-  },
-  addCollectionBtn: {
-    backgroundColor: colors.primary,
-    borderRadius: spacing.medium - 2,
-    height: CARD_SIZE,
-    width: CARD_SIZE,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  collectionsLoader: {
+  gradientColorContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  },
+  backIconContainer: {
+    backgroundColor: colors.white + 18,
+    padding: 10,
+    borderRadius: 5,
+    position: 'absolute',
+    left: spacing.medium,
+  },
+  rightIcons: {
+    flexDirection: 'row',
+    position: 'absolute',
+    right: spacing.medium,
+  },
+  singleRightIcon: {
+    backgroundColor: colors.white + 18,
+    padding: 10,
+    borderRadius: 5,
+    marginHorizontal: spacing.tiny,
   },
 });

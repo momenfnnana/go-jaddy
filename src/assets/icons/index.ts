@@ -27,3 +27,6 @@ export {default as ListViewIcon} from './svg/list-view-icon.svg';
 export {default as GridViewIcon} from './svg/grid-view-icon.svg';
 export {default as VerifyAccountImage} from './svg/verifyAccountModal.svg';
 export {default as UploadImageIcon} from './svg/upload-image.svg';
+export {default as ShareIcon} from './svg/share.svg';
+export {default as ProductFavoriteIcon} from './svg/product-favorite-icon.svg';
+export {default as ProfileIconTab} from './svg/profile-icon-tab.svg';

@@ -4,26 +4,39 @@ import {getSetting} from 'services/Auth';
 
 const UserContext = createContext({
   userData: {
-    AccessToken: '',
-    RememberMe: false,
-    UserEmailAddress: '',
-    UserFullName: '',
-    UserId: '',
-    UserPhoneNumber: '',
-    UserType: '',
+    Avatar: {
+      Id: '',
+      ThumbUrl: '',
+      Title: '',
+      Url: '',
+    },
+    Email: '',
+    FirstName: '',
+    LastName: '',
+    PhoneNumber: '',
   },
   settings: {},
   setUserData: ({}) => {},
   setSettings: ({}) => {},
+  accessToken: '',
+  setAccessToken: ({}) => {},
 });
 
 const UserProvider = ({children}) => {
   const [userData, setUserData] = useState({});
   const [settings, setSettings] = useState({});
+  const [accessToken, setAccessToken] = useState('');
 
   return (
     <UserContext.Provider
-      value={{userData, setUserData, setSettings, settings}}>
+      value={{
+        userData,
+        setUserData,
+        setSettings,
+        settings,
+        accessToken,
+        setAccessToken,
+      }}>
       {children}
     </UserContext.Provider>
   );

@@ -27,3 +27,5 @@ export const verificationCode = (params: any) =>
   });
 
 export const getLanguages = () => axios.get(`${BASE_URL}/api/custom/languages`);
+
+export const getUserData = () => axios.get(`${BASE_URL}/api/custom/customer/PersonalInfo`);

@@ -14,13 +14,11 @@ const Stack = createNativeStackNavigator<MainNavigator>();
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const {userData, setSettings} = useContext(UserContext);
+  const {accessToken, setSettings} = useContext(UserContext);
   const {height, width} = useWindowDimensions();
   const {
     data,
     isSuccess,
-    isError,
-    error,
     isLoading: isLoadingSettings,
   } = useQuery(['settings'], getSettings);
   const {data: currenciesData, isLoading: isLoadingCurrencies} = useQuery(
@@ -33,7 +31,7 @@ const App = () => {
       accessToken ? setIsLoggedIn(true) : setIsLoggedIn(false);
       setLoading(false);
     })();
-  }, [userData]);
+  }, [accessToken]);
   useEffect(() => {
     if (currenciesData?.data?.Currencies?.length) {
       AsyncStorage.setItem(
@@ -57,7 +55,12 @@ const App = () => {
   }, [currenciesData, data?.data]);
 
   if (loading || isLoadingCurrencies || isLoadingSettings) {
-    return <Loader style={[styles.loader, {height, width}]} />;
+    return (
+      <Loader
+        size={'large'}
+        containerStyle={[styles.loader, {height, width}]}
+      />
+    );
   }
 
   return (

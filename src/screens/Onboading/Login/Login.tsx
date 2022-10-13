@@ -75,7 +75,7 @@ const Login = () => {
   const {top} = useSafeAreaInsets();
   const {navigate, canGoBack, goBack} = useNavigation<HomeNavigationsType>();
   const {t} = useTranslation();
-  const {setUserData} = useContext(UserContext);
+  const {setUserData, setAccessToken} = useContext(UserContext);
   const [selectedFlag, setSelectedFlag] = useState<IFlag>({
     imageUrl: PalestineFlag,
     introructionNumber: '970',
@@ -147,15 +147,16 @@ const Login = () => {
         UserPhoneNumber,
         UserType,
       } = data.data;
-      setUserData({
-        AccessToken,
-        RememberMe,
-        UserEmailAddress,
-        UserFullName,
-        UserId,
-        UserPhoneNumber,
-        UserType,
-      });
+      setAccessToken(AccessToken);
+      // setUserData({
+      //   AccessToken,
+      //   RememberMe,
+      //   UserEmailAddress,
+      //   UserFullName,
+      //   UserId,
+      //   UserPhoneNumber,
+      //   UserType,
+      // });
       if (!RememberMe) {
         axios.defaults.headers.common['AccessToken'] = `${AccessToken}`;
         AsyncStorage.setItem('accessToken', AccessToken);

@@ -13,7 +13,7 @@ import en from 'i18n/locales/en.json';
 import ar from 'i18n/locales/ar.json';
 import {readLanguage, readAccessToken} from 'constants';
 import {UserProvider} from 'context/UserContext';
-import {setAxiosAccessToken} from 'axiosConfig';
+import {setAxiosAccessToken, setAxiosLanguage} from 'axiosConfig';
 
 const resources = {
   en: {
@@ -35,6 +35,7 @@ export default function App() {
       }
     });
     readLanguage().then((res: string | null) => {
+      setAxiosLanguage(res||'ar')
       setIsAr(res === 'ar' ? true : false);
       i18n.use(initReactI18next).init({
         lng: res || 'ar',

@@ -1,14 +1,4 @@
-import {useNavigation, useNavigationState} from '@react-navigation/native';
-import {
-  NativeStackNavigationProp,
-  NativeStackScreenProps,
-} from '@react-navigation/native-stack';
-import {DiscountIcon, FavoriteIcon, StarFilledIcon} from 'assets/icons';
-import {Text} from 'components';
-import {useCurrency} from 'hook/useCurrency';
-import {HomeNavigationsType} from 'navigators/NavigationsTypes';
-import {HomeRoutes} from 'navigators/RoutesTypes';
-import React from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   ImageBackground,
@@ -16,12 +6,21 @@ import {
   Pressable,
   useWindowDimensions,
 } from 'react-native';
+import {useNavigation, useNavigationState} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {useMutation} from '@tanstack/react-query';
+import {DiscountIcon, ProductFavoriteIcon, StarFilledIcon} from 'assets/icons';
+import {Text, AddToFav} from 'components';
+import {useCurrency} from 'hook/useCurrency';
+import {HomeNavigationsType} from 'navigators/NavigationsTypes';
+import {HomeRoutes} from 'navigators/RoutesTypes';
 import {IProductInterface} from 'screens/main/Home/types';
+import {postAddToWishlist} from 'services/Home';
 import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
+import {useTranslation} from 'react-i18next';
 
-interface IProductNaviagtion
-  extends NativeStackNavigationProp<HomeRoutes, 'Home'> {}
+const CARD_SIZE: number = 43;
 
 const ProductCard = (props: IProductInterface) => {
   const {
@@ -31,101 +30,135 @@ const ProductCard = (props: IProductInterface) => {
     Name,
     RatingSum,
     CategoryName,
-    SupportMultiWishlists,
     WishlistEnabled,
     styleContainer,
+    Id,
   } = props;
   const {currency} = useCurrency();
   const {navigate, setParams} = useNavigation<HomeNavigationsType>();
   const routes = useNavigationState(state => state.routes);
+  const {t} = useTranslation();
+  const [isAddToCollectionShown, setIsAddToCollectionShown] =
+    useState<boolean>(false);
 
   const DiscountBadge = Badges.find(item => item?.Style === 5);
   const isNewBadge = Badges.find(item => item?.Style === 2);
   const {width} = useWindowDimensions();
   const currentRoute = routes[routes.length - 1].name;
 
+  const {
+    mutate: mutateAddToWishlist,
+    isLoading: isLoadingAddToWishlist,
+    isSuccess: isSuccessAddToWishlist,
+  } = useMutation(postAddToWishlist, {
+    onSuccess: data => {
+      return data;
+    },
+    onError: error => {
+      return error;
+    },
+  });
   const navigateToProduct = () => {
     if (currentRoute === 'ProductDetails') {
       setParams({...props});
     }
     navigate('ProductDetails', {...props});
   };
+
+  const onCloseAddToCollection = () => {
+    setIsAddToCollectionShown(false);
+  };
+  const showAddToWishList = () => {
+    setIsAddToCollectionShown(true);
+  };
+
+  useEffect(() => {
+    if (!isLoadingAddToWishlist && isSuccessAddToWishlist) {
+      onCloseAddToCollection();
+    }
+  }, [isLoadingAddToWishlist, isSuccessAddToWishlist]);
+
   return (
-    <Pressable
-      onPress={navigateToProduct}
-      style={[styles.container, {width: width / 2 - 20}, styleContainer]}>
-      <ImageBackground
-        source={{uri: `${BASE_URL}${ImageResponse?.Url}`}}
-        resizeMode="contain"
-        style={styles.Imagecontainer}>
-        <View style={styles.topIconsContainer}>
-          {SupportMultiWishlists && WishlistEnabled && (
-            <FavoriteIcon stroke={colors.tabsColor} />
-          )}
-          {Price?.HasDiscount && DiscountBadge?.Label && (
-            <View style={styles.discountIcon}>
-              <DiscountIcon />
-              <Text
-                variant="xSmallLight"
-                text={DiscountBadge?.Label}
-                color={colors.white}
-              />
-            </View>
-          )}
-        </View>
-        {isNewBadge && (
-          <Text
-            style={styles.isNewBadge}
-            variant="xSmallLight"
-            text={isNewBadge?.Label}
-          />
-        )}
-      </ImageBackground>
-      <View style={styles.row}>
-        <Text
-          text={Name}
-          variant="xSmallRegular"
-          color={colors.tabsColor}
-          numberOfLines={2}
-          // adjustsFontSizeToFit
-          lineBreakMode="clip"
-          style={{flex: 1}}
-        />
-        <View style={styles.priceContainer}>
-          {Price?.HasDiscount ? (
+    <>
+      <Pressable
+        onPress={navigateToProduct}
+        style={[styles.container, {width: width / 2 - 20}, styleContainer]}>
+        <ImageBackground
+          source={{uri: `${BASE_URL}${ImageResponse?.Url}`}}
+          resizeMode="contain"
+          style={styles.Imagecontainer}>
+          <View style={styles.topIconsContainer}>
+            {WishlistEnabled && (
+              <View style={styles.favoriteIconContainer}>
+                <ProductFavoriteIcon
+                  stroke={colors.tabsColor}
+                  onPress={showAddToWishList}
+                />
+              </View>
+            )}
+            {Price?.HasDiscount && DiscountBadge?.Label && (
+              <View style={styles.discountIcon}>
+                <DiscountIcon />
+                <Text
+                  variant="xSmallLight"
+                  text={DiscountBadge?.Label}
+                  color={colors.white}
+                />
+              </View>
+            )}
+          </View>
+          {isNewBadge && (
             <Text
-              text={Price?.RegularPrice?.toString()}
+              style={styles.isNewBadge}
               variant="xSmallLight"
-              style={styles.prevPrice}
-              color={colors.grayMainBolder}
-              numberOfLines={1}
+              text={isNewBadge?.Label}
             />
-          ) : (
-            <View style={{height: spacing.normal}} />
           )}
+        </ImageBackground>
+        <View style={styles.row}>
           <Text
-            text={Price?.Price}
-            variant="smallBold"
-            color={colors.orange}
-            numberOfLines={1}
-          />
-          <Text
-            text={currency?.Symbol}
+            text={Name}
             variant="xSmallRegular"
             color={colors.tabsColor}
-            style={styles.currency}
+            numberOfLines={2}
+            lineBreakMode="clip"
+            style={{flex: 1}}
           />
+          <View style={styles.priceContainer}>
+            {Price?.HasDiscount ? (
+              <Text
+                text={Price?.RegularPrice?.toString()}
+                variant="xSmallLight"
+                style={styles.prevPrice}
+                color={colors.grayMainBolder}
+                numberOfLines={1}
+              />
+            ) : (
+              <View style={{height: spacing.normal}} />
+            )}
+            <Text
+              text={Price?.Price}
+              variant="smallBold"
+              color={colors.orange}
+              numberOfLines={1}
+            />
+            <Text
+              text={currency?.Symbol}
+              variant="xSmallRegular"
+              color={colors.tabsColor}
+              style={styles.currency}
+            />
+          </View>
         </View>
-      </View>
-      <View style={styles.rateAndColorsContainer}>
-        <StarFilledIcon color={colors.orange} />
-        <Text
-          text={RatingSum.toString()}
-          variant="xSmallRegular"
-          style={styles.rate}
-        />
-        <View style={styles.verticalLine} />
-        {/* <View style={styles.colorsContainer}>
+        <View style={styles.rateAndColorsContainer}>
+          <StarFilledIcon color={colors.orange} />
+          <Text
+            text={RatingSum.toString()}
+            variant="xSmallRegular"
+            style={styles.rate}
+          />
+          <View style={styles.verticalLine} />
+          {/* <View style={styles.colorsContainer}>
           {props?.ColorAttributes &&
             props?.ColorAttributes &&
             props?.ColorAttributes.map((item, index) => (
@@ -141,8 +174,14 @@ const ProductCard = (props: IProductInterface) => {
               />
             ))}
         </View> */}
-      </View>
-    </Pressable>
+        </View>
+      </Pressable>
+      <AddToFav
+        isAddToCollectionShown={isAddToCollectionShown}
+        setIsAddToCollectionShown={setIsAddToCollectionShown}
+        ProductId={Id}
+      />
+    </>
   );
 };
 
@@ -167,7 +206,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     alignSelf: 'center',
-    // paddingHorizontal: spacing.small,
   },
   discountIcon: {
     backgroundColor: colors.orange,
@@ -177,13 +215,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: spacing.tiny + 1,
   },
-  newsContainer: {
-    position: 'absolute',
-    bottom: spacing.medium + 2,
-    right: spacing.medium + 2,
-    backgroundColor: colors.orangeDark,
-    paddingHorizontal: spacing.small,
-    borderRadius: spacing.tiny + 1,
+  favoriteIconContainer: {
+    height: 40,
   },
   row: {
     flexDirection: 'row',
@@ -236,8 +269,5 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.tiny,
     borderRadius: 5,
     overflow: 'hidden',
-  },
-  productName: {
-    paddingRight: spacing.large,
   },
 });

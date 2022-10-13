@@ -47,11 +47,46 @@ const Modal: React.FC<IResetPasswordModalProps> = ({
 }) => {
   const {width} = useWindowDimensions();
   const {bottom} = useSafeAreaInsets();
-
-  return (
+  const isAndroid = Platform.OS === 'android';
+  return isAndroid ? (
+    <KeyboardAvoidingView behavior={'position'}>
+      <RNModal
+        isVisible={isVisible}
+        onBackdropPress={onBackdropPress}
+        style={[
+          styles.container,
+          containerStyle,
+          {
+            width,
+            bottom: 0,
+            paddingBottom: 20,
+          },
+        ]}>
+        <View style={{paddingBottom: bottom}}>
+          <View style={styles.contentConteiner}>
+            <AntDesign
+              name="close"
+              size={spacing.xxLarge}
+              color={colors.tabsColor + 40}
+              style={styles.closeBtn}
+              onPress={onBackdropPress}
+            />
+            <Text tx={title} variant="mediumBold" color={colors.tabsColor} />
+            <Text
+              tx={description}
+              variant="smallRegular"
+              color={colors.tabsColor + 70}
+              style={styles.titleHint}
+            />
+          </View>
+          {children}
+        </View>
+      </RNModal>
+    </KeyboardAvoidingView>
+  ) : (
     <RNModal isVisible={isVisible} onBackdropPress={onBackdropPress}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={'padding'}
         style={[
           styles.container,
           containerStyle,

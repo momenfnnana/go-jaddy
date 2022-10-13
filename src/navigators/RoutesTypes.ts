@@ -33,6 +33,10 @@ export type StoresRoutes = {
   StoresDetails?: StoreParams;
 };
 
+export type ProfileRoutes = {
+  Profile: {userId: string};
+};
+
 export type AuthRoutes = {
   Onboarding: undefined;
   Login: undefined;

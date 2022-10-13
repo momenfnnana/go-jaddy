@@ -36,10 +36,7 @@ const LanguageModal: React.FC<ILanguageModalProps> = ({
 }) => {
   const {navigate} = useNavigation<AuthNavigationsType>();
 
-  const {data, isSuccess, isError, error, isLoading} = useQuery(
-    ['settings'],
-    getLanguages,
-  );
+  const {data} = useQuery(['getLanguages'], getLanguages);
 
   const confirmLanguage = async () => {
     i18n.changeLanguage(language);
@@ -57,9 +54,6 @@ const LanguageModal: React.FC<ILanguageModalProps> = ({
       }
     }
   };
-  if (isLoading) {
-    return <Loader size={'small'} style={styles.loader} />;
-  }
 
   return (
     <>

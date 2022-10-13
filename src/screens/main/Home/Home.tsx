@@ -140,6 +140,7 @@ const Home = (props: IHome) => {
             title="home.arrival"
             coloredTitle="home.news"
             data={recentAdded?.data?.ProductSummary?.Items}
+            WishlistEnabled={recentAdded?.data?.ProductSummary?.WishlistEnabled}
             showSeeMore={false}
           />
           {advertisements?.data?.Advertisements?.map(({MobileImage}, index) => (
@@ -153,6 +154,7 @@ const Home = (props: IHome) => {
             title="home.best"
             coloredTitle="home.selling"
             data={bestSellers?.data?.ProductSummary?.Items}
+            WishlistEnabled={bestSellers?.data?.ProductSummary?.WishlistEnabled}
             showSeeMore={false}
           />
         </ScrollView>

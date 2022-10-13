@@ -10,5 +10,7 @@ export {default as Loader} from './Loader';
 export {default as SearchHeader} from './SearchHeader';
 export {default as ShowSection} from './ShowSection';
 export {default as Modal} from './Modal';
+export {default as AddToFav} from './Modal/AddToFav';
 export {default as Switch} from './Switch';
 export {default as ReviewList} from './ReviewList';
+export {default as Divider} from './Divider';

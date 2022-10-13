@@ -233,6 +233,7 @@ const ListFooterComponent = ({
                   isActive={addImagesVisible}
                   onPress={enableAddImagesHandler}
                   containerStyle={styles.switchBtn}
+                  title="product-details.attach-image"
                 />
                 <View style={styles.row}>
                   {addImagesVisible && !image.uri && (

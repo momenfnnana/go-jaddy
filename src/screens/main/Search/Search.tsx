@@ -109,9 +109,9 @@ const Search = () => {
   }
 
   // console.log({
-  //   'Products?.pages: ': JSON.stringify(
-  //     Products?.pages[0]?.data.ProductsModel,
-  //   ),
+  //   pages: Products?.pages
+  //     .map(page => (page as any)?.data.ProductsModel)
+  //     .flat(),
   // });
 
   return (
@@ -237,7 +237,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.tiny,
     borderRadius: spacing.large,
     justifyContent: 'space-between',
-    // flex: 0.3,
   },
   viewIconContainer: {
     width: FILTER_ICON_SIZE,

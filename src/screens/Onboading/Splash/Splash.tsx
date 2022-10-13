@@ -1,15 +1,7 @@
-import {
-  View,
-  Text,
-  ImageBackground,
-  Image,
-  useWindowDimensions,
-} from 'react-native';
 import React, {useEffect} from 'react';
+import {ImageBackground, Image, useWindowDimensions} from 'react-native';
 import {LogoBG, LogoSplash, SplashBG} from 'assets/images';
 import {useNavigation} from '@react-navigation/native';
-import {AuthRoutes} from 'navigators/RoutesTypes';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {AuthNavigationsType} from 'navigators/NavigationsTypes';
 
 const Splash = () => {

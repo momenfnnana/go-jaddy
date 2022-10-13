@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {CartScreen, ProfileScreen} from 'screens';
+import {CartScreen} from 'screens';
 import {BottomTabsRoutes} from './RoutesTypes';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
@@ -14,6 +14,7 @@ import {colors, font} from 'theme';
 import HomeStack from './HomeStack';
 import CategoriesStack from './CategoryStack';
 import StoresStack from './StoresStack';
+import ProfileStack from './ProfileStack';
 
 interface IUser {
   id: string;
@@ -78,11 +79,12 @@ const BottomTabs = () => {
         }}
       />
       <Tab.Screen
-        component={ProfileScreen}
+        component={ProfileStack}
         name="Profile"
         options={{
           tabBarIcon: ({focused}) => <ProfileIcon stroke={getColor(focused)} />,
           title: t('screens-tabs.profile'),
+          headerShown: false,
         }}
         initialParams={{userId: user.id}}
       />
