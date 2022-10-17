@@ -5,8 +5,12 @@ import {Loader, Text} from 'components';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {getSubCategories} from 'services/Category';
-
-const CategoryItem = ({item}) => {
+interface ICategoryItem {
+  setCatProductId: (() => void) | any;
+  setSubCatId: (() => void) | any;
+  item: any;
+}
+const CategoryItem = ({item, setCatProductId, setSubCatId}: ICategoryItem) => {
   const [show, setShow] = useState(false);
   const {
     data,
@@ -39,6 +43,9 @@ const CategoryItem = ({item}) => {
           if (item.HasSubCategories) {
             refetch();
             setShow(!show);
+          } else {
+            setCatProductId(item.Id);
+            setSubCatId(-2);
           }
         }}
         style={{
@@ -70,6 +77,9 @@ const CategoryItem = ({item}) => {
               <Pressable
                 onPress={() => {
                   if (item?.HasSubCategories) {
+                  } else {
+                    setCatProductId(item.Id);
+                    setSubCatId(-2);
                   }
                 }}
                 style={{

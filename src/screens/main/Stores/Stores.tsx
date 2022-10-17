@@ -48,8 +48,6 @@ const Stores = (props: IStores) => {
     },
   );
 
-  // console.log({isFetching});
-
   const loadMore = () => {
     if (hasNextPage) {
       fetchNextPage();
