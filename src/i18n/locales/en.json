@@ -143,7 +143,11 @@
     "about-app": "About the app",
     "currency": "Currency",
     "language": "Language",
-    "need-help": "Need help?"
+    "need-help": "Need help?",
+    "if-want-talk": "If you would like to talk with us",
+    "email": "Email Address",
+    "support": "Support",
+    "direct-call": "Direct call"
   },
   "currencies": {
     "shikel": "Shikel {{currency}}",
