@@ -13,3 +13,7 @@ export const readAccessToken = async () => {
   const token = await AsyncStorage.getItem('accessToken');
   return token;
 };
+
+export const changeLocalCurrencies = async (currency: any) => {
+  await AsyncStorage.setItem('currency', JSON.stringify(currency));
+};

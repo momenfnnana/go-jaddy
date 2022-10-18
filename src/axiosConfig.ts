@@ -7,6 +7,9 @@ export const setAxiosLanguage = (languageId: string) => {
 export const setAxiosAccessToken = (accessToken: string) => {
   axios.defaults.headers.common['AccessToken'] = accessToken;
 };
+export const setAxiosCurrencyId = (CurrencyId: number) => {
+  axios.defaults.headers.common['CurrencyId'] = CurrencyId;
+};
 
 axios.interceptors.response.use(
   response => response,
