@@ -135,7 +135,12 @@
       "categoriesTab": "categories"
     }
   },
-
+  "cart": {
+    "discountCode": "do you have discount code?",
+    "useDiscountCode": "use discount code",
+    "submitBtn": "request done",
+    "total": "Total ({{currency}})"
+  },
   "api": {
     "account": {
       "login": {

@@ -36,6 +36,8 @@ export interface TextProps extends TextProperties {
 
   color?: string;
 
+  size?: number;
+
   touchable?: boolean;
   center?: boolean;
 
