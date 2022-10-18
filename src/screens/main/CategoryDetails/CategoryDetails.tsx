@@ -1,6 +1,6 @@
 import {useRoute, useNavigation} from '@react-navigation/native';
-import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
-import {Text} from 'components';
+import {useInfiniteQuery} from '@tanstack/react-query';
+import {BackButton, Text} from 'components';
 import ArrowIcon from 'components/Arrow';
 import React, {useLayoutEffect} from 'react';
 import {
@@ -24,7 +24,7 @@ import {ActivityIndicator} from 'react-native-paper';
 const CategoriesDetails = (props: ICategoryDetails) => {
   const {width} = useWindowDimensions();
   const {params} = useRoute<CategoryNavigationsType>();
-  const {push, pop, goBack, canGoBack, replace, navigate} =
+  const {push, pop, goBack, canGoBack, replace, navigate, setOptions} =
     useNavigation<CategoryNavigationsType>();
 
   const {
@@ -48,19 +48,9 @@ const CategoriesDetails = (props: ICategoryDetails) => {
   );
 
   useLayoutEffect(() => {
-    props.navigation.setOptions({
+    setOptions({
       title: params?.title,
-      headerLeft: () => (
-        <Pressable
-          onPress={() => replace('Categories')}
-          style={{
-            backgroundColor: colors.white + 18,
-            padding: 8,
-            borderRadius: 5,
-          }}>
-          <ArrowIcon size={20} />
-        </Pressable>
-      ),
+      headerLeft: () => <BackButton onPress={() => replace('Categories')} />,
     });
   }, []);
 
