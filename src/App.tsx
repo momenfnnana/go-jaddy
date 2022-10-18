@@ -4,55 +4,47 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AuthStack, HomeStack} from 'navigators';
 import {MainNavigator} from 'navigators/RoutesTypes';
 import {StatusBar, StyleSheet, useWindowDimensions} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Loader} from 'components';
 import {UserContext} from 'context/UserContext';
 import {useQuery} from '@tanstack/react-query';
 import {getCurrencies, getSettings} from 'services/Auth';
+import {changeLocalCurrencies, readAccessToken} from 'constants';
+import {setAxiosCurrencyId} from 'axiosConfig';
 
 const Stack = createNativeStackNavigator<MainNavigator>();
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const {accessToken, setSettings} = useContext(UserContext);
+  const {accessToken, setSettings, setCurrencies} = useContext(UserContext);
   const {height, width} = useWindowDimensions();
   const {
     data,
     isSuccess,
     isLoading: isLoadingSettings,
   } = useQuery(['settings'], getSettings);
-  const {data: currenciesData, isLoading: isLoadingCurrencies} = useQuery(
-    ['currencies'],
-    getCurrencies,
-  );
+  const {
+    data: currenciesData,
+    isLoading: isLoadingCurrencies,
+    isSuccess: isSuccessLoadingCurrencies,
+  } = useQuery(['currencies'], getCurrencies);
   useEffect(() => {
-    (async () => {
-      const accessToken = await AsyncStorage.getItem('accessToken');
-      accessToken ? setIsLoggedIn(true) : setIsLoggedIn(false);
+    readAccessToken().then(res => {
+      res ? setIsLoggedIn(true) : setIsLoggedIn(false);
       setLoading(false);
-    })();
+    });
   }, [accessToken]);
+
   useEffect(() => {
-    if (currenciesData?.data?.Currencies?.length) {
-      AsyncStorage.setItem(
-        'currency',
-        JSON.stringify(currenciesData?.data?.Currencies[0]),
-      );
+    if (isSuccessLoadingCurrencies === true) {
+      setCurrencies(currenciesData?.data?.Currencies);
+      setAxiosCurrencyId(currenciesData?.data?.Currencies[0]?.Id);
+      changeLocalCurrencies(currenciesData?.data?.Currencies[0]);
     }
-  }, [currenciesData]);
+  }, [isSuccessLoadingCurrencies]);
 
   useEffect(() => {
     isSuccess && setSettings(data.data);
   }, [isSuccess]);
-
-  useEffect(() => {
-    if (currenciesData?.data?.Currencies?.length && data?.data) {
-      AsyncStorage.setItem(
-        'currency',
-        JSON.stringify(currenciesData?.data?.Currencies[0]),
-      );
-    }
-  }, [currenciesData, data?.data]);
 
   if (loading || isLoadingCurrencies || isLoadingSettings) {
     return (
