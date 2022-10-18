@@ -9,6 +9,7 @@ const arrowBackgroundColor2 = '#2929297F';
 const grayMain = '#C4C4C4';
 const grayMainBolder = '#C8C8C8';
 const inactiveStar = '#C7C7CC';
+const languagesSwitchText = '#1313137F';
 
 const primaryPalette = {
   primary: '#0232EB', // Main
@@ -49,6 +50,7 @@ const greenPalette = {
   greenLight: '#E7F3E7',
   greenSimiLight: '#B5B5B5',
   greenDark: '#005005',
+  greenSecondary: '#B6B7B7',
 };
 const brouwnPalette = {
   brouwn: '#9F9F9F', // Main
@@ -118,6 +120,7 @@ export const colors = {
   grayMain,
   grayMainBolder,
   inactiveStar,
+  languagesSwitchText,
 };
 
 export type ColorsTypes = keyof typeof colors;
