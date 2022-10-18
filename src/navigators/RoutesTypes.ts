@@ -34,7 +34,8 @@ export type StoresRoutes = {
 };
 
 export type ProfileRoutes = {
-  Profile: {userId: string};
+  Profile: undefined;
+  WishList: undefined;
 };
 
 export type AuthRoutes = {
