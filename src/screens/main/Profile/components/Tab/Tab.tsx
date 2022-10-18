@@ -1,29 +1,57 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {StyleSheet, View, Pressable} from 'react-native';
 import {Divider, Text} from 'components';
 import {ITab} from '../../Lists/UnAuthList';
 import {spacing} from 'theme';
 import {useCurrency} from 'hook/useCurrency';
 import {useTranslation} from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
 
-const Tab = ({icon, title, RightIcon}: ITab) => {
+interface ITabCustom extends ITab {
+  showDevider: boolean;
+}
+const Tab = ({
+  icon,
+  title,
+  RightIcon,
+  bottomSection,
+  showDevider = true,
+  goTo,
+}: ITabCustom) => {
   const {currency} = useCurrency();
   const {t} = useTranslation();
+  const {navigate} = useNavigation();
+  useEffect(() => {
+    const currencyObj = AsyncStorage.getItem('currency');
+    currencyObj.then(res => {
+      console.log({currencyObj: res});
+    });
+  }, []);
+  const onPressTab = () => {
+    console.log({title});
+    if (goTo) {
+      navigate(goTo);
+    }
+  };
   return (
-    <View style={styles.container}>
+    <Pressable onPress={onPressTab}>
       <View style={styles.containerContent}>
         <View style={styles.row}>
           {icon}
           <Text tx={title} style={styles.title} />
         </View>
-        {RightIcon && (
-          <RightIcon
-            text={t('currencies.shikel', {currency: currency?.Symbol})}
-          />
-        )}
+        <View>
+          {RightIcon && (
+            <RightIcon
+              text={t('currencies.shikel', {currency: currency?.Symbol})}
+            />
+          )}
+        </View>
       </View>
-      <Divider />
-    </View>
+      {bottomSection}
+      {showDevider && <Divider />}
+    </Pressable>
   );
 };
 
