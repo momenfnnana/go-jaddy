@@ -1,10 +1,18 @@
 import React, {useMemo} from 'react';
-import {View, StatusBar} from 'react-native';
+import {View, StatusBar, ViewStyle, TextStyle} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, typography, spacing} from 'theme';
 // import {CardStyleInterpolators} from '@react-navigation/native-stack';
 
-const headerOptions = {
+interface IHeaderOptions {
+  headerBackTitleVisible: boolean;
+  headerTitleAlign: string;
+  headerTitleStyle: ViewStyle | TextStyle;
+  headerLeftContainerStyle: ViewStyle;
+  headerRightContainerStyle: ViewStyle;
+  headerTintColor: string;
+}
+const headerOptions: IHeaderOptions = {
   headerBackTitleVisible: false,
   headerTitleAlign: 'center',
   headerTitleStyle: {...typography.mediumRegular, color: colors.primary},
@@ -15,7 +23,7 @@ const headerOptions = {
 
 export const useNavigationOptions = () => {
   const {top} = useSafeAreaInsets();
-  const paddingTop = StatusBar.currentHeight
+  const paddingTop: number = StatusBar.currentHeight
     ? 0
     : Math.max(top, spacing.normal);
 
