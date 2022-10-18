@@ -88,7 +88,16 @@
     "if-want-talk": "إذا كنت بحاجة إلى التحدث إلينا ، يمكنك ذلك من خلال",
     "email": "البريد الالكتروني",
     "support": "الدعم الفني",
-    "direct-call": "مكالمة مباشرة"
+    "direct-call": "مكالمة مباشرة",
+    "buyer-account": "حساب التاجر",
+    "logout": "تسجيل الخروج",
+    "others": "أخرى",
+    "account-details": "تفاصيل الحساب",
+    "request-list": "قائــمة الطلــبات",
+    "payment-information": "معلومـات الدفع",
+    "previous-titles": "العناوين السابقة",
+    "return-products": "ارجــاع المـــنتجات",
+    "score-balance": "رصيــــــد النـقــاط"
   },
   "category": {
     "title": "التصنيفات"
@@ -98,6 +107,12 @@
     "add-hint": "اختر الكوليكشن الذي تريد إضافة المنتج عليه، يمكنك انشاء كوليشن جديد",
     "add-collection": "إضافة كوليكشن جديد",
     "collection-name": "اسم القائمة"
+  },
+  "wishlist": {
+    "title": "المفضلة",
+    "free-wishlist": "المفضلة فارغة",
+    "free-wishlist-description": "لإضافة منتجات إلى قائمة المفضلة تصفح قائمة المنتجات واضف المنتج المطلوب",
+    "discover-products": "تصفح المنتجات"
   },
   "api": {
     "account": {

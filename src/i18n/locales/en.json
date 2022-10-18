@@ -147,7 +147,22 @@
     "if-want-talk": "If you would like to talk with us",
     "email": "Email Address",
     "support": "Support",
-    "direct-call": "Direct call"
+    "direct-call": "Direct call",
+    "buyer-account": "Seller account",
+    "logout": "Logout",
+    "others": "Others",
+    "account-details": "Account details",
+    "request-list": "Request list",
+    "payment-information": "Payment information",
+    "previous-titles": "Previous titles",
+    "return-products": "Return products",
+    "score-balance": "Score balance"
+  },
+  "wishlist": {
+    "title": "Wishlist",
+    "free-wishlist": "Wishlist is free",
+    "free-wishlist-description": "To add products to the wishlist, browse the list of products and add the desired product",
+    "discover-products": "Discover products"
   },
   "currencies": {
     "shikel": "Shikel {{currency}}",
