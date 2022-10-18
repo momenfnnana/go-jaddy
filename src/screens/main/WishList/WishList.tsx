@@ -84,8 +84,8 @@ const WishlistItem = ({Name, Top4Products, ...rest}: IWishListItem) => {
     }
     // const newArr = Top4Products
     return Top4Products;
+    // EmptyItemImage
   }, [Top4Products]);
-  // EmptyItemImage
   return (
     <View style={styles.wishlistItemContainer}>
       <View style={styles.wishlistItemContentContainer}>
