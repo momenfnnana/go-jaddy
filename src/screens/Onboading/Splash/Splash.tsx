@@ -5,7 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {AuthNavigationsType} from 'navigators/NavigationsTypes';
 
 const Splash = () => {
-  const {width, height} = useWindowDimensions();
+  const {height} = useWindowDimensions();
   const {navigate} = useNavigation<AuthNavigationsType>();
 
   useEffect(() => {
