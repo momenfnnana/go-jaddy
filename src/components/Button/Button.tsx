@@ -5,7 +5,7 @@ import Text from 'components/Text';
 import Loader from 'components/Loader';
 
 interface buttomProps {
-  style?: ViewStyle;
+  style?: ViewStyle | ViewStyle[];
   title: string;
   onPress?: any;
   color?: string;

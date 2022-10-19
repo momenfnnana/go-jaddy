@@ -20,12 +20,15 @@ const UserContext = createContext({
   setSettings: ({}) => {},
   accessToken: '',
   setAccessToken: ({}) => {},
+  currencies: [],
+  setCurrencies: ({}) => {},
 });
 
 const UserProvider = ({children}) => {
   const [userData, setUserData] = useState({});
   const [settings, setSettings] = useState({});
   const [accessToken, setAccessToken] = useState('');
+  const [currencies, setCurrencies] = useState([]);
 
   return (
     <UserContext.Provider
@@ -36,6 +39,8 @@ const UserProvider = ({children}) => {
         settings,
         accessToken,
         setAccessToken,
+        currencies,
+        setCurrencies,
       }}>
       {children}
     </UserContext.Provider>

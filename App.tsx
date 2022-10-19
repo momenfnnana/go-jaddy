@@ -35,7 +35,7 @@ export default function App() {
       }
     });
     readLanguage().then((res: string | null) => {
-      setAxiosLanguage(res||'ar')
+      setAxiosLanguage(res || 'ar');
       setIsAr(res === 'ar' ? true : false);
       i18n.use(initReactI18next).init({
         lng: res || 'ar',
@@ -64,7 +64,9 @@ export default function App() {
 
   return (
     <View style={[styles.container, {direction: isAr ? 'rtl' : 'ltr'}]}>
+      {/* remove user provider */}
       <UserProvider>
+        {/* check language provider  */}
         <LanguageProvider>
           <AuthProvider>
             <QueryClientProvider client={queryClient}>

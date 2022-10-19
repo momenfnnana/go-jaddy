@@ -1,11 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useEffect, useState} from 'react';
+import {ICurrency} from 'types';
 
-interface ICurrency {
-  Symbol: string;
-}
-
-export const useCurrency = () => {
+export const useCurrency = (refresh?: boolean) => {
   const [currency, setCurrency] = useState<ICurrency>();
   useEffect(() => {
     const currencyObj = AsyncStorage.getItem('currency');
@@ -14,7 +11,7 @@ export const useCurrency = () => {
         setCurrency(JSON.parse(res));
       }
     });
-  }, []);
+  }, [refresh]);
 
   return {currency};
 };

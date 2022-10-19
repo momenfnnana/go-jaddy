@@ -1,7 +1,6 @@
-import {View, StyleSheet, ViewStyle} from 'react-native';
 import {ProfileIconTab} from 'assets/icons';
-import {colors, spacing} from 'theme';
-import {Text} from 'components';
+import {DropDown, SwitchLang} from 'components';
+import WantTalkSection from '../components/WantTalkSection';
 interface IRightIconInputs {
   text: string;
 }
@@ -11,21 +10,9 @@ export interface ITab {
   icon: JSX.Element;
   RightIcon?: ({text}: IRightIconInputs) => JSX.Element;
   bottomSection?: JSX.Element;
+  goTo?: string;
 }
-const iconcontainerStyle = {
-  backgroundColor: colors.secondary,
-  height: spacing.normal,
-  width: spacing.normal,
-  justifyContent: 'center',
-  alignItems: 'center',
-  borderRadius: spacing.normal * 0.5,
-} as ViewStyle;
-const currencyContainer = {
-  backgroundColor: colors.secondaryBackground3,
-  paddingHorizontal: spacing.small,
-  paddingVertical: spacing.smaller,
-  borderRadius: spacing.large,
-} as ViewStyle;
+
 export const data: ITab[] = [
   {
     id: 1,
@@ -36,6 +23,7 @@ export const data: ITab[] = [
     id: 2,
     title: 'profile.favorite',
     icon: <ProfileIconTab />,
+    goTo: 'WishList',
   },
   {
     id: 3,
@@ -46,24 +34,18 @@ export const data: ITab[] = [
     id: 4,
     title: 'profile.currency',
     icon: <ProfileIconTab />,
-    RightIcon: ({text}) => {
-      return (
-        <View style={currencyContainer}>
-          <Text variant="smallBold" text={text} />
-        </View>
-      );
-    },
+    RightIcon: () => <DropDown varient="currencies" />,
   },
   {
     id: 5,
     title: 'profile.language',
     icon: <ProfileIconTab />,
-    RightIcon: () => <></>,
+    RightIcon: () => <SwitchLang />,
   },
   {
     id: 6,
     title: 'profile.need-help',
     icon: <ProfileIconTab />,
-    bottomSection: <></>,
+    bottomSection: <WantTalkSection />,
   },
 ];

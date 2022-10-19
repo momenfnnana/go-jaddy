@@ -8,7 +8,7 @@ import {
 import {colors} from 'theme';
 
 interface ILoader extends ActivityIndicatorProps {
-  containerStyle?: ViewStyle;
+  containerStyle?: ViewStyle | ViewStyle[];
   isPageLoading?: boolean;
 }
 const Loader = ({
@@ -25,7 +25,7 @@ const Loader = ({
           : containerStyle
       }>
       <ActivityIndicator
-        color={colors.primary}
+        color={colors.secondary}
         size={size || 'large'}
         {...rest}
       />
