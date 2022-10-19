@@ -6,7 +6,6 @@ import Pagination from './components/Pagination';
 import Slider from './components/Slider';
 import SliderList from './components/SliderList';
 
-
 const Onboarding: React.FC<{
   children: React.ReactNode;
   style?: ViewStyle;

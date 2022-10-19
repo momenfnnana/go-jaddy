@@ -7,6 +7,7 @@ import {useCurrency} from 'hook/useCurrency';
 import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
+import {ProfileScreenNavigationProp} from 'navigators/NavigationsTypes';
 
 interface ITabCustom extends ITab {
   showDevider: boolean;
@@ -21,7 +22,7 @@ const Tab = ({
 }: ITabCustom) => {
   const {currency} = useCurrency();
   const {t} = useTranslation();
-  const {navigate} = useNavigation();
+  const {navigate} = useNavigation<ProfileScreenNavigationProp>();
   useEffect(() => {
     const currencyObj = AsyncStorage.getItem('currency');
     currencyObj.then(res => {
