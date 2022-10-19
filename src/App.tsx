@@ -10,6 +10,7 @@ import {useQuery} from '@tanstack/react-query';
 import {getCurrencies, getSettings} from 'services/Auth';
 import {changeLocalCurrencies, readAccessToken} from 'constants';
 import {setAxiosCurrencyId} from 'axiosConfig';
+import {navigationRef} from 'navigators/RootNavigation';
 
 const Stack = createNativeStackNavigator<MainNavigator>();
 const App = () => {
@@ -56,16 +57,13 @@ const App = () => {
   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <StatusBar barStyle="light-content" />
       <Stack.Navigator
         initialRouteName={isLoggedIn ? 'HomeFlow' : 'AuthFlow'}
         screenOptions={{headerShown: false}}>
-        {isLoggedIn ? (
-          <Stack.Screen component={HomeStack} name="HomeFlow" />
-        ) : (
-          <Stack.Screen component={AuthStack} name="AuthFlow" />
-        )}
+        <Stack.Screen component={HomeStack} name="HomeFlow" />
+        <Stack.Screen component={AuthStack} name="AuthFlow" />
       </Stack.Navigator>
     </NavigationContainer>
   );

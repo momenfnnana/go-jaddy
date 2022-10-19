@@ -1,12 +1,16 @@
 import {IProductInterface, ISearchInterface} from 'screens/main/Home/types';
+export type MainNavigator = {
+  HomeFlow: BottomTabsRoutes;
+  AuthFlow: AuthRoutes;
+};
 
 export type BottomTabsRoutes = {
-  HomeStack: undefined & any;
+  HomeStack: HomeRoutes;
   CategoriesStack: undefined;
   CategoryDetails: {title: ''; id: -1};
   StoresStack: undefined;
   Cart: undefined;
-  Profile: {userId: string};
+  Profile: ProfileRoutes;
 };
 
 export type HomeRoutes = {
@@ -43,9 +47,4 @@ export type AuthRoutes = {
   Login: undefined;
   Register: undefined;
   Splash: undefined;
-};
-
-export type MainNavigator = {
-  HomeFlow: undefined;
-  AuthFlow: {userId: string};
 };

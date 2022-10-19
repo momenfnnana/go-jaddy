@@ -6,7 +6,6 @@ import {Provider as LanguageProvider} from 'context/reducer';
 import AppIndex from 'App';
 import {NetworkErrorScreen} from 'screens';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import {AuthProvider} from 'context/AuthProvider';
 import i18n from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import en from 'i18n/locales/en.json';
@@ -14,6 +13,7 @@ import ar from 'i18n/locales/ar.json';
 import {readLanguage, readAccessToken} from 'constants';
 import {UserProvider} from 'context/UserContext';
 import {setAxiosAccessToken, setAxiosLanguage} from 'axiosConfig';
+import {ScreenProvider} from 'context/ScreenContext';
 
 const resources = {
   en: {
@@ -64,17 +64,17 @@ export default function App() {
 
   return (
     <View style={[styles.container, {direction: isAr ? 'rtl' : 'ltr'}]}>
+      <ScreenProvider>
       {/* remove user provider */}
-      <UserProvider>
-        {/* check language provider  */}
-        <LanguageProvider>
-          <AuthProvider>
+        <UserProvider>
+          {/* check language provider  */}
+          <LanguageProvider>
             <QueryClientProvider client={queryClient}>
               <AppIndex />
             </QueryClientProvider>
-          </AuthProvider>
-        </LanguageProvider>
-      </UserProvider>
+          </LanguageProvider>
+        </UserProvider>
+      </ScreenProvider>
     </View>
   );
 }
