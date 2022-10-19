@@ -37,7 +37,8 @@ const BottomTabs = () => {
         tabBarInactiveTintColor: colors.gray[800],
         tabBarHideOnKeyboard: true,
         tabBarLabelStyle: {fontFamily: font.regular},
-        headerTitleStyle: {fontFamily: font.regular},
+        headerTitleStyle: {fontFamily: font.regular, color: colors.white},
+        headerStyle: {backgroundColor: colors.primary},
       })}>
       <Tab.Screen
         name="HomeStack"

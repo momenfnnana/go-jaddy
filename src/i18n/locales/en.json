@@ -168,6 +168,13 @@
     "shikel": "Shikel {{currency}}",
     "dollar": "Dollar {{currency}}"
   },
+  "cart": {
+    "discountCode": "do you have discount code?",
+    "useDiscountCode": "use discount code",
+    "submitBtn": "request done",
+    "total": "Total ({{currency}})",
+    "discountPlaceholder": "discount code"
+  },
   "api": {
     "account": {
       "login": {

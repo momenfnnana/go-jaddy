@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {showErrorMessage} from 'helpers';
 import * as RootNavigation from 'navigators/RootNavigation';
+
 export const setAxiosLanguage = (languageId: string) => {
   axios.defaults.headers.common['LanguageId'] = languageId;
 };

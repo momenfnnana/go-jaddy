@@ -12,6 +12,7 @@ interface IInputField extends TextInputProps {
   placeholder?: string;
   error?: string;
   textColor?: string;
+  label?: string;
   onPressRightIcon?: () => void;
   disabledRight?: boolean;
   disabledLeft?: boolean;
@@ -29,6 +30,7 @@ const InputField = ({
   disabledRight,
   disabledLeft,
   onPressLeftIcon,
+  label,
   ...rest
 }: IInputField) => {
   const {t} = useTranslation();
@@ -45,7 +47,13 @@ const InputField = ({
           fonts: {regular: {fontFamily: font.regular}},
           roundness: 8,
         }}
-        label={placeholder ? t(placeholder) : t('common.phone-numebr')}
+        label={
+          label
+            ? t(label)
+            : placeholder
+            ? t(placeholder)
+            : t('common.phone-numebr')
+        }
         placeholder={placeholder ? t(placeholder) : t('common.phone-numebr')}
         style={[styles.textInput, {flex: 1}]}
         autoCapitalize="none"
@@ -70,6 +78,7 @@ const InputField = ({
             />
           )
         }
+        {...rest}
       />
       {error && (
         <Text

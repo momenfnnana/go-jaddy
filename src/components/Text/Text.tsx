@@ -26,6 +26,7 @@ export default function Text(props: TextProps) {
     left,
     right,
     underline,
+    size,
     ...rest
   } = props;
   let {color = colors.text} = props;
@@ -41,6 +42,7 @@ export default function Text(props: TextProps) {
     marginRight: right ? spacing[right] : undefined,
     textAlign: center ? 'center' : 'left',
     textDecorationLine: underline ? 'underline' : 'none',
+    fontSize: size ? size : undefined,
   };
   if (color) {
     customStyle.color = color;

@@ -52,6 +52,8 @@ export default function App() {
       });
     });
   }, []);
+
+  console.log({isConnected});
   if (!isConnected) {
     return (
       <QueryClientProvider client={queryClient}>

@@ -1,15 +1,9 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 import {Loader, ProductCard, SearchHeader, Text, ReviewList} from 'components';
-import {CategoryNavigationsType, IStores} from 'navigators/NavigationsTypes';
-import React, {useContext, useEffect, useState} from 'react';
+import {IStores} from 'navigators/NavigationsTypes';
+import React, {useEffect, useState} from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {
-  View,
-  Pressable,
-  FlatList,
-  useWindowDimensions,
-  Image,
-} from 'react-native';
+import {View, Pressable, FlatList, Image} from 'react-native';
 import {colors, spacing} from 'theme';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
@@ -27,40 +21,39 @@ import {BASE_URL} from 'utils/Axios';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useTranslation} from 'react-i18next';
 import {RatingFiltters} from 'components/RatingFilters';
-import {UserContext} from 'context/UserContext';
 import CategoryItem from './components/categoryItem';
-import {screen} from '../../../theme/layout';
+import {getCategoryProducts} from 'services/Category';
+import MainTab from './components/MainTab';
 
 export interface Ifiltter {
   withImage: boolean;
   ratings: string[];
 }
 
+const tabs: string[] = [
+  'storeDetails.tabs.mainTab',
+  'storeDetails.tabs.newTab',
+  'storeDetails.tabs.offerTab',
+  'storeDetails.tabs.categoriesTab',
+];
 const StoreDetails = () => {
   const {params} = useRoute<IStores>();
-
   const [searchText, setSearchText] = useState<string>('');
-  const {push, pop, goBack, canGoBack, navigate} =
-    useNavigation<CategoryNavigationsType>();
   const [tab, setTab] = useState<number>(0);
   const [isFollowed, setFollowed] = useState<boolean>(false);
+  const [subCatId, setSubCatId] = useState<number>(-1);
+  const [catProductId, setCatProductId] = useState<number>(-1);
   const [selectedFilter, setSelectedFilter] = useState<Ifiltter>({
     ratings: [],
     withImage: false,
   });
-  const {settings} = useContext(UserContext);
   const {t} = useTranslation();
-  const {width} = useWindowDimensions();
 
   const {
     data: storeReviewsData,
     isLoading: isLoadingStoreReviews,
-    isError: isErrorStoreReviews,
-    hasNextPage: hasNextPageStoreReviews,
-    fetchNextPage: fetchNextPageStoreReviews,
     refetch: refetchStoreReviews,
     isFetchingNextPage: isFetchingNextPageStoreReviews,
-    isRefetching: isRefetchingStoreReviews,
   } = useInfiniteQuery(
     ['perantCategories'],
     ({pageParam}) =>
@@ -87,10 +80,6 @@ const StoreDetails = () => {
     isLoading: isLoadingStoreDetails,
     data: storeDetailsData,
     isError: isErrorStoreDetails,
-    refetch: refetchStoreDetails,
-    isRefetching: isRefetchingrefetchStoreDetails,
-    remove: removeStoreDetails,
-    isSuccess: isSuccessStoreDetails,
   } = useQuery(
     ['getStoreDetails'],
     () => getStoreDetails({storeId: params?.storeId}),
@@ -101,15 +90,7 @@ const StoreDetails = () => {
     },
   );
 
-  const {
-    isLoading: isLoadingrefreshFollowStore,
-    data: refreshFollowStoreData,
-    isError: isErrorrefreshFollowStore,
-    refetch: refetchrefreshFollowStore,
-    isRefetching: isRefetchingrefetchrefreshFollowStore,
-    remove: removerefreshFollowStore,
-    isSuccess: isSuccessrefreshFollowStore,
-  } = useQuery(
+  const {refetch: refetchrefreshFollowStore} = useQuery(
     ['refreshFollowStore'],
     () =>
       getRefreshFollowStore({
@@ -125,15 +106,7 @@ const StoreDetails = () => {
     },
   );
 
-  const {
-    isLoading: isLoadingStoreMain,
-    data: StoreMainData,
-    isError: isErrorStoreMain,
-    refetch: refetchStoreMain,
-    isRefetching: isRefetchingrefetchStoreMain,
-    remove: removeStoreMain,
-    hasNextPage,
-  } = useInfiniteQuery(
+  const {data: StoreMainData} = useInfiniteQuery(
     ['getStoreMainTab'],
     ({pageParam}) => getStoreCategories({storeId: params?.storeId, pageParam}),
     {
@@ -146,16 +119,8 @@ const StoreDetails = () => {
     },
   );
 
-  // const getStoreNewProductsPages = ({pageParam}: any) =>
-  //   getStoreNewProducts({pageParam, storeId: params?.storeId});
-
   const {
-    isLoading: isLoadingStoreNew,
     data: StoreNewData,
-    isError: isErrorStoreNew,
-    refetch: refetchStoreNew,
-    isRefetching: isRefetchingrefetchStoreNew,
-    remove: removeStoreNew,
     hasNextPage: hasNextPageNew,
     isFetchingNextPage: isFetchingNextPageNew,
     fetchNextPage: fetchNextPageNew,
@@ -173,12 +138,7 @@ const StoreDetails = () => {
     },
   );
   const {
-    isLoading: isLoadingStoreOffer,
     data: StoreOfferData,
-    isError: isErrorStoreOffer,
-    refetch: refetchStoreOffer,
-    isRefetching: isRefetchingrefetchStoreOffer,
-    remove: removeStoreOffer,
     hasNextPage: hasNextPageOffer,
     isFetchingNextPage: isFetchingNextPageOffer,
     fetchNextPage: fetchNextPageOffer,
@@ -199,10 +159,7 @@ const StoreDetails = () => {
   const {
     isLoading: isLoadingStoreSearch,
     data: StoreSearchData,
-    isError: isErrorStoreSearch,
     refetch: refetchStoreSearch,
-    isRefetching: isRefetchingrefetchStoreSearch,
-    remove: removeStoreSearch,
     hasNextPage: hasNextPageSearch,
     isFetchingNextPage: isFetchingNextPageSearch,
     fetchNextPage: fetchNextPageSearch,
@@ -225,24 +182,48 @@ const StoreDetails = () => {
         return null;
       },
       onSuccess() {
-        console.log('5 here');
         setTab(5);
       },
     },
   );
+
+  const {
+    data: ProductsData,
+    isRefetching: isRefetchingProductsCategory,
+    refetch: refetchProductsCategory,
+    isLoading: isLoadingProductsCategory,
+    remove,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useInfiniteQuery(
+    [`productsCategory${catProductId}`],
+    ({pageParam}) => getCategoryProducts({pageParam, categoryId: catProductId}),
+    {
+      enabled: false,
+      getNextPageParam: lastPage => {
+        if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
+          return lastPage?.data?.Page + 1;
+        }
+        return null;
+      },
+    },
+  );
+
+  useEffect(() => {
+    if (subCatId == -2) {
+      setTab(6);
+      refetchProductsCategory();
+    }
+  }, [subCatId]);
 
   useEffect(() => {
     refetchStoreReviews();
   }, [selectedFilter]);
 
   const SearchHandler = () => {
-    // if (
-    //   searchText.length >
-    //   parseInt((settings as any)?.SearchSettings?.InstantSearchTermMinLength)
-    // ) {
     setTab(5);
     refetchStoreSearch();
-    // }
   };
 
   if (isLoadingStoreDetails) {
@@ -270,13 +251,6 @@ const StoreDetails = () => {
       fetchNextPageSearch();
     }
   };
-
-  const tabs: string[] = [
-    'storeDetails.tabs.mainTab',
-    'storeDetails.tabs.newTab',
-    'storeDetails.tabs.offerTab',
-    'storeDetails.tabs.categoriesTab',
-  ];
 
   return (
     <View style={{flex: 1, backgroundColor: colors.white}}>
@@ -437,7 +411,12 @@ const StoreDetails = () => {
         }}>
         {tabs.map((item, index) => (
           <Pressable
-            onPress={() => setTab(index)}
+            onPress={() => {
+              if (index === 0 || index === 3) {
+                setSubCatId(-1);
+              }
+              setTab(index);
+            }}
             key={index.toString()}
             style={{
               position: 'relative',
@@ -467,52 +446,11 @@ const StoreDetails = () => {
         ))}
       </View>
       {tab == 0 && (
-        <FlatList
-          key={'#main'}
-          data={StoreMainData?.pages.map(page => page.data.Categories).flat()}
-          numColumns={2}
-          keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={{
-            paddingHorizontal: spacing.content,
-            paddingTop: 20,
-          }}
-          renderItem={({item, index}) => (
-            <Pressable
-              onPress={() =>
-                item.HasSubCategories
-                  ? navigate('CategoriesStack', {
-                      screen: 'CategoryDetails',
-                      params: {
-                        id: item.Id,
-                        title: item.Name,
-                      },
-                    })
-                  : navigate('HomeStack', {
-                      screen: 'SearchScreen',
-                      params: {
-                        categoryId: item.Id,
-                        title: item.Name,
-                        paramsType: 'category',
-                      },
-                    })
-              }
-              style={{
-                borderRadius: 10,
-                borderWidth: 1,
-                borderColor: colors.border,
-                padding: 8,
-                width: width / 2 - 20,
-                marginBottom: 10,
-                marginRight: index % 2 == 0 ? 10 : 0,
-              }}>
-              <Text tx={item.Name} variant="smallBold" />
-              <Image
-                source={{uri: BASE_URL + item.Image?.Url}}
-                style={{width: '100%', height: 90, marginTop: 10}}
-                resizeMode="contain"
-              />
-            </Pressable>
-          )}
+        <MainTab
+          setCatProductId={setCatProductId}
+          setSubCatId={setSubCatId}
+          storeId={params?.storeId}
+          subCatId={subCatId}
         />
       )}
       {tab == 1 && (
@@ -583,7 +521,13 @@ const StoreDetails = () => {
             paddingHorizontal: spacing.content,
             paddingTop: 20,
           }}
-          renderItem={({item, index}) => <CategoryItem item={item} />}
+          renderItem={({item, index}) => (
+            <CategoryItem
+              setCatProductId={setCatProductId}
+              setSubCatId={setSubCatId}
+              item={item}
+            />
+          )}
         />
       )}
       {tab == 4 && (
@@ -640,6 +584,50 @@ const StoreDetails = () => {
           />
         ) : (
           <Loader size={'small'} color={colors.primary} />
+        ))}
+      {tab == 6 &&
+        (isLoadingProductsCategory ? (
+          <View
+            style={{
+              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 20,
+            }}>
+            <Loader size={'large'} color={colors.primary} />
+          </View>
+        ) : (
+          <FlatList
+            key={'#Product_categories'}
+            onEndReached={() => {
+              if (hasNextPage) {
+                fetchNextPage();
+              }
+            }}
+            onEndReachedThreshold={0.7}
+            contentContainerStyle={{
+              paddingHorizontal: spacing.content,
+              paddingTop: 20,
+            }}
+            numColumns={2}
+            data={ProductsData?.pages
+              .map(page => page.data.ProductsModel.Items)
+              .flat()}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item, index}) => (
+              <ProductCard
+                styleContainer={{
+                  marginRight: index % 2 == 0 ? 10 : 0,
+                }}
+                {...item}
+              />
+            )}
+            ListFooterComponent={
+              isFetchingNextPage
+                ? () => <Loader size={'small'} color={colors.primary} />
+                : null
+            }
+          />
         ))}
     </View>
   );

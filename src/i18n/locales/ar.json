@@ -114,6 +114,17 @@
     "free-wishlist-description": "لإضافة منتجات إلى قائمة المفضلة تصفح قائمة المنتجات واضف المنتج المطلوب",
     "discover-products": "تصفح المنتجات"
   },
+  "currencies": {
+    "shikel": "شيكل {{currency}}",
+    "dollar": "دولار {{currency}}"
+  },
+  "cart": {
+    "discountCode": "هل لديك كود خصم؟",
+    "useDiscountCode": "استخدم كود خصم",
+    "submitBtn": "اتمام الطلب",
+    "total": "الاجمالي ({{currency}})",
+    "discountPlaceholder": "كود الخصم"
+  },
   "api": {
     "account": {
       "login": {
