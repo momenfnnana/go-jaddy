@@ -1,16 +1,18 @@
 import {ProfileIconTab} from 'assets/icons';
 import {DropDown, SwitchLang} from 'components';
+import {ProfileRoutes} from 'navigators/RoutesTypes';
 import WantTalkSection from '../components/WantTalkSection';
 interface IRightIconInputs {
   text: string;
 }
+
 export interface ITab {
   id: number;
   title: string;
   icon: JSX.Element;
   RightIcon?: ({text}: IRightIconInputs) => JSX.Element;
   bottomSection?: JSX.Element;
-  goTo?: string;
+  goTo?: 'Profile' | 'WishList';
 }
 
 export const data: ITab[] = [
