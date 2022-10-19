@@ -16,7 +16,6 @@ import axios from 'axios';
 const Profile = (props: HomeNavigationsType) => {
   const {navigate} = useNavigation<HomeNavigationsType>();
   const {params} = useRoute<HomeNavigationsType>();
-  const {userId} = params;
   const {setUserData} = useContext(UserContext);
   const logoutHandler = async () => {
     axios.defaults.headers.common['AccessToken'] = '';
