@@ -27,3 +27,5 @@ export {default as SupporCallIcon} from './svg/support-call.svg';
 export {default as SupporMailIcon} from './svg/support-mail.svg';
 export {default as SupporMessangerIcon} from './svg/support-messenger.svg';
 export {default as EmptyItemImage} from './svg/empty-item-image.svg';
+export {default as CloseIcon} from './svg/close.svg';
+export {default as EditIcon} from './svg/edit.svg';
