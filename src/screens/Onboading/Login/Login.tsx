@@ -1,4 +1,4 @@
-import React, {ReactNode, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Image,
@@ -9,7 +9,6 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  TouchableWithoutFeedback,
   Keyboard,
   ImageSourcePropType,
 } from 'react-native';
@@ -17,17 +16,11 @@ import {LoginMain, PalestineFlag} from 'assets/images';
 import LinearGradient from 'react-native-linear-gradient';
 import {Button, InputField, Loader, Spacer, Text} from 'components';
 import {colors, spacing} from 'theme';
-import {
-  FacebookIcon,
-  GojaddyLoginIcon,
-  GoogleIcon,
-  VisibilityEyeIcon,
-} from 'assets/icons';
+import {FacebookIcon, GojaddyLoginIcon, GoogleIcon} from 'assets/icons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {RouteProp, useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {AuthRoutes, HomeRoutes} from 'navigators/RoutesTypes';
+import {useNavigation} from '@react-navigation/native';
+import {AuthRoutes, HomeRoutes, MainNavigator} from 'navigators/RoutesTypes';
 import {Formik} from 'formik';
 import * as Yub from 'yup';
 import {useTranslation} from 'react-i18next';
@@ -38,7 +31,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AnonymousModal from './components/AnonymousModal';
 import ResetPasswordModal from './components/ForgetPasswordModal';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {HomeNavigationsType} from 'navigators/NavigationsTypes';
+import {LoginScreenNavigationProp} from 'navigators/NavigationsTypes';
 import axios from 'axios';
 
 interface IinitialValues {
@@ -73,7 +66,8 @@ const loginSchema = Yub.object().shape({
 const Login = () => {
   const {width, height} = useWindowDimensions();
   const {top} = useSafeAreaInsets();
-  const {navigate, canGoBack, goBack} = useNavigation<HomeNavigationsType>();
+  const {navigate, canGoBack, goBack} =
+    useNavigation<LoginScreenNavigationProp>();
   const {t} = useTranslation();
   const {setUserData, setAccessToken} = useContext(UserContext);
   const [selectedFlag, setSelectedFlag] = useState<IFlag>({
@@ -138,25 +132,9 @@ const Login = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      const {
-        AccessToken,
-        RememberMe,
-        UserEmailAddress,
-        UserFullName,
-        UserId,
-        UserPhoneNumber,
-        UserType,
-      } = data.data;
+      const {AccessToken, RememberMe} = data.data;
       setAccessToken(AccessToken);
-      // setUserData({
-      //   AccessToken,
-      //   RememberMe,
-      //   UserEmailAddress,
-      //   UserFullName,
-      //   UserId,
-      //   UserPhoneNumber,
-      //   UserType,
-      // });
+      navigate('HomeFlow', {screen: 'HomeStack'} as any);
       if (!RememberMe) {
         axios.defaults.headers.common['AccessToken'] = `${AccessToken}`;
         AsyncStorage.setItem('accessToken', AccessToken);

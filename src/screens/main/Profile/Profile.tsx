@@ -17,13 +17,14 @@ import {AuthList, UnAuthList} from './Lists';
 import {useDropDownContext} from 'context/dropdownContext';
 
 const Profile = (props: HomeNavigationsType) => {
-  const {setUserData} = useContext(UserContext);
+  const {setUserData, accessToken, settings} = useContext(UserContext);
   const {setIsDropDownShown} = useDropDownContext();
   const [isLogged, setIsLogged] = useState<boolean>(false);
   const {
     data,
-    isSuccess,
     isLoading: isLoadingUserData,
+    refetch,
+    isRefetching,
   } = useQuery(['getUserData'], getUserData);
 
   const closeOpenedModals = () => {
@@ -46,9 +47,14 @@ const Profile = (props: HomeNavigationsType) => {
     }
   }, [data]);
 
-  if (isLoadingUserData) {
+  useEffect(() => {
+    refetch();
+  }, [accessToken]);
+
+  if (isLoadingUserData || isRefetching) {
     return <Loader size={'large'} containerStyle={styles.loader} />;
   }
+  console.log({settings});
 
   return (
     <ScrollView>

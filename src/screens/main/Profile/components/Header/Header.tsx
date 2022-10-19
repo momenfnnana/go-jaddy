@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useMemo, useState} from 'react';
+import React, {useContext} from 'react';
 import {View, Image, StyleSheet, Pressable} from 'react-native';
 import {UserContext} from 'context/UserContext';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -6,6 +6,9 @@ import {colors, spacing} from 'theme';
 import {Text} from 'components';
 import {BASE_URL} from 'utils/Axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
+import {ProfileScreenNavigationProp} from 'navigators/NavigationsTypes';
+import {setAxiosAccessToken} from 'axiosConfig';
 
 interface IHeader {
   isLogged: boolean;
@@ -13,10 +16,13 @@ interface IHeader {
 
 const Header = ({isLogged}: IHeader) => {
   const {setUserData, setAccessToken, userData} = useContext(UserContext);
+  const {navigate} = useNavigation<ProfileScreenNavigationProp>();
   const logoutHandler = () => {
     AsyncStorage.removeItem('accessToken');
+    setAxiosAccessToken('');
     setUserData({});
-    setAccessToken(null);
+    setAccessToken('');
+    navigate('AuthFlow', {screen: 'Login'} as any);
   };
   return (
     <View style={styles.container}>

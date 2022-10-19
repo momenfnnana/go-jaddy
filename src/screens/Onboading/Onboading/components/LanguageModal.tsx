@@ -10,12 +10,12 @@ import React from 'react';
 import {colors, spacing} from 'theme';
 import Icon from 'react-native-vector-icons/AntDesign';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import {Button, Loader, Text} from 'components';
+import {Button, Text} from 'components';
 import {useNavigation} from '@react-navigation/native';
 import i18n from 'i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNRestart from 'react-native-restart';
-import {AuthNavigationsType} from 'navigators/NavigationsTypes';
+import {LoginScreenNavigationProp} from 'navigators/NavigationsTypes';
 import {useQuery} from '@tanstack/react-query';
 import {getLanguages} from 'services/Auth';
 import {setAxiosLanguage} from 'axiosConfig';
@@ -34,14 +34,15 @@ const LanguageModal: React.FC<ILanguageModalProps> = ({
   setLanguage,
   setVisibleLangModal,
 }) => {
-  const {navigate} = useNavigation<AuthNavigationsType>();
+  const {navigate} = useNavigation<LoginScreenNavigationProp>();
 
   const {data} = useQuery(['getLanguages'], getLanguages);
 
   const confirmLanguage = async () => {
+    setVisibleLangModal!(false)
     i18n.changeLanguage(language);
     AsyncStorage.setItem('languageId', language!);
-    navigate('Login');
+    navigate('HomeFlow', {screen: 'HomeStack'} as any);
     if (language == 'en') {
       if (I18nManager.isRTL) {
         await I18nManager.forceRTL(false);

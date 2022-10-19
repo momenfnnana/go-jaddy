@@ -34,6 +34,7 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {VerifyAccountModal} from './components';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import axios from 'axios';
+import {RegisterScreenNavigationProp} from 'navigators/NavigationsTypes';
 
 interface IFlag {
   imageUrl: ImageSourcePropType;
@@ -64,14 +65,14 @@ interface camiraImage {
 }
 
 const Register = () => {
-  const {settings} = useContext(UserContext);
+  const {settings, setUserData, setAccessToken} = useContext(UserContext);
   const {width, height} = useWindowDimensions();
-  const {canGoBack, goBack} = useNavigation();
+  const {canGoBack, goBack, navigate} =
+    useNavigation<RegisterScreenNavigationProp>();
   const [isSeller, setSeller] = useState(false);
   const [isPasswordShow, setIsPasswordShown] = useState<boolean>(false);
   const [isCPasswordShow, setIsCPasswordShown] = useState<boolean>(false);
   const [verifyModalShow, setVerifyModalShow] = useState<boolean>(false);
-  const {setUserData} = useContext(UserContext);
   const [image, setImage] = useState<camiraImage>({
     name: '',
     type: '',
@@ -138,6 +139,8 @@ const Register = () => {
         axios.defaults.headers.common[
           'AccessToken'
         ] = `${data.data.AccessToken}`;
+        setAccessToken(data.data.AccessToken);
+        navigate('HomeFlow', {screen: 'HomeStack'} as any);
       } else {
         setVerifyModalShow(true);
       }
