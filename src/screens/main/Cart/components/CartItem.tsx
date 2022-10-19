@@ -60,6 +60,10 @@ const CartItem = ({item, setData}: ICartItem) => {
     }
   }, [quantity]);
 
+  useEffect(() => {
+    setQuantity(item?.EnteredQuantity);
+  }, [item?.EnteredQuantity]);
+
   return (
     <View
       style={{
