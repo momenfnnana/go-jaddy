@@ -17,13 +17,10 @@ import {getPerantCategories, getSubCategories} from 'services/Category';
 
 import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
-import {
-  CategoryNavigationsType,
-  ICategories,
-} from 'navigators/NavigationsTypes';
+import {CategoryNavigationsType} from 'navigators/NavigationsTypes';
 import {ActivityIndicator} from 'react-native-paper';
 
-const Categories = (props: ICategories) => {
+const Categories = () => {
   const {top} = useSafeAreaInsets();
   const {width} = useWindowDimensions();
   const {params} = useRoute<CategoryNavigationsType>();
@@ -56,7 +53,6 @@ const Categories = (props: ICategories) => {
   };
 
   useEffect(() => {
-    console.log('!!!!!');
     refetch();
   }, []);
 

@@ -100,7 +100,6 @@ const StoreDetails = () => {
     {
       enabled: false,
       onSuccess() {
-        console.log('first');
         setFollowed(!isFollowed);
       },
     },

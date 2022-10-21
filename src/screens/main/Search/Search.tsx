@@ -67,17 +67,14 @@ const Search = () => {
     return () => remove();
   }, [params]);
 
-  const {mutate, isLoading, isError, error, isSuccess, data} = useMutation(
-    getSearchResults,
-    {
-      onSuccess: data => {
-        return data;
-      },
-      onError: error => {
-        return error;
-      },
+  const {mutate, isLoading, data} = useMutation(getSearchResults, {
+    onSuccess: data => {
+      return data;
     },
-  );
+    onError: error => {
+      return error;
+    },
+  });
 
   const SearchHandler = () => {
     if (
@@ -99,20 +96,6 @@ const Search = () => {
   ) {
     return <Loader containerStyle={styles.loaderStyle} />;
   }
-
-  if (isError) {
-    return (
-      <NetworkErrorScreen
-        onPress={() => mutate({searchText, CurrencyId: currency?.Id})}
-      />
-    );
-  }
-
-  // console.log({
-  //   pages: Products?.pages
-  //     .map(page => (page as any)?.data.ProductsModel)
-  //     .flat(),
-  // });
 
   return (
     <TouchableWithoutFeedback onPress={DismissKeyboard}>

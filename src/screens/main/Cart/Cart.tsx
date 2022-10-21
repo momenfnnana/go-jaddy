@@ -50,7 +50,6 @@ const Cart = () => {
   } = useQuery(['applyDiscountCart'], () => applyDiscountCart(discountCode), {
     enabled: false,
     onSuccess(data) {
-      console.log('first222z');
       setData(data.data);
     },
   });
@@ -77,7 +76,6 @@ const Cart = () => {
     {
       enabled: false,
       onSuccess(data) {
-        console.log('data');
         setData(data.data);
         onUsedPoints();
       },
@@ -87,8 +85,6 @@ const Cart = () => {
   const onUsedPoints = () => {
     setUsedPoints(!isUsedPoints);
   };
-
-  console.log({isUsedPoints});
 
   if (isLoading || isRefetching) {
     return (
