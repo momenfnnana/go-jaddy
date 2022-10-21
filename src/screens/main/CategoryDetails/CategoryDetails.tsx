@@ -1,6 +1,6 @@
 import {useRoute, useNavigation} from '@react-navigation/native';
 import {useInfiniteQuery} from '@tanstack/react-query';
-import {BackButton, Text} from 'components';
+import {BackButton, Loader, Text} from 'components';
 import ArrowIcon from 'components/Arrow';
 import React, {useLayoutEffect} from 'react';
 import {
@@ -60,6 +60,17 @@ const CategoriesDetails = (props: ICategoryDetails) => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <Loader
+        containerStyle={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      />
+    );
+  }
   return (
     <View style={{flex: 1}}>
       <FlatList

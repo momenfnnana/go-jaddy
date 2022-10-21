@@ -27,6 +27,8 @@ import {useCurrency} from 'hook/useCurrency';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import {CategoryNavigationsType} from 'navigators/NavigationsTypes';
+import {useQuery} from '@tanstack/react-query';
+import {addCartProducts} from 'services/Cart';
 
 interface IProductNavigation
   extends NativeStackNavigationProp<HomeRoutes, 'ProductDetails'>,
@@ -67,6 +69,20 @@ const ListHeaderComponent = ({
   const [subscribed, setSubscribed] = useState<boolean>(false);
   const [isAddToCollectionShown, setIsAddToCollectionShown] =
     useState<boolean>(false);
+  const {
+    isLoading: isLoadingCartProduct,
+    isError: isErrorCartProduct,
+    refetch: refetchCartProduct,
+    isFetching: isFetchingCartProduct,
+  } = useQuery(
+    ['adProductDetails'],
+    () =>
+      addCartProducts({productId: ProductId, quantityToAdd: productsNumber}),
+    {
+      enabled: false,
+    },
+  );
+
   const onLoadBackgroundEnd = () => {
     setIsLoadingImageBackground(false);
   };
@@ -313,12 +329,25 @@ const ListHeaderComponent = ({
                 <Entypo name="minus" size={20} color={colors.primary} />
               </Pressable>
             </View>
-            <Text
-              tx="product-details.add-to-cart"
-              color={colors.white}
-              variant="mediumBold"
+            <Pressable
+              disabled={isFetchingCartProduct}
               style={{flex: 0.5}}
-            />
+              onPress={() => refetchCartProduct()}>
+              {isFetchingCartProduct ? (
+                <Loader
+                  color={colors.white}
+                  size={'small'}
+                  style={{flex: 0.5}}
+                />
+              ) : (
+                <Text
+                  tx="product-details.add-to-cart"
+                  color={colors.white}
+                  variant="mediumBold"
+                  style={{flex: 0.5}}
+                />
+              )}
+            </Pressable>
           </View>
           <Pressable onPress={onPressHeart} style={styles.heartContainer}>
             <AntDesign name="heart" color={colors.red} size={20} />

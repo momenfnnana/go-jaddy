@@ -13,3 +13,5 @@ export {default as KotonIcon} from './koton.png';
 export {default as PhilipsIcon} from './Philips.png';
 export {default as ProductImage} from './productImage.png';
 export {default as BannerImage} from './banner.png';
+export {default as FaildModalImg} from './faildModalImg.svg';
+export {default as SuccessModalImg} from './successImgModal.svg';

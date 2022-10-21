@@ -198,7 +198,12 @@ const StoreDetails = () => {
     hasNextPage,
   } = useInfiniteQuery(
     [`productsCategory${catProductId}`],
-    ({pageParam}) => getCategoryProducts({pageParam, categoryId: catProductId}),
+    ({pageParam}) =>
+      getCategoryProducts({
+        pageParam,
+        categoryId: catProductId,
+        storeId: params?.storeId,
+      }),
     {
       enabled: false,
       getNextPageParam: lastPage => {

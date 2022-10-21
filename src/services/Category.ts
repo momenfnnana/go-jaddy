@@ -4,6 +4,7 @@ import {BASE_URL} from 'utils/Axios';
 interface CategoriesParams {
   pageParam?: any;
   categoryId?: number;
+  storeId?: number;
 }
 
 export const getPerantCategories = ({pageParam = 1}) => {

@@ -43,7 +43,9 @@ const Button: React.FC<buttomProps> = ({
         center
         variant="largeBold"
         tx={title}
-        color={color || colors.white}
+        color={
+          color || (variant == 'Secondary' ? colors.secondary : colors.white)
+        }
         style={!icon && styles.textStyle}
       />
       {isLoading && <Loader size="small" color={colors.white} />}

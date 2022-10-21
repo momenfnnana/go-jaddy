@@ -175,6 +175,12 @@
     "total": "Total ({{currency}})",
     "discountPlaceholder": "discount code"
   },
+  "modal": {
+    "successTitle": "are you sure from confirm?",
+    "faildTitle": "are you sure from delete?",
+    "confirmBtn": "confirm",
+    "cancelBtn": "cancel"
+  },
   "api": {
     "account": {
       "login": {

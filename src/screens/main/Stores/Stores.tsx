@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {useInfiniteQuery} from '@tanstack/react-query';
-import {Text} from 'components';
+import {Loader, Text} from 'components';
 import React, {useEffect, useState} from 'react';
 import {
   View,
@@ -33,6 +33,7 @@ const Stores = (props: IStores) => {
     refetch,
     isFetching,
     isFetchingNextPage,
+    isRefetching,
   } = useInfiniteQuery(
     ['AllStores'],
     ({pageParam}) =>
@@ -57,6 +58,18 @@ const Stores = (props: IStores) => {
   useEffect(() => {
     refetch();
   }, [typeStores]);
+
+  if (isLoading || isRefetching) {
+    return (
+      <Loader
+        containerStyle={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      />
+    );
+  }
 
   return (
     <View style={{flex: 1}}>
