@@ -60,19 +60,17 @@ const AddToFav = ({
       return error;
     },
   });
-  const {
-    mutate,
-    isLoading: isLoadingCreateWishList,
-    isSuccess: isCreatingWishlistSucceeded,
-    data: newWishlistData,
-  } = useMutation(postCreateWishlist, {
-    onSuccess: data => {
-      return data;
+  const {mutate, isLoading: isLoadingCreateWishList} = useMutation(
+    postCreateWishlist,
+    {
+      onSuccess: data => {
+        return data;
+      },
+      onError: error => {
+        return error;
+      },
     },
-    onError: error => {
-      return error;
-    },
-  });
+  );
   const showAddCollectionInput = () => {
     setShowInput(currentState => !currentState);
   };
@@ -105,8 +103,8 @@ const AddToFav = ({
       isLoading={isLoadedWishlists}
       forceRefetch={refetchWishlists}
       ProductId={ProductId}
-      title="whishlist.add"
-      description="whishlist.add-hint">
+      title="wishlist.add"
+      description="wishlist.add-hint">
       {isLoadingWishlists ? (
         <Loader size={'small'} style={styles.collectionsLoader} />
       ) : wishlistsData?.data?.Wishlists?.length > 0 ? (
@@ -135,7 +133,7 @@ const AddToFav = ({
                         }
                       </View>
                       <Text
-                        tx="whishlist.add-collection"
+                        tx="wishlist.add-collection"
                         variant="mediumBold"
                         color={colors.primary}
                         style={styles.collectionName}
@@ -146,7 +144,7 @@ const AddToFav = ({
                         value={values.collectionName}
                         onChangeText={handleChange('collectionName')}
                         onBlur={handleBlur('collectionName')}
-                        placeholder={t('whishlist.collection-name')}
+                        placeholder={t('wishlist.collection-name')}
                         style={{}}
                         rightIcon={
                           isLoadingCreateWishList ? (
@@ -232,7 +230,7 @@ const AddToFav = ({
                     {<AntDesign name="plus" color={colors.white} size={25} />}
                   </View>
                   <Text
-                    tx="whishlist.add-collection"
+                    tx="wishlist.add-collection"
                     variant="mediumBold"
                     color={colors.primary}
                     style={styles.collectionName}
@@ -243,7 +241,7 @@ const AddToFav = ({
                     value={values.collectionName}
                     onChangeText={handleChange('collectionName')}
                     onBlur={handleBlur('collectionName')}
-                    placeholder={t('whishlist.collection-name')}
+                    placeholder={t('wishlist.collection-name')}
                     style={{}}
                     rightIcon={
                       isLoadingCreateWishList ? (
