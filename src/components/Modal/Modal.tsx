@@ -29,6 +29,7 @@ interface IResetPasswordModalProps {
   description: string;
   children: ReactNode;
   containerStyle: ViewStyle;
+  showCloseBtn?: boolean;
 }
 
 const ICON_WIDTH = 30;
@@ -44,6 +45,7 @@ const Modal: React.FC<IResetPasswordModalProps> = ({
   description,
   children,
   containerStyle,
+  showCloseBtn = true,
 }) => {
   const {width} = useWindowDimensions();
   const {bottom} = useSafeAreaInsets();
@@ -64,13 +66,15 @@ const Modal: React.FC<IResetPasswordModalProps> = ({
         ]}>
         <View style={{paddingBottom: bottom}}>
           <View style={styles.contentConteiner}>
-            <AntDesign
-              name="close"
-              size={spacing.xxLarge}
-              color={colors.tabsColor + 40}
-              style={styles.closeBtn}
-              onPress={onBackdropPress}
-            />
+            {showCloseBtn && (
+              <AntDesign
+                name="close"
+                size={spacing.xxLarge}
+                color={colors.tabsColor + 40}
+                style={styles.closeBtn}
+                onPress={onBackdropPress}
+              />
+            )}
             <Text tx={title} variant="mediumBold" color={colors.tabsColor} />
             <Text
               tx={description}
@@ -97,13 +101,15 @@ const Modal: React.FC<IResetPasswordModalProps> = ({
         ]}>
         <View style={{paddingBottom: bottom}}>
           <View style={styles.contentConteiner}>
-            <AntDesign
-              name="close"
-              size={spacing.xxLarge}
-              color={colors.tabsColor + 40}
-              style={styles.closeBtn}
-              onPress={onBackdropPress}
-            />
+            {showCloseBtn && (
+              <AntDesign
+                name="close"
+                size={spacing.xxLarge}
+                color={colors.tabsColor + 40}
+                style={styles.closeBtn}
+                onPress={onBackdropPress}
+              />
+            )}
             <Text tx={title} variant="mediumBold" color={colors.tabsColor} />
             <Text
               tx={description}
