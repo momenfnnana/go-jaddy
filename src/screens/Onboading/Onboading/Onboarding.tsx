@@ -1,4 +1,4 @@
-import { OnboardingBG } from 'assets/images';
+import {OnboardingBG} from 'assets/images';
 import React from 'react';
 import {ImageBackground, ViewStyle} from 'react-native';
 import LanguageModal from './components/LanguageModal';

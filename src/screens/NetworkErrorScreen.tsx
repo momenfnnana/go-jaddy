@@ -11,12 +11,13 @@ import {ScreenContainer, Text} from 'components';
 import {NetworkErrorIcon} from 'assets/icons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {colors, spacing} from 'theme';
+import NetInfo from '@react-native-community/netinfo';
 
 interface INetworkErrorScreen {
   onPress?: () => void;
 }
 
-const NetworkErrorScreen = ({onPress}: INetworkErrorScreen) => {
+const NetworkErrorScreen = ({...rest}: INetworkErrorScreen) => {
   const {width} = useWindowDimensions();
   const SIZE = width * 0.2;
   const customReloadButtonStyle: ViewStyle = useMemo(() => {
@@ -26,6 +27,11 @@ const NetworkErrorScreen = ({onPress}: INetworkErrorScreen) => {
       borderRadius: SIZE * 0.5,
     };
   }, []);
+  const onPress = () => {
+    NetInfo.refresh().then(status => {
+      console.log({status});
+    });
+  };
   return (
     <ScreenContainer withPadding>
       <StatusBar barStyle="dark-content" />
@@ -47,7 +53,8 @@ const NetworkErrorScreen = ({onPress}: INetworkErrorScreen) => {
         />
         <Pressable
           onPress={onPress}
-          style={[styles.reloadButtonContainer, customReloadButtonStyle]}>
+          style={[styles.reloadButtonContainer, customReloadButtonStyle]}
+          {...rest}>
           <SimpleLineIcons
             name="reload"
             size={40}

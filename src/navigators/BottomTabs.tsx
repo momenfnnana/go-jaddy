@@ -15,6 +15,7 @@ import HomeStack from './HomeStack';
 import CategoriesStack from './CategoryStack';
 import StoresStack from './StoresStack';
 import ProfileStack from './ProfileStack';
+import CartStack from './CartStack';
 
 interface IUser {
   id: string;
@@ -37,8 +38,7 @@ const BottomTabs = () => {
         tabBarInactiveTintColor: colors.gray[800],
         tabBarHideOnKeyboard: true,
         tabBarLabelStyle: {fontFamily: font.regular},
-        headerTitleStyle: {fontFamily: font.regular, color: colors.white},
-        headerStyle: {backgroundColor: colors.primary},
+        headerShown: false,
       })}>
       <Tab.Screen
         name="HomeStack"
@@ -47,7 +47,6 @@ const BottomTabs = () => {
           tabBarIcon: ({focused}) => (
             <HomeIcon stroke={getColor(focused)} fill={getColor(focused)} />
           ),
-          headerShown: false,
           title: t('screens-tabs.home'),
         }}
       />
@@ -58,7 +57,6 @@ const BottomTabs = () => {
           tabBarIcon: ({focused}) => (
             <CategoriesIcon stroke={getColor(focused)} />
           ),
-          headerShown: false,
           title: t('screens-tabs.categories'),
         }}
       />
@@ -68,11 +66,10 @@ const BottomTabs = () => {
         options={{
           tabBarIcon: ({focused}) => <StoresIcon stroke={getColor(focused)} />,
           title: t('screens-tabs.stores'),
-          headerShown: false,
         }}
       />
       <Tab.Screen
-        component={CartScreen}
+        component={CartStack}
         name="Cart"
         options={{
           tabBarIcon: ({focused}) => <CartIcon stroke={getColor(focused)} />,
@@ -85,9 +82,7 @@ const BottomTabs = () => {
         options={{
           tabBarIcon: ({focused}) => <ProfileIcon stroke={getColor(focused)} />,
           title: t('screens-tabs.profile'),
-          headerShown: false,
         }}
-        initialParams={{userId: user.id}}
       />
     </Tab.Navigator>
   );

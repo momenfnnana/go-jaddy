@@ -1,30 +1,26 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {StoresScreen, StoreDetailsScreen} from 'screens';
+import {CartScreen} from 'screens';
 import {colors, font} from 'theme';
-import {StoresRoutes} from './RoutesTypes';
+import {CartRoutes} from './RoutesTypes';
 
-const Stack = createNativeStackNavigator<StoresRoutes>();
+const Stack = createNativeStackNavigator<CartRoutes>();
 
-const StoresStack = () => {
+const CartStack = () => {
   const {t} = useTranslation();
   return (
     <Stack.Navigator
+      initialRouteName="Cart"
       screenOptions={{
         headerStyle: {backgroundColor: colors.primary},
         headerTitleStyle: {fontFamily: font.regular, color: colors.white},
-        headerTitle: t('screens-tabs.stores'),
+        headerTitle: t('screens-tabs.cart'),
         headerTitleAlign: 'center',
       }}>
-      <Stack.Screen component={StoresScreen} name="Stores" />
-      <Stack.Screen
-        options={{headerShown: false}}
-        component={StoreDetailsScreen}
-        name="StoresDetails"
-      />
+      <Stack.Screen component={CartScreen} name="Cart" />
     </Stack.Navigator>
   );
 };
 
-export default StoresStack;
+export default CartStack;

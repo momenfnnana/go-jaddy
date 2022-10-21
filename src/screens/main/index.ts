@@ -1,5 +1,6 @@
 export {default as HomeScreen} from './Home';
 export {default as CategoriesScreen} from './Categories';
+export {default as CategoryDetailsScreen} from './CategoryDetails';
 export {default as StoresScreen} from './Stores';
 export {default as StoreDetailsScreen} from './StoreDetails';
 export {default as CartScreen} from './Cart';

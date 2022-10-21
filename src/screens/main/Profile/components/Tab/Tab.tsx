@@ -1,11 +1,10 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {StyleSheet, View, Pressable} from 'react-native';
 import {Divider, Text} from 'components';
 import {ITab} from '../../Lists/UnAuthList';
 import {spacing} from 'theme';
 import {useCurrency} from 'hook/useCurrency';
 import {useTranslation} from 'react-i18next';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {ProfileScreenNavigationProp} from 'navigators/NavigationsTypes';
 
@@ -23,14 +22,7 @@ const Tab = ({
   const {currency} = useCurrency();
   const {t} = useTranslation();
   const {navigate} = useNavigation<ProfileScreenNavigationProp>();
-  useEffect(() => {
-    const currencyObj = AsyncStorage.getItem('currency');
-    currencyObj.then(res => {
-      console.log({currencyObj: res});
-    });
-  }, []);
   const onPressTab = () => {
-    console.log({title});
     if (goTo) {
       navigate(goTo);
     }

@@ -1,5 +1,5 @@
-import React from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
+import React, {useContext} from 'react';
+import {Pressable, StyleSheet, View, Linking} from 'react-native';
 import {Text} from 'components';
 import {colors, spacing} from 'theme';
 import {
@@ -7,8 +7,25 @@ import {
   SupporMailIcon,
   SupporMessangerIcon,
 } from 'assets/icons';
-
+import {UserContext} from 'context/UserContext';
+enum linkHandlerTypes {
+  phone,
+  support,
+  email,
+}
 const WantTalkSection = () => {
+  const {settings} = useContext(UserContext);
+  const onPress = (value: linkHandlerTypes) => {
+    if (value === linkHandlerTypes.phone) {
+      return Linking.openURL(`tel:${settings?.GlobalSettings?.PhoneNumber}`);
+    } else if (value === linkHandlerTypes.support) {
+      return Linking.openURL(`tel:${settings?.GlobalSettings?.PhoneNumber}`);
+    } else if (value === linkHandlerTypes.email) {
+      return Linking.openURL(
+        `mailto:${settings?.GlobalSettings?.EmailAddress}`,
+      );
+    }
+  };
   return (
     <View style={styles.container}>
       <Text
@@ -17,24 +34,30 @@ const WantTalkSection = () => {
         color={colors.arrowColor}
       />
       <View style={styles.row}>
-        <Pressable style={styles.supportItemContainer}>
-          <SupporCallIcon />
+        <Pressable
+          onPress={() => onPress(linkHandlerTypes.email)}
+          style={styles.supportItemContainer}>
+          <SupporMailIcon />
           <Text
             tx="profile.email"
             variant="xSmallLight"
             style={styles.supportText}
           />
         </Pressable>
-        <Pressable style={styles.supportItemContainer}>
-          <SupporMailIcon />
+        <Pressable
+          onPress={() => onPress(linkHandlerTypes.support)}
+          style={styles.supportItemContainer}>
+          <SupporMessangerIcon />
           <Text
             tx="profile.support"
             variant="xSmallLight"
             style={styles.supportText}
           />
         </Pressable>
-        <Pressable style={styles.supportItemContainer}>
-          <SupporMessangerIcon />
+        <Pressable
+          onPress={() => onPress(linkHandlerTypes.phone)}
+          style={styles.supportItemContainer}>
+          <SupporCallIcon />
           <Text
             tx="profile.direct-call"
             variant="xSmallLight"
@@ -57,10 +80,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: spacing.small,
+    marginVertical: spacing.small,
   },
   supportItemContainer: {
-    paddingHorizontal: spacing.medium + 2,
+    flex: 0.32,
     paddingBottom: spacing.medium - 2,
     paddingTop: spacing.small,
     borderWidth: 0.5,

@@ -102,17 +102,17 @@
   "category": {
     "title": "التصنيفات"
   },
-  "whishlist": {
-    "add": "أضف العنصر للمفضلة",
-    "add-hint": "اختر الكوليكشن الذي تريد إضافة المنتج عليه، يمكنك انشاء كوليشن جديد",
-    "add-collection": "إضافة كوليكشن جديد",
-    "collection-name": "اسم القائمة"
-  },
   "wishlist": {
     "title": "المفضلة",
     "free-wishlist": "المفضلة فارغة",
     "free-wishlist-description": "لإضافة منتجات إلى قائمة المفضلة تصفح قائمة المنتجات واضف المنتج المطلوب",
-    "discover-products": "تصفح المنتجات"
+    "discover-products": "تصفح المنتجات",
+    "add": "أضف العنصر للمفضلة",
+    "add-hint": "اختر الكوليكشن الذي تريد إضافة المنتج عليه، يمكنك انشاء كوليشن جديد",
+    "add-collection": "إضافة كوليكشن جديد",
+    "collection-name": "اسم القائمة",
+    "are-sure-want-to-delete": "هل أنت متأكد من الحذف؟",
+    "are-sure-want-to-delete-hint": "باختيارك تأكيد الحذف لا يمكنك الرجوع عن هذا الأمر، هل أنت متأكد من حذف العنصر؟"
   },
   "currencies": {
     "shikel": "شيكل {{currency}}",
@@ -143,6 +143,8 @@
     "something-went-wrong": "حصلت مشكلة ما؟",
     "search_in_store": "ابحث في المتجر",
     "send": "إرسال",
-    "load-more": "تحميل المزيد"
+    "load-more": "تحميل المزيد",
+    "continue": "تأكيد",
+    "cancel": "تراجع"
   }
 }

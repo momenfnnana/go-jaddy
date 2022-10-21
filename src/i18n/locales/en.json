@@ -78,7 +78,9 @@
     "verifyModalText": "Please type the verification code sent to",
     "something-went-wrong": "Something went wrong",
     "send": "Send",
-    "load-more": "Load more"
+    "load-more": "Load more",
+    "continue": "Continue",
+    "cancel": "Cancel"
   },
   "carasoule": {
     "name": "clothes title goes here"
@@ -112,12 +114,6 @@
   },
   "category": {
     "title": "Category"
-  },
-  "whishlist": {
-    "add": "Add to wishlist",
-    "add-hint": "Choose the collection you want to add the product to, you can create a new collage",
-    "add-collection": "Add new collection",
-    "collection-name": "Collection name"
   },
   "stores": {
     "title": "Stores",
@@ -162,7 +158,13 @@
     "title": "Wishlist",
     "free-wishlist": "Wishlist is free",
     "free-wishlist-description": "To add products to the wishlist, browse the list of products and add the desired product",
-    "discover-products": "Discover products"
+    "discover-products": "Discover products",
+    "add": "Add to wishlist",
+    "add-hint": "Choose the collection you want to add the product to, you can create a new collage",
+    "add-collection": "Add new collection",
+    "collection-name": "Collection name",
+    "are-sure-want-to-delete": "Are you sure to delete?",
+    "are-sure-want-to-delete-hint": "By choosing to confirm deletion, you cannot undo this command. Are you sure to delete the item?"
   },
   "currencies": {
     "shikel": "Shikel {{currency}}",

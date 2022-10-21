@@ -17,6 +17,7 @@ const ProfileStack = () => {
           headerStyle: {backgroundColor: colors.primary},
           headerTitleStyle: {fontFamily: font.regular, color: colors.white},
           headerBackTitleVisible: false,
+          headerTitleAlign: 'center',
         }}>
         <Stack.Screen
           component={ProfileScreen}

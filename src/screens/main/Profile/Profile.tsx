@@ -7,7 +7,6 @@ import {
 } from 'react-native';
 import {Loader} from 'components';
 import {UserContext} from 'context/UserContext';
-import {HomeNavigationsType} from 'navigators/NavigationsTypes';
 import {Header, Section} from './components';
 import {spacing} from 'theme';
 import {useQuery} from '@tanstack/react-query';
@@ -16,7 +15,7 @@ import {readAccessToken} from 'constants';
 import {AuthList, UnAuthList} from './Lists';
 import {useDropDownContext} from 'context/dropdownContext';
 
-const Profile = (props: HomeNavigationsType) => {
+const Profile = () => {
   const {setUserData, accessToken, settings} = useContext(UserContext);
   const {setIsDropDownShown} = useDropDownContext();
   const [isLogged, setIsLogged] = useState<boolean>(false);
@@ -54,7 +53,6 @@ const Profile = (props: HomeNavigationsType) => {
   if (isLoadingUserData || isRefetching) {
     return <Loader size={'large'} containerStyle={styles.loader} />;
   }
-  console.log({settings});
 
   return (
     <ScrollView>

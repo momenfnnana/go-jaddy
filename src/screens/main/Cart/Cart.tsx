@@ -6,6 +6,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  StyleSheet,
 } from 'react-native';
 import React, {useState} from 'react';
 import {useQueries, useQuery} from '@tanstack/react-query';
@@ -17,7 +18,7 @@ import {
 } from 'services/Cart';
 import {colors, font, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
-import {Button, InputField, Loader, Text} from 'components';
+import {Button, InputField, Loader, Modal, Text} from 'components';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Switch} from 'react-native-paper';
@@ -25,6 +26,8 @@ import {useCurrency} from 'hook/useCurrency';
 import CartItem from './components/CartItem';
 import {useTranslation} from 'react-i18next';
 import Entypo from 'react-native-vector-icons/Entypo';
+import {GoJaddyRedIcon} from 'assets/icons';
+import {SuccessModalImg} from 'assets/images';
 
 const Cart = () => {
   const {isLoading, isRefetching} = useQuery(
@@ -41,6 +44,7 @@ const Cart = () => {
   const {t} = useTranslation();
   const [discountCode, setDiscountCode] = useState<string>('');
   const [isUsedPoints, setUsedPoints] = useState<boolean>(false);
+  const [isShowModel, setShowModel] = useState<boolean>(false);
   const {currency} = useCurrency();
 
   const {
@@ -50,7 +54,6 @@ const Cart = () => {
   } = useQuery(['applyDiscountCart'], () => applyDiscountCart(discountCode), {
     enabled: false,
     onSuccess(data) {
-      console.log('first222z');
       setData(data.data);
     },
   });
@@ -77,7 +80,6 @@ const Cart = () => {
     {
       enabled: false,
       onSuccess(data) {
-        console.log('data');
         setData(data.data);
         onUsedPoints();
       },
@@ -87,8 +89,6 @@ const Cart = () => {
   const onUsedPoints = () => {
     setUsedPoints(!isUsedPoints);
   };
-
-  console.log({isUsedPoints});
 
   if (isLoading || isRefetching) {
     return (
@@ -105,6 +105,52 @@ const Cart = () => {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{flex: 1}}>
+      <Modal
+        isVisible={isShowModel}
+        onBackdropPress={() => {
+          setShowModel(false);
+        }}
+        title=""
+        showCloseBtn={false}>
+        <View style={styles.modalContent}>
+          {isUsedPoints ? (
+            <GoJaddyRedIcon style={styles.redIcon} />
+          ) : (
+            <SuccessModalImg style={styles.redIcon} />
+          )}
+          <Text
+            tx={`modal.${!isUsedPoints ? 'successTitle' : 'faildTitle'}`}
+            variant="xLargeBold"
+            color={!isUsedPoints ? colors.success : colors.red}
+            center
+          />
+          <Text
+            tx={data?.RewardPoints?.RewardPointsMessage}
+            variant="smallRegular"
+            color={colors.modalDescriptionColor}
+            center
+          />
+          <View style={styles.row}>
+            <Button
+              title="common.continue"
+              style={styles.confirmButton}
+              onPress={() => {
+                refetchApplyPoints();
+                setShowModel(false);
+              }}
+            />
+            <Button
+              title="common.cancel"
+              style={styles.confirmButton}
+              variant="Secondary"
+              color={colors.secondary}
+              onPress={() => {
+                setShowModel(false);
+              }}
+            />
+          </View>
+        </View>
+      </Modal>
       <FlatList
         contentContainerStyle={{
           marginHorizontal: spacing.content,
@@ -222,7 +268,8 @@ const Cart = () => {
             value={isUsedPoints}
             onValueChange={() => {
               if (!isFetchingApplyPoints) {
-                refetchApplyPoints();
+                // refetchApplyPoints();
+                setShowModel(true);
               }
             }}
             color={colors.primary}
@@ -268,5 +315,24 @@ const Cart = () => {
     </KeyboardAvoidingView>
   );
 };
+
+const styles = StyleSheet.create({
+  redIcon: {
+    alignSelf: 'center',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: spacing.xxxLarge + 2,
+    marginBottom: spacing.xxLarge + 2,
+  },
+  confirmButton: {
+    width: '48%',
+  },
+  modalContent: {
+    paddingHorizontal: spacing.large - 2,
+  },
+});
 
 export default Cart;

@@ -1,16 +1,9 @@
-import {useNavigation} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {AdidasIcon} from 'assets/icons';
-import {Text} from 'components';
-import ArrowIcon from 'components/Arrow';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {Pressable, useWindowDimensions, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {CategoriesScreen} from 'screens';
-import Categories from 'screens/main/Categories';
-import CategoryDetails from 'screens/main/CategoryDetails';
-import {colors, font, spacing} from 'theme';
+import {CategoriesScreen, CategoryDetailsScreen} from 'screens';
+import {colors, font} from 'theme';
 import {CategotyRoutes} from './RoutesTypes';
 
 const Stack = createNativeStackNavigator<CategotyRoutes>();
@@ -25,10 +18,11 @@ const CategoriesStack = () => {
         headerStyle: {backgroundColor: colors.primary},
         headerTitleStyle: {fontFamily: font.regular, color: colors.white},
         headerTitle: t('screens-tabs.categories'),
+        headerTitleAlign: 'center',
       }}>
-      <Stack.Screen component={Categories} name="Categories" />
+      <Stack.Screen component={CategoriesScreen} name="Categories" />
       <Stack.Screen
-        component={CategoryDetails}
+        component={CategoryDetailsScreen}
         name="CategoryDetails"
         initialParams={{title: '', id: -1}}
       />

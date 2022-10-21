@@ -1,44 +1,84 @@
-import React, {ReactNode, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {View, Pressable, FlatList, Image, StyleSheet} from 'react-native';
-import {CloseIcon, EditIcon, EmptyItemImage} from 'assets/icons';
-import {Text} from 'components';
+import {
+  CloseIcon,
+  EditIcon,
+  EmptyItemImage,
+  GoJaddyRedIcon,
+} from 'assets/icons';
+import {Button, Loader, Modal, Text} from 'components';
 import {BASE_URL} from 'utils/Axios';
 import {colors, spacing} from 'theme';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import CollectionNameInput from '../CollectionNameInput';
+import {useMutation} from '@tanstack/react-query';
+import {
+  editWishListName,
+  postCreateWishlist,
+  removeWishListName,
+} from 'services/Home';
+import {ITop4Products, IWishListItem} from '../../types';
 
-interface ITop4Products {
-  DetailUrl?: string;
-  Id: number;
-  localImage?: ReactNode;
-  Image?: {
-    Id?: number;
-    ThumbUrl?: string;
-    Title?: string;
-    Url?: string;
-  };
-  Name?: string;
-  ShortDescription?: string;
-}
-interface IWishListItem {
-  Name: string;
-  CreatedOn: Date;
-  Id: number;
-  ModifiedOn: Date;
-  Top4Products: ITop4Products[];
-  WishlistLinesCount: number;
-}
 const ITEM_SIZE: number = 163;
 
-const WishlistItem = ({Name, Top4Products, ...rest}: IWishListItem) => {
-  const [collectionName, setCollectionName] = useState<string>(Name);
+const WishlistItem = ({
+  Name,
+  Top4Products,
+  Id,
+  refreshItems,
+}: IWishListItem) => {
+  const [collectionName, setCollectionName] = useState<string>(Name || '');
   const [isEdititingCollectionName, setIsEdititingCollectionName] =
-    useState<boolean>();
+    useState<boolean>(false);
+  const [
+    isDeleteWishListComponentVisibel,
+    setIsDeleteWishListComponentVisibel,
+  ] = useState<boolean>(false);
+
+  const {
+    mutate: mutateEditWishlistName,
+    isLoading: isLoadingEditWishlistName,
+    isSuccess: isSuccessEditWishlistName,
+  } = useMutation(editWishListName, {
+    onSuccess: data => {
+      return data;
+    },
+    onError: error => {
+      return error;
+    },
+  });
+
+  const {
+    mutate: mutateRemoveWishListCollection,
+    isLoading: isLoadingRemoveWishListName,
+    isSuccess: isSuccessRemoveWishListName,
+  } = useMutation(removeWishListName, {
+    onSuccess: data => {
+      return data;
+    },
+    onError: error => {
+      return error;
+    },
+  });
+
+  const {
+    mutate: createNewWishlist,
+    isLoading: isLoadingCreateWishList,
+    isSuccess: isSuccessCreateWishList,
+  } = useMutation(postCreateWishlist, {
+    onSuccess: data => {
+      return data;
+    },
+    onError: error => {
+      return error;
+    },
+  });
+
   const products = useMemo(() => {
-    if (Top4Products.length < 4) {
+    if (Top4Products?.length < 4) {
       const data = [];
       for (let index = 0; index < 4; index++) {
-        const element = Top4Products[index];
+        const element = Top4Products?.[index];
         if (element) {
           data.push(element);
         } else {
@@ -56,18 +96,51 @@ const WishlistItem = ({Name, Top4Products, ...rest}: IWishListItem) => {
     setIsEdititingCollectionName(currentValue => !currentValue);
 
   const editCollectionNameHandler = () => {
-    // mutate api change collection name
+    if (Id === 0) {
+      return createNewWishlist(collectionName);
+    }
+    mutateEditWishlistName({wishlistId: Id, Name: collectionName});
   };
-  const removeCollectionHandler = () => {
-    // mutate api call to remove collection
+
+  const onSubmitDeleteColletion = () => {
+    hideDeleteWishlistModal();
+    mutateRemoveWishListCollection(Id);
   };
+
+  const hideDeleteWishlistModal = () => {
+    setIsDeleteWishListComponentVisibel(false);
+  };
+
+  const showDeleteWishlistModal = () => {
+    setIsDeleteWishListComponentVisibel(true);
+  };
+
+  useEffect(() => {
+    if (isSuccessEditWishlistName) {
+      onPressEditCollectionName();
+    }
+  }, [isSuccessEditWishlistName]);
+  useEffect(() => {
+    if (isSuccessRemoveWishListName || isSuccessCreateWishList) {
+      refreshItems();
+    }
+  }, [isSuccessRemoveWishListName, isSuccessCreateWishList]);
+  useEffect(() => {
+    if (collectionName.length === 0) {
+      setIsEdititingCollectionName(true);
+    }
+  }, []);
 
   return (
     <View style={styles.wishlistItemContainer}>
       <View style={styles.wishlistItemContentContainer}>
+        {isLoadingRemoveWishListName && (
+          <Loader containerStyle={styles.collectionLoader} />
+        )}
         <Pressable
-          onPress={removeCollectionHandler}
-          style={styles.closeBtnContainer}>
+          onPress={showDeleteWishlistModal}
+          style={styles.closeBtnContainer}
+          disabled={isLoadingRemoveWishListName}>
           <CloseIcon style={styles.closeBtn} />
         </Pressable>
         <FlatList
@@ -95,15 +168,20 @@ const WishlistItem = ({Name, Top4Products, ...rest}: IWishListItem) => {
       {isEdititingCollectionName ? (
         <View>
           <CollectionNameInput
-            placeholder="whishlist.collection-name"
+            placeholder="wishlist.collection-name"
             value={collectionName}
             onChangeText={setCollectionName}
             containerStyle={styles.collectionNameInput}
             rightIcon={
               <Pressable
                 onPress={editCollectionNameHandler}
-                style={styles.checkboxContainer}>
-                <AntDesign name={'check'} size={15} color={colors.white} />
+                style={styles.checkboxContainer}
+                disabled={isLoadingEditWishlistName || isLoadingCreateWishList}>
+                {isLoadingEditWishlistName || isLoadingCreateWishList ? (
+                  <Loader size={'small'} />
+                ) : (
+                  <AntDesign name={'check'} size={15} color={colors.white} />
+                )}
               </Pressable>
             }
           />
@@ -111,13 +189,51 @@ const WishlistItem = ({Name, Top4Products, ...rest}: IWishListItem) => {
       ) : (
         <Pressable
           onPress={onPressEditCollectionName}
-          style={styles.collectionNameContainer}>
-          <Text text={Name} />
+          style={styles.collectionNameContainer}
+          disabled={isLoadingRemoveWishListName}>
+          <Text text={collectionName} />
           <View style={styles.editIconContainer}>
             <EditIcon />
           </View>
         </Pressable>
       )}
+      <Modal
+        isVisible={isDeleteWishListComponentVisibel}
+        onBackdropPress={hideDeleteWishlistModal}
+        isLoading={false}
+        forceRefetch={() => {}}
+        title=""
+        showCloseBtn={false}>
+        <View style={styles.modalContent}>
+          <GoJaddyRedIcon style={styles.redIcon} />
+          <Text
+            tx="wishlist.are-sure-want-to-delete"
+            variant="xLargeBold"
+            color={colors.red}
+            center
+          />
+          <Text
+            tx="wishlist.are-sure-want-to-delete-hint"
+            variant="smallRegular"
+            color={colors.modalDescriptionColor}
+            center
+          />
+          <View style={styles.row}>
+            <Button
+              title="common.continue"
+              style={styles.confirmButton}
+              onPress={onSubmitDeleteColletion}
+            />
+            <Button
+              title="common.cancel"
+              style={styles.confirmButton}
+              variant="Secondary"
+              color={colors.secondary}
+              onPress={hideDeleteWishlistModal}
+            />
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -190,5 +306,31 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  collectionLoader: {
+    flex: 1,
+    position: 'absolute',
+    zIndex: 1,
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.white + 80,
+  },
+  redIcon: {
+    alignSelf: 'center',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: spacing.xxxLarge + 2,
+    marginBottom: spacing.xxLarge + 2,
+  },
+  confirmButton: {
+    width: '48%',
+  },
+  modalContent: {
+    paddingHorizontal: spacing.large - 2,
   },
 });

@@ -32,6 +32,10 @@ export type CategotyRoutes = {
   CategoryDetails: CategoryParams;
 };
 
+export type CartRoutes = {
+  Cart: undefined;
+};
+
 export type StoresRoutes = {
   Stores: undefined;
   StoresDetails?: StoreParams;

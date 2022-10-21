@@ -8,6 +8,7 @@ export {
   SearchScreen,
   StoreDetailsScreen,
   WishListScreen,
+  CategoryDetailsScreen,
 } from './main';
 export {
   OnboardingScreen,

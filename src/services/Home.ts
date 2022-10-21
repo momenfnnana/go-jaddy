@@ -3,7 +3,7 @@ import {BASE_URL} from 'utils/Axios';
 
 interface IgetSearchResults {
   searchText: string;
-  CurrencyId: string;
+  CurrencyId: number;
 }
 interface IgetReviews {
   ProductId: number | string;
@@ -11,6 +11,11 @@ interface IgetReviews {
   WithImageOnly: boolean;
   Ratings?: number[] | string[];
   pageParam?: number;
+}
+
+interface IEditWishListName {
+  wishlistId: number;
+  Name: string;
 }
 export const getStores = () =>
   axios(`${BASE_URL}/api/custom/stores/HomeStores`);
@@ -70,3 +75,11 @@ export const getIpAddress = () => axios(`https://geolocation-db.com/json/`);
 
 export const postAddReview = (data: any) =>
   axios.post(`${BASE_URL}/api/custom/products/AddProductReview`, data);
+
+export const editWishListName = ({wishlistId, Name}: IEditWishListName) =>
+  axios.post(
+    `${BASE_URL}/api/custom/wishlist/EditWishlist?wishlistId=${wishlistId}&wishlistName=${Name}`,
+  );
+
+export const removeWishListName = (id: number) =>
+  axios.post(`${BASE_URL}/api/custom/wishlist/DeleteWishlist?id=${id}`);

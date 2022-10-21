@@ -12,33 +12,27 @@ import {
 import {FadeLoading} from 'react-native-fade-loading';
 import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
-import {CategoryNavigationsType, IStores} from 'navigators/NavigationsTypes';
+import {IStores} from 'navigators/NavigationsTypes';
 import {ActivityIndicator} from 'react-native-paper';
 import {getAllStores} from 'services/Stores';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import StoreDetails from '../StoreDetails/StoreDetails';
 
-const Stores = (props: IStores) => {
+const Stores = () => {
   const {width} = useWindowDimensions();
   const {navigate} = useNavigation<IStores>();
   const [typeStores, setTypeStores] = useState('all');
   const {
     data,
     isLoading,
-    isSuccess,
-    isError,
-    error,
     hasNextPage,
     fetchNextPage,
     refetch,
-    isFetching,
     isFetchingNextPage,
     isRefetching,
   } = useInfiniteQuery(
     ['AllStores'],
     ({pageParam}) =>
       getAllStores({pageParam, onlyFollowed: typeStores != 'all'}),
-
     {
       getNextPageParam: lastPage => {
         if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
