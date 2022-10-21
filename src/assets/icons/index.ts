@@ -29,3 +29,4 @@ export {default as SupporMessangerIcon} from './svg/support-messenger.svg';
 export {default as EmptyItemImage} from './svg/empty-item-image.svg';
 export {default as CloseIcon} from './svg/close.svg';
 export {default as EditIcon} from './svg/edit.svg';
+export {default as GoJaddyRedIcon} from './svg/go-jaddy-red.svg';
