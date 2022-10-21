@@ -87,7 +87,6 @@ const BottomTabs = () => {
           title: t('screens-tabs.profile'),
           headerShown: false,
         }}
-        initialParams={{userId: user.id}}
       />
     </Tab.Navigator>
   );
