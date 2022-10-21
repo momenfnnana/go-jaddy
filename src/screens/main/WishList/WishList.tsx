@@ -1,12 +1,13 @@
-import React, {useLayoutEffect} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {View, StyleSheet, Pressable, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {BackButton, Loader} from 'components';
+import {BackButton, Loader, Modal} from 'components';
 import {colors, spacing} from 'theme';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useQuery} from '@tanstack/react-query';
 import {getWishlist} from 'services/Profile';
 import {FreeWishlist, WishlistItem} from './components';
+import {IWishListItem} from './types';
 
 interface IAddBtn {
   onPress: () => void;
@@ -20,10 +21,28 @@ const AddBtn = ({onPress}: IAddBtn) => (
 
 const WishList = () => {
   const {setOptions} = useNavigation();
+  const [wishlistData, setWishlistData] = useState<IWishListItem[]>([]);
+  const {data, isLoading, refetch} = useQuery(['getWishlist'], getWishlist);
   const onPress = () => {
-    console.log('onPress');
+    const newArray: IWishListItem[] = [
+      {
+        Name: '',
+        CreatedOn: new Date(),
+        Id: 0,
+        ModifiedOn: new Date(),
+        Top4Products: [],
+        WishlistLinesCount: 0,
+        refreshItems: () => {},
+      },
+      ...data?.data?.Wishlists,
+    ];
+    setWishlistData(newArray);
   };
-  const {data, isLoading} = useQuery(['getWishlist'], getWishlist);
+
+  const refreshItems = () => {
+    refetch();
+  };
+
   useLayoutEffect(() => {
     setOptions({
       headerLeft: () => <BackButton />,
@@ -31,18 +50,26 @@ const WishList = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (data?.data?.Wishlists) {
+      setWishlistData(data?.data?.Wishlists);
+    }
+  }, [data?.data?.Wishlists]);
+
   if (isLoading) {
     return <Loader size={'large'} containerStyle={styles.loader} />;
   }
 
   return (
     <View style={styles.container}>
-      {data?.data?.Wishlists?.length > 0 ? (
+      {wishlistData?.length > 0 ? (
         <FlatList
-          data={data?.data?.Wishlists}
-          keyExtractor={item => item?.Id}
+          data={wishlistData}
+          keyExtractor={item => item.Id.toString()}
           numColumns={2}
-          renderItem={({item}) => <WishlistItem {...item} />}
+          renderItem={({item}) => (
+            <WishlistItem {...item} refreshItems={refreshItems} />
+          )}
         />
       ) : (
         <FreeWishlist />
