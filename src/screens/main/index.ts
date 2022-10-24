@@ -8,3 +8,6 @@ export {default as ProfileScreen} from './Profile';
 export {default as ProductDetailsScreen} from './ProductDetails';
 export {default as SearchScreen} from './Search';
 export {default as WishListScreen} from './WishList';
+export {default as PreviousTitlesScreen} from './PreviousTitles';
+export {default as ReturnProductsScreen} from './ReturnProducts';
+export {default as CustomerPointsScreen} from './CustomerPoints';

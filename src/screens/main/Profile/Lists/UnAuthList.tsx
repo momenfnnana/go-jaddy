@@ -12,7 +12,12 @@ export interface ITab {
   icon: JSX.Element;
   RightIcon?: ({text}: IRightIconInputs) => JSX.Element;
   bottomSection?: JSX.Element;
-  goTo?: 'Profile' | 'WishList';
+  goTo?:
+    | 'Profile'
+    | 'WishList'
+    | 'PreviousTitles'
+    | 'ReturnProducts'
+    | 'CustomerPoints';
 }
 
 export const data: ITab[] = [

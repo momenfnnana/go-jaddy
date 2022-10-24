@@ -21,15 +21,18 @@ export const data: ITab[] = [
     id: 4,
     title: 'profile.previous-titles',
     icon: <ProfileIconTab />,
+    goTo: 'PreviousTitles',
   },
   {
     id: 5,
     title: 'profile.return-products',
+    goTo: 'ReturnProducts',
     icon: <ProfileIconTab />,
   },
   {
     id: 6,
     title: 'profile.score-balance',
+    goTo: 'CustomerPoints',
     icon: <ProfileIconTab />,
   },
 ];

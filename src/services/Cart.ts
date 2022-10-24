@@ -14,6 +14,11 @@ interface IEditCartItem {
 export const getCartProducts = () =>
   axios(`${BASE_URL}/api/custom/cart/GetCart`);
 
+export const getCartSummary = () =>
+  axios(`${BASE_URL}/api/custom/cart/GetCartSummary`, {
+    method: 'post',
+  });
+
 export const addCartProducts = ({productId, quantityToAdd}: IAddCartItem) =>
   axios(`${BASE_URL}/api/custom/cart/AddCartItem`, {
     method: 'post',

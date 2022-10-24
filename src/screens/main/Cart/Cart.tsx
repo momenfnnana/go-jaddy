@@ -13,6 +13,7 @@ import {useQueries, useQuery} from '@tanstack/react-query';
 import {
   applyDiscountCart,
   getCartProducts,
+  getCartSummary,
   removeDiscountCart,
   togglePointsCart,
 } from 'services/Cart';
@@ -44,7 +45,8 @@ const Cart = () => {
   const {t} = useTranslation();
   const [discountCode, setDiscountCode] = useState<string>('');
   const [isUsedPoints, setUsedPoints] = useState<boolean>(false);
-  const [isShowModel, setShowModel] = useState<boolean>(false);
+  const [isShowPointsModel, setShowPointsModel] = useState<boolean>(false);
+  const [isShowSummaryModel, setShowSummaryModel] = useState<boolean>(false);
   const {currency} = useCurrency();
 
   const {
@@ -56,6 +58,14 @@ const Cart = () => {
     onSuccess(data) {
       setData(data.data);
     },
+  });
+  const {
+    data: summaryData,
+    isLoading: isLoadingSummary,
+    isFetching: isFetchingSummary,
+    refetch: refetchSummary,
+  } = useQuery(['applyCartSummary'], getCartSummary, {
+    enabled: false,
   });
 
   const {
@@ -106,9 +116,9 @@ const Cart = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{flex: 1}}>
       <Modal
-        isVisible={isShowModel}
+        isVisible={isShowPointsModel}
         onBackdropPress={() => {
-          setShowModel(false);
+          setShowPointsModel(false);
         }}
         title=""
         showCloseBtn={false}>
@@ -136,7 +146,7 @@ const Cart = () => {
               style={styles.confirmButton}
               onPress={() => {
                 refetchApplyPoints();
-                setShowModel(false);
+                setShowPointsModel(false);
               }}
             />
             <Button
@@ -145,10 +155,115 @@ const Cart = () => {
               variant="Secondary"
               color={colors.secondary}
               onPress={() => {
-                setShowModel(false);
+                setShowPointsModel(false);
               }}
             />
           </View>
+        </View>
+      </Modal>
+      <Modal
+        isVisible={isShowSummaryModel}
+        onBackdropPress={() => {
+          setShowSummaryModel(false);
+        }}
+        title=""
+        showCloseBtn={false}>
+        <View style={styles.modalContent}>
+          <Text tx={`modal.BillTitle`} variant="xLargeBold" center />
+          {isLoadingSummary || isFetchingSummary ? (
+            <Loader
+              containerStyle={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            />
+          ) : (
+            <>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  paddingBottom: 10,
+                  borderBottomWidth: 0.5,
+                  borderBottomColor: colors.border,
+                  marginTop: 20,
+                }}>
+                <Text variant="mediumRegular" tx="modal.TotalProducts" />
+                <Text
+                  variant="mediumRegular"
+                  text={summaryData?.data?.SubTotal}
+                />
+              </View>
+              {summaryData?.data?.RewardPointsAmount && (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    paddingBottom: 10,
+                    borderBottomWidth: 0.5,
+                    borderBottomColor: colors.border,
+                    marginTop: 10,
+                  }}>
+                  <Text variant="mediumRegular" tx="modal.RewardPoints" />
+                  <Text
+                    variant="mediumRegular"
+                    text={summaryData?.data?.RewardPointsAmount}
+                  />
+                </View>
+              )}
+              {summaryData?.data?.OrderTotalDiscount && (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    paddingBottom: 10,
+                    borderBottomWidth: 0.5,
+                    borderBottomColor: colors.border,
+                    marginTop: 10,
+                  }}>
+                  <Text variant="mediumRegular" tx="modal.DiscoundCode" />
+                  <Text
+                    variant="mediumRegular"
+                    text={summaryData?.data?.OrderTotalDiscount}
+                  />
+                </View>
+              )}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  paddingBottom: 10,
+                  marginTop: 10,
+                }}>
+                <Text
+                  variant="mediumBold"
+                  color={colors.secondary}
+                  tx="modal.total"
+                />
+                <Text
+                  variant="mediumBold"
+                  color={colors.secondary}
+                  text={summaryData?.data?.OrderTotal}
+                />
+              </View>
+            </>
+          )}
+          <Button
+            title="modal.submitTotalModal"
+            style={{
+              marginTop: spacing.xxxLarge + 2,
+              marginBottom: spacing.xxLarge + 2,
+            }}
+            onPress={() => {
+              // refetchApplyPoints();
+              setShowPointsModel(false);
+            }}
+          />
         </View>
       </Modal>
       <FlatList
@@ -230,7 +345,7 @@ const Cart = () => {
                 />
               </Pressable>
             )}
-            {discountCode.length > 0 && data?.DiscountBox?.IsWarning && (
+            {data?.DiscountBox?.IsWarning && (
               <Pressable
                 onPress={() => refetchRemoveDis()}
                 disabled={isRefetchingRemoveDis}>
@@ -269,7 +384,7 @@ const Cart = () => {
             onValueChange={() => {
               if (!isFetchingApplyPoints) {
                 // refetchApplyPoints();
-                setShowModel(true);
+                setShowPointsModel(true);
               }
             }}
             color={colors.primary}
@@ -290,7 +405,12 @@ const Cart = () => {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Pressable
+              onPress={() => {
+                refetchSummary();
+                setShowSummaryModel(true);
+              }}
+              style={{flexDirection: 'row', alignItems: 'center'}}>
               <MaterialIcons
                 name={`keyboard-arrow-down`}
                 size={18}
@@ -302,7 +422,7 @@ const Cart = () => {
                 color={colors.reloadColor}
                 variant="xSmallRegular"
               />
-            </View>
+            </Pressable>
             <Text
               txOptions={{currency: currency?.Symbol}}
               text={data?.Total}

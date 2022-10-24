@@ -9,6 +9,9 @@ export {
   StoreDetailsScreen,
   WishListScreen,
   CategoryDetailsScreen,
+  PreviousTitlesScreen,
+  ReturnProductsScreen,
+  CustomerPointsScreen,
 } from './main';
 export {
   OnboardingScreen,

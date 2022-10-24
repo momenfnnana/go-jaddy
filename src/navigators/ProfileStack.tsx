@@ -1,7 +1,13 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useTranslation} from 'react-i18next';
-import {ProfileScreen, WishListScreen} from 'screens';
+import {
+  CustomerPointsScreen,
+  PreviousTitlesScreen,
+  ProfileScreen,
+  ReturnProductsScreen,
+  WishListScreen,
+} from 'screens';
 import {colors, font} from 'theme';
 import {ProfileRoutes} from './RoutesTypes';
 import {DropDownProvider} from 'context/dropdownContext';
@@ -31,6 +37,27 @@ const ProfileStack = () => {
           name="WishList"
           options={{
             headerTitle: t('wishlist.title'),
+          }}
+        />
+        <Stack.Screen
+          component={PreviousTitlesScreen}
+          name="PreviousTitles"
+          options={{
+            headerTitle: t('previousTitles.titleHeader'),
+          }}
+        />
+        <Stack.Screen
+          component={ReturnProductsScreen}
+          name="ReturnProducts"
+          options={{
+            headerTitle: t('returnProducts.titleHeader'),
+          }}
+        />
+        <Stack.Screen
+          component={CustomerPointsScreen}
+          name="CustomerPoints"
+          options={{
+            headerTitle: t('customerPoints.titleHeader'),
           }}
         />
       </Stack.Navigator>

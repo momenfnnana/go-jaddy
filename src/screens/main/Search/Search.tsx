@@ -108,9 +108,20 @@ const Search = () => {
         />
         <View style={[styles.row, styles.resultsHeader]}>
           <View style={styles.row}>
-            <Text tx="search.search-result-for" variant="smallRegular" />
             <Text
-              text={` ${searchText || (params as any)?.title}`}
+              tx={
+                (params as any)?.title?.length > 0
+                  ? 'search.categoryTitle'
+                  : 'search.search-result-for'
+              }
+              variant="smallRegular"
+            />
+            <Text
+              text={` ${
+                (params as any)?.title?.length > 0
+                  ? (params as any)?.title
+                  : searchText
+              }`}
               variant="smallBold"
             />
           </View>

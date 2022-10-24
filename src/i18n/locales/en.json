@@ -93,7 +93,8 @@
   },
   "search": {
     "search-input": "Search in store",
-    "search-result-for": "Search result for:"
+    "search-result-for": "Search result for:",
+    "categoryTitle": "Products for: "
   },
   "product-details": {
     "select-color": "Select color",
@@ -177,11 +178,40 @@
     "total": "Total ({{currency}})",
     "discountPlaceholder": "discount code"
   },
+  "previousTitles": {
+    "titleHeader": "Previous Addresses",
+    "phoneNumber": "Phone: {{phoneNumber}}",
+    "chargeLabel": "Charge Address",
+    "defultLabel": "Defualt",
+    "defualtBtn": "Set Defualt",
+    "editBtn": "Edit",
+    "deleteBtn": "Delete"
+  },
+  "returnProducts": {
+    "titleHeader": "Return Products",
+    "orderNum": "Order number #{{orderNum}}",
+    "productName": "Product",
+    "ReturnReason": "Return Reason",
+    "ReturnCommand": "Return Command",
+    "orderDate": "Order Date",
+    "comment": "Your Comment"
+  },
+  "customerPoints": {
+    "titleHeader": "Points Balance",
+    "points": "{{points}} Points",
+    "equivalent": "equivalent to {{money}}"
+  },
   "modal": {
     "successTitle": "are you sure from confirm?",
     "faildTitle": "are you sure from delete?",
     "confirmBtn": "confirm",
-    "cancelBtn": "cancel"
+    "cancelBtn": "cancel",
+    "BillTitle": "Order Invoice",
+    "TotalProducts": "Products Total",
+    "RewardPoints": "Reward Points",
+    "DiscoundCode": "Discound Code",
+    "total": "Total",
+    "submitTotalModal": "Done Requset"
   },
   "api": {
     "account": {

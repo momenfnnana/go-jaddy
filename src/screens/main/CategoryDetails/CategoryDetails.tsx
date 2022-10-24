@@ -50,7 +50,7 @@ const CategoriesDetails = () => {
   useLayoutEffect(() => {
     setOptions({
       title: params?.title,
-      headerLeft: () => <BackButton onPress={() => replace('Categories')} />,
+      headerLeft: () => <BackButton onPress={() => navigate('Categories')} />,
     });
   }, []);
 
@@ -99,7 +99,7 @@ const CategoriesDetails = () => {
             <Pressable
               onPress={() =>
                 item.HasSubCategories
-                  ? push('CategoryDetails', {title: item.Name, id: item.Id})
+                  ? navigate('CategoryDetails', {title: item.Name, id: item.Id})
                   : navigate('HomeStack', {
                       screen: 'SearchScreen',
                       params: {
