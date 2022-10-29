@@ -1,5 +1,5 @@
 import React, {ReactNode} from 'react';
-import {StyleSheet, TextInputProps, ViewStyle} from 'react-native';
+import {StyleSheet, TextInputProps, View, ViewStyle} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {colors, font, spacing} from 'theme';
 import {Text} from 'components';
@@ -15,6 +15,7 @@ interface IInputField extends TextInputProps {
   label?: string;
   onPressRightIcon?: () => void;
   disabledRight?: boolean;
+  disabled?: boolean;
   disabledLeft?: boolean;
   onPressLeftIcon?: () => void;
 }
@@ -31,12 +32,14 @@ const InputField = ({
   disabledLeft,
   onPressLeftIcon,
   label,
+  disabled,
   ...rest
 }: IInputField) => {
   const {t} = useTranslation();
   return (
-    <>
+    <View style={containerStyle}>
       <TextInput
+        disabled={disabled}
         mode="outlined"
         theme={{
           colors: {
@@ -88,7 +91,7 @@ const InputField = ({
           {error}
         </Text>
       )}
-    </>
+    </View>
   );
 };
 
@@ -97,15 +100,15 @@ const styles = StyleSheet.create({
   textInput: {
     marginBottom: 15,
   },
-  containerStyle: {
-    borderColor: colors.reloadColor,
-    borderWidth: 1,
-    alignSelf: 'center',
-    paddingVertical: spacing.large,
-    borderRadius: spacing.small,
-    paddingHorizontal: spacing.normal,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.white,
-  },
+  // containerStyle: {
+  //   borderColor: colors.reloadColor,
+  //   borderWidth: 1,
+  //   alignSelf: 'center',
+  //   paddingVertical: spacing.large,
+  //   borderRadius: spacing.small,
+  //   paddingHorizontal: spacing.normal,
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   backgroundColor: colors.white,
+  // },
 });

@@ -11,7 +11,7 @@ const PreviousTitles = () => {
   const [isDefault, setDefault] = useState<number>(-1);
   const [deletedItem, setDeletedItem] = useState<number>(-1);
   const [data, setData] = useState([]);
-  const {setOptions} = useNavigation();
+  const {setOptions, navigate} = useNavigation();
   const {isFetching: isFetchingPreAdd} = useQuery(
     ['getPreAddresses'],
     getPreAddresses,
@@ -28,7 +28,13 @@ const PreviousTitles = () => {
   useLayoutEffect(() => {
     setOptions({
       headerLeft: () => <BackButton />,
-      headerRight: () => <AddHeaderBtn onPress={() => {}} />,
+      headerRight: () => (
+        <AddHeaderBtn
+          onPress={() => {
+            navigate('AddAddress');
+          }}
+        />
+      ),
     });
   }, []);
 

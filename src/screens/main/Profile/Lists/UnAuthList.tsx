@@ -17,7 +17,8 @@ export interface ITab {
     | 'WishList'
     | 'PreviousTitles'
     | 'ReturnProducts'
-    | 'CustomerPoints';
+    | 'CustomerPoints'
+    | 'ProfileDetails';
 }
 
 export const data: ITab[] = [

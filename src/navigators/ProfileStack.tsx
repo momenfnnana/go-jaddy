@@ -2,8 +2,10 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useTranslation} from 'react-i18next';
 import {
+  AddAddressScreen,
   CustomerPointsScreen,
   PreviousTitlesScreen,
+  ProfileDetailsScreen,
   ProfileScreen,
   ReturnProductsScreen,
   WishListScreen,
@@ -58,6 +60,20 @@ const ProfileStack = () => {
           name="CustomerPoints"
           options={{
             headerTitle: t('customerPoints.titleHeader'),
+          }}
+        />
+        <Stack.Screen
+          component={AddAddressScreen}
+          name="AddAddress"
+          options={{
+            headerTitle: t('addAddress.titleHeader'),
+          }}
+        />
+        <Stack.Screen
+          component={ProfileDetailsScreen}
+          name="ProfileDetails"
+          options={{
+            headerTitle: t('profileDetails.titleHeader'),
           }}
         />
       </Stack.Navigator>

@@ -12,6 +12,8 @@ export {
   PreviousTitlesScreen,
   ReturnProductsScreen,
   CustomerPointsScreen,
+  AddAddressScreen,
+  ProfileDetailsScreen,
 } from './main';
 export {
   OnboardingScreen,

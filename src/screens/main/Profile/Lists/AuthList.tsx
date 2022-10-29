@@ -6,6 +6,7 @@ export const data: ITab[] = [
     id: 1,
     title: 'profile.account-details',
     icon: <ProfileIconTab />,
+    goTo: 'ProfileDetails',
   },
   {
     id: 2,

@@ -3,7 +3,13 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AuthStack, HomeStack} from 'navigators';
 import {MainNavigator} from 'navigators/RoutesTypes';
-import {StatusBar, StyleSheet, useWindowDimensions} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native';
 import {Loader} from 'components';
 import {UserContext} from 'context/UserContext';
 import {useQuery} from '@tanstack/react-query';
@@ -59,12 +65,16 @@ const App = () => {
   return (
     <NavigationContainer ref={navigationRef}>
       <StatusBar barStyle="light-content" />
-      <Stack.Navigator
-        initialRouteName={isLoggedIn ? 'HomeFlow' : 'AuthFlow'}
-        screenOptions={{headerShown: false}}>
-        <Stack.Screen component={HomeStack} name="HomeFlow" />
-        <Stack.Screen component={AuthStack} name="AuthFlow" />
-      </Stack.Navigator>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <Stack.Navigator
+          initialRouteName={isLoggedIn ? 'HomeFlow' : 'AuthFlow'}
+          screenOptions={{headerShown: false}}>
+          <Stack.Screen component={HomeStack} name="HomeFlow" />
+          <Stack.Screen component={AuthStack} name="AuthFlow" />
+        </Stack.Navigator>
+      </KeyboardAvoidingView>
     </NavigationContainer>
   );
 };

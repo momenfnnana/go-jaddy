@@ -47,6 +47,8 @@ export type ProfileRoutes = {
   PreviousTitles: undefined;
   ReturnProducts: undefined;
   CustomerPoints: undefined;
+  AddAddress: undefined;
+  ProfileDetails: undefined;
 };
 
 export type AuthRoutes = {

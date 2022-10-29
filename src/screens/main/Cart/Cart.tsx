@@ -112,7 +112,7 @@ const Cart = () => {
     );
   }
   return (
-    <KeyboardAvoidingView
+    <View
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{flex: 1}}>
       <Modal
@@ -275,98 +275,95 @@ const Cart = () => {
         keyExtractor={(i, _) => _.toString()}
         renderItem={({item}) => <CartItem item={item} setData={setData} />}
       />
-      <KeyboardAvoidingView
-        behavior={'padding'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : -40}>
-        <View style={{marginTop: 20, paddingHorizontal: spacing.content}}>
+
+      <View style={{marginTop: 20, paddingHorizontal: spacing.content}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: 10,
+          }}>
+          <Text tx="cart.discountCode" variant="smallRegular" size={14} />
           <View
             style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginBottom: 10,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 20,
+              backgroundColor: '#EEEEEE',
             }}>
-            <Text tx="cart.discountCode" variant="smallRegular" size={14} />
-            <View
-              style={{
-                paddingHorizontal: 10,
-                paddingVertical: 5,
-                borderRadius: 20,
-                backgroundColor: '#EEEEEE',
-              }}>
-              <Text
-                size={12}
-                tx="cart.useDiscountCode"
-                color={colors.secondary}
-                variant="smallBold"
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              height: 50,
-              borderRadius: 6,
-              borderWidth: 1.5,
-              borderColor: colors.secondary,
-              borderStyle: 'dashed',
-              backgroundColor: '#4B95550F',
-              flexDirection: 'row',
-              alignItems: 'center',
-              overflow: 'hidden',
-            }}>
-            <TextInput
-              value={discountCode}
-              onChangeText={setDiscountCode}
-              placeholder={t('cart.discountPlaceholder')}
-              style={{
-                flex: 1,
-                height: '100%',
-                fontFamily: font.regular,
-                paddingHorizontal: 10,
-              }}
-            />
-            {discountCode.length > 0 && !data?.DiscountBox?.IsWarning && (
-              <Pressable
-                onPress={() => {
-                  refetchApplyDis();
-                }}
-                disabled={isRefetchingApplyDis}>
-                <MaterialCommunityIcons
-                  name="check"
-                  color={colors.success}
-                  size={14}
-                  style={{
-                    padding: 2,
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    borderColor: colors.success,
-                    marginLeft: 10,
-                  }}
-                />
-              </Pressable>
-            )}
-            {data?.DiscountBox?.IsWarning && (
-              <Pressable
-                onPress={() => refetchRemoveDis()}
-                disabled={isRefetchingRemoveDis}>
-                <Entypo name="circle-with-cross" color={colors.red} size={24} />
-              </Pressable>
-            )}
-            <MaterialCommunityIcons
-              name="percent"
+            <Text
+              size={12}
+              tx="cart.useDiscountCode"
               color={colors.secondary}
-              size={14}
-              style={{
-                padding: 2,
-                borderRadius: 10,
-                borderWidth: 1,
-                borderColor: colors.secondary,
-                marginHorizontal: 10,
-              }}
+              variant="smallBold"
             />
           </View>
         </View>
-      </KeyboardAvoidingView>
+        <View
+          style={{
+            height: 50,
+            borderRadius: 6,
+            borderWidth: 1.5,
+            borderColor: colors.secondary,
+            borderStyle: 'dashed',
+            backgroundColor: '#4B95550F',
+            flexDirection: 'row',
+            alignItems: 'center',
+            overflow: 'hidden',
+          }}>
+          <TextInput
+            value={discountCode}
+            onChangeText={setDiscountCode}
+            placeholder={t('cart.discountPlaceholder')}
+            style={{
+              flex: 1,
+              height: '100%',
+              fontFamily: font.regular,
+              paddingHorizontal: 10,
+            }}
+          />
+          {discountCode.length > 0 && !data?.DiscountBox?.IsWarning && (
+            <Pressable
+              onPress={() => {
+                refetchApplyDis();
+              }}
+              disabled={isRefetchingApplyDis}>
+              <MaterialCommunityIcons
+                name="check"
+                color={colors.success}
+                size={14}
+                style={{
+                  padding: 2,
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: colors.success,
+                  marginLeft: 10,
+                }}
+              />
+            </Pressable>
+          )}
+          {data?.DiscountBox?.IsWarning && (
+            <Pressable
+              onPress={() => refetchRemoveDis()}
+              disabled={isRefetchingRemoveDis}>
+              <Entypo name="circle-with-cross" color={colors.red} size={24} />
+            </Pressable>
+          )}
+          <MaterialCommunityIcons
+            name="percent"
+            color={colors.secondary}
+            size={14}
+            style={{
+              padding: 2,
+              borderRadius: 10,
+              borderWidth: 1,
+              borderColor: colors.secondary,
+              marginHorizontal: 10,
+            }}
+          />
+        </View>
+      </View>
       <View style={{marginTop: 20, paddingHorizontal: spacing.content}}>
         <View
           style={{
@@ -432,7 +429,7 @@ const Cart = () => {
           </View>
         </View>
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
