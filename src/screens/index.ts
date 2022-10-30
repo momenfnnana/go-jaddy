@@ -8,6 +8,11 @@ export {
   SearchScreen,
   StoreDetailsScreen,
   CategoryDetailsScreen,
+  PreviousTitlesScreen,
+  ReturnProductsScreen,
+  CustomerPointsScreen,
+  AddAddressScreen,
+  ProfileDetailsScreen,
   WishListScreen,
   WishlistDetails,
 } from './main';

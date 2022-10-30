@@ -556,7 +556,7 @@ const styles = StyleSheet.create({
   },
 
   inputContainer: {
-    marginBottom: spacing.medium - 2,
+    // marginBottom: spacing.medium - 2,
   },
   submitLogin: {
     flex: 1,

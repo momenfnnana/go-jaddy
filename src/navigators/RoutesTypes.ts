@@ -44,6 +44,11 @@ export type StoresRoutes = {
 export type ProfileRoutes = {
   Profile: undefined;
   WishList: undefined;
+  PreviousTitles: undefined;
+  ReturnProducts: undefined;
+  CustomerPoints: undefined;
+  AddAddress: undefined;
+  ProfileDetails: undefined;
   WishlistDetails: {Id: number; title: string};
 };
 

@@ -5,11 +5,13 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
+    "ios-14": "react-native run-ios --simulator='iPhone 14'",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "release-android": "cd android && ./gradlew assembleRelease",
-    "link": "npx react-native-asset"
+    "link": "npx react-native-asset",
+    "get-packages":"yarn && npx pod-install"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.10",

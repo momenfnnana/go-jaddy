@@ -15,3 +15,4 @@ export {default as ProductImage} from './productImage.png';
 export {default as BannerImage} from './banner.png';
 export {default as FaildModalImg} from './faildModalImg.svg';
 export {default as SuccessModalImg} from './successImgModal.svg';
+export {default as Withdraw} from './Withdraw.svg';

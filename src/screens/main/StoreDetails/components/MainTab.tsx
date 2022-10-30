@@ -58,7 +58,8 @@ const MainTab = ({
     refetch: refetchSubCat,
   } = useInfiniteQuery(
     [`subCategories${subCatId}`],
-    ({pageParam}) => getSubCategories({categoryId: subCatId, pageParam}),
+    ({pageParam}) =>
+      getSubCategories({categoryId: subCatId, pageParam, StoreId: storeId}),
     {
       enabled: false,
       getNextPageParam: lastPage => {
@@ -69,7 +70,6 @@ const MainTab = ({
       },
     },
   );
-
 
   useEffect(() => {
     if (subCatId == -1 || subCatId == -2) {

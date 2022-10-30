@@ -1,23 +1,13 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {View, StyleSheet, Pressable, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {BackButton, Loader, Modal} from 'components';
+import {AddHeaderBtn, BackButton, Loader, Modal} from 'components';
 import {colors, spacing} from 'theme';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useQuery} from '@tanstack/react-query';
 import {getWishlist} from 'services/Profile';
 import {FreeWishlist, WishlistItem} from './components';
 import {IWishListItem} from './types';
-
-interface IAddBtn {
-  onPress: () => void;
-}
-
-const AddBtn = ({onPress}: IAddBtn) => (
-  <Pressable onPress={onPress} style={styles.addBtnContainer}>
-    <AntDesign name="plus" color={colors.white} size={25} />
-  </Pressable>
-);
 
 const WishList = () => {
   const {setOptions} = useNavigation();
@@ -51,7 +41,7 @@ const WishList = () => {
   useLayoutEffect(() => {
     setOptions({
       headerLeft: () => <BackButton />,
-      headerRight: () => <AddBtn onPress={onPress} />,
+      headerRight: () => <AddHeaderBtn onPress={onPress} />,
     });
   }, []);
 

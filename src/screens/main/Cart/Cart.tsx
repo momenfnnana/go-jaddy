@@ -13,6 +13,7 @@ import {useQueries, useQuery} from '@tanstack/react-query';
 import {
   applyDiscountCart,
   getCartProducts,
+  getCartSummary,
   removeDiscountCart,
   togglePointsCart,
 } from 'services/Cart';
@@ -44,7 +45,8 @@ const Cart = () => {
   const {t} = useTranslation();
   const [discountCode, setDiscountCode] = useState<string>('');
   const [isUsedPoints, setUsedPoints] = useState<boolean>(false);
-  const [isShowModel, setShowModel] = useState<boolean>(false);
+  const [isShowPointsModel, setShowPointsModel] = useState<boolean>(false);
+  const [isShowSummaryModel, setShowSummaryModel] = useState<boolean>(false);
   const {currency} = useCurrency();
 
   const {
@@ -56,6 +58,14 @@ const Cart = () => {
     onSuccess(data) {
       setData(data.data);
     },
+  });
+  const {
+    data: summaryData,
+    isLoading: isLoadingSummary,
+    isFetching: isFetchingSummary,
+    refetch: refetchSummary,
+  } = useQuery(['applyCartSummary'], getCartSummary, {
+    enabled: false,
   });
 
   const {
@@ -102,13 +112,13 @@ const Cart = () => {
     );
   }
   return (
-    <KeyboardAvoidingView
+    <View
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{flex: 1}}>
       <Modal
-        isVisible={isShowModel}
+        isVisible={isShowPointsModel}
         onBackdropPress={() => {
-          setShowModel(false);
+          setShowPointsModel(false);
         }}
         title=""
         showCloseBtn={false}>
@@ -136,7 +146,7 @@ const Cart = () => {
               style={styles.confirmButton}
               onPress={() => {
                 refetchApplyPoints();
-                setShowModel(false);
+                setShowPointsModel(false);
               }}
             />
             <Button
@@ -145,10 +155,115 @@ const Cart = () => {
               variant="Secondary"
               color={colors.secondary}
               onPress={() => {
-                setShowModel(false);
+                setShowPointsModel(false);
               }}
             />
           </View>
+        </View>
+      </Modal>
+      <Modal
+        isVisible={isShowSummaryModel}
+        onBackdropPress={() => {
+          setShowSummaryModel(false);
+        }}
+        title=""
+        showCloseBtn={false}>
+        <View style={styles.modalContent}>
+          <Text tx={`modal.BillTitle`} variant="xLargeBold" center />
+          {isLoadingSummary || isFetchingSummary ? (
+            <Loader
+              containerStyle={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            />
+          ) : (
+            <>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  paddingBottom: 10,
+                  borderBottomWidth: 0.5,
+                  borderBottomColor: colors.border,
+                  marginTop: 20,
+                }}>
+                <Text variant="mediumRegular" tx="modal.TotalProducts" />
+                <Text
+                  variant="mediumRegular"
+                  text={summaryData?.data?.SubTotal}
+                />
+              </View>
+              {summaryData?.data?.RewardPointsAmount && (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    paddingBottom: 10,
+                    borderBottomWidth: 0.5,
+                    borderBottomColor: colors.border,
+                    marginTop: 10,
+                  }}>
+                  <Text variant="mediumRegular" tx="modal.RewardPoints" />
+                  <Text
+                    variant="mediumRegular"
+                    text={summaryData?.data?.RewardPointsAmount}
+                  />
+                </View>
+              )}
+              {summaryData?.data?.OrderTotalDiscount && (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    paddingBottom: 10,
+                    borderBottomWidth: 0.5,
+                    borderBottomColor: colors.border,
+                    marginTop: 10,
+                  }}>
+                  <Text variant="mediumRegular" tx="modal.DiscoundCode" />
+                  <Text
+                    variant="mediumRegular"
+                    text={summaryData?.data?.OrderTotalDiscount}
+                  />
+                </View>
+              )}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  paddingBottom: 10,
+                  marginTop: 10,
+                }}>
+                <Text
+                  variant="mediumBold"
+                  color={colors.secondary}
+                  tx="modal.total"
+                />
+                <Text
+                  variant="mediumBold"
+                  color={colors.secondary}
+                  text={summaryData?.data?.OrderTotal}
+                />
+              </View>
+            </>
+          )}
+          <Button
+            title="modal.submitTotalModal"
+            style={{
+              marginTop: spacing.xxxLarge + 2,
+              marginBottom: spacing.xxLarge + 2,
+            }}
+            onPress={() => {
+              // refetchApplyPoints();
+              setShowPointsModel(false);
+            }}
+          />
         </View>
       </Modal>
       <FlatList
@@ -160,98 +275,95 @@ const Cart = () => {
         keyExtractor={(i, _) => _.toString()}
         renderItem={({item}) => <CartItem item={item} setData={setData} />}
       />
-      <KeyboardAvoidingView
-        behavior={'padding'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : -40}>
-        <View style={{marginTop: 20, paddingHorizontal: spacing.content}}>
+
+      <View style={{marginTop: 20, paddingHorizontal: spacing.content}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: 10,
+          }}>
+          <Text tx="cart.discountCode" variant="smallRegular" size={14} />
           <View
             style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginBottom: 10,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 20,
+              backgroundColor: '#EEEEEE',
             }}>
-            <Text tx="cart.discountCode" variant="smallRegular" size={14} />
-            <View
-              style={{
-                paddingHorizontal: 10,
-                paddingVertical: 5,
-                borderRadius: 20,
-                backgroundColor: '#EEEEEE',
-              }}>
-              <Text
-                size={12}
-                tx="cart.useDiscountCode"
-                color={colors.secondary}
-                variant="smallBold"
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              height: 50,
-              borderRadius: 6,
-              borderWidth: 1.5,
-              borderColor: colors.secondary,
-              borderStyle: 'dashed',
-              backgroundColor: '#4B95550F',
-              flexDirection: 'row',
-              alignItems: 'center',
-              overflow: 'hidden',
-            }}>
-            <TextInput
-              value={discountCode}
-              onChangeText={setDiscountCode}
-              placeholder={t('cart.discountPlaceholder')}
-              style={{
-                flex: 1,
-                height: '100%',
-                fontFamily: font.regular,
-                paddingHorizontal: 10,
-              }}
-            />
-            {discountCode.length > 0 && !data?.DiscountBox?.IsWarning && (
-              <Pressable
-                onPress={() => {
-                  refetchApplyDis();
-                }}
-                disabled={isRefetchingApplyDis}>
-                <MaterialCommunityIcons
-                  name="check"
-                  color={colors.success}
-                  size={14}
-                  style={{
-                    padding: 2,
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    borderColor: colors.success,
-                    marginLeft: 10,
-                  }}
-                />
-              </Pressable>
-            )}
-            {discountCode.length > 0 && data?.DiscountBox?.IsWarning && (
-              <Pressable
-                onPress={() => refetchRemoveDis()}
-                disabled={isRefetchingRemoveDis}>
-                <Entypo name="circle-with-cross" color={colors.red} size={24} />
-              </Pressable>
-            )}
-            <MaterialCommunityIcons
-              name="percent"
+            <Text
+              size={12}
+              tx="cart.useDiscountCode"
               color={colors.secondary}
-              size={14}
-              style={{
-                padding: 2,
-                borderRadius: 10,
-                borderWidth: 1,
-                borderColor: colors.secondary,
-                marginHorizontal: 10,
-              }}
+              variant="smallBold"
             />
           </View>
         </View>
-      </KeyboardAvoidingView>
+        <View
+          style={{
+            height: 50,
+            borderRadius: 6,
+            borderWidth: 1.5,
+            borderColor: colors.secondary,
+            borderStyle: 'dashed',
+            backgroundColor: '#4B95550F',
+            flexDirection: 'row',
+            alignItems: 'center',
+            overflow: 'hidden',
+          }}>
+          <TextInput
+            value={discountCode}
+            onChangeText={setDiscountCode}
+            placeholder={t('cart.discountPlaceholder')}
+            style={{
+              flex: 1,
+              height: '100%',
+              fontFamily: font.regular,
+              paddingHorizontal: 10,
+            }}
+          />
+          {discountCode.length > 0 && !data?.DiscountBox?.IsWarning && (
+            <Pressable
+              onPress={() => {
+                refetchApplyDis();
+              }}
+              disabled={isRefetchingApplyDis}>
+              <MaterialCommunityIcons
+                name="check"
+                color={colors.success}
+                size={14}
+                style={{
+                  padding: 2,
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: colors.success,
+                  marginLeft: 10,
+                }}
+              />
+            </Pressable>
+          )}
+          {data?.DiscountBox?.IsWarning && (
+            <Pressable
+              onPress={() => refetchRemoveDis()}
+              disabled={isRefetchingRemoveDis}>
+              <Entypo name="circle-with-cross" color={colors.red} size={24} />
+            </Pressable>
+          )}
+          <MaterialCommunityIcons
+            name="percent"
+            color={colors.secondary}
+            size={14}
+            style={{
+              padding: 2,
+              borderRadius: 10,
+              borderWidth: 1,
+              borderColor: colors.secondary,
+              marginHorizontal: 10,
+            }}
+          />
+        </View>
+      </View>
       <View style={{marginTop: 20, paddingHorizontal: spacing.content}}>
         <View
           style={{
@@ -269,7 +381,7 @@ const Cart = () => {
             onValueChange={() => {
               if (!isFetchingApplyPoints) {
                 // refetchApplyPoints();
-                setShowModel(true);
+                setShowPointsModel(true);
               }
             }}
             color={colors.primary}
@@ -290,7 +402,12 @@ const Cart = () => {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Pressable
+              onPress={() => {
+                refetchSummary();
+                setShowSummaryModel(true);
+              }}
+              style={{flexDirection: 'row', alignItems: 'center'}}>
               <MaterialIcons
                 name={`keyboard-arrow-down`}
                 size={18}
@@ -302,7 +419,7 @@ const Cart = () => {
                 color={colors.reloadColor}
                 variant="xSmallRegular"
               />
-            </View>
+            </Pressable>
             <Text
               txOptions={{currency: currency?.Symbol}}
               text={data?.Total}
@@ -312,7 +429,7 @@ const Cart = () => {
           </View>
         </View>
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 

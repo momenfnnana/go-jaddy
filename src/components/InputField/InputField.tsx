@@ -1,20 +1,30 @@
 import React, {ReactNode} from 'react';
-import {StyleSheet, TextInputProps, ViewStyle} from 'react-native';
+import {StyleSheet, TextInputProps, View, ViewStyle} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {colors, font, spacing} from 'theme';
 import {Text} from 'components';
 import {TextInput} from 'react-native-paper';
+import {FormikErrors, FormikTouched} from 'formik';
 
 interface IInputField extends TextInputProps {
   rightIcon?: ReactNode;
   leftIcon?: ReactNode;
   containerStyle?: ViewStyle;
   placeholder?: string;
-  error?: string;
+  error?: {
+    touched: boolean | FormikTouched<any> | FormikTouched<any>[] | undefined;
+    value:
+      | string
+      | string[]
+      | FormikErrors<any>
+      | FormikErrors<any>[]
+      | undefined;
+  };
   textColor?: string;
   label?: string;
   onPressRightIcon?: () => void;
   disabledRight?: boolean;
+  disabled?: boolean;
   disabledLeft?: boolean;
   onPressLeftIcon?: () => void;
 }
@@ -31,12 +41,14 @@ const InputField = ({
   disabledLeft,
   onPressLeftIcon,
   label,
+  disabled,
   ...rest
 }: IInputField) => {
   const {t} = useTranslation();
   return (
-    <>
+    <View style={containerStyle}>
       <TextInput
+        disabled={disabled}
         mode="outlined"
         theme={{
           colors: {
@@ -80,15 +92,15 @@ const InputField = ({
         }
         {...rest}
       />
-      {error && (
+      {error?.touched && error.value && (
         <Text
           variant="error"
           color={colors.red}
           style={{marginBottom: spacing.large}}>
-          {error}
+          {error.value}
         </Text>
       )}
-    </>
+    </View>
   );
 };
 
@@ -97,15 +109,15 @@ const styles = StyleSheet.create({
   textInput: {
     marginBottom: 15,
   },
-  containerStyle: {
-    borderColor: colors.reloadColor,
-    borderWidth: 1,
-    alignSelf: 'center',
-    paddingVertical: spacing.large,
-    borderRadius: spacing.small,
-    paddingHorizontal: spacing.normal,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.white,
-  },
+  // containerStyle: {
+  //   borderColor: colors.reloadColor,
+  //   borderWidth: 1,
+  //   alignSelf: 'center',
+  //   paddingVertical: spacing.large,
+  //   borderRadius: spacing.small,
+  //   paddingHorizontal: spacing.normal,
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   backgroundColor: colors.white,
+  // },
 });

@@ -1,7 +1,16 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useTranslation} from 'react-i18next';
-import {ProfileScreen, WishlistDetails, WishListScreen} from 'screens';
+import {
+  AddAddressScreen,
+  CustomerPointsScreen,
+  PreviousTitlesScreen,
+  ProfileDetailsScreen,
+  ProfileScreen,
+  ReturnProductsScreen,
+  WishListScreen,
+  WishlistDetails,
+} from 'screens';
 import {colors, font} from 'theme';
 import {ProfileRoutes} from './RoutesTypes';
 import {DropDownProvider} from 'context/dropdownContext';
@@ -34,6 +43,41 @@ const ProfileStack = () => {
           name="WishList"
           options={{
             headerTitle: t('wishlist.title'),
+          }}
+        />
+        <Stack.Screen
+          component={PreviousTitlesScreen}
+          name="PreviousTitles"
+          options={{
+            headerTitle: t('previousTitles.titleHeader'),
+          }}
+        />
+        <Stack.Screen
+          component={ReturnProductsScreen}
+          name="ReturnProducts"
+          options={{
+            headerTitle: t('returnProducts.titleHeader'),
+          }}
+        />
+        <Stack.Screen
+          component={CustomerPointsScreen}
+          name="CustomerPoints"
+          options={{
+            headerTitle: t('customerPoints.titleHeader'),
+          }}
+        />
+        <Stack.Screen
+          component={AddAddressScreen}
+          name="AddAddress"
+          options={{
+            headerTitle: t('addAddress.titleHeader'),
+          }}
+        />
+        <Stack.Screen
+          component={ProfileDetailsScreen}
+          name="ProfileDetails"
+          options={{
+            headerTitle: t('profileDetails.titleHeader'),
           }}
         />
         <Stack.Screen component={WishlistDetails} name="WishlistDetails" />

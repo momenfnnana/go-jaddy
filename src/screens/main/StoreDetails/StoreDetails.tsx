@@ -95,7 +95,7 @@ const StoreDetails = () => {
     () =>
       getRefreshFollowStore({
         storeId: params?.storeId as number,
-        isFollow: isFollowed,
+        isFollow: !isFollowed,
       }),
     {
       enabled: false,
@@ -201,7 +201,7 @@ const StoreDetails = () => {
       getCategoryProducts({
         pageParam,
         categoryId: catProductId,
-        storeId: params?.storeId,
+        StoreId: params?.storeId,
       }),
     {
       enabled: false,

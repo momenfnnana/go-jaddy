@@ -62,6 +62,7 @@
   },
   "common": {
     "phone-numebr": "Phone Number",
+    "oldPassword": "Old Password",
     "password": "Password",
     "forget-password": "Forget Password?",
     "search_in_store": "Search in store",
@@ -93,7 +94,8 @@
   },
   "search": {
     "search-input": "Search in store",
-    "search-result-for": "Search result for:"
+    "search-result-for": "Search result for:",
+    "categoryTitle": "Products for: "
   },
   "product-details": {
     "select-color": "Select color",
@@ -152,7 +154,7 @@
     "account-details": "Account details",
     "request-list": "Request list",
     "payment-information": "Payment information",
-    "previous-titles": "Previous titles",
+    "previous-titles": "Previous addresses",
     "return-products": "Return products",
     "score-balance": "Score balance"
   },
@@ -180,11 +182,66 @@
     "total": "Total ({{currency}})",
     "discountPlaceholder": "discount code"
   },
+  "previousTitles": {
+    "titleHeader": "Previous Addresses",
+    "phoneNumber": "Phone: {{phoneNumber}}",
+    "chargeLabel": "Charge Address",
+    "defultLabel": "Defualt",
+    "defualtBtn": "Set Defualt",
+    "editBtn": "Edit",
+    "deleteBtn": "Delete"
+  },
+  "returnProducts": {
+    "titleHeader": "Return Products",
+    "orderNum": "Order number #{{orderNum}}",
+    "productName": "Product",
+    "ReturnReason": "Return Reason",
+    "ReturnCommand": "Return Command",
+    "orderDate": "Order Date",
+    "comment": "Your Comment"
+  },
+  "customerPoints": {
+    "titleHeader": "Points Balance",
+    "points": "{{points}} Points",
+    "equivalent": "equivalent to {{money}}"
+  },
+  "addAddress": {
+    "titleHeader": "Add New Address",
+    "description": "You can delete/modify any of the added sites with ease after the addition process",
+    "coName": "Company",
+    "fName": "First Name",
+    "lName": "Family Name",
+    "address1": "Address 1",
+    "address2": "Address 2",
+    "country": "Country",
+    "state": "State",
+    "city": "City",
+    "email": "Email",
+    "phone": "Phone Number",
+    "fax": "Fax",
+    "countries-def": "Select Country",
+    "states-def": "Select State",
+    "setDefualt": "Set Defualt?",
+    "submitBtn": "Continue"
+  },
+  "profileDetails": {
+    "titleHeader": "Account Details",
+    "myInfo": "Information",
+    "changePhoto": "Change Photo",
+    "password": "Password",
+    "submitBtn": "Save Changes"
+  },
   "modal": {
     "successTitle": "are you sure from confirm?",
     "faildTitle": "are you sure from delete?",
     "confirmBtn": "confirm",
-    "cancelBtn": "cancel"
+    "cancelBtn": "cancel",
+    "BillTitle": "Order Invoice",
+    "TotalProducts": "Products Total",
+    "RewardPoints": "Reward Points",
+    "DiscoundCode": "Discound Code",
+    "total": "Total",
+    "submitTotalModal": "Done Requset"
   },
   "api": {
     "account": {
