@@ -110,7 +110,8 @@
     "product-rating": "Rate product",
     "rate-product": "Rate product",
     "rate-field": "Documents (optional)",
-    "attach-image": "Attach image (optional)"
+    "attach-image": "Attach image (optional)",
+    "select": "Select {{optionName}}"
   },
   "category": {
     "title": "Category"
@@ -164,7 +165,8 @@
     "add-collection": "Add new collection",
     "collection-name": "Collection name",
     "are-sure-want-to-delete": "Are you sure to delete?",
-    "are-sure-want-to-delete-hint": "By choosing to confirm deletion, you cannot undo this command. Are you sure to delete the item?"
+    "are-sure-want-to-delete-hint": "By choosing to confirm deletion, you cannot undo this command. Are you sure to delete the item?",
+    "category": "category {{category}}"
   },
   "currencies": {
     "shikel": "Shikel {{currency}}",
