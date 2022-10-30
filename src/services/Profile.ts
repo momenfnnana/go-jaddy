@@ -9,6 +9,12 @@ interface IchangeUserInfo {
   AvatarId?: number | undefined;
 }
 
+interface IchangePassword {
+  OldPassword?: string;
+  NewPassword?: string;
+  ConfirmNewPassword?: string;
+}
+
 export const getUserData = () =>
   axios.get(`${BASE_URL}/api/custom/customer/PersonalInfo`);
 
@@ -34,5 +40,19 @@ export const changeUserInfo = ({
       Email,
       PhoneNumber,
       AvatarId,
+    },
+  });
+
+export const changePassword = ({
+  OldPassword,
+  NewPassword,
+  ConfirmNewPassword,
+}: IchangePassword) =>
+  axios(`${BASE_URL}/api/custom/customer/ChangePassword`, {
+    method: 'post',
+    data: {
+      OldPassword,
+      NewPassword,
+      ConfirmNewPassword,
     },
   });

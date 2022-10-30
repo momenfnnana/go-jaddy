@@ -6,7 +6,7 @@ import {
   ImageSourcePropType,
 } from 'react-native';
 import React, {useContext, useLayoutEffect, useState} from 'react';
-import {BackButton, Button, InputField, Text} from 'components';
+import {BackButton, Button, InputField, Loader, Text} from 'components';
 import {useNavigation} from '@react-navigation/native';
 import {colors, spacing} from 'theme';
 import HeaderAccount from './components/HeaderAccount';
@@ -14,9 +14,10 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {PalestineFlag} from 'assets/images';
 import {UserContext} from 'context/UserContext';
-import {useMutation} from '@tanstack/react-query';
-import {changeUserInfo} from 'services/Profile';
+import {useMutation, useQuery} from '@tanstack/react-query';
+import {changePassword, changeUserInfo, getUserData} from 'services/Profile';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Snackbar from 'react-native-snackbar';
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -31,18 +32,21 @@ const updateProfileSchema = Yup.object().shape({
   lastName: Yup.string().required('last name is required'),
   email: Yup.string().email().required('email is required'),
   phoneNumber: Yup.string()
+    .length(15, 'phone number must be 15 characters in length')
     .matches(phoneRegExp, 'phone number is not valid')
     .required('phone number is required'),
 });
 
 const updatePasswordSchema = Yup.object().shape({
-  oldPassword: Yup.string().required('Old Password name is required'),
+  oldPassword: Yup.string()
+    .required('Old Password name is required')
+    .min(8, 'password must being at least 8 characters'),
   newPassword: Yup.string()
     .required('new Password is required')
     .min(8, 'password must being at least 8 characters'),
   confirmPassword: Yup.string()
     .required('confirm password is required')
-    .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    .oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
 });
 
 const ProfileDetails = () => {
@@ -63,11 +67,26 @@ const ProfileDetails = () => {
       headerLeft: () => <BackButton />,
     });
   }, []);
-
+  const {
+    data,
+    isLoading: isLoadingUserData,
+    refetch,
+    isRefetching,
+    isFetching,
+  } = useQuery(['getUserData'], getUserData);
   const {mutate: mutateUpdateUserInfo, isLoading: isLoadingUpdateUserInfo} =
     useMutation(['changeUserInfo'], changeUserInfo, {
       onSuccess: data => {
-        console.log({changeUserInfo: data.data});
+        refetch();
+        return data;
+      },
+      onError: error => {
+        return error;
+      },
+    });
+  const {mutate: mutateUpdatePassword, isLoading: isLoadingUpdatePassword} =
+    useMutation(['changePassword'], changePassword, {
+      onSuccess: data => {
         return data;
       },
       onError: error => {
@@ -94,6 +113,15 @@ const ProfileDetails = () => {
     }
   };
 
+  const onUpdatePasswordHandle = (values: any) => {
+    const {confirmPassword, newPassword, oldPassword} = values;
+    mutateUpdatePassword({
+      OldPassword: oldPassword,
+      NewPassword: newPassword,
+      ConfirmNewPassword: confirmPassword,
+    });
+  };
+
   const showOldPassword = () => {
     setIsOldPasswordShown(currentValue => !currentValue);
   };
@@ -109,12 +137,27 @@ const ProfileDetails = () => {
     settings.CustomerSettings.AllowCustomersToUploadAvatars == 'True';
   const enableChangeData =
     settings.CustomerSettings.AllowUsersToChangeUsernames == 'True';
+
+  if (isLoadingUserData || isFetching) {
+    return (
+      <Loader
+        size={'large'}
+        containerStyle={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      />
+    );
+  }
+
   return (
     <View style={{flex: 1, backgroundColor: colors.white}}>
       <View style={{flex: 1}}>
         <ScrollView
           contentContainerStyle={{paddingHorizontal: spacing.content}}>
           <HeaderAccount
+            avatarInitial={data?.data?.Avatar?.Url}
             enableUpload={enableUpload}
             isEditInfo={isEditInfo}
             setEditInfo={setEditInfo}
@@ -122,15 +165,17 @@ const ProfileDetails = () => {
           />
           {isEditInfo ? (
             <Formik
+              key={'#pesonal'}
               initialValues={{
-                firstName: '',
-                lastName: '',
-                phoneNumber: '',
-                email: '',
+                firstName: data?.data.FirstName,
+                lastName: data?.data.LastName,
+                phoneNumber: data?.data.PhoneNumber,
+                email: data?.data.Email,
               }}
               onSubmit={onUpdateProfileHandle}
               validationSchema={updateProfileSchema}>
               {({handleChange, handleBlur, handleSubmit, values, errors}) => {
+                console.log({errors});
                 return (
                   <>
                     <InputField
@@ -199,12 +244,13 @@ const ProfileDetails = () => {
             </Formik>
           ) : (
             <Formik
+              key={'#password-form'}
               initialValues={{
                 oldPassword: '',
                 newPassword: '',
                 confirmPassword: '',
               }}
-              onSubmit={onUpdateProfileHandle}
+              onSubmit={onUpdatePasswordHandle}
               validationSchema={updatePasswordSchema}>
               {({handleChange, handleBlur, handleSubmit, values, errors}) => {
                 return (
@@ -256,6 +302,14 @@ const ProfileDetails = () => {
                           size={18}
                         />
                       }
+                    />
+                    <Button
+                      isLoading={isLoadingUpdatePassword}
+                      onPress={handleSubmit}
+                      style={{
+                        marginTop: 20,
+                      }}
+                      title="profileDetails.submitBtn"
                     />
                   </>
                 );

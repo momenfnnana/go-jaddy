@@ -4,13 +4,14 @@ import {useTranslation} from 'react-i18next';
 import {colors, font, spacing} from 'theme';
 import {Text} from 'components';
 import {TextInput} from 'react-native-paper';
+import { FormikErrors } from 'formik';
 
 interface IInputField extends TextInputProps {
   rightIcon?: ReactNode;
   leftIcon?: ReactNode;
   containerStyle?: ViewStyle;
   placeholder?: string;
-  error?: string;
+  error?: string | string[] | FormikErrors<any> | FormikErrors<any>[] | undefined;
   textColor?: string;
   label?: string;
   onPressRightIcon?: () => void;

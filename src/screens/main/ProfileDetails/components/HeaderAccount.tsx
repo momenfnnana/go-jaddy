@@ -8,11 +8,13 @@ import ImageResizer from 'react-native-image-resizer';
 import {UserContext} from 'context/UserContext';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {uploadAvatar} from 'services/Profile';
+import {BASE_URL} from 'utils/Axios';
 
 interface IHeaderAccount {
   setEditInfo: (val: boolean) => void;
   setIdImage: (val: number) => void;
   isEditInfo: boolean;
+  avatarInitial?: string;
   enableUpload: boolean;
 }
 interface camiraImage {
@@ -26,11 +28,12 @@ const HeaderAccount = ({
   isEditInfo,
   setIdImage,
   enableUpload,
+  avatarInitial,
 }: IHeaderAccount) => {
   const [image, setImage] = useState<camiraImage>({
     name: '',
     type: '',
-    uri: '',
+    uri: avatarInitial ? BASE_URL + avatarInitial : '',
   });
 
   const {mutate, isLoading} = useMutation(['uploadAvatar'], uploadAvatar, {
@@ -130,6 +133,7 @@ const HeaderAccount = ({
             position: 'relative',
             justifyContent: 'center',
             alignItems: 'center',
+            backgroundColor: colors.white,
           }}>
           <Image
             source={{
