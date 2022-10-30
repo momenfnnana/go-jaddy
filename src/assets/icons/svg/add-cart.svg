@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="10.438" height="13.28" viewBox="0 0 10.438 13.28">
+  <g id="cart" transform="translate(0.5 0.5)">
+    <g id="bag-20">
+      <g id="Group_38052" data-name="Group 38052">
+        <path id="Path" d="M9.938,9.413H-.5V-.5H9.938ZM.5,8.413H8.938V.5H.5Z" transform="translate(0 3.367)" fill="#0232eb"/>
+        <path id="Path-2" data-name="Path" d="M4.694,4.879h-1V2.189A1.647,1.647,0,0,0,2.1.5,1.647,1.647,0,0,0,.5,2.189V4.879h-1V2.189A2.648,2.648,0,0,1,2.1-.5a2.648,2.648,0,0,1,2.6,2.689Z" transform="translate(2.622)" fill="#0232eb"/>
+      </g>
+    </g>
+    <path id="_11" data-name="11" d="M-1.847-3.019V-4.687H-3.536v-1.1h1.689v-1.7H-.755v1.7H.923v1.1H-.755v1.668Z" transform="translate(6.02 13.456)" fill="#0232eb"/>
+  </g>
+</svg>
