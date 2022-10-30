@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {DiscountIcon, ShareIcon, StarFilledIcon} from 'assets/icons';
-import {AddToFav, Loader, Text} from 'components';
+import {AddToFav, InputField, Loader, Text} from 'components';
 import ArrowIcon from 'components/Arrow';
 import {colors, spacing, font} from 'theme';
 import {BASE_URL} from 'utils/Axios';
@@ -410,6 +410,12 @@ const ListHeaderComponent = ({
                     )
                   )}
                 </ScrollView>
+                {item.AttributeControlType === 'TextBox' && (
+                  <InputField
+                    style={{}}
+                    placeholder={'product-details.custom-text'}
+                  />
+                )}
               </View>
             );
           })}
