@@ -113,7 +113,8 @@
     "rate-product": "Rate product",
     "rate-field": "Documents (optional)",
     "attach-image": "Attach image (optional)",
-    "select": "Select {{optionName}}"
+    "select": "Select {{optionName}}",
+    "custom-text": "Custom text.."
   },
   "category": {
     "title": "Category"
