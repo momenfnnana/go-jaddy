@@ -20,7 +20,7 @@ import {useNavigation} from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {colors, spacing} from 'theme';
-import {Button, InputField, Text} from 'components';
+import {BackButton, Button, InputField, Text} from 'components';
 import {PalestineFlag} from 'assets/images';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
@@ -207,14 +207,11 @@ const Register = () => {
               width: '100%',
             }}>
             {canGoBack() && (
-              <Pressable style={styles.goBackContainer} onPress={goBack}>
-                <MaterialIcons
-                  name="keyboard-backspace"
-                  size={25}
-                  color={colors.white}
-                  style={styles.goBackArrow}
-                />
-              </Pressable>
+              <BackButton
+                style={styles.goBackContainer}
+                size={22}
+                color={colors.white}
+              />
             )}
           </LinearGradient>
           <RegisterLogo

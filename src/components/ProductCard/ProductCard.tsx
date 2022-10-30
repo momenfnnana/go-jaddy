@@ -33,7 +33,9 @@ const ProductCard = (props: IProductInterface) => {
     WishlistEnabled,
     styleContainer,
     Id,
+    ColorAttributes,
   } = props;
+
   const {currency} = useCurrency();
   const {navigate, setParams} = useNavigation<HomeNavigationsType>();
   const routes = useNavigationState(state => state.routes);
@@ -158,22 +160,22 @@ const ProductCard = (props: IProductInterface) => {
             style={styles.rate}
           />
           <View style={styles.verticalLine} />
-          {/* <View style={styles.colorsContainer}>
-          {props?.ColorAttributes &&
-            props?.ColorAttributes &&
-            props?.ColorAttributes.map((item, index) => (
-              <View
-                key={index.toString()}
-                style={[
-                  styles.colorItem,
-                  {
-                    backgroundColor: item,
-                    left: spacing.smaller * (index + 1),
-                  },
-                ]}
-              />
-            ))}
-        </View> */}
+          <View style={styles.colorsContainer}>
+            {ColorAttributes &&
+              ColorAttributes &&
+              ColorAttributes.map((item, index) => (
+                <View
+                  key={index.toString()}
+                  style={[
+                    styles.colorItem,
+                    {
+                      backgroundColor: item.Color,
+                      left: spacing.smaller * (index + 1),
+                    },
+                  ]}
+                />
+              ))}
+          </View>
         </View>
       </Pressable>
       <AddToFav

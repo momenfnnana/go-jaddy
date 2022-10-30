@@ -42,7 +42,7 @@ export default function Text(props: TextProps) {
     marginRight: right ? spacing[right] : undefined,
     textAlign: center ? 'center' : 'left',
     textDecorationLine: underline ? 'underline' : 'none',
-    fontSize: size ? size : undefined,
+    fontSize: size ? size : typography[variant].fontSize,
   };
   if (color) {
     customStyle.color = color;

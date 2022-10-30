@@ -1,10 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, ScrollView} from 'react-native';
-import {RouteProp, useRoute} from '@react-navigation/native';
-import {
-  NativeStackNavigationProp,
-  NativeStackScreenProps,
-} from '@react-navigation/native-stack';
+import {useRoute} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
 import {Loader, ReviewList} from 'components';
 import {HomeRoutes} from 'navigators/RoutesTypes';
@@ -12,33 +9,10 @@ import NetworkErrorScreen from 'screens/NetworkErrorScreen';
 import {getProductDetails, getReviews} from 'services/Home';
 import {colors} from 'theme';
 import {ListFooterComponent, ListHeaderComponent} from './components';
-
-interface IProductNavigation
-  extends NativeStackNavigationProp<HomeRoutes, 'ProductDetails'>,
-    RouteProp<HomeRoutes, 'ProductDetails'> {}
+import {IProductNavigation} from 'navigators/NavigationsTypes';
 
 interface IProductDetails
   extends NativeStackScreenProps<HomeRoutes, 'ProductDetails'> {}
-
-interface IProductImages {
-  id: number;
-  folderId: number;
-  mime: string;
-  type: string;
-  createdOn: Date;
-  alt: string;
-  titleAttr: string;
-  path: string;
-  url: string;
-  thumbUrl: string;
-  lastUpdated: string;
-  size: number;
-  name: string;
-  dir: string;
-  title: string;
-  ext: string;
-  dimensions: string;
-}
 
 const ProductDetails = ({}: IProductDetails) => {
   const {params} = useRoute<IProductNavigation>();
@@ -51,19 +25,18 @@ const ProductDetails = ({}: IProductDetails) => {
     isError,
     refetch,
     isRefetching,
-  } = useQuery(['getProductDetails'], () => getProductDetails(Id));
+  } = useQuery([`getProductDetails${Id}`], () => getProductDetails(Id));
 
   const {
     data,
     isLoading: isLoadingReviews,
-    isError: isErrorReviews,
     hasNextPage: hasNextPageReviews,
     fetchNextPage,
     refetch: refetchReviews,
     isFetchingNextPage,
     isRefetching: isRefetchingReviews,
   } = useInfiniteQuery(
-    ['perantCategories'],
+    [`getReviews${Id}`],
     ({pageParam}) =>
       getReviews({
         pageParam,
@@ -92,7 +65,7 @@ const ProductDetails = ({}: IProductDetails) => {
     refetch();
   }, [Id]);
 
-  if (isLoading || isRefetching) {
+  if (isLoading || isRefetching || isLoadingReviews) {
     return <Loader containerStyle={styles.loaderStyle} />;
   }
 
@@ -124,6 +97,7 @@ const ProductDetails = ({}: IProductDetails) => {
         setRatingFilters={setRatingFilters}
         ratingFilters={ratingFilters}
         isRefetchingReviews={isLoadingReviews || isRefetchingReviews}
+        reviewsList={reviewsList as any[]}
       />
       {reviewsList?.map(item => (
         <ReviewList key={item?.Id} item={item} />

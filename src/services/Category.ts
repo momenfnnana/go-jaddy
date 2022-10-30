@@ -11,7 +11,6 @@ export const getPerantCategories = ({pageParam = 1}) => {
   return axios(
     `${BASE_URL}/api/custom/category/ParentCategories?pageSize=10&page=${pageParam}`,
   );
-  // return res.data;
 };
 
 export const getSubCategories = ({

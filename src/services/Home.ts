@@ -1,10 +1,10 @@
 import axios from 'axios';
 import {BASE_URL} from 'utils/Axios';
 
-interface IgetSearchResults {
-  searchText: string;
-  CurrencyId: number;
-}
+// interface IgetSearchResults {
+//   searchText: string;
+//   CurrencyId: number;
+// }
 interface IgetReviews {
   ProductId: number | string;
   PageSize: number | string;
@@ -16,6 +16,13 @@ interface IgetReviews {
 interface IEditWishListName {
   wishlistId: number;
   Name: string;
+}
+interface IgetSearchResults {
+  page: number | string;
+  pageSize: number;
+  term: string;
+  Filters?: any;
+  CurrencyId?: number;
 }
 export const getStores = () =>
   axios(`${BASE_URL}/api/custom/stores/HomeStores`);
@@ -59,17 +66,33 @@ export const subscribeProduct = (id: number) =>
   axios.post(`${BASE_URL}/api/custom/products/BackInStockSubscribe?id=${id}`);
 
 export const getAdvertisements = () =>
-  axios(
-    `${BASE_URL}/api/custom/advertisements?codes=Header_Navigation_Categories_One`,
-  );
+  axios(`${BASE_URL}/api/custom/advertisements?codes=Mobile_Home_AD`);
 
 export const getBestSellers = () =>
   axios(`${BASE_URL}/api/custom/products/BestSellers`);
 
-export const getSearchResults = ({searchText, CurrencyId}: IgetSearchResults) =>
-  axios(`${BASE_URL}/api/custom/search/ByTerm?term=${searchText}`, {
-    headers: {CurrencyId: CurrencyId},
-  });
+// export const getSearchResults = ({searchText, CurrencyId}: IgetSearchResults) =>
+//   axios(`${BASE_URL}/api/custom/search/ByTerm?term=${searchText}`, {
+//     headers: {CurrencyId: CurrencyId},
+//   });
+
+export const getSearchResults = ({
+  page = 1,
+  pageSize,
+  term,
+  Filters,
+  CurrencyId,
+}: IgetSearchResults) =>
+  axios(
+    `${BASE_URL}/api/custom/search/ByTerm?term=${term}&page=${page}&pageSize=${pageSize}`,
+    {
+      method: 'post',
+      data: {
+        Filters,
+      },
+      headers: {CurrencyId: CurrencyId},
+    },
+  );
 
 export const getIpAddress = () => axios(`https://geolocation-db.com/json/`);
 

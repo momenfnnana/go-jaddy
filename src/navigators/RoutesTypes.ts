@@ -6,7 +6,7 @@ export type MainNavigator = {
 
 export type BottomTabsRoutes = {
   HomeStack: HomeRoutes;
-  CategoriesStack: undefined;
+  CategoriesStack: CategotyRoutes;
   CategoryDetails: {title: ''; id: -1};
   StoresStack: undefined;
   Cart: undefined;
@@ -44,6 +44,7 @@ export type StoresRoutes = {
 export type ProfileRoutes = {
   Profile: undefined;
   WishList: undefined;
+  WishlistDetails: {Id: number; title: string};
 };
 
 export type AuthRoutes = {

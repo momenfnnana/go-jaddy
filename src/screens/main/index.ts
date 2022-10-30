@@ -8,3 +8,4 @@ export {default as ProfileScreen} from './Profile';
 export {default as ProductDetailsScreen} from './ProductDetails';
 export {default as SearchScreen} from './Search';
 export {default as WishListScreen} from './WishList';
+export {default as WishlistDetails} from './WishlistDetails';

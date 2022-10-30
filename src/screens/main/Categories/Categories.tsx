@@ -1,8 +1,7 @@
-import {useRoute, useNavigation} from '@react-navigation/native';
-import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
+import {useNavigation} from '@react-navigation/native';
+import {useInfiniteQuery} from '@tanstack/react-query';
 import {Loader, Text} from 'components';
-import ArrowIcon from 'components/Arrow';
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Pressable,
@@ -12,8 +11,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import {FadeLoading} from 'react-native-fade-loading';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {getPerantCategories, getSubCategories} from 'services/Category';
+import {getPerantCategories} from 'services/Category';
 
 import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
@@ -21,23 +19,18 @@ import {CategoryNavigationsType} from 'navigators/NavigationsTypes';
 import {ActivityIndicator} from 'react-native-paper';
 
 const Categories = () => {
-  const {top} = useSafeAreaInsets();
   const {width} = useWindowDimensions();
-  const {params} = useRoute<CategoryNavigationsType>();
   const {push, navigate} = useNavigation<CategoryNavigationsType>();
 
   const {
     data,
     isLoading,
-    isSuccess,
-    isError,
-    error,
     hasNextPage,
     fetchNextPage,
     refetch,
     isFetchingNextPage,
     isRefetching,
-  } = useInfiniteQuery(['perantCategories'], getPerantCategories, {
+  } = useInfiniteQuery(['parentCategories'], getPerantCategories, {
     getNextPageParam: lastPage => {
       if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
         return lastPage?.data?.Page + 1;

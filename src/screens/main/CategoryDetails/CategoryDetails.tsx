@@ -1,7 +1,6 @@
 import {useRoute, useNavigation} from '@react-navigation/native';
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {BackButton, Loader, Text} from 'components';
-import ArrowIcon from 'components/Arrow';
 import React, {useLayoutEffect} from 'react';
 import {
   View,
@@ -11,41 +10,34 @@ import {
   Image,
 } from 'react-native';
 import {FadeLoading} from 'react-native-fade-loading';
-import {getCategoryProducts, getSubCategories} from 'services/Category';
+import {getSubCategories} from 'services/Category';
 
-import {colors, font, spacing} from 'theme';
+import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
-import {
-  CategoryNavigationsType,
-  ICategoryDetails,
-} from 'navigators/NavigationsTypes';
+import {CategoryNavigationsType} from 'navigators/NavigationsTypes';
 import {ActivityIndicator} from 'react-native-paper';
 
 const CategoriesDetails = () => {
   const {width} = useWindowDimensions();
   const {params} = useRoute<CategoryNavigationsType>();
+  console.log({id: params?.id, title: params?.title});
+
   const {push, pop, goBack, canGoBack, replace, navigate, setOptions} =
     useNavigation<CategoryNavigationsType>();
 
-  const {
-    data,
-    isLoading,
-    isSuccess,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery(
-    [`subCategories${params?.id}`],
-    ({pageParam}) => getSubCategories({categoryId: params?.id, pageParam}),
-    {
-      getNextPageParam: lastPage => {
-        if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
-          return lastPage?.data?.Page + 1;
-        }
-        return null;
+  const {data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage} =
+    useInfiniteQuery(
+      [`subCategories${params?.id}`],
+      ({pageParam}) => getSubCategories({categoryId: params?.id, pageParam}),
+      {
+        getNextPageParam: lastPage => {
+          if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
+            return lastPage?.data?.Page + 1;
+          }
+          return null;
+        },
       },
-    },
-  );
+    );
 
   useLayoutEffect(() => {
     setOptions({

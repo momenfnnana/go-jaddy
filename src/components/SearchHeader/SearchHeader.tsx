@@ -70,9 +70,9 @@ const SearchHeader = ({
             </Pressable>
           }
         />
-        <Pressable style={styles.goBackContainer}>
+        {/* <Pressable style={styles.goBackContainer}>
           {RightIcon ? RightIcon : <CartIcon stroke={colors.white} />}
-        </Pressable>
+        </Pressable> */}
       </View>
       {Footer}
     </View>

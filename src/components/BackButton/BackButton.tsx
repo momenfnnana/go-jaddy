@@ -4,11 +4,16 @@ import {colors, spacing} from 'theme';
 import ArrowIcon from 'components/Arrow';
 import {useNavigation} from '@react-navigation/native';
 
-const BackButton = ({...rest}: PressableProps) => {
+interface IBackButton extends PressableProps {
+  color?: string;
+  size?: number;
+}
+
+const BackButton = ({color, size = 20, ...rest}: IBackButton) => {
   const {goBack} = useNavigation();
   return (
     <Pressable onPress={goBack} style={styles.container} {...rest}>
-      <ArrowIcon size={20} />
+      <ArrowIcon size={size} color={color} />
     </Pressable>
   );
 };
