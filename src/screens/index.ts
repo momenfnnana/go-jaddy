@@ -7,13 +7,14 @@ export {
   CartScreen,
   SearchScreen,
   StoreDetailsScreen,
-  WishListScreen,
   CategoryDetailsScreen,
   PreviousTitlesScreen,
   ReturnProductsScreen,
   CustomerPointsScreen,
   AddAddressScreen,
   ProfileDetailsScreen,
+  WishListScreen,
+  WishlistDetails,
 } from './main';
 export {
   OnboardingScreen,

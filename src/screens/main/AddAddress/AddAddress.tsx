@@ -5,13 +5,19 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {BackButton, Button, InputField, Text} from 'components';
-import {colors, spacing} from 'theme';
+import {BackButton, Button, InputField, Loader, Text} from 'components';
+import {colors, font, spacing} from 'theme';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {Switch} from 'react-native-paper';
+import SelectDropdown from 'react-native-select-dropdown';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {useQuery} from '@tanstack/react-query';
+import {getCountries, getStatesByCountry} from 'services/Addresses';
+import {t} from 'i18next';
+import {useTranslation} from 'react-i18next';
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -30,6 +36,29 @@ const addressSchema = Yup.object().shape({
 const AddAddress = () => {
   const {setOptions} = useNavigation();
   const [isDefualt, setDefualt] = useState<boolean>(false);
+  const [countrySelected, setCountrySelected] = useState<any>({});
+  const [stateSelected, setStateSelected] = useState<any>({});
+  const {t} = useTranslation();
+  const {data: countriesData, isLoading: isLoadingCountries} = useQuery(
+    ['getCountries'],
+    getCountries,
+    {
+      onSuccess: () => {
+        refetchStates();
+      },
+    },
+  );
+  const {
+    data: statesData,
+    isLoading: isLoadingStates,
+    isFetching: isFetchingStates,
+    refetch: refetchStates,
+  } = useQuery(
+    ['getStates'],
+    () => getStatesByCountry(countrySelected?.Value),
+    {enabled: false},
+  );
+
   useLayoutEffect(() => {
     setOptions({
       headerLeft: () => <BackButton />,
@@ -47,6 +76,16 @@ const AddAddress = () => {
     email: '',
     fax: '',
   };
+
+  useEffect(() => {
+    if (countrySelected?.Text?.length != 0) {
+      console.log({countrySelected, sss: 'ss'});
+      refetchStates();
+    }
+  }, [countrySelected.Value]);
+
+  console.log({countrySelected, sss: 'out'});
+
   const onRegisterHandle = () => {};
   return (
     <View>
@@ -73,6 +112,7 @@ const AddAddress = () => {
                   placeholder={'addAddress.coName'}
                   error={errors.companyName}
                 />
+
                 <View style={[styles.rowFiled, styles.inputContainer]}>
                   <InputField
                     value={values.firstName}
@@ -106,6 +146,120 @@ const AddAddress = () => {
                   placeholder={'addAddress.address2'}
                   error={errors.address2}
                 />
+                <View
+                  style={{
+                    marginBottom: spacing.small,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <SelectDropdown
+                    defaultButtonText={t('addAddress.countries-def')}
+                    renderDropdownIcon={() => (
+                      <MaterialIcons
+                        name={`keyboard-arrow-down`}
+                        size={18}
+                        color={colors.black}
+                      />
+                    )}
+                    disabled={isLoadingCountries}
+                    renderCustomizedButtonChild={selectedItem =>
+                      isLoadingCountries ? (
+                        <Loader size={'small'} />
+                      ) : (
+                        <Text
+                          center
+                          text={
+                            selectedItem?.Text || t('addAddress.countries-def')
+                          }
+                        />
+                      )
+                    }
+                    data={countriesData?.data || []}
+                    buttonStyle={{
+                      paddingVertical: spacing.small,
+                      borderWidth: 1,
+                      borderColor: colors.gray[400],
+                      borderRadius: spacing.small,
+                      backgroundColor: colors.white,
+                      flex: 1,
+                      justifyContent: 'space-between',
+                      flexDirection: 'row',
+                      paddingHorizontal: spacing.smaller,
+                    }}
+                    buttonTextStyle={{fontFamily: font.regular}}
+                    renderCustomizedRowChild={item => (
+                      <View
+                        style={{
+                          height: '100%',
+                          justifyContent: 'center',
+                          paddingHorizontal: spacing.smaller,
+                        }}>
+                        <Text variant="mediumBold" text={item.Text} />
+                      </View>
+                    )}
+                    onSelect={item => {
+                      setCountrySelected(item);
+                    }}
+                    buttonTextAfterSelection={selectedItem => {
+                      return selectedItem.Text;
+                    }}
+                    rowTextForSelection={(item: any) => item}
+                  />
+                  <View style={{width: 10}} />
+                  <SelectDropdown
+                    defaultButtonText={t('addAddress.states-def')}
+                    renderDropdownIcon={() => (
+                      <MaterialIcons
+                        name={`keyboard-arrow-down`}
+                        size={18}
+                        color={colors.black}
+                      />
+                    )}
+                    disabled={isFetchingStates || !setCountrySelected?.Text}
+                    renderCustomizedButtonChild={selectedItem =>
+                      isFetchingStates ? (
+                        <Loader size={'small'} />
+                      ) : (
+                        <Text
+                          center
+                          text={
+                            selectedItem?.Text || t('addAddress.states-def')
+                          }
+                        />
+                      )
+                    }
+                    data={statesData?.data || []}
+                    buttonStyle={{
+                      paddingVertical: spacing.small,
+                      borderWidth: 1,
+                      borderColor: colors.gray[400],
+                      borderRadius: spacing.small,
+                      backgroundColor: colors.white,
+                      flex: 1,
+                      justifyContent: 'space-between',
+                      flexDirection: 'row',
+                      paddingHorizontal: spacing.smaller,
+                    }}
+                    buttonTextStyle={{fontFamily: font.regular}}
+                    renderCustomizedRowChild={item => (
+                      <View
+                        style={{
+                          height: '100%',
+                          justifyContent: 'center',
+                          paddingHorizontal: spacing.smaller,
+                        }}>
+                        <Text variant="mediumBold" text={item.Text} />
+                      </View>
+                    )}
+                    onSelect={item => {
+                      setStateSelected(item);
+                    }}
+                    buttonTextAfterSelection={selectedItem => {
+                      return selectedItem.Text;
+                    }}
+                    rowTextForSelection={(item: any) => item}
+                  />
+                </View>
                 <InputField
                   value={values.city}
                   onChangeText={handleChange('city')}

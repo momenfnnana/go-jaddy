@@ -11,6 +11,7 @@ const grayMainBolder = '#C8C8C8';
 const inactiveStar = '#C7C7CC';
 const languagesSwitchText = '#1313137F';
 const modalDescriptionColor = '#262626';
+const storesImageBorder = '#7474743D';
 
 const primaryPalette = {
   primary: '#0232EB', // Main
@@ -123,6 +124,7 @@ export const colors = {
   inactiveStar,
   languagesSwitchText,
   modalDescriptionColor,
+  storesImageBorder,
 };
 
 export type ColorsTypes = keyof typeof colors;

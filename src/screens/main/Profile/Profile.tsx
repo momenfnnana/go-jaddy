@@ -16,7 +16,7 @@ import {AuthList, UnAuthList} from './Lists';
 import {useDropDownContext} from 'context/dropdownContext';
 
 const Profile = () => {
-  const {setUserData, accessToken, settings} = useContext(UserContext);
+  const {setUserData, accessToken} = useContext(UserContext);
   const {setIsDropDownShown} = useDropDownContext();
   const [isLogged, setIsLogged] = useState<boolean>(false);
   const {

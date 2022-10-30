@@ -1,5 +1,12 @@
-import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
-import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
+import {
+  BottomTabNavigationProp,
+  BottomTabScreenProps,
+} from '@react-navigation/bottom-tabs';
+import {
+  CompositeNavigationProp,
+  CompositeScreenProps,
+  RouteProp,
+} from '@react-navigation/native';
 import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
@@ -14,50 +21,86 @@ import {
   StoresRoutes,
 } from './RoutesTypes';
 
-export type AuthNavigationsType = CompositeNavigationProp<
+type AuthNavigationsType = CompositeNavigationProp<
   NativeStackNavigationProp<AuthRoutes>,
   NativeStackNavigationProp<BottomTabsRoutes>
 >;
 
-export interface HomeNavigationsType
+interface HomeNavigationsType
   extends NativeStackNavigationProp<HomeRoutes>,
     RouteProp<BottomTabsRoutes> {}
 
-export interface CategoryNavigationsType
+interface CategoryNavigationsType
   extends NativeStackNavigationProp<CategotyRoutes & BottomTabsRoutes>,
     RouteProp<CategotyRoutes> {}
 
-export type IHome = NativeStackScreenProps<BottomTabsRoutes, 'HomeStack'>;
+type IHome = NativeStackScreenProps<BottomTabsRoutes, 'HomeStack'>;
 
-export type ICategories = NativeStackScreenProps<
-  BottomTabsRoutes,
-  'CategoriesStack'
+type ICategories = NativeStackScreenProps<BottomTabsRoutes, 'CategoriesStack'>;
+
+// interface IStores
+//   extends NativeStackScreenProps<BottomTabsRoutes, 'StoresStack'>,
+//     RouteProp<StoresRoutes>,
+//     NativeStackNavigationProp<StoresRoutes> {}
+
+type IStores = CompositeNavigationProp<
+  NativeStackNavigationProp<MainNavigator, 'HomeFlow'>,
+  NativeStackNavigationProp<BottomTabsRoutes, 'StoresStack'>
 >;
 
-export interface IStores
-  extends NativeStackScreenProps<BottomTabsRoutes, 'StoresStack'>,
-    RouteProp<StoresRoutes>,
-    NativeStackNavigationProp<StoresRoutes> {}
-
-export type ICategoryDetails = BottomTabNavigationProp<
+type ICategoryDetails = BottomTabNavigationProp<
   BottomTabsRoutes,
   'CategoryDetails'
 >;
 
-export type LoginScreenNavigationProp = CompositeNavigationProp<
+type LoginScreenNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<MainNavigator, 'AuthFlow'>,
   NativeStackNavigationProp<AuthRoutes, 'Login'>
 >;
 
-export type RegisterScreenNavigationProp = CompositeNavigationProp<
+type RegisterScreenNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<MainNavigator, 'AuthFlow'>,
   NativeStackNavigationProp<AuthRoutes, 'Register'>
 >;
-export type ProfileScreenNavigationProp = CompositeNavigationProp<
+type ProfileScreenNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<MainNavigator, 'HomeFlow'>,
   NativeStackNavigationProp<ProfileRoutes, 'Profile'>
 >;
-export type WishlistScreenNavigationProp = NativeStackNavigationProp<
-  BottomTabsRoutes,
-  'Profile'
+type WishlistScreenNavigationProp = NativeStackNavigationProp<
+  ProfileRoutes,
+  'WishList'
 >;
+type WishlistDetailsScreenNavigationProp = CompositeNavigationProp<
+  NativeStackNavigationProp<ProfileRoutes, 'WishlistDetails'>,
+  NativeStackNavigationProp<HomeRoutes, 'Home'>
+>;
+
+// type WishlistDetailsScreenNavigationProp = CompositeNavigationProp<
+//   NativeStackNavigationProp<ProfileRoutes, 'WishlistDetails'>,
+//   NativeStackNavigationProp<BottomTabsRoutes, 'Profile'>
+// >;
+
+interface IProductNavigation
+  extends NativeStackNavigationProp<HomeRoutes, 'ProductDetails'>,
+    RouteProp<HomeRoutes, 'ProductDetails'> {}
+
+interface ProfileStackProps
+  extends NativeStackNavigationProp<ProfileRoutes>,
+    RouteProp<ProfileRoutes> {}
+
+export type {
+  AuthNavigationsType,
+  HomeNavigationsType,
+  CategoryNavigationsType,
+  IHome,
+  ICategories,
+  IStores,
+  ICategoryDetails,
+  LoginScreenNavigationProp,
+  RegisterScreenNavigationProp,
+  ProfileScreenNavigationProp,
+  WishlistScreenNavigationProp,
+  WishlistDetailsScreenNavigationProp,
+  ProfileStackProps,
+  IProductNavigation,
+};

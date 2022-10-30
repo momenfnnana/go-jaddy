@@ -30,3 +30,5 @@ export {default as EmptyItemImage} from './svg/empty-item-image.svg';
 export {default as CloseIcon} from './svg/close.svg';
 export {default as EditIcon} from './svg/edit.svg';
 export {default as GoJaddyRedIcon} from './svg/go-jaddy-red.svg';
+export {default as AddCartIcon} from './svg/add-cart.svg';
+export {default as TrashIcon} from './svg/trash.svg';

@@ -174,7 +174,14 @@ const ProfileDetails = () => {
               }}
               onSubmit={onUpdateProfileHandle}
               validationSchema={updateProfileSchema}>
-              {({handleChange, handleBlur, handleSubmit, values, errors}) => {
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                touched,
+              }) => {
                 console.log({errors});
                 return (
                   <>
@@ -183,14 +190,20 @@ const ProfileDetails = () => {
                       onChangeText={handleChange('firstName')}
                       onBlur={handleBlur('firstName')}
                       placeholder={'common.firstName'}
-                      error={errors.firstName}
+                      error={{
+                        touched: touched.firstName,
+                        value: errors.firstName,
+                      }}
                     />
                     <InputField
                       value={values.lastName}
                       placeholder={'common.lastName'}
                       onChangeText={handleChange('lastName')}
                       onBlur={handleBlur('lastName')}
-                      error={errors.lastName}
+                      error={{
+                        touched: touched.lastName,
+                        value: errors.lastName,
+                      }}
                     />
                     <InputField
                       disabled={!enableChangeData}
@@ -198,7 +211,10 @@ const ProfileDetails = () => {
                       keyboardType="phone-pad"
                       onChangeText={handleChange('phoneNumber')}
                       onBlur={handleBlur('phoneNumber')}
-                      error={errors.phoneNumber}
+                      error={{
+                        touched: touched.phoneNumber,
+                        value: errors.phoneNumber,
+                      }}
                       disabledRight
                       rightIcon={
                         <Pressable
@@ -228,7 +244,10 @@ const ProfileDetails = () => {
                       placeholder={'common.email'}
                       onChangeText={handleChange('email')}
                       onBlur={handleBlur('email')}
-                      error={errors.email}
+                      error={{
+                        touched: touched.email,
+                        value: errors.email,
+                      }}
                     />
                     <Button
                       // isLoading={isLoadingUpdateUserInfo}
@@ -252,7 +271,14 @@ const ProfileDetails = () => {
               }}
               onSubmit={onUpdatePasswordHandle}
               validationSchema={updatePasswordSchema}>
-              {({handleChange, handleBlur, handleSubmit, values, errors}) => {
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                touched,
+              }) => {
                 return (
                   <>
                     <InputField
@@ -261,7 +287,10 @@ const ProfileDetails = () => {
                       onChangeText={handleChange('oldPassword')}
                       onBlur={handleBlur('oldPassword')}
                       secureTextEntry={!isOldPasswordShow}
-                      error={errors.oldPassword}
+                      error={{
+                        touched: touched.oldPassword,
+                        value: errors.oldPassword,
+                      }}
                       onPressRightIcon={showOldPassword}
                       rightIcon={
                         <MaterialCommunityIcons
@@ -277,7 +306,10 @@ const ProfileDetails = () => {
                       onChangeText={handleChange('newPassword')}
                       onBlur={handleBlur('newPassword')}
                       secureTextEntry={!isPasswordShow}
-                      error={errors.newPassword}
+                      error={{
+                        touched: touched.newPassword,
+                        value: errors.newPassword,
+                      }}
                       onPressRightIcon={showPassword}
                       rightIcon={
                         <MaterialCommunityIcons
@@ -293,7 +325,10 @@ const ProfileDetails = () => {
                       onChangeText={handleChange('confirmPassword')}
                       onBlur={handleBlur('confirmPassword')}
                       secureTextEntry={!isCPasswordShow}
-                      error={errors.confirmPassword}
+                      error={{
+                        touched: touched.confirmPassword,
+                        value: errors.confirmPassword,
+                      }}
                       onPressRightIcon={showCPassword}
                       rightIcon={
                         <MaterialCommunityIcons

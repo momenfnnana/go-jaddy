@@ -75,7 +75,8 @@
     "product-rating": "تقييم المنتج",
     "rate-product": "قيم المنتج",
     "rate-field": "ملاحظات (اختياري)",
-    "attach-image": "ارفاق صورة (اختياري)"
+    "attach-image": "ارفاق صورة (اختياري)",
+    "select": "اختر {{optionName}}"
   },
   "profile": {
     "welcome": "أهلا بك",
@@ -112,7 +113,8 @@
     "add-collection": "إضافة كوليكشن جديد",
     "collection-name": "اسم القائمة",
     "are-sure-want-to-delete": "هل أنت متأكد من الحذف؟",
-    "are-sure-want-to-delete-hint": "باختيارك تأكيد الحذف لا يمكنك الرجوع عن هذا الأمر، هل أنت متأكد من حذف العنصر؟"
+    "are-sure-want-to-delete-hint": "باختيارك تأكيد الحذف لا يمكنك الرجوع عن هذا الأمر، هل أنت متأكد من حذف العنصر؟",
+    "category": "التصنيف {{category}}"
   },
   "currencies": {
     "shikel": "شيكل {{currency}}",

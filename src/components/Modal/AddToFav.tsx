@@ -23,7 +23,7 @@ interface IinitialValues {
 }
 interface IAddToFav {
   isAddToCollectionShown: boolean;
-  setIsAddToCollectionShown: (value: boolean) => boolean;
+  setIsAddToCollectionShown: (value: boolean) => void;
   ProductId: string | number;
 }
 

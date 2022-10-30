@@ -13,3 +13,4 @@ export {default as ReturnProductsScreen} from './ReturnProducts';
 export {default as CustomerPointsScreen} from './CustomerPoints';
 export {default as AddAddressScreen} from './AddAddress';
 export {default as ProfileDetailsScreen} from './ProfileDetails';
+export {default as WishlistDetails} from './WishlistDetails';

@@ -1,11 +1,7 @@
 import {createContext, useState} from 'react';
+import {ImageData} from 'types';
 interface IUserData {
-  Avatar?: {
-    Id: number;
-    ThumbUrl: string;
-    Title: string;
-    Url: string;
-  };
+  Avatar?: ImageData;
   Email?: string;
   FirstName?: string;
   LastName?: string;

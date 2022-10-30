@@ -55,7 +55,7 @@ const StoreDetails = () => {
     refetch: refetchStoreReviews,
     isFetchingNextPage: isFetchingNextPageStoreReviews,
   } = useInfiniteQuery(
-    ['perantCategories'],
+    [`perantCategories${params?.storeId}`],
     ({pageParam}) =>
       getStoreReviews({
         pageParam,
@@ -81,7 +81,7 @@ const StoreDetails = () => {
     data: storeDetailsData,
     isError: isErrorStoreDetails,
   } = useQuery(
-    ['getStoreDetails'],
+    [`getStoreDetails${params?.storeId}`],
     () => getStoreDetails({storeId: params?.storeId}),
     {
       onSuccess(data) {
@@ -106,7 +106,7 @@ const StoreDetails = () => {
   );
 
   const {data: StoreMainData} = useInfiniteQuery(
-    ['getStoreMainTab'],
+    [`getStoreMainTab${params?.storeId}`],
     ({pageParam}) => getStoreCategories({storeId: params?.storeId, pageParam}),
     {
       getNextPageParam: lastPage => {
@@ -124,7 +124,7 @@ const StoreDetails = () => {
     isFetchingNextPage: isFetchingNextPageNew,
     fetchNextPage: fetchNextPageNew,
   } = useInfiniteQuery(
-    ['getStoreNewTab'],
+    [`getStoreNewTab${params?.storeId}`],
     ({pageParam}) => getStoreNewProducts({pageParam, storeId: params?.storeId}),
     {
       getNextPageParam: lastPage => {
@@ -142,7 +142,7 @@ const StoreDetails = () => {
     isFetchingNextPage: isFetchingNextPageOffer,
     fetchNextPage: fetchNextPageOffer,
   } = useInfiniteQuery(
-    ['getStoreOfferTab'],
+    [`getStoreOfferTab${params?.storeId}`],
     ({pageParam}) =>
       getStoreOfferProducts({pageParam, storeId: params?.storeId}),
     {
@@ -164,7 +164,7 @@ const StoreDetails = () => {
     fetchNextPage: fetchNextPageSearch,
     isSuccess: isSuccessSearch,
   } = useInfiniteQuery(
-    ['getStoreSearchTab'],
+    [`getStoreSearchTab${params?.storeId}${searchText}`],
     ({pageParam}) =>
       getStoreSearchProducts({
         pageParam,
@@ -196,7 +196,7 @@ const StoreDetails = () => {
     isFetchingNextPage,
     hasNextPage,
   } = useInfiniteQuery(
-    [`productsCategory${catProductId}`],
+    [`productsCategory${catProductId}${params?.storeId}`],
     ({pageParam}) =>
       getCategoryProducts({
         pageParam,

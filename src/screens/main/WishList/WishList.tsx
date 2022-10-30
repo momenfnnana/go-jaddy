@@ -32,6 +32,11 @@ const WishList = () => {
   const refreshItems = () => {
     refetch();
   };
+  const removeEmptyItem = () => {
+    setWishlistData(
+      data?.data?.Wishlists?.filter((item: IWishListItem) => item?.Id !== 0),
+    );
+  };
 
   useLayoutEffect(() => {
     setOptions({
@@ -58,7 +63,11 @@ const WishList = () => {
           keyExtractor={item => item.Id.toString()}
           numColumns={2}
           renderItem={({item}) => (
-            <WishlistItem {...item} refreshItems={refreshItems} />
+            <WishlistItem
+              {...item}
+              refreshItems={refreshItems}
+              removeEmptyItem={removeEmptyItem}
+            />
           )}
         />
       ) : (

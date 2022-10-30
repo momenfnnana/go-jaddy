@@ -15,6 +15,10 @@ interface IchangePassword {
   ConfirmNewPassword?: string;
 }
 
+interface IGetWishlistDetails {
+  pageParam: number;
+  Id: number;
+}
 export const getUserData = () =>
   axios.get(`${BASE_URL}/api/custom/customer/PersonalInfo`);
 
@@ -56,3 +60,16 @@ export const changePassword = ({
       ConfirmNewPassword,
     },
   });
+export const getWishlistDetails = ({
+  pageParam = 1,
+  Id,
+}: IGetWishlistDetails) => {
+  return axios(
+    `${BASE_URL}/api/custom/wishlist/GetWishlist?id=${Id}&page=${pageParam}`,
+  );
+};
+export const deleteWishlistItem = (itemId: number) => {
+  return axios.post(
+    `${BASE_URL}/api/custom/wishlist/DeleteWishlistLine?itemId=${itemId}`,
+  );
+};

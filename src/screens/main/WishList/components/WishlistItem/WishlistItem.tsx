@@ -18,6 +18,8 @@ import {
   removeWishListName,
 } from 'services/Home';
 import {ITop4Products, IWishListItem} from '../../types';
+import {useNavigation} from '@react-navigation/native';
+import {WishlistScreenNavigationProp} from 'navigators/NavigationsTypes';
 
 const ITEM_SIZE: number = 163;
 
@@ -26,7 +28,9 @@ const WishlistItem = ({
   Top4Products,
   Id,
   refreshItems,
+  removeEmptyItem,
 }: IWishListItem) => {
+  const {navigate} = useNavigation<WishlistScreenNavigationProp>();
   const [collectionName, setCollectionName] = useState<string>(Name || '');
   const [isEdititingCollectionName, setIsEdititingCollectionName] =
     useState<boolean>(false);
@@ -112,7 +116,20 @@ const WishlistItem = ({
   };
 
   const showDeleteWishlistModal = () => {
-    setIsDeleteWishListComponentVisibel(true);
+    if (Id) {
+      setIsDeleteWishListComponentVisibel(true);
+    } else {
+      if (removeEmptyItem) {
+        removeEmptyItem();
+      }
+    }
+  };
+
+  const goToDetails = () => {
+    navigate('WishlistDetails', {
+      Id: Id,
+      title: Name,
+    });
   };
 
   useEffect(() => {
@@ -132,7 +149,7 @@ const WishlistItem = ({
   }, []);
 
   return (
-    <View style={styles.wishlistItemContainer}>
+    <Pressable onPress={goToDetails} style={styles.wishlistItemContainer}>
       <View style={styles.wishlistItemContentContainer}>
         {isLoadingRemoveWishListName && (
           <Loader containerStyle={styles.collectionLoader} />
@@ -147,6 +164,7 @@ const WishlistItem = ({
           data={products}
           keyExtractor={item => item.Id.toString()}
           numColumns={2}
+          scrollEnabled={false}
           renderItem={({item}) => (
             <>
               {item?.Image ? (
@@ -234,7 +252,7 @@ const WishlistItem = ({
           </View>
         </View>
       </Modal>
-    </View>
+    </Pressable>
   );
 };
 

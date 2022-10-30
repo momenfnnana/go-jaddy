@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext, useEffect, useMemo} from 'react';
 import {
   Loader,
   ProductCard,
@@ -19,7 +19,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import {useInfiniteQuery, useMutation} from '@tanstack/react-query';
 import {getSearchResults} from 'services/Home';
-import NetworkErrorScreen from 'screens/NetworkErrorScreen';
 import {UserContext} from 'context/UserContext';
 import {useCurrency} from 'hook/useCurrency';
 import {useRoute} from '@react-navigation/native';
@@ -42,12 +41,12 @@ const Search = () => {
     data: Products,
     isRefetching: isRefetchingProductsCategory,
     refetch: refetchProductsCategory,
-    isLoading: isLoadingProductsCategory,
+    isFetching: isFetchingProductsCategory,
     remove,
   } = useInfiniteQuery(
-    ['productsCategory'],
+    [`productsCategory${(params as any)?.categoryId}`],
     ({pageParam}) =>
-      getCategoryProducts({pageParam, categoryId: (params as any).categoryId}),
+      getCategoryProducts({pageParam, categoryId: (params as any)?.categoryId}),
     {
       enabled: false,
       getNextPageParam: lastPage => {
@@ -67,32 +66,71 @@ const Search = () => {
     return () => remove();
   }, [params]);
 
-  const {mutate, isLoading, data} = useMutation(getSearchResults, {
-    onSuccess: data => {
-      return data;
+  // const {mutate, isLoading, data} = useMutation(getSearchResults, {
+  //   onSuccess: data => {
+  //     return data;
+  //   },
+  //   onError: error => {
+  //     return error;
+  //   },
+  // });
+
+  const {
+    data,
+    isFetching,
+    hasNextPage: hasNextPageReviews,
+    fetchNextPage,
+    refetch: refetchReviews,
+    isFetchingNextPage,
+    isRefetching: isRefetchingReviews,
+  } = useInfiniteQuery(
+    [`getSearchResults${searchText}`],
+    ({pageParam}: any) =>
+      getSearchResults({
+        page: pageParam,
+        pageSize: 5,
+        term: searchText,
+        Filters: null,
+        CurrencyId: currency?.Id,
+      }),
+    {
+      enabled: false,
+      getNextPageParam: (lastPage: any) => {
+        if (
+          lastPage?.data?.ProductReviews?.Page <
+          lastPage?.data?.ProductReviews?.TotalPages
+        ) {
+          return lastPage?.data?.ProductReviews?.Page + 1;
+        }
+        return null;
+      },
     },
-    onError: error => {
-      return error;
-    },
-  });
+  );
 
   const SearchHandler = () => {
     if (
       searchText.length >
       parseInt(settings?.SearchSettings?.InstantSearchTermMinLength)
     ) {
-      mutate({searchText, CurrencyId: currency?.Id});
+      refetchReviews();
+      // mutate({searchText, CurrencyId: currency?.Id});
     }
   };
 
   const DismissKeyboard = () => {
     Keyboard.dismiss();
   };
+  const productsList = useMemo(() => {
+    return data?.pages.map(page => page.data?.ProductsModel?.Items).flat();
+  }, [data]);
+  const productsModel = useMemo(() => {
+    return data?.pages.map(page => page.data?.ProductsModel);
+  }, [data]);
 
   if (
-    isLoading ||
+    isFetching ||
     (params?.paramsType == 'category' &&
-      (isRefetchingProductsCategory || isLoadingProductsCategory))
+      (isRefetchingProductsCategory || isFetchingProductsCategory))
   ) {
     return <Loader containerStyle={styles.loaderStyle} />;
   }
@@ -162,12 +200,7 @@ const Search = () => {
         {viewType === 'grid' ? (
           <FlatList
             key={'_'}
-            data={
-              data?.data?.ProductsModel?.Items ||
-              Products?.pages
-                .map(page => (page as any)?.data.ProductsModel.Items)
-                .flat()
-            }
+            data={productsList}
             keyExtractor={item => item?.Id}
             contentContainerStyle={{
               paddingTop: spacing.large,
@@ -186,12 +219,7 @@ const Search = () => {
         ) : (
           <FlatList
             key={'#'}
-            data={
-              data?.data?.ProductsModel?.Items ||
-              Products?.pages
-                .map(page => (page as any)?.data.ProductsModel.Items)
-                .flat()
-            }
+            data={productsList}
             keyExtractor={item => item?.Id}
             contentContainerStyle={{
               paddingHorizontal: spacing.medium - 2,
@@ -201,7 +229,9 @@ const Search = () => {
               <RowProductCard
                 {...item}
                 currency={currency}
-                WishlistEnabled={data?.data?.ProductsModel?.WishlistEnabled}
+                WishlistEnabled={
+                  productsModel && productsModel[0].WishlistEnabled
+                }
                 SupportMultiWishlists={
                   settings?.ShoppingCartSettings?.SupportMultiWishlists
                 }

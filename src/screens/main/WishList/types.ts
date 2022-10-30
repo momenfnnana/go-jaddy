@@ -20,5 +20,6 @@ interface IWishListItem {
   Top4Products: ITop4Products[];
   WishlistLinesCount: number;
   refreshItems: () => void;
+  removeEmptyItem?: () => void;
 }
 export type {ITop4Products, IWishListItem};

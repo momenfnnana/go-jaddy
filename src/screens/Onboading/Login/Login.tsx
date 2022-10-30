@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import {LoginMain, PalestineFlag} from 'assets/images';
 import LinearGradient from 'react-native-linear-gradient';
-import {Button, InputField, Loader, Spacer, Text} from 'components';
+import {BackButton, Button, InputField, Loader, Spacer, Text} from 'components';
 import {colors, spacing} from 'theme';
 import {FacebookIcon, GojaddyLoginIcon, GoogleIcon} from 'assets/icons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -52,7 +52,7 @@ const GredientFrom = '#AFB2B500';
 const GredientTo = '#231D2590';
 
 const initialValues: IinitialValues = {
-  phoneNumber: '121234567891011',
+  phoneNumber: '121234567891012',
   password: 'Password$1',
 };
 const loginSchema = Yub.object().shape({
@@ -153,14 +153,11 @@ const Login = () => {
           style={styles.linearGradient}>
           <View style={[styles.headerContainer, {marginTop: top}]}>
             {canGoBack() && (
-              <Pressable style={styles.goBackContainer} onPress={goBack}>
-                <FontAwesome
-                  name="long-arrow-right"
-                  size={25}
-                  color={colors.arrowColor}
-                  style={styles.goBackArrow}
-                />
-              </Pressable>
+              <BackButton
+                style={styles.goBackContainer}
+                size={22}
+                color={colors.arrowColor}
+              />
             )}
             <Pressable
               onPress={goRegister}
@@ -406,12 +403,9 @@ const styles = StyleSheet.create({
     marginTop: spacing.large,
   },
   goBackContainer: {
-    width: GO_BACK_SIZE,
-    height: GO_BACK_SIZE,
-    borderRadius: spacing.small + 2,
     backgroundColor: colors.arrowBackgroundColor,
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: 8,
+    borderRadius: spacing.small + 2,
   },
   registerTextContainer: {
     flexDirection: 'row',

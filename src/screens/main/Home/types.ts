@@ -1,13 +1,12 @@
-import {ReactNode} from 'react';
-import {
-  ImageBackgroundProps,
-  ImageSourcePropType,
-  ViewStyle,
-} from 'react-native';
+import {ImageSourcePropType, ViewStyle} from 'react-native';
+import {ImageData} from 'types';
 
 export interface ICategories {
   imageUrl: ImageSourcePropType;
   name: string;
+  Id: number;
+  Image: ImageData;
+  Name: string;
 }
 export interface IProductInterface {
   Id: number;
@@ -32,6 +31,7 @@ export interface IProductInterface {
   SupportMultiWishlists: string;
   WishlistEnabled: boolean;
   styleContainer: ViewStyle;
+  ColorAttributes: any[];
 }
 
 export interface ISearchInterface {

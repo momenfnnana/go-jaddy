@@ -9,15 +9,18 @@ import {
   ProfileScreen,
   ReturnProductsScreen,
   WishListScreen,
+  WishlistDetails,
 } from 'screens';
 import {colors, font} from 'theme';
 import {ProfileRoutes} from './RoutesTypes';
 import {DropDownProvider} from 'context/dropdownContext';
+import {BackButton} from 'components';
 
 const Stack = createNativeStackNavigator<ProfileRoutes>();
 
 const ProfileStack = () => {
   const {t} = useTranslation();
+
   return (
     <DropDownProvider>
       <Stack.Navigator
@@ -26,7 +29,8 @@ const ProfileStack = () => {
           headerTitleStyle: {fontFamily: font.regular, color: colors.white},
           headerBackTitleVisible: false,
           headerTitleAlign: 'center',
-        }}>
+        }}
+        initialRouteName="Profile">
         <Stack.Screen
           component={ProfileScreen}
           name="Profile"
@@ -76,6 +80,7 @@ const ProfileStack = () => {
             headerTitle: t('profileDetails.titleHeader'),
           }}
         />
+        <Stack.Screen component={WishlistDetails} name="WishlistDetails" />
       </Stack.Navigator>
     </DropDownProvider>
   );

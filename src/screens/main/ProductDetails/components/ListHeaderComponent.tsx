@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {
   View,
   ImageBackground,
@@ -9,14 +9,13 @@ import {
   Image,
   StyleSheet,
   Platform,
+  ScrollView,
 } from 'react-native';
-import {RouteProp, useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CartIcon, DiscountIcon, ShareIcon, StarFilledIcon} from 'assets/icons';
+import {useNavigation} from '@react-navigation/native';
+import {DiscountIcon, ShareIcon, StarFilledIcon} from 'assets/icons';
 import {AddToFav, Loader, Text} from 'components';
 import ArrowIcon from 'components/Arrow';
-import {HomeRoutes} from 'navigators/RoutesTypes';
-import {colors, spacing} from 'theme';
+import {colors, spacing, font} from 'theme';
 import {BASE_URL} from 'utils/Axios';
 import ProductImagesList from './ProductImagesList';
 import {CartContext} from 'context/CartContext';
@@ -29,10 +28,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import {CategoryNavigationsType} from 'navigators/NavigationsTypes';
 import {useQuery} from '@tanstack/react-query';
 import {addCartProducts} from 'services/Cart';
+import {useTranslation} from 'react-i18next';
+import {Boxes, CheckboxList, DropdownList, RadioList} from './attributes';
 
-interface IProductNavigation
-  extends NativeStackNavigationProp<HomeRoutes, 'ProductDetails'>,
-    RouteProp<HomeRoutes, 'ProductDetails'> {}
 interface IListHeaderComponent {
   Product: any;
   ProductId: number;
@@ -41,12 +39,50 @@ interface IListHeaderComponent {
   ratingFilters: string[];
   setRatingFilters: (value: any) => void;
   isRefetchingReviews: boolean;
+  reviewsList: any[];
+}
+interface IAttributes {
+  AttributeControlType:
+    | 'Boxes'
+    | 'DropdownList'
+    | 'RadioList'
+    | 'Checkboxes'
+    | 'TextBox';
+  AttributeId: number;
+  DisplayOrder: number;
+  IsMultipleChoice: boolean;
+  IsRequired: boolean;
+  isSelected: boolean;
+  Name: string;
+  Values: any[];
+  VariantAttributeId: number;
+}
+interface ISelectAttribute {
+  attributeValue?: any[];
+  attribute?: number;
+}
+interface ISelectAttributeHandler {
+  attribute: IAttributes;
+  attributeValue: any;
+}
+interface ICheckIncludedItem {
+  item: ISelectAttribute;
+  array: ISelectAttribute[];
 }
 
 enum productCounter {
   increase,
   descrease,
 }
+const checkIncludedItem = ({item, array}: ICheckIncludedItem) => {
+  const foundedItem = array.filter(element => {
+    return (
+      element.attribute === item.attribute &&
+      element.attributeValue?.includes(item.attributeValue)
+    );
+  });
+  return foundedItem.length > 0;
+};
 
 const ListHeaderComponent = ({
   Product,
@@ -56,7 +92,9 @@ const ListHeaderComponent = ({
   ratingFilters,
   setRatingFilters,
   isRefetchingReviews,
+  reviewsList,
 }: IListHeaderComponent) => {
+  const {t} = useTranslation();
   const {navigate, goBack, canGoBack} =
     useNavigation<CategoryNavigationsType>();
   const {productsNumber, setProductsNumber} = useContext(CartContext);
@@ -65,13 +103,16 @@ const ListHeaderComponent = ({
   const {currency} = useCurrency();
   const [isLoadingImageBackground, setIsLoadingImageBackground] =
     useState<boolean>(true);
+  const [attributes, setAttributes] = useState<IAttributes[]>([]);
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
   const [subscribed, setSubscribed] = useState<boolean>(false);
   const [isAddToCollectionShown, setIsAddToCollectionShown] =
     useState<boolean>(false);
+  const [selectedAttributes, setSelectedAttributes] = useState<
+    ISelectAttribute[]
+  >([]);
   const {
     isLoading: isLoadingCartProduct,
-    isError: isErrorCartProduct,
     refetch: refetchCartProduct,
     isFetching: isFetchingCartProduct,
   } = useQuery(
@@ -137,6 +178,62 @@ const ListHeaderComponent = ({
     onOpenAddToCollection();
   };
 
+  const selectAttributeHandler = useCallback(
+    ({attribute, attributeValue}: ISelectAttributeHandler) => {
+      const newItems = attributes.map(element => {
+        if (element.AttributeId === attribute.AttributeId) {
+          return {
+            ...element,
+            Values:
+              element?.IsMultipleChoice === true
+                ? element.Values.map(ele => {
+                    if (ele.Id === attributeValue.Id) {
+                      return {
+                        ...ele,
+                        isSelected: !ele.isSelected,
+                        IsPreSelected: false,
+                      };
+                    }
+                    return ele;
+                  })
+                : element.Values.map(ele => {
+                    if (ele.Id === attributeValue.Id) {
+                      return {
+                        ...ele,
+                        isSelected: !ele.isSelected,
+                        IsPreSelected: false,
+                      };
+                    }
+                    return {
+                      ...ele,
+                      isSelected: false,
+                      IsPreSelected: false,
+                    };
+                  }),
+          };
+        }
+        return element;
+      });
+      setAttributes(newItems);
+    },
+    [attributes],
+  );
+  useEffect(() => {
+    if (Product?.Attributes) {
+      const newItems = Product?.Attributes.map((element: IAttributes) => {
+        return {
+          ...element,
+          Values: element.Values.map(ele => {
+            return {
+              ...ele,
+              isSelected: false,
+            };
+          }),
+        };
+      });
+      setAttributes(newItems);
+    }
+  }, [Product?.Attributes]);
   const mainImage = {
     height: height * 0.5,
   } as ViewStyle;
@@ -178,9 +275,9 @@ const ListHeaderComponent = ({
                   styles.rightIcons,
                   {top: Platform.OS === 'android' ? spacing.tiny : top},
                 ]}>
-                <Pressable style={styles.singleRightIcon}>
+                {/* <Pressable style={styles.singleRightIcon}>
                   <CartIcon stroke={colors.white} />
-                </Pressable>
+                </Pressable> */}
                 <Pressable style={styles.singleRightIcon}>
                   <ShareIcon color={colors.white} />
                 </Pressable>
@@ -232,7 +329,7 @@ const ListHeaderComponent = ({
                   params: {
                     storeId: Product?.StoreId,
                   },
-                })
+                } as any)
               }>
               <Image
                 source={{uri: `${BASE_URL}${Product?.StoreImage?.Url}`}}
@@ -274,12 +371,48 @@ const ListHeaderComponent = ({
             </View>
           </View>
         </View>
-        <View style={styles.row}>
-          <Text
-            tx="product-details.select-color"
-            color={colors.tabsColor}
-            variant="mediumBold"
-          />
+        <View style={{marginTop: spacing.smaller}}>
+          {attributes?.map((item: IAttributes) => {
+            return (
+              <View style={styles.attributeContainer}>
+                <Text
+                  key={item.AttributeId}
+                  text={item.Name}
+                  color={colors.tabsColor}
+                  variant="mediumBold"
+                />
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  style={{marginHorizontal: -spacing.normal}}
+                  contentContainerStyle={{paddingHorizontal: spacing.normal}}>
+                  {item.AttributeControlType === 'Boxes' ? (
+                    item.Values?.map(attributeValue => {
+                      return (
+                        <Boxes
+                          {...{attributeValue, item, selectAttributeHandler}}
+                        />
+                      );
+                    })
+                  ) : item.AttributeControlType === 'RadioList' ? (
+                    item.Values?.map(attributeValue => {
+                      return (
+                        <RadioList
+                          {...{selectAttributeHandler, item, attributeValue}}
+                        />
+                      );
+                    })
+                  ) : item.AttributeControlType === 'DropdownList' ? (
+                    <DropdownList {...{item}} />
+                  ) : (
+                    item.AttributeControlType === 'Checkboxes' && (
+                      <CheckboxList {...{item}} />
+                    )
+                  )}
+                </ScrollView>
+              </View>
+            );
+          })}
         </View>
         <View style={[styles.row, styles.availableQuantity]}>
           <View style={styles.row}>
@@ -353,7 +486,7 @@ const ListHeaderComponent = ({
             <AntDesign name="heart" color={colors.red} size={20} />
           </Pressable>
         </View>
-        {DisplayProductReviews === true && (
+        {DisplayProductReviews === true && reviewsList.length > 0 && (
           <>
             <View style={[styles.ratingsContainer, styles.row]}>
               <View style={styles.row}>
@@ -632,5 +765,21 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginHorizontal: spacing.tiny,
+  },
+  colorAttribute: {
+    width: spacing.xxLarge,
+    height: spacing.xxLarge,
+    marginHorizontal: spacing.tiny + 1,
+    borderWidth: 2,
+    marginTop: spacing.smaller,
+  },
+  attributeContainer: {
+    marginBottom: spacing.small,
+  },
+  radioBtnContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: spacing.small,
+    marginTop: spacing.smaller,
   },
 });

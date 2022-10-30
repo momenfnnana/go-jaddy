@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -6,16 +6,14 @@ import {
   ScrollView,
   Image,
   RefreshControl,
+  Pressable,
+  Linking,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {useTranslation} from 'react-i18next';
-import {BottomTabsRoutes} from 'navigators/RoutesTypes';
 import {MainHeader, SearchInput, Loader, ShowSection} from 'components';
 import {spacing} from 'theme';
 import {Carasoule} from './components';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import CategoriesCarasoule from './components/CategoriesCarasoule';
+import StoresCarasoule from './components/StoresCarasoule';
 import {useQuery} from '@tanstack/react-query';
 import {
   getStores,
@@ -24,29 +22,29 @@ import {
   getAdvertisements,
   getBestSellers,
 } from 'services/Home';
-import {NetworkErrorScreen} from 'screens';
 import {BASE_URL} from 'utils/Axios';
-import {HomeNavigationsType} from 'navigators/NavigationsTypes';
-
-interface IHome extends NativeStackScreenProps<BottomTabsRoutes, 'Home'> {}
-
-const Home = (props: IHome) => {
-  const {t} = useTranslation();
+import {ImageData} from 'types';
+import {UserContext} from 'context/UserContext';
+interface IAdvertisements {
+  Link: string;
+  MobileImage: ImageData;
+}
+const Home = () => {
   const {top} = useSafeAreaInsets();
-
+  const {settings} = useContext(UserContext);
+  const {CatalogSettings, StoreSettings} = settings;
   const {
     isLoading: isLoadingStores,
     data: storesData,
-    isError: isErrorStore,
     refetch: refetchStore,
     isRefetching: isRefetchingrefetchStore,
   } = useQuery(['getStores'], getStores, {
+    // enabled: StoreSettings?.ShowStoresOnHomePage === 'True',
     enabled: false,
   });
   const {
     isLoading: isLoadingSlider,
     data: sliderData,
-    isError: isErrorSlider,
     refetch: refetchSlider,
     isRefetching: isRefetchingrefetchSlider,
   } = useQuery(['getSlider'], getSlider, {
@@ -55,7 +53,6 @@ const Home = (props: IHome) => {
   const {
     isLoading: isLoadingRecentAdded,
     data: recentAdded,
-    isError: isErrorRecentAdded,
     refetch: refetchRecentAdded,
     isRefetching: isRefetchingrefetchRecentAdded,
   } = useQuery(['getRecentAdded'], getRecentAdded, {
@@ -64,7 +61,6 @@ const Home = (props: IHome) => {
   const {
     isLoading: isLoadingAdvertisements,
     data: advertisements,
-    isError: isErrorAdvertisements,
     refetch: refetchAdvertisements,
     isRefetching: isRefetchingrefetchAdvertisements,
   } = useQuery(['getAdvertisements'], getAdvertisements, {
@@ -73,10 +69,10 @@ const Home = (props: IHome) => {
   const {
     isLoading: isLoadinggetBestSellers,
     data: bestSellers,
-    isError: isErrorgetBestSellers,
     refetch: refetchgetBestSellers,
     isRefetching: isRefetchinggetBestSellers,
   } = useQuery(['getBestSellers'], getBestSellers, {
+    // enabled: CatalogSettings?.ShowBestsellersOnHomepage === 'True',
     enabled: false,
   });
 
@@ -135,7 +131,7 @@ const Home = (props: IHome) => {
                   : spacing.medium * 2),
             }}
           />
-          <CategoriesCarasoule items={storesData.data?.Stores} />
+          <StoresCarasoule items={storesData.data?.Stores} />
           <ShowSection
             title="home.arrival"
             coloredTitle="home.news"
@@ -143,13 +139,17 @@ const Home = (props: IHome) => {
             WishlistEnabled={recentAdded?.data?.ProductSummary?.WishlistEnabled}
             showSeeMore={false}
           />
-          {advertisements?.data?.Advertisements?.map(({MobileImage}, index) => (
-            <Image
-              key={index}
-              source={{uri: `${BASE_URL}${MobileImage?.Url}`}}
-              style={styles.bannerImage}
-            />
-          ))}
+          {advertisements?.data?.Advertisements?.map(
+            ({MobileImage, Link}: IAdvertisements, index: number) => (
+              <Pressable onPress={() => Linking.openURL(Link)}>
+                <Image
+                  key={index}
+                  source={{uri: `${BASE_URL}${MobileImage?.Url}`}}
+                  style={styles.bannerImage}
+                />
+              </Pressable>
+            ),
+          )}
           <ShowSection
             title="home.best"
             coloredTitle="home.selling"
