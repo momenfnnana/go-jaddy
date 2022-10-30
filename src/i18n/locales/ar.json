@@ -76,7 +76,8 @@
     "rate-product": "قيم المنتج",
     "rate-field": "ملاحظات (اختياري)",
     "attach-image": "ارفاق صورة (اختياري)",
-    "select": "اختر {{optionName}}"
+    "select": "اختر {{optionName}}",
+    "custom-text": "تخصيص.."
   },
   "profile": {
     "welcome": "أهلا بك",
