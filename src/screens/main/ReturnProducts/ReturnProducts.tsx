@@ -6,6 +6,7 @@ import {useQuery} from '@tanstack/react-query';
 import {getReturnProducts} from 'services/Addresses';
 import {colors, spacing} from 'theme';
 import moment from 'moment';
+import EmptyPage from 'components/EmptyPage/EmptyPage';
 
 const ReturnProducts = () => {
   const {setOptions} = useNavigation();
@@ -29,6 +30,18 @@ const ReturnProducts = () => {
         }}
         size="large"
       />
+    );
+  }
+
+  if (data?.data?.Items?.length == 0) {
+    return (
+      <View style={{flex: 1}}>
+        <EmptyPage
+          descritopn="EmptyPage.product-description"
+          title="EmptyPage.product-title"
+          displayButton
+        />
+      </View>
     );
   }
 

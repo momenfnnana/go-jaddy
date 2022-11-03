@@ -1,6 +1,6 @@
-import {View, ViewStyle, Pressable, StyleSheet} from 'react-native';
+import {View, ViewStyle, Pressable, StyleSheet, TextStyle} from 'react-native';
 import React, {ReactNode} from 'react';
-import {colors, spacing} from 'theme';
+import {colors, spacing, TypographyTypes} from 'theme';
 import Text from 'components/Text';
 import Loader from 'components/Loader';
 
@@ -13,6 +13,8 @@ interface buttomProps {
   variant?: 'Primary' | 'Secondary';
   icon?: ReactNode;
   disabled?: boolean;
+  textVariant?: TypographyTypes;
+  textStyle?: TextStyle;
 }
 
 const Button: React.FC<buttomProps> = ({
@@ -24,6 +26,8 @@ const Button: React.FC<buttomProps> = ({
   variant,
   icon,
   disabled = false,
+  textVariant = 'largeBold',
+  textStyle,
 }) => {
   return (
     <Pressable
@@ -41,12 +45,12 @@ const Button: React.FC<buttomProps> = ({
       {icon && icon}
       <Text
         center
-        variant="largeBold"
+        variant={textVariant}
         tx={title}
         color={
           color || (variant == 'Secondary' ? colors.secondary : colors.white)
         }
-        style={!icon && styles.textStyle}
+        style={[!icon && styles.textStyle, textStyle]}
       />
       {isLoading && <Loader size="small" color={colors.white} />}
     </Pressable>

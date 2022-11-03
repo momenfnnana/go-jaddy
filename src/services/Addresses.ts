@@ -17,6 +17,10 @@ interface IAddAddress {
   IsDefault: boolean;
 }
 
+interface IEditAddress extends IAddAddress {
+  id: number;
+}
+
 export const getPreAddresses = () =>
   axios(`${BASE_URL}/api/custom/customer/Addresses`);
 
@@ -24,7 +28,9 @@ export const getCountries = () =>
   axios(`${BASE_URL}/api/custom/addresses/GetAvailableCountries`);
 
 export const getStatesByCountry = (countryId: number) =>
-  axios(`${BASE_URL}/api/custom/addresses/GetAvailableStates/${countryId}`);
+  axios(
+    `${BASE_URL}/api/custom/addresses/GetAvailableStates?countryId=${countryId}`,
+  );
 
 export const getReturnProducts = () =>
   axios(`${BASE_URL}/api/custom/customer/ReturnRequests`);
@@ -40,6 +46,14 @@ export const setDefulatAddress = ({id}: {id: number}) =>
 
 export const addAddress = ({...rest}: IAddAddress) =>
   axios(`${BASE_URL}/api/custom/addresses/AddAddress`, {
+    method: 'post',
+    data: {
+      ...rest,
+    },
+  });
+
+export const editAddress = ({...rest}: IEditAddress) =>
+  axios(`${BASE_URL}/api/custom/addresses/EditAddress?id=${rest.id}`, {
     method: 'post',
     data: {
       ...rest,

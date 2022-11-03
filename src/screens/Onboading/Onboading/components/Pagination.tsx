@@ -1,5 +1,4 @@
 import {RouteProp, useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Button, Text} from 'components';
 import SecondaryButton from 'components/SecondaryButton';
 import {readLanguage} from 'constants';

@@ -29,6 +29,7 @@ import {useTranslation} from 'react-i18next';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {GoJaddyRedIcon} from 'assets/icons';
 import {SuccessModalImg} from 'assets/images';
+import EmptyPage from 'components/EmptyPage/EmptyPage';
 
 const Cart = () => {
   const {isLoading, isRefetching} = useQuery(
@@ -111,6 +112,19 @@ const Cart = () => {
       />
     );
   }
+
+  if (data?.Items.length == 0) {
+    return (
+      <View style={{flex: 1}}>
+        <EmptyPage
+          descritopn="go to home to discover products"
+          title="No products in your cart"
+          displayButton
+        />
+      </View>
+    );
+  }
+
   return (
     <View
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

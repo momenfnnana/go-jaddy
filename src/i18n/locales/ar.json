@@ -79,6 +79,27 @@
     "select": "اختر {{optionName}}",
     "custom-text": "تخصيص.."
   },
+  "category": {
+    "title": "التصنيفات"
+  },
+  "stores": {
+    "title": "المتاجر",
+    "allStores": "كل المتاجر",
+    "FollowedStores": "التي أتابعها",
+    "rate-store": "قيّم المتجر"
+  },
+  "storeDetails": {
+    "search": "بحث في",
+    "rating": "التقيمات",
+    "follow": "متابعة",
+    "followed": "متابع",
+    "tabs": {
+      "mainTab": "الرئيسية",
+      "newTab": "ما الجديد",
+      "offerTab": "عروض",
+      "categoriesTab": "التصنيفات"
+    }
+  },
   "profile": {
     "welcome": "أهلا بك",
     "notifications": "الاشعارات",
@@ -102,9 +123,7 @@
     "return-products": "ارجــاع المـــنتجات",
     "score-balance": "رصيــــــد النـقــاط"
   },
-  "category": {
-    "title": "التصنيفات"
-  },
+
   "wishlist": {
     "title": "المفضلة",
     "free-wishlist": "المفضلة فارغة",

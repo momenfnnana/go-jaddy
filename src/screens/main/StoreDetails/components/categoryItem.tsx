@@ -5,6 +5,8 @@ import {Loader, Text} from 'components';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {getSubCategories} from 'services/Category';
+import ArrowIcon from 'components/Arrow';
+import {readLanguage} from 'constants';
 interface ICategoryItem {
   setCatProductId: (() => void) | any;
   setSubCatId: (() => void) | any;
@@ -12,6 +14,10 @@ interface ICategoryItem {
 }
 const CategoryItem = ({item, setCatProductId, setSubCatId}: ICategoryItem) => {
   const [show, setShow] = useState(false);
+  const [isAr, setAr] = useState(false);
+  useEffect(() => {
+    readLanguage().then(lang => setAr(lang == 'ar'));
+  }, []);
   const {
     data,
     isLoading,
@@ -62,11 +68,16 @@ const CategoryItem = ({item, setCatProductId, setSubCatId}: ICategoryItem) => {
           color={item.HasSubCategories ? colors.primary : colors.black}
           variant="smallRegular"
         />
-        <MaterialIcons
+        <ArrowIcon
+          name={`keyboard-arrow-${show ? (isAr ? 'up' : 'down') : 'right'}`}
+          size={18}
+          color={item?.HasSubCategories ? colors.primary : colors.black}
+        />
+        {/* <MaterialIcons
           name={`keyboard-arrow-${show ? 'down' : 'right'}`}
           size={18}
           color={item.HasSubCategories ? colors.primary : colors.black}
-        />
+        /> */}
       </Pressable>
       {isSuccess &&
         show &&
@@ -97,7 +108,7 @@ const CategoryItem = ({item, setCatProductId, setSubCatId}: ICategoryItem) => {
                   color={item?.HasSubCategories ? colors.primary : colors.black}
                   variant="smallRegular"
                 />
-                <MaterialIcons
+                <ArrowIcon
                   name={`keyboard-arrow-right`}
                   size={18}
                   color={item?.HasSubCategories ? colors.primary : colors.black}

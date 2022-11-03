@@ -122,7 +122,8 @@
   "stores": {
     "title": "Stores",
     "allStores": "All Stores",
-    "FollowedStores": "Followed Stores"
+    "FollowedStores": "Followed Stores",
+    "rate-store": "Rate Store"
   },
   "storeDetails": {
     "search": "Search in",
@@ -221,6 +222,7 @@
     "phone": "Phone Number",
     "fax": "Fax",
     "countries-def": "Select Country",
+    "states-select-country": "Select Country First",
     "states-def": "Select State",
     "setDefualt": "Set Defualt?",
     "submitBtn": "Continue"
@@ -243,6 +245,14 @@
     "DiscoundCode": "Discound Code",
     "total": "Total",
     "submitTotalModal": "Done Requset"
+  },
+  "EmptyPage": {
+    "product-description": "go to home to discover products",
+    "product-title": "No products in this screen",
+    "addresses-title": "No address to show",
+    "addresses-description": "To add address, press on add icon in header",
+    "store-title": "No stores to show",
+    "store-description": "go to all stores then follow them"
   },
   "api": {
     "account": {

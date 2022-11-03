@@ -27,6 +27,22 @@ interface StoreParams {
   storeId: number;
 }
 
+export interface IAddress {
+  Id: number;
+  Company: string;
+  FirstName: string;
+  LastName: string;
+  Address1: string;
+  Address2: string;
+  CountryId: number;
+  CountryName: string;
+  City: string;
+  Email: string;
+  PhoneNumber: string;
+  FaxNumber: string;
+  IsDefault: boolean;
+}
+
 export type CategotyRoutes = {
   Categories: undefined;
   CategoryDetails: CategoryParams;
@@ -44,10 +60,10 @@ export type StoresRoutes = {
 export type ProfileRoutes = {
   Profile: undefined;
   WishList: undefined;
-  PreviousTitles: undefined;
+  PreviousTitles: {refetch?: number};
   ReturnProducts: undefined;
   CustomerPoints: undefined;
-  AddAddress: undefined;
+  AddAddress: {item?: IAddress} | undefined;
   ProfileDetails: undefined;
   WishlistDetails: {Id: number; title: string};
 };

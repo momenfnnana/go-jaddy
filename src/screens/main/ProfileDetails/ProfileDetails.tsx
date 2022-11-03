@@ -17,7 +17,6 @@ import {UserContext} from 'context/UserContext';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {changePassword, changeUserInfo, getUserData} from 'services/Profile';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Snackbar from 'react-native-snackbar';
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;

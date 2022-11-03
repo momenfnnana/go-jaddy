@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {showErrorMessage} from 'helpers';
 import * as RootNavigation from 'navigators/RootNavigation';
-import Snackbar from 'react-native-snackbar';
+// import Snackbar from 'react-native-snackbar';
 import {colors} from 'theme';
 
 export const setAxiosLanguage = (languageId: string) => {
@@ -17,11 +17,11 @@ export const setAxiosCurrencyId = (CurrencyId: number) => {
 axios.interceptors.response.use(
   response => {
     if (response.status == 200 && response.data.Message) {
-      Snackbar.show({
-        text: response.data.Message,
-        duration: Snackbar.LENGTH_SHORT,
-        backgroundColor: colors.success,
-      });
+      // Snackbar.show({
+      //   text: response.data.Message,
+      //   duration: Snackbar.LENGTH_SHORT,
+      //   backgroundColor: colors.success,
+      // });
     }
     return response;
   },
