@@ -3,9 +3,8 @@ import React, {ReactNode} from 'react';
 import {View, StyleSheet, StatusBar, Pressable, Platform} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, spacing} from 'theme';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {CartIcon, FilterIcon} from 'assets/icons';
+import {FilterIcon} from 'assets/icons';
 import {SearchInput} from './components';
 import ArrowIcon from 'components/Arrow';
 
