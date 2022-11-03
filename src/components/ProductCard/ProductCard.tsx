@@ -153,16 +153,19 @@ const ProductCard = (props: IProductInterface) => {
           </View>
         </View>
         <View style={styles.rateAndColorsContainer}>
-          <StarFilledIcon color={colors.orange} />
-          <Text
-            text={RatingSum.toString()}
-            variant="xSmallRegular"
-            style={styles.rate}
-          />
-          <View style={styles.verticalLine} />
+          {RatingSum > 0 && (
+            <>
+              <StarFilledIcon color={colors.orange} />
+              <Text
+                text={RatingSum.toString()}
+                variant="xSmallRegular"
+                style={styles.rate}
+              />
+            </>
+          )}
+          {!!ColorAttributes?.length && <View style={styles.verticalLine} />}
           <View style={styles.colorsContainer}>
-            {ColorAttributes &&
-              ColorAttributes &&
+            {!!ColorAttributes?.length &&
               ColorAttributes.map((item, index) => (
                 <View
                   key={index.toString()}

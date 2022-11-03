@@ -1,11 +1,14 @@
+import {useNavigation} from '@react-navigation/native';
 import {DiscountIcon, FavoriteIcon} from 'assets/icons';
 import Text from 'components/Text';
+import {HomeNavigationsType} from 'navigators/NavigationsTypes';
 import React from 'react';
 import {
   View,
   StyleSheet,
   ImageBackground,
   useWindowDimensions,
+  Pressable,
 } from 'react-native';
 import {IProductInterface} from 'screens/main/Home/types';
 import {colors, spacing} from 'theme';
@@ -22,12 +25,15 @@ const RowProductCard = (props: IProductInterface) => {
     SupportMultiWishlists,
     WishlistEnabled,
   } = props;
+  const {navigate} = useNavigation<HomeNavigationsType>();
   const DiscountBadge = Badges.find(item => item?.Style === 5);
   const isNewBadge = Badges.find(item => item?.Style === 2);
-  const {width} = useWindowDimensions();
+  const navigateToProduct = () => {
+    navigate('ProductDetails', {...props});
+  };
   return (
     <View style={styles.container}>
-      <View style={styles.imageContainer}>
+      <Pressable onPress={navigateToProduct} style={styles.imageContainer}>
         <ImageBackground
           source={{uri: `${BASE_URL}${ImageResponse?.Url}`}}
           resizeMode="contain"
@@ -53,7 +59,7 @@ const RowProductCard = (props: IProductInterface) => {
             />
           )}
         </ImageBackground>
-      </View>
+      </Pressable>
       <View style={styles.productNameContainer}>
         <Text
           text={Name}
