@@ -1,9 +1,16 @@
 import axios from 'axios';
 import {BASE_URL} from 'utils/Axios';
 
+interface IAttributes {
+  AttributeId: number;
+  VariantAttributeId?: number;
+  AttributeValueId: number;
+}
+
 interface IAddCartItem {
   productId: number;
   quantityToAdd: number;
+  SelectedAttributes?: IAttributes[];
 }
 
 interface IEditCartItem {
@@ -19,11 +26,21 @@ export const getCartSummary = () =>
     method: 'post',
   });
 
-export const addCartProducts = ({productId, quantityToAdd}: IAddCartItem) =>
-  axios(`${BASE_URL}/api/custom/cart/AddCartItem`, {
+export const addCartProducts = ({
+  productId,
+  quantityToAdd,
+  SelectedAttributes,
+}: IAddCartItem) => {
+  const body = {
+    Items: [
+      {ProductId: productId, QuantityToAdd: quantityToAdd, SelectedAttributes},
+    ],
+  };
+  return axios(`${BASE_URL}/api/custom/cart/AddCartItems`, {
     method: 'post',
-    params: {productId, quantityToAdd},
+    data: body,
   });
+};
 
 export const editCartProducts = ({itemId, newQuantity}: IEditCartItem) =>
   axios(`${BASE_URL}/api/custom/cart/UpdateCartItem`, {
