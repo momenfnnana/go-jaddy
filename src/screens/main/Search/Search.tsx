@@ -121,11 +121,16 @@ const Search = () => {
     Keyboard.dismiss();
   };
   const productsList = useMemo(() => {
+    if ((params as any)?.title?.length > 0) {
+      return Products?.pages
+        .map(page => page.data?.ProductsModel?.Items)
+        .flat();
+    }
     return data?.pages.map(page => page.data?.ProductsModel?.Items).flat();
-  }, [data]);
+  }, [data, Products]);
   const productsModel = useMemo(() => {
     return data?.pages.map(page => page.data?.ProductsModel);
-  }, [data]);
+  }, [data, Products]);
 
   if (
     isFetching ||
