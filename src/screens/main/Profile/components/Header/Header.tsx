@@ -51,9 +51,11 @@ const Header = ({isLogged}: IHeader) => {
         </View>
       </View>
       <View>
-        <View style={styles.userTypeContainer}>
-          <Text tx="profile.buyer-account" color={colors.orange} center />
-        </View>
+        {!!userData?.UserType && (
+          <View style={styles.userTypeContainer}>
+            <Text text={userData?.UserType} color={colors.orange} center />
+          </View>
+        )}
         {isLogged ? (
           <Pressable
             onPress={logoutHandler}

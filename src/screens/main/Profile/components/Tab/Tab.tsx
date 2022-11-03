@@ -25,8 +25,10 @@ const Tab = ({
   const {t} = useTranslation();
   const {navigate} = useNavigation<ProfileScreenNavigationProp>();
   const onPressTab = () => {
-    if (goTo && isLogged) {
-      navigate(goTo);
+    if (isLogged) {
+      if (goTo) {
+        navigate(goTo);
+      }
     } else {
       navigate('AuthFlow', {screen: 'Login'} as any);
     }
