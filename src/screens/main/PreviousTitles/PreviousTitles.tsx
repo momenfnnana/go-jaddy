@@ -1,9 +1,9 @@
-import {View, FlatList, Pressable, RefreshControl} from 'react-native';
+import {View, FlatList, RefreshControl} from 'react-native';
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
-import {getPreAddresses, setDefulatAddress} from 'services/Addresses';
+import {getPreAddresses} from 'services/Addresses';
 import {AddHeaderBtn, BackButton, Loader, Text} from 'components';
-import {colors, spacing} from 'theme';
+import {spacing} from 'theme';
 import AddressItem from './components/AddressItem';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import EmptyPage from 'components/EmptyPage/EmptyPage';
@@ -13,22 +13,14 @@ const PreviousTitles = () => {
   const [isDefault, setDefault] = useState<number>(-1);
   const {params} = useRoute();
   const [deletedItem, setDeletedItem] = useState<number>(-1);
-  const [data, setData] = useState([]);
   const {setOptions, navigate} = useNavigation<PreviousAddressNavigationProp>();
+
   const {
     isFetching: isFetchingPreAdd,
     isLoading: isLoadingPreAdd,
     refetch: refetchPreAdd,
-  } = useQuery(['getPreAddresses'], getPreAddresses, {
-    onSuccess(data) {
-      if (data.data?.Addresses.length > 0) {
-        setDefault(
-          data.data?.Addresses.find((i: any) => i.IsDefault === true).Id,
-        );
-        setData(data.data?.Addresses);
-      }
-    },
-  });
+    data: AddressesData,
+  } = useQuery(['getPreAddresses'], getPreAddresses);
 
   useLayoutEffect(() => {
     setOptions({
@@ -44,16 +36,22 @@ const PreviousTitles = () => {
   }, []);
 
   useEffect(() => {
-    if (deletedItem !== -1) {
-      setData(data.filter(i => (i as any)?.Id != deletedItem));
-    }
-  }, [deletedItem]);
-
-  useEffect(() => {
     if (params?.refetch) {
       refetchPreAdd();
     }
   }, [params?.refetch]);
+
+  useEffect(() => {
+    if (isDefault != -1) {
+      refetchPreAdd();
+    }
+  }, [isDefault]);
+
+  useEffect(() => {
+    if (deletedItem != -1) {
+      refetchPreAdd();
+    }
+  }, [deletedItem]);
 
   if (isFetchingPreAdd) {
     return (
@@ -70,7 +68,7 @@ const PreviousTitles = () => {
 
   return (
     <View style={{flex: 1}}>
-      {data.length > 0 ? (
+      {AddressesData?.data?.Addresses?.length > 0 ? (
         <FlatList
           refreshControl={
             <RefreshControl
@@ -78,7 +76,7 @@ const PreviousTitles = () => {
               onRefresh={refetchPreAdd}
             />
           }
-          data={data}
+          data={AddressesData?.data?.Addresses}
           keyExtractor={(i, _) => _.toString()}
           contentContainerStyle={{
             paddingHorizontal: spacing.content,

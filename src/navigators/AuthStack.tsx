@@ -34,27 +34,27 @@ const AuthStack = () => {
     })();
   }, []);
 
-  if (loading) {
-    return (
-      <Loader
-        size={'large'}
-        containerStyle={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      />
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <Loader
+  //       size={'large'}
+  //       containerStyle={{
+  //         flex: 1,
+  //         justifyContent: 'center',
+  //         alignItems: 'center',
+  //       }}
+  //     />
+  //   );
+  // }
 
   return (
     <Stack.Navigator
-      initialRouteName={initialRoute}
+      initialRouteName={'Splash'}
       screenOptions={{headerShown: false}}>
       <Stack.Screen component={OnboardingScreen} name="Onboarding" />
       <Stack.Screen component={LoginScreen} name="Login" />
       <Stack.Screen component={RegisterScreen} name="Register" />
-      {/* <Stack.Screen component={SplashScreen} name="Splash" /> */}
+      <Stack.Screen component={SplashScreen} name="Splash" />
     </Stack.Navigator>
   );
 };
