@@ -47,7 +47,7 @@ const AddToFav = ({
     data: wishlistsData,
     refetch: refetchWishlists,
     isSuccess: isLoadedWishlists,
-  } = useQuery(['getWishlists'], getWishlists);
+  } = useQuery(['getWishlists'], getWishlists, {cacheTime: 0});
   const {
     mutate: mutateAddToWishlist,
     isLoading: isLoadingAddToWishlist,
