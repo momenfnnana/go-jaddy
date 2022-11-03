@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   View,
   ImageBackground,
@@ -26,7 +26,7 @@ import {useCurrency} from 'hook/useCurrency';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import {CategoryNavigationsType} from 'navigators/NavigationsTypes';
-import {useQuery} from '@tanstack/react-query';
+import {useMutation} from '@tanstack/react-query';
 import {addCartProducts} from 'services/Cart';
 import {useTranslation} from 'react-i18next';
 import {Boxes, CheckboxList, DropdownList, RadioList} from './attributes';
@@ -97,7 +97,7 @@ const ListHeaderComponent = ({
   const {t} = useTranslation();
   const {navigate, goBack, canGoBack} =
     useNavigation<CategoryNavigationsType>();
-  const {productsNumber, setProductsNumber} = useContext(CartContext);
+  const [productsNumber, setProductsNumber] = useState<number>(1);
   const {top} = useSafeAreaInsets();
   const {height} = useWindowDimensions();
   const {currency} = useCurrency();
@@ -108,19 +108,18 @@ const ListHeaderComponent = ({
   const [subscribed, setSubscribed] = useState<boolean>(false);
   const [isAddToCollectionShown, setIsAddToCollectionShown] =
     useState<boolean>(false);
-  const [selectedAttributes, setSelectedAttributes] = useState<
-    ISelectAttribute[]
-  >([]);
-  const {
-    isLoading: isLoadingCartProduct,
-    refetch: refetchCartProduct,
-    isFetching: isFetchingCartProduct,
-  } = useQuery(
-    ['adProductDetails'],
-    () =>
-      addCartProducts({productId: ProductId, quantityToAdd: productsNumber}),
+  const [selectedAttributes, setSelectedAttributes] = useState<any[]>([]);
+  const [customTextValue, setCustomTextValue] = useState<string>('');
+
+  const {mutate: mutateAddToCart, isLoading: isLoadingAddToCart} = useMutation(
+    addCartProducts,
     {
-      enabled: false,
+      onSuccess: data => {
+        return data;
+      },
+      onError: error => {
+        return error;
+      },
     },
   );
 
@@ -142,6 +141,23 @@ const ListHeaderComponent = ({
   const DisplayBackInStockSubscription =
     Product?.DisplayBackInStockSubscription;
   const BackInStockAlreadySubscribed = Product?.BackInStockAlreadySubscribed;
+
+  const totalPrice: number = useMemo(() => {
+    if (!!selectedAttributes.length) {
+      let attributesArray: any[] = [];
+      selectedAttributes.map(y => {
+        y.values.map((ele: any) => {
+          attributesArray.push(ele);
+        });
+      });
+      const total = attributesArray.reduce(function (prev: number, cur) {
+        return prev + cur.PriceAdjustmentValue;
+      }, 0);
+      return total;
+    }
+    return 0;
+  }, [StockAvailability, selectedAttributes]);
+
   const productCounterHandler = (type: productCounter) => {
     if (type === productCounter.increase) {
       if (productsNumber < parseInt(StockAvailability)) {
@@ -176,6 +192,55 @@ const ListHeaderComponent = ({
 
   const onPressHeart = () => {
     onOpenAddToCollection();
+  };
+  const onSelect = (value: any, attributesList: any[]) => {
+    const foundParent = selectedAttributes.find((item: any) => {
+      return item?.AttributeId === value?.parentAttribute?.AttributeId;
+    });
+    const filteredParent = selectedAttributes.filter((item: any) => {
+      return item?.AttributeId !== value?.parentAttribute?.AttributeId;
+    });
+    if (foundParent) {
+      if (foundParent.IsMultipleChoice) {
+        const foundChild = foundParent.values.find((element: any) => {
+          return element.Id === value.selectedItem.Id;
+        });
+        const remainedValues = foundParent.values.filter((element: any) => {
+          return element.Id !== value.selectedItem.Id;
+        });
+        if (foundChild) {
+          const newItem = {
+            AttributeId: foundParent.AttributeId,
+            IsMultipleChoice: foundParent.IsMultipleChoice,
+            IsRequired: foundParent.IsRequired,
+            values: remainedValues,
+          };
+          setSelectedAttributes([...filteredParent, newItem]);
+          return;
+        }
+        const newItem = {
+          AttributeId: foundParent.AttributeId,
+          IsMultipleChoice: foundParent.IsMultipleChoice,
+          IsRequired: foundParent.IsRequired,
+          values: [...remainedValues, {...value.selectedItem}],
+        };
+        setSelectedAttributes([...filteredParent, newItem]);
+        return;
+      }
+      const newParent = {...foundParent, values: [value.selectedItem]};
+      setSelectedAttributes([...filteredParent, newParent]);
+      return;
+    }
+    const newArray = [
+      ...attributesList,
+      {
+        AttributeId: value.parentAttribute?.AttributeId,
+        IsMultipleChoice: value.parentAttribute?.IsMultipleChoice,
+        IsRequired: value.parentAttribute?.IsRequired,
+        values: [{...value.selectedItem}],
+      },
+    ];
+    setSelectedAttributes(newArray);
   };
 
   const selectAttributeHandler = useCallback(
@@ -372,9 +437,9 @@ const ListHeaderComponent = ({
           </View>
         </View>
         <View style={{marginTop: spacing.smaller}}>
-          {attributes?.map((item: IAttributes) => {
+          {attributes?.map((item: IAttributes, index: number) => {
             return (
-              <View style={styles.attributeContainer}>
+              <View style={styles.attributeContainer} key={index.toString()}>
                 <Text
                   key={item.AttributeId}
                   text={item.Name}
@@ -391,6 +456,10 @@ const ListHeaderComponent = ({
                       return (
                         <Boxes
                           {...{attributeValue, item, selectAttributeHandler}}
+                          key={attributeValue.Id}
+                          onSelect={value =>
+                            onSelect(value, selectedAttributes)
+                          }
                         />
                       );
                     })
@@ -399,14 +468,24 @@ const ListHeaderComponent = ({
                       return (
                         <RadioList
                           {...{selectAttributeHandler, item, attributeValue}}
+                          key={attributeValue.Id}
+                          onSelect={value =>
+                            onSelect(value, selectedAttributes)
+                          }
                         />
                       );
                     })
                   ) : item.AttributeControlType === 'DropdownList' ? (
-                    <DropdownList {...{item}} />
+                    <DropdownList
+                      {...{item}}
+                      onSelect={value => onSelect(value, selectedAttributes)}
+                    />
                   ) : (
                     item.AttributeControlType === 'Checkboxes' && (
-                      <CheckboxList {...{item}} />
+                      <CheckboxList
+                        {...{item}}
+                        onSelect={value => onSelect(value, selectedAttributes)}
+                      />
                     )
                   )}
                 </ScrollView>
@@ -414,6 +493,8 @@ const ListHeaderComponent = ({
                   <InputField
                     style={{}}
                     placeholder={'product-details.custom-text'}
+                    value={customTextValue}
+                    onChangeText={setCustomTextValue}
                   />
                 )}
               </View>
@@ -428,7 +509,9 @@ const ListHeaderComponent = ({
               variant="mediumLight"
             />
             <Text style={styles.stockAvailability}>
-              {StockAvailability === '' ? 0 : StockAvailability}
+              {StockAvailability === ''
+                ? 0
+                : (StockAvailability + totalPrice) * productsNumber}
             </Text>
           </View>
           {StockAvailability === '' &&
@@ -469,21 +552,21 @@ const ListHeaderComponent = ({
               </Pressable>
             </View>
             <Pressable
-              disabled={isFetchingCartProduct}
+              disabled={isLoadingAddToCart}
               style={{flex: 0.5}}
-              onPress={() => refetchCartProduct()}>
-              {isFetchingCartProduct ? (
-                <Loader
-                  color={colors.white}
-                  size={'small'}
-                  style={{flex: 0.5}}
-                />
+              onPress={() =>
+                mutateAddToCart({
+                  productId: ProductId,
+                  quantityToAdd: productsNumber,
+                })
+              }>
+              {isLoadingAddToCart ? (
+                <Loader color={colors.white} size={'small'} />
               ) : (
                 <Text
                   tx="product-details.add-to-cart"
                   color={colors.white}
                   variant="mediumBold"
-                  style={{flex: 0.5}}
                 />
               )}
             </Pressable>
