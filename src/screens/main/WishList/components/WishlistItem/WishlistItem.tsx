@@ -61,18 +61,14 @@ const WishlistItem = ({
     },
   });
 
-  const {
-    mutate: createNewWishlist,
-    isLoading: isLoadingCreateWishList,
-    isSuccess: isSuccessCreateWishList,
-  } = useMutation(postCreateWishlist, {
-    onSuccess: data => {
-      return data;
-    },
-    onError: error => {
-      return error;
-    },
-  });
+  const {mutate: createNewWishlist, isLoading: isLoadingCreateWishList} =
+    useMutation(postCreateWishlist, {
+      onSuccess: data => {
+        refreshItems();
+        setIsRefetch(!isRefetch);
+        return data;
+      },
+    });
 
   const products = useMemo(() => {
     if (Top4Products?.length < 4) {
