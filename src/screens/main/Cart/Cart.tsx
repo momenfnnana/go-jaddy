@@ -32,7 +32,7 @@ import {SuccessModalImg} from 'assets/images';
 import EmptyPage from 'components/EmptyPage/EmptyPage';
 
 const Cart = () => {
-  const {isLoading, isRefetching} = useQuery(
+  const {isLoading, isRefetching, isError} = useQuery(
     ['cartProducts'],
     getCartProducts,
     {
@@ -113,7 +113,7 @@ const Cart = () => {
     );
   }
 
-  if (data?.Items.length == 0) {
+  if (data?.Items?.length == 0 || isError) {
     return (
       <View style={{flex: 1}}>
         <EmptyPage

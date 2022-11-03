@@ -3,6 +3,7 @@ import {ImageBackground, Image, useWindowDimensions} from 'react-native';
 import {LogoBG, LogoSplash, SplashBG} from 'assets/images';
 import {useNavigation} from '@react-navigation/native';
 import {AuthNavigationsType} from 'navigators/NavigationsTypes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Splash = () => {
   const {height} = useWindowDimensions();
@@ -11,7 +12,13 @@ const Splash = () => {
   useEffect(() => {
     (() => {
       setTimeout(() => {
-        navigate('Onboarding');
+        AsyncStorage.getItem('onBoardingActive').then(value => {
+          if (value == 'true') {
+            navigate('Login');
+          } else {
+            navigate('Onboarding');
+          }
+        });
       }, 3000);
     })();
   }, []);
