@@ -28,6 +28,7 @@ import {UserContext} from 'context/UserContext';
 interface IAdvertisements {
   Link: string;
   MobileImage: ImageData;
+  Id: number;
 }
 const Home = () => {
   const {top} = useSafeAreaInsets();
@@ -140,8 +141,8 @@ const Home = () => {
             showSeeMore={false}
           />
           {advertisements?.data?.Advertisements?.map(
-            ({MobileImage, Link}: IAdvertisements, index: number) => (
-              <Pressable onPress={() => Linking.openURL(Link)}>
+            ({MobileImage, Link, Id}: IAdvertisements, index: number) => (
+              <Pressable onPress={() => Linking.openURL(Link)} key={Id}>
                 <Image
                   key={index}
                   source={{uri: `${BASE_URL}${MobileImage?.Url}`}}
