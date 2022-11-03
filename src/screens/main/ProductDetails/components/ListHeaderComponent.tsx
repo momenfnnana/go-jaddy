@@ -206,6 +206,7 @@ const ListHeaderComponent = ({
             AttributeId: foundParent.AttributeId,
             IsMultipleChoice: foundParent.IsMultipleChoice,
             IsRequired: foundParent.IsRequired,
+            VariantAttributeId: foundParent.VariantAttributeId,
             values: remainedValues,
           };
           setSelectedAttributes([...filteredParent, newItem]);
@@ -215,6 +216,7 @@ const ListHeaderComponent = ({
           AttributeId: foundParent.AttributeId,
           IsMultipleChoice: foundParent.IsMultipleChoice,
           IsRequired: foundParent.IsRequired,
+          VariantAttributeId: foundParent.VariantAttributeId,
           values: [...remainedValues, {...value.selectedItem}],
         };
         setSelectedAttributes([...filteredParent, newItem]);
@@ -230,6 +232,7 @@ const ListHeaderComponent = ({
         AttributeId: value.parentAttribute?.AttributeId,
         IsMultipleChoice: value.parentAttribute?.IsMultipleChoice,
         IsRequired: value.parentAttribute?.IsRequired,
+        VariantAttributeId: value.parentAttribute.VariantAttributeId,
         values: [{...value.selectedItem}],
       },
     ];

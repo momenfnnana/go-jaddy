@@ -29,6 +29,7 @@ const RadioList = ({
         AttributeId: item.AttributeId,
         IsRequired: item.IsRequired,
         IsMultipleChoice: item.IsMultipleChoice,
+        VariantAttributeId: item.VariantAttributeId,
       },
     });
   };
