@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Text} from 'components';
 import SelectDropdown from 'react-native-select-dropdown';
@@ -15,7 +15,7 @@ interface selectedAttribute {
   isSelected: boolean;
 }
 
-const DropdownList = ({item}: IAttribute) => {
+const DropdownList = ({item, onSelect}: IAttribute) => {
   const {t} = useTranslation();
   const [selectedAttribute, setSelectedAttribute] =
     useState<selectedAttribute>();
@@ -24,6 +24,18 @@ const DropdownList = ({item}: IAttribute) => {
       return ele?.IsPreSelected === true;
     });
   }, [item]);
+  const onSelectItem = useCallback((selectedItem: selectedAttribute) => {
+    setSelectedAttribute(selectedItem);
+    onSelect({
+      selectedItem,
+      parentAttribute: {
+        AttributeId: item.AttributeId,
+        IsRequired: item.IsRequired,
+        IsMultipleChoice: item.IsMultipleChoice,
+      },
+    });
+  }, []);
+
   useEffect(() => {
     setSelectedAttribute(selectedItem);
   }, [selectedItem]);
@@ -44,9 +56,7 @@ const DropdownList = ({item}: IAttribute) => {
           <Text variant="mediumBold" text={item.Name} />
         </View>
       )}
-      onSelect={(selectedItem: selectedAttribute) => {
-        setSelectedAttribute(selectedItem);
-      }}
+      onSelect={onSelectItem}
       buttonTextAfterSelection={(selectedItem: selectedAttribute) => {
         return selectedItem.Name;
       }}

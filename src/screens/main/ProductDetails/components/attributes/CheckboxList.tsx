@@ -6,10 +6,12 @@ import {colors, spacing} from 'theme';
 import {IAttribute} from './types';
 interface ICheckboxItem {
   ele: any;
+  onSelect: (value: any) => void;
 }
-const CheckboxItem = ({ele}: ICheckboxItem) => {
+const CheckboxItem = ({ele, onSelect}: ICheckboxItem) => {
   const [isSelected, setIsSelected] = useState<boolean>(false);
   const onPress = () => {
+    onSelect({...ele, isSelected: !isSelected});
     setIsSelected(currentState => !currentState);
   };
   return (
@@ -24,11 +26,21 @@ const CheckboxItem = ({ele}: ICheckboxItem) => {
   );
 };
 
-const CheckboxList = ({item}: IAttribute) => {
+const CheckboxList = ({item, onSelect}: IAttribute) => {
+  const onSelectItem = (value: any) => {
+    onSelect({
+      selectedItem: value,
+      parentAttribute: {
+        AttributeId: item.AttributeId,
+        IsRequired: item.IsRequired,
+        IsMultipleChoice: item.IsMultipleChoice,
+      },
+    });
+  };
   return (
     <View style={styles.container}>
       {item?.Values?.map((ele: any, index: number) => (
-        <CheckboxItem ele={ele} key={index} />
+        <CheckboxItem ele={ele} key={index} onSelect={onSelectItem} />
       ))}
     </View>
   );

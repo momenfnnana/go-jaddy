@@ -1,20 +1,32 @@
 import React from 'react';
 import {Pressable, StyleSheet} from 'react-native';
 import {colors, spacing} from 'theme';
-interface IAttribute {
-  selectAttributeHandler: ({attributeValue, attribute}: any) => void;
-  attributeValue: any;
-  item: any;
-}
-const Boxes = ({selectAttributeHandler, attributeValue, item}: IAttribute) => {
+import {IAttribute} from './types';
+
+const Boxes = ({
+  selectAttributeHandler,
+  attributeValue,
+  item,
+  onSelect,
+}: IAttribute) => {
+  const onPress = () => {
+    selectAttributeHandler &&
+      selectAttributeHandler({
+        attributeValue,
+        attribute: item,
+      });
+    onSelect({
+      selectedItem: attributeValue,
+      parentAttribute: {
+        AttributeId: item.AttributeId,
+        IsRequired: item.IsRequired,
+        IsMultipleChoice: item.IsMultipleChoice,
+      },
+    });
+  };
   return (
     <Pressable
-      onPress={() =>
-        selectAttributeHandler({
-          attributeValue,
-          attribute: item,
-        })
-      }
+      onPress={onPress}
       style={[
         styles.colorAttribute,
         {

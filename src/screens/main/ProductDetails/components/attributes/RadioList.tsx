@@ -9,6 +9,7 @@ const RadioList = ({
   selectAttributeHandler,
   attributeValue,
   item,
+  onSelect,
 }: IAttribute) => {
   const radioBtnContainer = {
     flexDirection: 'row',
@@ -16,16 +17,23 @@ const RadioList = ({
     marginRight: spacing.small,
     marginTop: spacing.smaller,
   } as ViewStyle;
+  const onPressHandler = () => {
+    selectAttributeHandler &&
+      selectAttributeHandler({
+        attributeValue,
+        attribute: item,
+      });
+    onSelect({
+      selectedItem: attributeValue,
+      parentAttribute: {
+        AttributeId: item.AttributeId,
+        IsRequired: item.IsRequired,
+        IsMultipleChoice: item.IsMultipleChoice,
+      },
+    });
+  };
   return (
-    <Pressable
-      onPress={() =>
-        selectAttributeHandler &&
-        selectAttributeHandler({
-          attributeValue,
-          attribute: item,
-        })
-      }
-      style={radioBtnContainer}>
+    <Pressable onPress={onPressHandler} style={radioBtnContainer}>
       <MaterialIcons
         name={`radio-button-${
           attributeValue.IsPreSelected || attributeValue.isSelected
