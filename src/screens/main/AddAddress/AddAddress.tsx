@@ -6,7 +6,7 @@ import {
   ScrollView,
 } from 'react-native';
 import React, {useEffect, useLayoutEffect, useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {BackButton, Button, InputField, Loader, Text} from 'components';
 import {colors, font, spacing} from 'theme';
 import {Formik} from 'formik';
@@ -14,10 +14,19 @@ import * as Yup from 'yup';
 import {Switch} from 'react-native-paper';
 import SelectDropdown from 'react-native-select-dropdown';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {useQuery} from '@tanstack/react-query';
-import {getCountries, getStatesByCountry} from 'services/Addresses';
+import {useMutation, useQuery} from '@tanstack/react-query';
+import {
+  addAddress,
+  editAddress,
+  getCountries,
+  getStatesByCountry,
+} from 'services/Addresses';
 import {t} from 'i18next';
 import {useTranslation} from 'react-i18next';
+import {
+  AddAddressNavigationProp,
+  PreviousAddressNavigationProp,
+} from 'navigators/NavigationsTypes';
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -29,35 +38,78 @@ const addressSchema = Yup.object().shape({
   city: Yup.string().required('city is required'),
   email: Yup.string().email().required('email is required'),
   phoneNumber: Yup.string()
+    .length(15, 'must be 15 characters')
     .matches(phoneRegExp, 'phone number is not valid')
     .required('phone number is required'),
 });
 
+interface ISelectedState {
+  item: any;
+  isExistData: boolean;
+  defualtText: string;
+}
+
 const AddAddress = () => {
-  const {setOptions} = useNavigation();
-  const [isDefualt, setDefualt] = useState<boolean>(false);
+  const {setOptions, navigate} = useNavigation<AddAddressNavigationProp>();
+  const {params} = useRoute();
+  const [isDefualt, setDefualt] = useState<boolean>(
+    params?.item?.IsDefault || false,
+  );
   const [countrySelected, setCountrySelected] = useState<any>({});
-  const [stateSelected, setStateSelected] = useState<any>({});
   const {t} = useTranslation();
+  const [stateSelected, setStateSelected] = useState<ISelectedState>({
+    item: {Value: (params as any)?.item?.StateId},
+    isExistData: false,
+    defualtText: t('addAddress.states-select-country'),
+  });
+  const {mutate: mutateaddAddress, isLoading: isLoadingaddAddress} =
+    useMutation(['addAddress'], addAddress, {
+      onSuccess: () => {
+        navigate('PreviousTitles', {refetch: Math.random() * 1.6});
+      },
+    });
+  const {mutate: mutateEditAddress, isLoading: isLoadingEditAddress} =
+    useMutation(['editAddress'], editAddress, {
+      onSuccess: () => {
+        navigate('PreviousTitles', {refetch: Math.random() * 1.5});
+      },
+    });
   const {data: countriesData, isLoading: isLoadingCountries} = useQuery(
     ['getCountries'],
     getCountries,
     {
-      onSuccess: () => {
-        refetchStates();
+      onSuccess: data => {
+        if ((params as any)?.item) {
+          const item = data.data.find(
+            (i: any) => i.Value == params?.item?.CountryId,
+          );
+          setCountrySelected(item);
+          mutateGetStates(item.Value);
+        }
       },
     },
   );
   const {
     data: statesData,
     isLoading: isLoadingStates,
-    isFetching: isFetchingStates,
-    refetch: refetchStates,
-  } = useQuery(
-    ['getStates'],
-    () => getStatesByCountry(countrySelected?.Value),
-    {enabled: false},
-  );
+    mutate: mutateGetStates,
+  } = useMutation(['getStates'], getStatesByCountry, {
+    onError(error, variables, context) {
+      console.log('first: ', (error as any)?.response?.data?.Message);
+      setStateSelected({
+        ...stateSelected,
+        isExistData: false,
+        defualtText: (error as any)?.response?.data?.Message,
+      });
+    },
+    onSuccess: () => {
+      setStateSelected({
+        ...stateSelected,
+        isExistData: true,
+        defualtText: t('addAddress.states-def'),
+      });
+    },
+  });
 
   useLayoutEffect(() => {
     setOptions({
@@ -66,27 +118,32 @@ const AddAddress = () => {
   }, []);
 
   const initialVal = {
-    companyName: '',
-    firstName: '',
-    lastName: '',
-    address1: '',
-    address2: '',
-    city: '',
-    phoneNumber: '',
-    email: '',
-    fax: '',
+    companyName: params?.item?.Company || '',
+    firstName: params?.item?.FirstName || '',
+    lastName: params?.item?.LastName || '',
+    address1: params?.item?.Address1 || '',
+    address2: params?.item?.Address2 || '',
+    city: params?.item?.City || '',
+    phoneNumber: params?.item?.PhoneNumber || '',
+    email: params?.item?.Email || '',
+    fax: params?.item?.FaxNumber || '',
   };
 
-  useEffect(() => {
-    if (countrySelected?.Text?.length != 0) {
-      console.log({countrySelected, sss: 'ss'});
-      refetchStates();
-    }
-  }, [countrySelected.Value]);
-
-  console.log({countrySelected, sss: 'out'});
-
   const onRegisterHandle = () => {};
+
+  if (isLoadingaddAddress || isLoadingEditAddress) {
+    return (
+      <Loader
+        size={'large'}
+        containerStyle={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      />
+    );
+  }
+
   return (
     <View>
       <ScrollView
@@ -94,9 +151,51 @@ const AddAddress = () => {
         contentContainerStyle={{paddingHorizontal: 15, paddingVertical: 10}}>
         <Formik
           initialValues={initialVal}
-          onSubmit={onRegisterHandle}
+          onSubmit={values => {
+            if (params?.item) {
+              mutateEditAddress({
+                Address1: values.address1,
+                Address2: values.address2,
+                City: values.city,
+                Company: values.companyName,
+                CountryId: countrySelected?.Value,
+                Email: values.email,
+                FaxNumber: values.fax,
+                FirstName: values.firstName,
+                LastName: values.lastName,
+                PhoneNumber: values.phoneNumber,
+                PostalCode: 'PostalCode',
+                StateId: stateSelected.item?.Value,
+                IsDefault: isDefualt,
+                id: params?.item?.Id,
+              });
+            } else {
+              mutateaddAddress({
+                Address1: values.address1,
+                Address2: values.address2,
+                City: values.city,
+                Company: values.companyName,
+                CountryId: countrySelected?.Value,
+                Email: values.email,
+                FaxNumber: values.fax,
+                FirstName: values.firstName,
+                LastName: values.lastName,
+                PhoneNumber: values.phoneNumber,
+                PostalCode: 'PostalCode',
+                StateId: stateSelected.item?.Value,
+                IsDefault: isDefualt,
+              });
+            }
+          }}
           validationSchema={addressSchema}>
-          {({handleChange, handleBlur, handleSubmit, values, errors}) => {
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+          }) => {
             return (
               <>
                 <Text
@@ -110,26 +209,36 @@ const AddAddress = () => {
                   onBlur={handleBlur('companyName')}
                   containerStyle={styles.inputContainer}
                   placeholder={'addAddress.coName'}
-                  error={errors.companyName}
+                  error={{
+                    touched: touched.companyName,
+                    value: errors.companyName,
+                  }}
                 />
-
                 <View style={[styles.rowFiled, styles.inputContainer]}>
                   <InputField
+                    style={{flex: undefined, marginBottom: 15}}
                     value={values.firstName}
                     onChangeText={handleChange('firstName')}
                     onBlur={handleBlur('firstName')}
                     containerStyle={{flex: 1}}
                     placeholder={'addAddress.fName'}
-                    error={errors.firstName}
+                    error={{
+                      touched: touched.firstName,
+                      value: errors.firstName,
+                    }}
                   />
                   <View style={{width: 10}} />
                   <InputField
+                    style={{flex: undefined, marginBottom: 15}}
                     value={values.lastName}
                     onChangeText={handleChange('lastName')}
                     onBlur={handleBlur('lastName')}
                     containerStyle={{flex: 1}}
                     placeholder={'addAddress.lName'}
-                    error={errors.lastName}
+                    error={{
+                      touched: touched.lastName,
+                      value: errors.lastName,
+                    }}
                   />
                 </View>
                 <InputField
@@ -137,14 +246,20 @@ const AddAddress = () => {
                   onChangeText={handleChange('address1')}
                   onBlur={handleBlur('address1')}
                   placeholder={'addAddress.address1'}
-                  error={errors.address1}
+                  error={{
+                    touched: touched.address1,
+                    value: errors.address1,
+                  }}
                 />
                 <InputField
                   value={values.address2}
                   onChangeText={handleChange('address2')}
                   onBlur={handleBlur('address2')}
                   placeholder={'addAddress.address2'}
-                  error={errors.address2}
+                  error={{
+                    touched: touched.address2,
+                    value: errors.address2,
+                  }}
                 />
                 <View
                   style={{
@@ -153,6 +268,8 @@ const AddAddress = () => {
                     justifyContent: 'space-between',
                   }}>
                   <SelectDropdown
+                    search
+                    searchInputStyle={{backgroundColor: colors.white}}
                     defaultButtonText={t('addAddress.countries-def')}
                     renderDropdownIcon={() => (
                       <MaterialIcons
@@ -169,7 +286,9 @@ const AddAddress = () => {
                         <Text
                           center
                           text={
-                            selectedItem?.Text || t('addAddress.countries-def')
+                            selectedItem?.Text ||
+                            countrySelected.Text ||
+                            t('addAddress.countries-def')
                           }
                         />
                       )
@@ -190,6 +309,7 @@ const AddAddress = () => {
                     renderCustomizedRowChild={item => (
                       <View
                         style={{
+                          backgroundColor: colors.white,
                           height: '100%',
                           justifyContent: 'center',
                           paddingHorizontal: spacing.smaller,
@@ -199,6 +319,7 @@ const AddAddress = () => {
                     )}
                     onSelect={item => {
                       setCountrySelected(item);
+                      mutateGetStates(item.Value);
                     }}
                     buttonTextAfterSelection={selectedItem => {
                       return selectedItem.Text;
@@ -215,16 +336,14 @@ const AddAddress = () => {
                         color={colors.black}
                       />
                     )}
-                    disabled={isFetchingStates || !setCountrySelected?.Text}
+                    disabled={isLoadingStates || !stateSelected.isExistData}
                     renderCustomizedButtonChild={selectedItem =>
-                      isFetchingStates ? (
+                      isLoadingStates ? (
                         <Loader size={'small'} />
                       ) : (
                         <Text
                           center
-                          text={
-                            selectedItem?.Text || t('addAddress.states-def')
-                          }
+                          text={selectedItem?.Text || stateSelected.defualtText}
                         />
                       )
                     }
@@ -252,7 +371,7 @@ const AddAddress = () => {
                       </View>
                     )}
                     onSelect={item => {
-                      setStateSelected(item);
+                      setStateSelected({...stateSelected, item: item});
                     }}
                     buttonTextAfterSelection={selectedItem => {
                       return selectedItem.Text;
@@ -265,28 +384,40 @@ const AddAddress = () => {
                   onChangeText={handleChange('city')}
                   onBlur={handleBlur('city')}
                   placeholder={'addAddress.city'}
-                  error={errors.city}
+                  error={{
+                    touched: touched.city,
+                    value: errors.city,
+                  }}
                 />
                 <InputField
                   value={values.email}
                   onChangeText={handleChange('email')}
                   onBlur={handleBlur('email')}
                   placeholder={'addAddress.email'}
-                  error={errors.email}
+                  error={{
+                    touched: touched.email,
+                    value: errors.email,
+                  }}
                 />
                 <InputField
                   value={values.phoneNumber}
                   onChangeText={handleChange('phoneNumber')}
                   onBlur={handleBlur('phoneNumber')}
                   placeholder={'addAddress.phone'}
-                  error={errors.phoneNumber}
+                  error={{
+                    touched: touched.phoneNumber,
+                    value: errors.phoneNumber,
+                  }}
                 />
                 <InputField
                   value={values.fax}
                   onChangeText={handleChange('fax')}
                   onBlur={handleBlur('fax')}
                   placeholder={'addAddress.fax'}
-                  error={errors.fax}
+                  error={{
+                    touched: touched.fax,
+                    value: errors.fax,
+                  }}
                 />
                 <View style={styles.defualtContainer}>
                   <Switch
@@ -301,6 +432,7 @@ const AddAddress = () => {
                   />
                 </View>
                 <Button
+                  onPress={handleSubmit}
                   style={{marginBottom: 10}}
                   title="addAddress.submitBtn"
                 />
@@ -321,10 +453,11 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     // marginBottom: spacing.medium - 2,
+    // marginBottom: spacing.large,
   },
   rowFiled: {
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'center',
     justifyContent: 'space-between',
   },
   defualtContainer: {

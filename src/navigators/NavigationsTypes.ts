@@ -66,10 +66,22 @@ type ProfileScreenNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<MainNavigator, 'HomeFlow'>,
   NativeStackNavigationProp<ProfileRoutes, 'Profile'>
 >;
+
 type WishlistScreenNavigationProp = NativeStackNavigationProp<
   ProfileRoutes,
   'WishList'
 >;
+
+type PreviousAddressNavigationProp = NativeStackNavigationProp<
+  ProfileRoutes,
+  'PreviousTitles'
+>;
+
+type AddAddressNavigationProp = NativeStackNavigationProp<
+  ProfileRoutes,
+  'AddAddress'
+>;
+
 type WishlistDetailsScreenNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<ProfileRoutes, 'WishlistDetails'>,
   NativeStackNavigationProp<HomeRoutes, 'Home'>
@@ -103,4 +115,6 @@ export type {
   WishlistDetailsScreenNavigationProp,
   ProfileStackProps,
   IProductNavigation,
+  PreviousAddressNavigationProp,
+  AddAddressNavigationProp,
 };

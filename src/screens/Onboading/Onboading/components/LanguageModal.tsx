@@ -39,10 +39,11 @@ const LanguageModal: React.FC<ILanguageModalProps> = ({
   const {data} = useQuery(['getLanguages'], getLanguages);
 
   const confirmLanguage = async () => {
-    setVisibleLangModal!(false)
+    setVisibleLangModal!(false);
     i18n.changeLanguage(language);
     AsyncStorage.setItem('languageId', language!);
     navigate('HomeFlow', {screen: 'HomeStack'} as any);
+    activeOnboardingHandle();
     if (language == 'en') {
       if (I18nManager.isRTL) {
         await I18nManager.forceRTL(false);
@@ -53,6 +54,14 @@ const LanguageModal: React.FC<ILanguageModalProps> = ({
         await I18nManager.forceRTL(true);
         RNRestart.Restart();
       }
+    }
+  };
+
+  const activeOnboardingHandle = async () => {
+    try {
+      await AsyncStorage.setItem('onBoardingActive', 'true');
+    } catch (error) {
+      console.log({error});
     }
   };
 

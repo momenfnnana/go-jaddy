@@ -5,13 +5,16 @@ import Text from 'components/Text';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {StarFilledIcon} from 'assets/icons';
 import {Ifiltter} from 'screens/main/StoreDetails/StoreDetails';
+import Button from 'components/Button';
 
 interface IRatingFiltters {
   selectedFilter: Ifiltter;
   setSelectedFilter: (value: any) => void;
+  onPressRate?: () => void;
   TotalReviews?: any;
   RatingSum?: any;
   style?: ViewStyle;
+  DisplayStoreReviews?: boolean;
 }
 
 const RatingFiltters = ({
@@ -20,6 +23,8 @@ const RatingFiltters = ({
   TotalReviews,
   RatingSum,
   style,
+  DisplayStoreReviews,
+  onPressRate,
 }: IRatingFiltters) => {
   const onPressFilter = (value: string) => {
     if (value === 'all') {
@@ -28,18 +33,6 @@ const RatingFiltters = ({
         ratings: [],
       });
       return;
-      // if (!selectedFilter.withImage && selectedFilter.ratings.length !== 5) {
-      //   setSelectedFilter({
-      //     withImage: true,
-      //     ratings: [1, 2, 3, 4, 5],
-      //   });
-      // } else {
-      //   setSelectedFilter({
-      //     withImage: false,
-      //     ratings: [],
-      //   });
-      // }
-      // return;
     }
     if (value === 'with-images') {
       setSelectedFilter({
@@ -61,24 +54,43 @@ const RatingFiltters = ({
 
   return (
     <View style={style}>
-      <View style={[styles.ratingsContainer, styles.row]}>
-        <View style={styles.row}>
-          <Text tx="product-details.ratings" variant="mediumBold" />
-          <Text
-            text={TotalReviews.toString()}
-            variant="mediumBold"
-            style={styles.totalRatings}
-          />
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginTop: spacing.normal,
+        }}>
+        <View style={[styles.ratingsContainer, styles.row]}>
+          <View style={styles.row}>
+            <Text tx="product-details.ratings" variant="mediumBold" />
+            <Text
+              text={TotalReviews.toString()}
+              variant="mediumBold"
+              style={styles.totalRatings}
+            />
+          </View>
+          <View style={[styles.ratingTotal, styles.row]}>
+            <StarFilledIcon color={colors.orangeDark} />
+            <Text
+              text={RatingSum.toString()}
+              color={colors.orangeDark}
+              style={styles.ratingSum}
+              variant="smallRegular"
+            />
+          </View>
         </View>
-        <View style={[styles.ratingTotal, styles.row]}>
-          <StarFilledIcon color={colors.orangeDark} />
-          <Text
-            text={RatingSum.toString()}
-            color={colors.orangeDark}
-            style={styles.ratingSum}
-            variant="smallRegular"
+        {DisplayStoreReviews && (
+          <Button
+            onPress={onPressRate}
+            style={{paddingVertical: 2, paddingHorizontal: spacing.small}}
+            title="stores.rate-store"
+            variant="Secondary"
+            icon={<StarFilledIcon color={colors.orangeDark} />}
+            textVariant="xSmallRegular"
+            textStyle={{marginLeft: 3}}
           />
-        </View>
+        )}
       </View>
       <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
         <Pressable
@@ -198,9 +210,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  ratingsContainer: {
-    marginTop: spacing.normal,
-  },
+  ratingsContainer: {},
   totalRatings: {
     marginHorizontal: spacing.tiny,
   },

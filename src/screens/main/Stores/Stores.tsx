@@ -16,10 +16,11 @@ import {IStores} from 'navigators/NavigationsTypes';
 import {ActivityIndicator} from 'react-native-paper';
 import {getAllStores} from 'services/Stores';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import EmptyPage from 'components/EmptyPage/EmptyPage';
 
 const Stores = () => {
   const {width} = useWindowDimensions();
-  const {navigate} = useNavigation<IStores>();
+  const {navigate} = useNavigation<any>();
   const [typeStores, setTypeStores] = useState('all');
   const {
     data,
@@ -29,6 +30,7 @@ const Stores = () => {
     refetch,
     isFetchingNextPage,
     isRefetching,
+    isError,
   } = useInfiniteQuery(
     ['AllStores'],
     ({pageParam}) =>
@@ -72,11 +74,7 @@ const Stores = () => {
         onEndReachedThreshold={0.3}
         keyExtractor={(i, _) => _.toString()}
         horizontal={false}
-        data={
-          isLoading
-            ? [1, 2, 4, 5, 6]
-            : data?.pages.map(page => page.data.Stores).flat()
-        }
+        data={isError ? [1] : data?.pages.map(page => page.data.Stores).flat()}
         numColumns={2}
         ListHeaderComponent={() => (
           <View
@@ -146,6 +144,16 @@ const Stores = () => {
           paddingTop: spacing.large,
         }}
         renderItem={({item}) => {
+          if (isError) {
+            return (
+              <View style={{flex: 1}}>
+                <EmptyPage
+                  title="No Stores to show"
+                  descritopn="go to all stores then follow them"
+                />
+              </View>
+            );
+          }
           return (
             <Pressable
               onPress={() => {

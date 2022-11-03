@@ -4,19 +4,12 @@ import {colors} from 'theme';
 import {Loader, Text} from 'components';
 import {useQuery} from '@tanstack/react-query';
 import {deleteAddress, setDefulatAddress} from 'services/Addresses';
+import {useNavigation} from '@react-navigation/native';
+import {PreviousAddressNavigationProp} from 'navigators/NavigationsTypes';
+import {IAddress} from 'navigators/RoutesTypes';
 
 interface IAddressItem {
-  item: {
-    Id: number;
-    FirstName: string;
-    LastName: string;
-    Address1: string;
-    Address2: string;
-    City: string;
-    CountryName: string;
-    Email: string;
-    PhoneNumber: string;
-  };
+  item: IAddress;
   isDefault: number;
   setDefault: (id: number) => void;
   setDeletedItem: (id: number) => void;
@@ -30,7 +23,7 @@ const AddressItem = ({
 }: IAddressItem) => {
   const [pressedDefualt, setPressedDefualt] = useState<number>(-1);
   const [pressedDelete, setPressedDelete] = useState<number>(-1);
-
+  const {navigate} = useNavigation<PreviousAddressNavigationProp>();
   const {
     isLoading,
     isFetching: isFetchingSetDefulatAddress,
@@ -158,7 +151,11 @@ const AddressItem = ({
               )}
             </Pressable>
           )}
-          <Pressable style={{marginHorizontal: 10}}>
+          <Pressable
+            onPress={() => {
+              navigate('AddAddress', {item});
+            }}
+            style={{marginHorizontal: 10}}>
             <Text tx="previousTitles.editBtn" variant="smallRegular" />
           </Pressable>
           <Pressable

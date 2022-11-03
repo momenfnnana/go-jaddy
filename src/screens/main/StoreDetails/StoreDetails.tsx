@@ -1,5 +1,12 @@
 import {useRoute} from '@react-navigation/native';
-import {Loader, ProductCard, SearchHeader, Text, ReviewList} from 'components';
+import {
+  Loader,
+  ProductCard,
+  SearchHeader,
+  Text,
+  ReviewList,
+  RateModal,
+} from 'components';
 import {IStores} from 'navigators/NavigationsTypes';
 import React, {useEffect, useState} from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -24,6 +31,7 @@ import {RatingFiltters} from 'components/RatingFilters';
 import CategoryItem from './components/categoryItem';
 import {getCategoryProducts} from 'services/Category';
 import MainTab from './components/MainTab';
+import ArrowIcon from 'components/Arrow';
 
 export interface Ifiltter {
   withImage: boolean;
@@ -38,6 +46,7 @@ const tabs: string[] = [
 ];
 const StoreDetails = () => {
   const {params} = useRoute<IStores>();
+  const [isRateModalShown, setIsRateModalShown] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>('');
   const [tab, setTab] = useState<number>(0);
   const [isFollowed, setFollowed] = useState<boolean>(false);
@@ -357,7 +366,7 @@ const StoreDetails = () => {
                         storeDetailsData.data?.ReviewOverview?.TotalReviews
                       }  ${t('storeDetails.rating')})`}
                     />
-                    <MaterialIcon
+                    <ArrowIcon
                       name="keyboard-arrow-right"
                       color={colors.white}
                       size={13}
@@ -539,11 +548,15 @@ const StoreDetails = () => {
           keyExtractor={(i, _) => _.toString()}
           ListHeaderComponent={
             <RatingFiltters
+              DisplayStoreReviews={storeDetailsData.data.DisplayStoreReviews}
               style={{paddingHorizontal: spacing.content}}
               setSelectedFilter={setSelectedFilter}
               selectedFilter={selectedFilter}
               RatingSum={storeDetailsData.data.ReviewOverview.RatingSum}
               TotalReviews={storeDetailsData.data.ReviewOverview.TotalReviews}
+              onPressRate={() => {
+                setIsRateModalShown(true);
+              }}
             />
           }
           renderItem={ReviewList}
@@ -633,6 +646,12 @@ const StoreDetails = () => {
             }
           />
         ))}
+      <RateModal
+        isRateModalShown={isRateModalShown}
+        setIsRateModalShown={setIsRateModalShown}
+        isStore
+        StoreId={params?.storeId}
+      />
     </View>
   );
 };

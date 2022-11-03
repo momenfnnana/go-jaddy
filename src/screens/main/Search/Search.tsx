@@ -38,7 +38,7 @@ const Search = () => {
   };
 
   const {
-    data: Products,
+    data: ProductsCategoryData,
     isRefetching: isRefetchingProductsCategory,
     refetch: refetchProductsCategory,
     isFetching: isFetchingProductsCategory,

@@ -107,3 +107,6 @@ export const getRefreshFollowStore = ({
       isFollow,
     },
   });
+
+export const postAddStoreReview = (data: any) =>
+  axios.post(`${BASE_URL}/api/custom/stores/AddStoreReview`, data);
