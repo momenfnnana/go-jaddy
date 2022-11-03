@@ -14,6 +14,7 @@ const WishList = () => {
   const {data, isLoading, refetch} = useQuery(['getWishlist'], getWishlist);
   const onPress = () => {
     const newArray: IWishListItem[] = [
+      ...data?.data?.Wishlists,
       {
         Name: '',
         CreatedOn: new Date(),
@@ -23,7 +24,6 @@ const WishList = () => {
         WishlistLinesCount: 0,
         refreshItems: () => {},
       },
-      ...data?.data?.Wishlists,
     ];
     setWishlistData(newArray);
   };
