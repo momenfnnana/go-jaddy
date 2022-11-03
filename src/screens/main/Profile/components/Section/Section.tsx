@@ -7,8 +7,9 @@ import Tab from '../Tab';
 interface ISection {
   title?: string;
   list: ITab[];
+  isLogged: boolean;
 }
-const Section = ({title, list}: ISection) => {
+const Section = ({title, list, isLogged}: ISection) => {
   return (
     <>
       {title && (
@@ -20,6 +21,7 @@ const Section = ({title, list}: ISection) => {
             key={item.id}
             {...item}
             showDevider={list.length !== index + 1}
+            isLogged={isLogged}
           />
         );
       })}

@@ -59,10 +59,17 @@ const Profile = () => {
       <TouchableWithoutFeedback onPress={closeOpenedModals}>
         <View style={styles.container}>
           <Header isLogged={isLogged} />
-          {isLogged && <Section title="screens-tabs.profile" list={AuthList} />}
+          {isLogged && (
+            <Section
+              title="screens-tabs.profile"
+              list={AuthList}
+              isLogged={isLogged}
+            />
+          )}
           <Section
             title={isLogged ? 'profile.others' : undefined}
             list={UnAuthList}
+            isLogged={isLogged}
           />
         </View>
       </TouchableWithoutFeedback>

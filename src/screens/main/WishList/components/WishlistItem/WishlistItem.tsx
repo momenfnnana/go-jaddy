@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
 import {View, Pressable, FlatList, Image, StyleSheet} from 'react-native';
 import {
   CloseIcon,
@@ -20,6 +20,7 @@ import {
 import {ITop4Products, IWishListItem} from '../../types';
 import {useNavigation} from '@react-navigation/native';
 import {WishlistScreenNavigationProp} from 'navigators/NavigationsTypes';
+import {WishlistContext} from 'context/WishlistContext';
 
 const ITEM_SIZE: number = 163;
 
@@ -30,6 +31,7 @@ const WishlistItem = ({
   refreshItems,
   removeEmptyItem,
 }: IWishListItem) => {
+  const {isRefetch, setIsRefetch} = useContext(WishlistContext);
   const {navigate} = useNavigation<WishlistScreenNavigationProp>();
   const [collectionName, setCollectionName] = useState<string>(Name || '');
   const [isEdititingCollectionName, setIsEdititingCollectionName] =
@@ -38,30 +40,24 @@ const WishlistItem = ({
     isDeleteWishListComponentVisibel,
     setIsDeleteWishListComponentVisibel,
   ] = useState<boolean>(false);
-
-  const {
-    mutate: mutateEditWishlistName,
-    isLoading: isLoadingEditWishlistName,
-    isSuccess: isSuccessEditWishlistName,
-  } = useMutation(editWishListName, {
-    onSuccess: data => {
-      return data;
-    },
-    onError: error => {
-      return error;
-    },
-  });
+  const {mutate: mutateEditWishlistName, isLoading: isLoadingEditWishlistName} =
+    useMutation(editWishListName, {
+      onSuccess: data => {
+        refreshItems();
+        setIsRefetch(!isRefetch);
+        onPressEditCollectionName();
+        return data;
+      },
+    });
 
   const {
     mutate: mutateRemoveWishListCollection,
     isLoading: isLoadingRemoveWishListName,
-    isSuccess: isSuccessRemoveWishListName,
   } = useMutation(removeWishListName, {
     onSuccess: data => {
+      refreshItems();
+      setIsRefetch(!isRefetch);
       return data;
-    },
-    onError: error => {
-      return error;
     },
   });
 
@@ -132,16 +128,6 @@ const WishlistItem = ({
     });
   };
 
-  useEffect(() => {
-    if (isSuccessEditWishlistName) {
-      onPressEditCollectionName();
-    }
-  }, [isSuccessEditWishlistName]);
-  useEffect(() => {
-    if (isSuccessRemoveWishListName || isSuccessCreateWishList) {
-      refreshItems();
-    }
-  }, [isSuccessRemoveWishListName, isSuccessCreateWishList]);
   useEffect(() => {
     if (collectionName.length === 0) {
       setIsEdititingCollectionName(true);

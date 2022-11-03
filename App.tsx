@@ -5,7 +5,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider as LanguageProvider} from 'context/reducer';
 import AppIndex from 'App';
 import {NetworkErrorScreen} from 'screens';
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {QueryClientProvider} from '@tanstack/react-query';
 import i18n from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import en from 'i18n/locales/en.json';
@@ -14,6 +14,8 @@ import {readLanguage, readAccessToken} from 'constants';
 import {UserProvider} from 'context/UserContext';
 import {setAxiosAccessToken, setAxiosLanguage} from 'axiosConfig';
 import {ScreenProvider} from 'context/ScreenContext';
+import {WishlistProvider} from 'context/WishlistContext';
+import queryClient from 'queryClient';
 
 const resources = {
   en: {
@@ -26,7 +28,6 @@ const resources = {
 
 export default function App() {
   const {isConnected} = useNetInfo();
-  const queryClient = new QueryClient();
   const [isAr, setIsAr] = useState<boolean>(false);
   useEffect(() => {
     readAccessToken().then(accessToken => {
@@ -67,14 +68,16 @@ export default function App() {
   return (
     <View style={[styles.container, {direction: isAr ? 'rtl' : 'ltr'}]}>
       <ScreenProvider>
-      {/* remove user provider */}
+        {/* remove user provider */}
         <UserProvider>
-          {/* check language provider  */}
-          <LanguageProvider>
-            <QueryClientProvider client={queryClient}>
-              <AppIndex />
-            </QueryClientProvider>
-          </LanguageProvider>
+          <WishlistProvider>
+            {/* check language provider  */}
+            <LanguageProvider>
+              <QueryClientProvider client={queryClient}>
+                <AppIndex />
+              </QueryClientProvider>
+            </LanguageProvider>
+          </WishlistProvider>
         </UserProvider>
       </ScreenProvider>
     </View>

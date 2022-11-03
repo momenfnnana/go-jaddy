@@ -1,9 +1,8 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react';
-import {View, StyleSheet, Pressable, FlatList} from 'react-native';
+import {View, StyleSheet, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {AddHeaderBtn, BackButton, Loader, Modal} from 'components';
+import {AddHeaderBtn, BackButton, Loader} from 'components';
 import {colors, spacing} from 'theme';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useQuery} from '@tanstack/react-query';
 import {getWishlist} from 'services/Profile';
 import {FreeWishlist, WishlistItem} from './components';

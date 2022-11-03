@@ -30,11 +30,13 @@ import {useMutation} from '@tanstack/react-query';
 import {addCartProducts} from 'services/Cart';
 import {useTranslation} from 'react-i18next';
 import {Boxes, CheckboxList, DropdownList, RadioList} from './attributes';
+import {RatingFiltters} from 'components/RatingFilters';
+import { Ifiltter } from 'screens/main/StoreDetails/StoreDetails';
 
 interface IListHeaderComponent {
   Product: any;
   ProductId: number;
-  selectedFilter: string[];
+  selectedFilter: Ifiltter;
   setSelectedFilter: (value: any) => void;
   ratingFilters: string[];
   setRatingFilters: (value: any) => void;
@@ -111,17 +113,8 @@ const ListHeaderComponent = ({
   const [selectedAttributes, setSelectedAttributes] = useState<any[]>([]);
   const [customTextValue, setCustomTextValue] = useState<string>('');
 
-  const {mutate: mutateAddToCart, isLoading: isLoadingAddToCart} = useMutation(
-    addCartProducts,
-    {
-      onSuccess: data => {
-        return data;
-      },
-      onError: error => {
-        return error;
-      },
-    },
-  );
+  const {mutate: mutateAddToCart, isLoading: isLoadingAddToCart} =
+    useMutation(addCartProducts);
 
   const onLoadBackgroundEnd = () => {
     setIsLoadingImageBackground(false);
@@ -575,130 +568,13 @@ const ListHeaderComponent = ({
             <AntDesign name="heart" color={colors.red} size={20} />
           </Pressable>
         </View>
-        {DisplayProductReviews === true && reviewsList.length > 0 && (
-          <>
-            <View style={[styles.ratingsContainer, styles.row]}>
-              <View style={styles.row}>
-                <Text tx="product-details.ratings" variant="mediumBold" />
-                <Text
-                  text={ReviewOverview?.TotalReviews?.toString()}
-                  variant="mediumBold"
-                  style={styles.totalRatings}
-                />
-              </View>
-              <View style={[styles.ratingTotal, styles.row]}>
-                <StarFilledIcon color={colors.orangeDark} />
-                <Text
-                  text={ReviewOverview?.RatingSum?.toString()}
-                  color={colors.orangeDark}
-                  style={styles.ratingSum}
-                  variant="smallRegular"
-                />
-              </View>
-            </View>
-            <View style={styles.ratingFiltersContainer}>
-              <Pressable
-                style={[
-                  styles.filterItem,
-                  {
-                    backgroundColor: selectedFilter.includes('all')
-                      ? colors.secondary
-                      : colors.simiWhite,
-                  },
-                ]}
-                onPress={() => onPressFilter('all')}>
-                <Text
-                  tx="product-details.all"
-                  color={
-                    selectedFilter.includes('all') ? colors.white : colors.black
-                  }
-                />
-              </Pressable>
-              <Pressable
-                style={[
-                  styles.filterItem,
-                  {
-                    backgroundColor: selectedFilter.includes('with-images')
-                      ? colors.secondary
-                      : colors.simiWhite,
-                  },
-                ]}
-                onPress={() => onPressFilter('with-images')}>
-                <Text
-                  tx="product-details.with-images"
-                  color={
-                    selectedFilter.includes('with-images')
-                      ? colors.white
-                      : colors.black
-                  }
-                />
-              </Pressable>
-              {[0, 1, 2, 3, 4].map((item, index) => {
-                const itemsArray = [];
-                switch (index) {
-                  case 0:
-                    itemsArray.push(item);
-                    break;
-                  case 1:
-                    itemsArray.push(item);
-                    itemsArray.push(item);
-                    break;
-                  case 2:
-                    itemsArray.push(item);
-                    itemsArray.push(item);
-                    itemsArray.push(item);
-                    break;
-                  case 3:
-                    itemsArray.push(item);
-                    itemsArray.push(item);
-                    itemsArray.push(item);
-                    itemsArray.push(item);
-                    break;
-                  case 4:
-                    itemsArray.push(item);
-                    itemsArray.push(item);
-                    itemsArray.push(item);
-                    itemsArray.push(item);
-                    itemsArray.push(item);
-                    break;
-
-                  default:
-                    break;
-                }
-
-                return (
-                  <Pressable
-                    style={[
-                      styles.filterItem,
-                      {
-                        backgroundColor: ratingFilters.includes(
-                          (index + 1).toString(),
-                        )
-                          ? colors.secondary
-                          : colors.simiWhite,
-                      },
-                    ]}
-                    key={item}
-                    onPress={() => onPressFilter((item + 1).toString())}>
-                    <View style={styles.row}>
-                      {itemsArray.map((_, subIndex) => (
-                        <AntDesign
-                          name="star"
-                          color={
-                            ratingFilters.includes((index + 1).toString())
-                              ? colors.white
-                              : colors.reloadColor
-                          }
-                          key={subIndex}
-                        />
-                      ))}
-                    </View>
-                  </Pressable>
-                );
-              })}
-            </View>
-          </>
-        )}
+        <RatingFiltters
+          style={{paddingHorizontal: spacing.content}}
+          setSelectedFilter={setSelectedFilter}
+          selectedFilter={selectedFilter}
+          RatingSum={ReviewOverview?.RatingSum?.toString()}
+          TotalReviews={ReviewOverview?.TotalReviews?.toString()}
+        />
       </View>
       {isRefetchingReviews && (
         <Loader size={'small'} color={colors.secondary} />

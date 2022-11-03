@@ -1,6 +1,7 @@
 import i18next from 'i18next';
 import {Linking, Platform} from 'react-native';
 import Snackbar from 'react-native-snackbar';
+import {colors} from 'theme';
 
 export const getFullName = (...names: (string | null | undefined)[]) => {
   return names.filter(Boolean).join(' ');
@@ -58,5 +59,6 @@ export const showErrorMessage = (errorMessage: string) => {
   Snackbar.show({
     text: errorMessage,
     duration: Snackbar.LENGTH_SHORT,
+    backgroundColor: colors.red,
   });
 };

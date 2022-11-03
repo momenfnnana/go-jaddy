@@ -54,9 +54,22 @@ const Header = ({isLogged}: IHeader) => {
         <View style={styles.userTypeContainer}>
           <Text tx="profile.buyer-account" color={colors.orange} center />
         </View>
-        <Pressable onPress={logoutHandler} style={styles.logoutBtnContainer}>
-          <Text tx="profile.logout" color={colors.white} center />
-        </Pressable>
+        {isLogged ? (
+          <Pressable
+            onPress={logoutHandler}
+            style={[styles.logoutBtnContainer, {backgroundColor: colors.red}]}>
+            <Text tx="profile.logout" color={colors.white} center />
+          </Pressable>
+        ) : (
+          <Pressable
+            onPress={logoutHandler}
+            style={[
+              styles.logoutBtnContainer,
+              {backgroundColor: colors.primary},
+            ]}>
+            <Text tx="profile.login" color={colors.white} center />
+          </Pressable>
+        )}
       </View>
     </View>
   );
@@ -95,7 +108,6 @@ const styles = StyleSheet.create({
     marginBottom: spacing.small,
   },
   logoutBtnContainer: {
-    backgroundColor: colors.red,
     paddingHorizontal: spacing.normal + 1,
     paddingVertical: spacing.small - 1,
     borderRadius: spacing.normal - 1,

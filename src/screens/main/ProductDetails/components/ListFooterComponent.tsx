@@ -184,6 +184,7 @@ const ListFooterComponent = ({
           title="product-details.products"
           showSeeMore={false}
           coloredTitle="product-details.related"
+          WishlistEnabled={AlsoPurchasedModel?.WishlistEnabled}
         />
       )}
       {AlsoPurchasedModel?.Items?.length > 0 && (
@@ -192,6 +193,7 @@ const ListFooterComponent = ({
           title="product-details.products"
           showSeeMore={false}
           coloredTitle="product-details.you-may-like"
+          WishlistEnabled={AlsoPurchasedModel?.WishlistEnabled}
         />
       )}
       <Modal

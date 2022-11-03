@@ -10,6 +10,7 @@ import {getProductDetails, getReviews} from 'services/Home';
 import {colors} from 'theme';
 import {ListFooterComponent, ListHeaderComponent} from './components';
 import {IProductNavigation} from 'navigators/NavigationsTypes';
+import {Ifiltter} from '../StoreDetails/StoreDetails';
 
 interface IProductDetails
   extends NativeStackScreenProps<HomeRoutes, 'ProductDetails'> {}
@@ -17,7 +18,10 @@ interface IProductDetails
 const ProductDetails = ({}: IProductDetails) => {
   const {params} = useRoute<IProductNavigation>();
   const {Id} = params;
-  const [selectedFilter, setSelectedFilter] = useState<string[]>([]);
+  const [selectedFilter, setSelectedFilter] = useState<Ifiltter>({
+    ratings: [],
+    withImage: false,
+  });
   const [ratingFilters, setRatingFilters] = useState<string[]>([]);
   const {
     isLoading,
@@ -42,8 +46,8 @@ const ProductDetails = ({}: IProductDetails) => {
         pageParam,
         PageSize: 5,
         ProductId: Id,
-        WithImageOnly: selectedFilter.includes('with-images'),
-        Ratings: ratingFilters,
+        WithImageOnly: selectedFilter.withImage,
+        Ratings: selectedFilter.ratings,
       }),
     {
       getNextPageParam: lastPage => {
@@ -60,7 +64,7 @@ const ProductDetails = ({}: IProductDetails) => {
 
   useEffect(() => {
     refetchReviews();
-  }, [selectedFilter.length, ratingFilters.length]);
+  }, [selectedFilter, ratingFilters.length]);
   useEffect(() => {
     refetch();
   }, [Id]);

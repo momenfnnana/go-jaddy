@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, StyleSheet, FlatList, Pressable, Image} from 'react-native';
 import Modal from './Modal';
 import {useMutation, useQuery} from '@tanstack/react-query';
@@ -15,6 +15,7 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import {colors, spacing} from 'theme';
 import {useTranslation} from 'react-i18next';
 import {BASE_URL} from 'utils/Axios';
+import {WishlistContext} from 'context/WishlistContext';
 
 const CARD_SIZE: number = 43;
 
@@ -39,6 +40,7 @@ const AddToFav = ({
   setIsAddToCollectionShown,
   ProductId,
 }: IAddToFav) => {
+  const {isRefetch} = useContext(WishlistContext);
   const [showInput, setShowInput] = useState<boolean>(false);
   const [selectedWishlist, setSelectedWishlist] = useState<number | string>();
   const {t} = useTranslation();
@@ -52,22 +54,13 @@ const AddToFav = ({
     mutate: mutateAddToWishlist,
     isLoading: isLoadingAddToWishlist,
     isSuccess: isSuccessAddToWishlist,
-  } = useMutation(postAddToWishlist, {
-    onSuccess: data => {
-      return data;
-    },
-    onError: error => {
-      return error;
-    },
-  });
+  } = useMutation(postAddToWishlist);
   const {mutate, isLoading: isLoadingCreateWishList} = useMutation(
     postCreateWishlist,
     {
       onSuccess: data => {
+        refetchWishlists();
         return data;
-      },
-      onError: error => {
-        return error;
       },
     },
   );
@@ -77,7 +70,7 @@ const AddToFav = ({
   const onCloseAddToCollection = () => {
     setIsAddToCollectionShown(false);
   };
-  const addCollectionHandler = (values: IinitialValues, {resetForm}) => {
+  const addCollectionHandler = (values: IinitialValues, {resetForm}: any) => {
     mutate(values.collectionName);
     resetForm();
   };
@@ -96,6 +89,9 @@ const AddToFav = ({
       onCloseAddToCollection();
     }
   }, [isLoadingAddToWishlist, isSuccessAddToWishlist]);
+  useEffect(() => {
+    refetchWishlists();
+  }, [isRefetch]);
   return (
     <Modal
       isVisible={isAddToCollectionShown}

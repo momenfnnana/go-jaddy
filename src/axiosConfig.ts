@@ -27,7 +27,7 @@ axios.interceptors.response.use(
   },
   error => {
     if (error?.response?.status === 401) {
-      return RootNavigation.navigate('AuthFlow', {screen: 'Login'} as any);
+      // return RootNavigation.navigate('AuthFlow', {screen: 'Login'} as any);
     }
     showErrorMessage(error?.response?.data?.Message);
     throw error;

@@ -15,6 +15,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {ICurrency} from 'types';
 import {changeLocalCurrencies} from 'constants';
 import {useDropDownContext} from 'context/dropdownContext';
+import {getCurrencies} from 'services/Auth';
+import {useQuery} from '@tanstack/react-query';
 
 interface IDropDown {
   text?: string;
@@ -24,11 +26,15 @@ interface IDropDown {
 
 let dropdownWidth: number = 145;
 const DropDown = ({text, items}: IDropDown) => {
-  const {width, height} = useWindowDimensions();
   const {currencies} = useContext(UserContext);
   const {isDropDownShown, setIsDropDownShown} = useDropDownContext();
   const [refreshCurrency, setRefreshCurrency] = useState<boolean>();
   const {currency} = useCurrency(refreshCurrency);
+  const {
+    data: currenciesData,
+    isLoading: isLoadingCurrencies,
+    isSuccess: isSuccessLoadingCurrencies,
+  } = useQuery(['currencies'], getCurrencies);
   const showDropDownHandler = () => {
     setIsDropDownShown((currentValue: boolean) => !currentValue);
   };
@@ -45,9 +51,9 @@ const DropDown = ({text, items}: IDropDown) => {
           text={`${currency?.Name} (${currency?.Symbol})`}
         />
       </Pressable>
-      {isDropDownShown && currencies.length && (
+      {isDropDownShown && currenciesData?.data?.Currencies.length && (
         <View style={styles.listContainer}>
-          {currencies.map((item: ICurrency, index: number) => {
+          {currenciesData?.data?.Currencies.map((item: ICurrency, index: number) => {
             return (
               <>
                 <TouchableOpacity
@@ -76,7 +82,7 @@ const DropDown = ({text, items}: IDropDown) => {
                     />
                   )}
                 </TouchableOpacity>
-                {currencies.length !== index + 1 && <Divider />}
+                {currenciesData?.data?.Currencies.length !== index + 1 && <Divider />}
               </>
             );
           })}
