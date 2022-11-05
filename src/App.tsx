@@ -69,7 +69,7 @@ const App = () => {
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <Stack.Navigator
-          initialRouteName={isLoggedIn ? 'HomeFlow' : 'AuthFlow'}
+          initialRouteName='HomeFlow'
           screenOptions={{headerShown: false}}>
           <Stack.Screen component={HomeStack} name="HomeFlow" />
           <Stack.Screen component={AuthStack} name="AuthFlow" />
