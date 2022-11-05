@@ -32,6 +32,7 @@ import CategoryItem from './components/categoryItem';
 import {getCategoryProducts} from 'services/Category';
 import MainTab from './components/MainTab';
 import ArrowIcon from 'components/Arrow';
+import EmptyPage from 'components/EmptyPage/EmptyPage';
 
 export interface Ifiltter {
   withImage: boolean;
@@ -114,7 +115,7 @@ const StoreDetails = () => {
     },
   );
 
-  const {data: StoreMainData} = useInfiniteQuery(
+  const {data: StoreMainData, isLoading: isLoadingStoreMain} = useInfiniteQuery(
     [`getStoreMainTab${params?.storeId}`],
     ({pageParam}) => getStoreCategories({storeId: params?.storeId, pageParam}),
     {
@@ -132,6 +133,7 @@ const StoreDetails = () => {
     hasNextPage: hasNextPageNew,
     isFetchingNextPage: isFetchingNextPageNew,
     fetchNextPage: fetchNextPageNew,
+    isLoading: isLoadingStoreNews,
   } = useInfiniteQuery(
     [`getStoreNewTab${params?.storeId}`],
     ({pageParam}) => getStoreNewProducts({pageParam, storeId: params?.storeId}),
@@ -150,6 +152,7 @@ const StoreDetails = () => {
     hasNextPage: hasNextPageOffer,
     isFetchingNextPage: isFetchingNextPageOffer,
     fetchNextPage: fetchNextPageOffer,
+    isLoading: isLoadingStoreOfferes,
   } = useInfiniteQuery(
     [`getStoreOfferTab${params?.storeId}`],
     ({pageParam}) =>
@@ -239,7 +242,12 @@ const StoreDetails = () => {
     refetchStoreSearch();
   };
 
-  if (isLoadingStoreDetails) {
+  if (
+    isLoadingStoreDetails ||
+    isLoadingStoreMain ||
+    isLoadingStoreNews ||
+    isLoadingStoreOfferes
+  ) {
     return <Loader isPageLoading />;
   }
 
@@ -480,18 +488,27 @@ const StoreDetails = () => {
             .map(page => page.data.ProductSummary.Items)
             .flat()}
           keyExtractor={(item, index) => index.toString()}
+          ListEmptyComponent={
+            <EmptyPage
+              descritopn="EmptyPage.product-description"
+              title="EmptyPage.product-title"
+            />
+          }
           renderItem={({item, index}) => (
             <ProductCard
               styleContainer={{
                 marginRight: index % 2 == 0 ? 10 : 0,
               }}
+              WishlistEnabled={
+                StoreNewData?.pages
+                  .map(page => page.data.ProductSummary)
+                  .flat()[0].WishlistEnabled
+              }
               {...item}
             />
           )}
           ListFooterComponent={
-            isFetchingNextPageNew
-              ? () => <Loader size={'small'} color={colors.primary} />
-              : null
+            isFetchingNextPageNew ? () => <Loader size={'small'} /> : null
           }
         />
       )}
@@ -509,18 +526,27 @@ const StoreDetails = () => {
             .map(page => page.data.ProductSummary.Items)
             .flat()}
           keyExtractor={(item, index) => index.toString()}
+          ListEmptyComponent={
+            <EmptyPage
+              descritopn="EmptyPage.product-description"
+              title="EmptyPage.product-title"
+            />
+          }
           renderItem={({item, index}) => (
             <ProductCard
               styleContainer={{
                 marginRight: index % 2 == 0 ? 10 : 0,
               }}
               {...item}
+              WishlistEnabled={
+                StoreOfferData?.pages
+                  .map(page => page.data.ProductSummary)
+                  .flat()[0].WishlistEnabled
+              }
             />
           )}
           ListFooterComponent={
-            isFetchingNextPageOffer
-              ? () => <Loader size={'small'} color={colors.primary} />
-              : null
+            isFetchingNextPageOffer ? () => <Loader size={'small'} /> : null
           }
         />
       )}
@@ -529,12 +555,18 @@ const StoreDetails = () => {
           key={'#categories'}
           data={StoreMainData?.pages.map(page => page.data.Categories).flat()}
           numColumns={1}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(_, index) => index.toString()}
           contentContainerStyle={{
             paddingHorizontal: spacing.content,
             paddingTop: 20,
           }}
-          renderItem={({item, index}) => (
+          ListEmptyComponent={
+            <EmptyPage
+              descritopn="EmptyPage.product-description"
+              title="EmptyPage.product-title"
+            />
+          }
+          renderItem={({item}) => (
             <CategoryItem
               setCatProductId={setCatProductId}
               setSubCatId={setSubCatId}
@@ -547,25 +579,30 @@ const StoreDetails = () => {
         <FlatList
           keyExtractor={(i, _) => _.toString()}
           ListHeaderComponent={
-            <RatingFiltters
-              DisplayStoreReviews={storeDetailsData.data.DisplayStoreReviews}
-              style={{paddingHorizontal: spacing.content}}
-              setSelectedFilter={setSelectedFilter}
-              selectedFilter={selectedFilter}
-              RatingSum={storeDetailsData.data.ReviewOverview.RatingSum}
-              TotalReviews={storeDetailsData.data.ReviewOverview.TotalReviews}
-              onPressRate={() => {
-                setIsRateModalShown(true);
-              }}
-            />
+            !!storeReviewsData?.pages
+              .map(page => page.data.StoreReviews.Items)
+              .flat().length ? (
+              <RatingFiltters
+                DisplayStoreReviews={storeDetailsData.data.DisplayStoreReviews}
+                style={{paddingHorizontal: spacing.content}}
+                setSelectedFilter={setSelectedFilter}
+                selectedFilter={selectedFilter}
+                RatingSum={storeDetailsData.data.ReviewOverview.RatingSum}
+                TotalReviews={storeDetailsData.data.ReviewOverview.TotalReviews}
+                onPressRate={() => {
+                  setIsRateModalShown(true);
+                }}
+              />
+            ) : undefined
           }
+          ListEmptyComponent={<EmptyPage title="EmptyPage.no-reviews-title" />}
           renderItem={ReviewList}
           data={storeReviewsData?.pages
             .map(page => page.data.StoreReviews.Items)
             .flat()}
           ListFooterComponent={
             isFetchingNextPageStoreReviews || isLoadingStoreReviews ? (
-              <Loader size={'small'} color={colors.primary} />
+              <Loader size={'small'} />
             ) : null
           }
         />
@@ -573,6 +610,9 @@ const StoreDetails = () => {
       {tab == 5 &&
         (isSuccessSearch && !isLoadingStoreSearch ? (
           <FlatList
+            data={StoreSearchData?.pages
+              .map(page => page.data.ProductSummary.Items)
+              .flat()}
             keyExtractor={(i, _) => _.toString()}
             key={'#Search'}
             onEndReached={loadMoreSearch}
@@ -588,19 +628,21 @@ const StoreDetails = () => {
                   marginRight: index % 2 == 0 ? 10 : 0,
                 }}
                 {...item}
+                WishlistEnabled={
+                  StoreSearchData?.pages
+                    .map(page => page.data.ProductSummary)
+                    .flat()[0].WishlistEnabled
+                }
               />
             )}
-            data={StoreSearchData?.pages
-              .map(page => page.data.ProductSummary.Items)
-              .flat()}
             ListFooterComponent={
               isFetchingNextPageSearch || isLoadingStoreSearch ? (
-                <Loader size={'small'} color={colors.primary} />
+                <Loader size={'small'} />
               ) : null
             }
           />
         ) : (
-          <Loader size={'small'} color={colors.primary} />
+          <Loader size={'small'} />
         ))}
       {tab == 6 &&
         (isLoadingProductsCategory ? (
@@ -611,7 +653,7 @@ const StoreDetails = () => {
               alignItems: 'center',
               marginTop: 20,
             }}>
-            <Loader size={'large'} color={colors.primary} />
+            <Loader size={'large'} />
           </View>
         ) : (
           <FlatList
@@ -636,13 +678,16 @@ const StoreDetails = () => {
                 styleContainer={{
                   marginRight: index % 2 == 0 ? 10 : 0,
                 }}
+                WishlistEnabled={
+                  ProductsData?.pages
+                    .map(page => page.data.ProductsModel)
+                    .flat()[0].WishlistEnabled
+                }
                 {...item}
               />
             )}
             ListFooterComponent={
-              isFetchingNextPage
-                ? () => <Loader size={'small'} color={colors.primary} />
-                : null
+              isFetchingNextPage ? () => <Loader size={'small'} /> : null
             }
           />
         ))}

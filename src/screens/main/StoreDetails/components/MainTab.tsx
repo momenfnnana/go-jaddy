@@ -12,6 +12,7 @@ import {getCategoryProducts, getSubCategories} from 'services/Category';
 import {colors, spacing} from 'theme';
 import {Loader, ProductCard, Text} from 'components';
 import {BASE_URL} from 'utils/Axios';
+import EmptyPage from 'components/EmptyPage/EmptyPage';
 
 interface IMainTab {
   storeId: number | any;
@@ -120,6 +121,12 @@ const MainTab = ({
         paddingHorizontal: spacing.content,
         paddingTop: 20,
       }}
+      ListEmptyComponent={
+        <EmptyPage
+          descritopn="EmptyPage.product-description"
+          title="EmptyPage.product-title"
+        />
+      }
       renderItem={({item, index}) => (
         <Pressable
           onPress={() => {
