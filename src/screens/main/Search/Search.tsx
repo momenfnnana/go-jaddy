@@ -122,15 +122,18 @@ const Search = () => {
   };
   const productsList = useMemo(() => {
     if ((params as any)?.title?.length > 0) {
-      return Products?.pages
+      return ProductsCategoryData?.pages
         .map(page => page.data?.ProductsModel?.Items)
         .flat();
     }
     return data?.pages.map(page => page.data?.ProductsModel?.Items).flat();
-  }, [data, Products]);
+  }, [data, ProductsCategoryData]);
   const productsModel = useMemo(() => {
+    if ((params as any)?.title?.length > 0) {
+      return ProductsCategoryData?.pages.map(page => page.data?.ProductsModel);
+    }
     return data?.pages.map(page => page.data?.ProductsModel);
-  }, [data, Products]);
+  }, [data, ProductsCategoryData]);
 
   if (
     isFetching ||
@@ -212,14 +215,19 @@ const Search = () => {
               paddingHorizontal: spacing.content,
             }}
             numColumns={2}
-            renderItem={({item, index}) => (
-              <ProductCard
-                styleContainer={{
-                  marginRight: index % 2 == 0 ? 10 : 0,
-                }}
-                {...item}
-              />
-            )}
+            renderItem={({item, index}) => {
+              return (
+                <ProductCard
+                  styleContainer={{
+                    marginRight: index % 2 == 0 ? 10 : 0,
+                  }}
+                  {...item}
+                  WishlistEnabled={
+                    productsModel && productsModel[0].WishlistEnabled
+                  }
+                />
+              );
+            }}
           />
         ) : (
           <FlatList
