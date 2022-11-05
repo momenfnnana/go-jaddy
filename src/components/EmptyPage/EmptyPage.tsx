@@ -7,39 +7,44 @@ import {Image, StyleSheet, useWindowDimensions, View} from 'react-native';
 import {spacing} from 'theme';
 
 interface IEmptyPage {
-  title: string;
-  descritopn: string;
+  title?: string;
+  descritopn?: string;
   children?: React.ReactNode;
   displayButton?: boolean;
 }
 
-const EmptyPage = ({...res}: IEmptyPage) => {
+const EmptyPage = ({
+  title,
+  descritopn,
+  displayButton,
+  children,
+}: IEmptyPage) => {
   const {width} = useWindowDimensions();
   const {navigate} = useNavigation<WishlistScreenNavigationProp>();
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Image source={FreeWishlistIcon} style={styles.image} />
       <Text
-        tx={res.title}
+        tx={title}
         variant="largeBold"
         center
         top={'xLarge'}
         bottom={'medium'}
       />
       <Text
-        tx={res.descritopn}
+        tx={descritopn}
         variant="smallLight"
         center
         style={{width: width * 0.7}}
       />
-      {res.displayButton && (
+      {displayButton && (
         <Button
           title="wishlist.discover-products"
           style={[styles.discoverProductsBtn, {width: width * 0.6}]}
           onPress={() => navigate('HomeStack', {} as any)}
         />
       )}
-      {res.children}
+      {children}
     </View>
   );
 };

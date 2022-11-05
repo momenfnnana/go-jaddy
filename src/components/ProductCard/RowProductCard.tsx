@@ -1,15 +1,10 @@
 import {useNavigation} from '@react-navigation/native';
-import {DiscountIcon, FavoriteIcon} from 'assets/icons';
+import {DiscountIcon, ProductFavoriteIcon} from 'assets/icons';
+import AddToFav from 'components/Modal/AddToFav';
 import Text from 'components/Text';
 import {HomeNavigationsType} from 'navigators/NavigationsTypes';
-import React from 'react';
-import {
-  View,
-  StyleSheet,
-  ImageBackground,
-  useWindowDimensions,
-  Pressable,
-} from 'react-native';
+import React, {useState} from 'react';
+import {View, StyleSheet, ImageBackground, Pressable} from 'react-native';
 import {IProductInterface} from 'screens/main/Home/types';
 import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
@@ -24,13 +19,23 @@ const RowProductCard = (props: IProductInterface) => {
     CategoryName,
     SupportMultiWishlists,
     WishlistEnabled,
+    Id,
   } = props;
   const {navigate} = useNavigation<HomeNavigationsType>();
+  const [isAddToCollectionShown, setIsAddToCollectionShown] =
+    useState<boolean>(false);
   const DiscountBadge = Badges.find(item => item?.Style === 5);
   const isNewBadge = Badges.find(item => item?.Style === 2);
   const navigateToProduct = () => {
     navigate('ProductDetails', {...props});
   };
+  const showAddToWishList = () => {
+    setIsAddToCollectionShown(true);
+  };
+  const onCloseAddToCollection = () => {
+    setIsAddToCollectionShown(false);
+  };
+
   return (
     <View style={styles.container}>
       <Pressable onPress={navigateToProduct} style={styles.imageContainer}>
@@ -39,7 +44,12 @@ const RowProductCard = (props: IProductInterface) => {
           resizeMode="contain"
           style={styles.image}>
           {SupportMultiWishlists && WishlistEnabled && (
-            <FavoriteIcon stroke={colors.tabsColor} />
+            <View style={styles.favoriteIconContainer}>
+              <ProductFavoriteIcon
+                stroke={colors.tabsColor}
+                onPress={showAddToWishList}
+              />
+            </View>
           )}
           {Price?.HasDiscount && DiscountBadge?.Label && (
             <View style={styles.discountBadgeContainer}>
@@ -105,6 +115,11 @@ const RowProductCard = (props: IProductInterface) => {
           style={styles.currency}
         />
       </View>
+      <AddToFav
+        isAddToCollectionShown={isAddToCollectionShown}
+        setIsAddToCollectionShown={setIsAddToCollectionShown}
+        ProductId={Id}
+      />
     </View>
   );
 };
@@ -178,5 +193,8 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.tiny,
     borderRadius: 5,
     overflow: 'hidden',
+  },
+  favoriteIconContainer: {
+    height: 40,
   },
 });

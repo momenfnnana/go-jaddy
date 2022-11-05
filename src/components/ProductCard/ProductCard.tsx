@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   ImageBackground,
@@ -7,20 +7,15 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {useNavigation, useNavigationState} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {useMutation} from '@tanstack/react-query';
 import {DiscountIcon, ProductFavoriteIcon, StarFilledIcon} from 'assets/icons';
 import {Text, AddToFav} from 'components';
 import {useCurrency} from 'hook/useCurrency';
 import {HomeNavigationsType} from 'navigators/NavigationsTypes';
-import {HomeRoutes} from 'navigators/RoutesTypes';
 import {IProductInterface} from 'screens/main/Home/types';
-import {postAddToWishlist} from 'services/Home';
 import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
 import {useTranslation} from 'react-i18next';
-
-const CARD_SIZE: number = 43;
+import {LogoSplash} from 'assets/images';
 
 const ProductCard = (props: IProductInterface) => {
   const {
@@ -48,18 +43,6 @@ const ProductCard = (props: IProductInterface) => {
   const {width} = useWindowDimensions();
   const currentRoute = routes[routes.length - 1].name;
 
-  const {
-    mutate: mutateAddToWishlist,
-    isLoading: isLoadingAddToWishlist,
-    isSuccess: isSuccessAddToWishlist,
-  } = useMutation(postAddToWishlist, {
-    onSuccess: data => {
-      return data;
-    },
-    onError: error => {
-      return error;
-    },
-  });
   const navigateToProduct = () => {
     if (currentRoute === 'ProductDetails') {
       setParams({...props});
@@ -67,28 +50,26 @@ const ProductCard = (props: IProductInterface) => {
     navigate('ProductDetails', {...props});
   };
 
-  const onCloseAddToCollection = () => {
-    setIsAddToCollectionShown(false);
-  };
   const showAddToWishList = () => {
     setIsAddToCollectionShown(true);
   };
 
-  useEffect(() => {
-    if (!isLoadingAddToWishlist && isSuccessAddToWishlist) {
-      onCloseAddToCollection();
-    }
-  }, [isLoadingAddToWishlist, isSuccessAddToWishlist]);
-
+  const source =
+    ImageResponse.Id === 0
+      ? LogoSplash
+      : {uri: `${BASE_URL}${ImageResponse?.Url}`};
   return (
     <>
       <Pressable
         onPress={navigateToProduct}
         style={[styles.container, {width: width / 2 - 20}, styleContainer]}>
         <ImageBackground
-          source={{uri: `${BASE_URL}${ImageResponse?.Url}`}}
+          source={source}
           resizeMode="contain"
-          style={styles.Imagecontainer}>
+          style={[
+            styles.Imagecontainer,
+            {opacity: ImageResponse.Id === 0 ? 0.5 : 1},
+          ]}>
           <View style={styles.topIconsContainer}>
             {WishlistEnabled && (
               <View style={styles.favoriteIconContainer}>
