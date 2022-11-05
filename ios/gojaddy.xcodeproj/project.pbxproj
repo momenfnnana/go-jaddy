@@ -30,6 +30,7 @@
 		AF990F0D28DA2578005630CC /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF990EFD28DA2578005630CC /* EvilIcons.ttf */; };
 		AF990F0E28DA2578005630CC /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF990EFE28DA2578005630CC /* SimpleLineIcons.ttf */; };
 		AF990F0F28DA2578005630CC /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF990EFF28DA2578005630CC /* MaterialIcons.ttf */; };
+		E293E80F2916E0C100DE3BD7 /* splash_screen.png in Resources */ = {isa = PBXBuildFile; fileRef = E293E80E2916E0C100DE3BD7 /* splash_screen.png */; };
 		E2C3263328F423690026C805 /* Almarai-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2C3262F28F423690026C805 /* Almarai-Bold.ttf */; };
 		E2C3263428F423690026C805 /* Almarai-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2C3263028F423690026C805 /* Almarai-Light.ttf */; };
 		E2C3263528F423690026C805 /* Almarai-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2C3263128F423690026C805 /* Almarai-ExtraBold.ttf */; };
@@ -79,6 +80,7 @@
 		AF990EFD28DA2578005630CC /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
 		AF990EFE28DA2578005630CC /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		AF990EFF28DA2578005630CC /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
+		E293E80E2916E0C100DE3BD7 /* splash_screen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash_screen.png; sourceTree = "<group>"; };
 		E2C3262F28F423690026C805 /* Almarai-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Almarai-Bold.ttf"; path = "../src/assets/fonts/Almarai-Bold.ttf"; sourceTree = "<group>"; };
 		E2C3263028F423690026C805 /* Almarai-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Almarai-Light.ttf"; path = "../src/assets/fonts/Almarai-Light.ttf"; sourceTree = "<group>"; };
 		E2C3263128F423690026C805 /* Almarai-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Almarai-ExtraBold.ttf"; path = "../src/assets/fonts/Almarai-ExtraBold.ttf"; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 		13B07FAE1A68108700A75B9A /* gojaddy */ = {
 			isa = PBXGroup;
 			children = (
+				E293E80E2916E0C100DE3BD7 /* splash_screen.png */,
 				AF990EEF28DA2578005630CC /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -322,6 +325,7 @@
 				AF990F0628DA2578005630CC /* AntDesign.ttf in Resources */,
 				E2C3263628F423690026C805 /* Almarai-Regular.ttf in Resources */,
 				AF990F0728DA2578005630CC /* Foundation.ttf in Resources */,
+				E293E80F2916E0C100DE3BD7 /* splash_screen.png in Resources */,
 				AF990F0C28DA2578005630CC /* Zocial.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
