@@ -9,7 +9,7 @@ import {
   Pressable,
   Linking,
 } from 'react-native';
-import {Text} from 'components';
+import {ProgressiveImage, Text} from 'components';
 import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
 
@@ -64,6 +64,7 @@ const Carasoule = ({containerStyle, data}: ICarasoule) => {
       justifyContent: 'flex-end',
       paddingVertical: spacing.large + 2,
       width: width - 30,
+      backgroundColor: 'transparent',
     };
   }, [height]);
   const customTitleContainer: ViewStyle = useMemo(() => {
@@ -101,9 +102,11 @@ const Carasoule = ({containerStyle, data}: ICarasoule) => {
           item: {imageUrl, Description, Image, MobileImage, Link, ...rest},
         }) => (
           <Pressable onPress={() => Linking.openURL(Link)}>
-            <ImageBackground
+            <ProgressiveImage
               source={{uri: `${BASE_URL}${MobileImage?.Url}`}}
-              style={customStyle}>
+              thumbnailSource={{uri: `${BASE_URL}${MobileImage?.ThumbUrl}`}}
+              containerStyle={customStyle}
+              variant="ImageBackground">
               <View style={[styles.titleContainer, customTitleContainer]}>
                 <View style={styles.tab} />
                 <Text
@@ -113,7 +116,7 @@ const Carasoule = ({containerStyle, data}: ICarasoule) => {
                   style={styles.title}
                 />
               </View>
-            </ImageBackground>
+            </ProgressiveImage>
           </Pressable>
         )}
       />
