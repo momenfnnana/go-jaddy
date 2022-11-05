@@ -251,8 +251,9 @@
     "product-title": "No products in this screen",
     "addresses-title": "No address to show",
     "addresses-description": "To add address, press on add icon in header",
-    "store-title": "No stores to show",
-    "store-description": "go to all stores then follow them"
+    "store-follow-title": "No stores to show",
+    "store-follow-description": "go to all stores then follow them",
+    "no-reviews-title": "No reviews added before"
   },
   "api": {
     "account": {

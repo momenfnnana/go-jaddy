@@ -169,5 +169,14 @@
     "load-more": "تحميل المزيد",
     "continue": "تأكيد",
     "cancel": "تراجع"
+  },
+  "EmptyPage": {
+    "product-description": "اذهب للرئيسية واكتشف المنتجات",
+    "product-title": "لا يوجد منتجات",
+    "addresses-title": "لم يتم اضافة عناوين",
+    "addresses-description": "لإضافة عنوان اضغط على زر الاضافة في الاعلى",
+    "store-follow-title": "لا يوجد متاجر",
+    "store-follow-description": "اذهب لكل المتاجر وتابع منها",
+    "no-reviews-title": "لم يتم اضافة تقييمات"
   }
 }
