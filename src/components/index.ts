@@ -18,3 +18,4 @@ export {default as DropDown} from './DropDown';
 export {default as BackButton} from './BackButton';
 export {default as AddHeaderBtn} from './AddHeaderBtn';
 export {default as RateModal} from './RateModal';
+export {default as ProgressiveImage} from './ProgressiveImage';
