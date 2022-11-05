@@ -31,7 +31,7 @@ import {addCartProducts} from 'services/Cart';
 import {useTranslation} from 'react-i18next';
 import {Boxes, CheckboxList, DropdownList, RadioList} from './attributes';
 import {RatingFiltters} from 'components/RatingFilters';
-import { Ifiltter } from 'screens/main/StoreDetails/StoreDetails';
+import {Ifiltter} from 'screens/main/StoreDetails/StoreDetails';
 
 interface IListHeaderComponent {
   Product: any;
@@ -571,13 +571,15 @@ const ListHeaderComponent = ({
             <AntDesign name="heart" color={colors.red} size={20} />
           </Pressable>
         </View>
-        <RatingFiltters
-          style={{paddingHorizontal: spacing.content}}
-          setSelectedFilter={setSelectedFilter}
-          selectedFilter={selectedFilter}
-          RatingSum={ReviewOverview?.RatingSum?.toString()}
-          TotalReviews={ReviewOverview?.TotalReviews?.toString()}
-        />
+        {!!reviewsList.length && (
+          <RatingFiltters
+            style={{paddingHorizontal: spacing.content}}
+            setSelectedFilter={setSelectedFilter}
+            selectedFilter={selectedFilter}
+            RatingSum={ReviewOverview?.RatingSum?.toString()}
+            TotalReviews={ReviewOverview?.TotalReviews?.toString()}
+          />
+        )}
       </View>
       {isRefetchingReviews && (
         <Loader size={'small'} color={colors.secondary} />
