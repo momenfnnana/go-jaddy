@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native';
 import React, {ReactNode} from 'react';
 import {View, StyleSheet, StatusBar, Pressable, Platform} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -6,7 +5,7 @@ import {colors, spacing} from 'theme';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {FilterIcon} from 'assets/icons';
 import {SearchInput} from './components';
-import ArrowIcon from 'components/Arrow';
+import BackButton from 'components/BackButton';
 
 const GO_BACK_SIZE = 36;
 const ICON_SIZE = 20;
@@ -33,7 +32,6 @@ const SearchHeader = ({
   placeholder = 'search.search-input',
 }: ISearchHeader) => {
   const {top} = useSafeAreaInsets();
-  const {goBack} = useNavigation();
   return (
     <View
       style={{
@@ -44,9 +42,7 @@ const SearchHeader = ({
       }}>
       <StatusBar barStyle="light-content" />
       <View style={styles.container}>
-        <Pressable style={styles.goBackContainer} onPress={goBack}>
-          <ArrowIcon size={ICON_SIZE} color={colors.white} />
-        </Pressable>
+        <BackButton />
         <SearchInput
           autoFocus={autoFocus}
           containerStyle={styles.inputField}
@@ -82,18 +78,9 @@ export default SearchHeader;
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 0.1,
     justifyContent: 'space-around',
     alignItems: 'flex-end',
     flexDirection: 'row',
-  },
-  goBackContainer: {
-    width: GO_BACK_SIZE,
-    height: GO_BACK_SIZE,
-    borderRadius: spacing.small + 2,
-    backgroundColor: colors.white + 18,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   searchIconContainer: {
     width: GO_BACK_SIZE,
