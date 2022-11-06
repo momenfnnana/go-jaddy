@@ -13,12 +13,14 @@ import {colors, spacing} from 'theme';
 import {Loader, ProductCard, Text} from 'components';
 import {BASE_URL} from 'utils/Axios';
 import EmptyPage from 'components/EmptyPage/EmptyPage';
+import {LogoSplash} from 'assets/images';
 
 interface IMainTab {
   storeId: number | any;
   setSubCatId: (() => void) | any;
   setCatProductId: (() => void) | any;
   subCatId: number;
+  onScroll: (value: any) => void;
 }
 
 const MainTab = ({
@@ -26,6 +28,7 @@ const MainTab = ({
   setSubCatId,
   subCatId,
   setCatProductId,
+  onScroll,
 }: IMainTab) => {
   const {width} = useWindowDimensions();
   const {
@@ -109,6 +112,7 @@ const MainTab = ({
 
   return (
     <FlatList
+      onScroll={onScroll}
       key={'#main'}
       data={
         subCatId == -1
@@ -127,33 +131,44 @@ const MainTab = ({
           title="EmptyPage.product-title"
         />
       }
-      renderItem={({item, index}) => (
-        <Pressable
-          onPress={() => {
-            if (item.HasSubCategories) {
-              setSubCatId(item.Id);
-            } else {
-              setCatProductId(item.Id);
-              setSubCatId(-2);
-            }
-          }}
-          style={{
-            borderRadius: 10,
-            borderWidth: 1,
-            borderColor: colors.border,
-            padding: 8,
-            width: width / 2 - 20,
-            marginBottom: 10,
-            marginRight: index % 2 == 0 ? 10 : 0,
-          }}>
-          <Text tx={item.Name} variant="smallBold" />
-          <Image
-            source={{uri: BASE_URL + item.Image?.Url}}
-            style={{width: '100%', height: 90, marginTop: 10}}
-            resizeMode="contain"
-          />
-        </Pressable>
-      )}
+      renderItem={({item, index}) => {
+        const isExistCategoryImage = item.Image?.Url?.length > 0;
+        const sourcCategory = !isExistCategoryImage
+          ? LogoSplash
+          : {uri: BASE_URL + item.Image?.Url};
+        return (
+          <Pressable
+            onPress={() => {
+              if (item.HasSubCategories) {
+                setSubCatId(item.Id);
+              } else {
+                setCatProductId(item.Id);
+                setSubCatId(-2);
+              }
+            }}
+            style={{
+              borderRadius: 10,
+              borderWidth: 1,
+              borderColor: colors.border,
+              padding: 8,
+              width: width / 2 - 20,
+              marginBottom: 10,
+              marginRight: index % 2 == 0 ? 10 : 0,
+            }}>
+            <Text tx={item.Name} variant="smallBold" />
+            <Image
+              source={sourcCategory}
+              style={{
+                width: '100%',
+                height: 90,
+                marginTop: 10,
+                opacity: isExistCategoryImage ? 1 : 0.5,
+              }}
+              resizeMode="contain"
+            />
+          </Pressable>
+        );
+      }}
     />
   );
 };

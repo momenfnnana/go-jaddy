@@ -17,6 +17,8 @@ import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
 import {CategoryNavigationsType} from 'navigators/NavigationsTypes';
 import {ActivityIndicator} from 'react-native-paper';
+import EmptyPage from 'components/EmptyPage/EmptyPage';
+import {LogoSplash} from 'assets/images';
 
 const Categories = () => {
   const {width} = useWindowDimensions();
@@ -53,18 +55,18 @@ const Categories = () => {
     refetch();
   }, []);
 
-  if (isLoading) {
-    return (
-      <Loader
-        size={'large'}
-        containerStyle={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      />
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <Loader
+  //       size={'large'}
+  //       containerStyle={{
+  //         flex: 1,
+  //         justifyContent: 'center',
+  //         alignItems: 'center',
+  //       }}
+  //     />
+  //   );
+  // }
 
   return (
     <View style={{flex: 1}}>
@@ -72,6 +74,7 @@ const Categories = () => {
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={onRefresh} />
         }
+        ListEmptyComponent={<EmptyPage title="EmptyPage.categories-title" />}
         onEndReached={loadMore}
         onEndReachedThreshold={0.3}
         keyExtractor={(i, _) => _.toString()}
@@ -93,6 +96,10 @@ const Categories = () => {
           paddingTop: spacing.large,
         }}
         renderItem={({item}) => {
+          const source =
+            item?.Image?.Id === 0
+              ? LogoSplash
+              : {uri: `${BASE_URL}${item?.Image?.Url}`};
           return (
             <Pressable
               onPress={() =>
@@ -178,8 +185,12 @@ const Categories = () => {
                       marginBottom: 5,
                     }}>
                     <Image
-                      style={{width: '100%', height: '100%'}}
-                      source={{uri: `${BASE_URL + item?.Image.Url}`}}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        opacity: item?.Image.Id === 0 ? 0.5 : 1,
+                      }}
+                      source={source}
                       resizeMode={'contain'}
                     />
                   </View>

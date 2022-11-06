@@ -10,7 +10,7 @@ import EmptyPage from 'components/EmptyPage/EmptyPage';
 import {PreviousAddressNavigationProp} from 'navigators/NavigationsTypes';
 
 const PreviousTitles = () => {
-  const [isDefault, setDefault] = useState<number>(-1);
+  // const [isDefault, setDefault] = useState<number>(-1);
   const {params} = useRoute();
   const [deletedItem, setDeletedItem] = useState<number>(-1);
   const {setOptions, navigate} = useNavigation<PreviousAddressNavigationProp>();
@@ -41,11 +41,11 @@ const PreviousTitles = () => {
     }
   }, [params?.refetch]);
 
-  useEffect(() => {
-    if (isDefault != -1) {
-      refetchPreAdd();
-    }
-  }, [isDefault]);
+  // useEffect(() => {
+  //   if (isDefault != -1) {
+  //     refetchPreAdd();
+  //   }
+  // }, [isDefault]);
 
   useEffect(() => {
     if (deletedItem != -1) {
@@ -85,16 +85,15 @@ const PreviousTitles = () => {
           renderItem={({item}) => (
             <AddressItem
               item={item}
-              isDefault={isDefault}
-              setDefault={setDefault}
               setDeletedItem={setDeletedItem}
+              refetchAddresses={refetchPreAdd}
             />
           )}
         />
       ) : (
         <EmptyPage
           title="EmptyPage.addresses-title"
-          descritopn="addresses-description"
+          descritopn="EmptyPage.addresses-description"
         />
       )}
     </View>

@@ -52,7 +52,7 @@ const GredientFrom = '#AFB2B500';
 const GredientTo = '#231D2590';
 
 const initialValues: IinitialValues = {
-  phoneNumber: '121234567891012',
+  phoneNumber: '00980595700501',
   password: 'Password$1',
 };
 const loginSchema = Yub.object().shape({
