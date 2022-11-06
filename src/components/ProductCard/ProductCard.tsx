@@ -16,6 +16,8 @@ import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
 import {useTranslation} from 'react-i18next';
 import {LogoSplash} from 'assets/images';
+import {useAccessToken} from 'hook/useAccessToken';
+import { goToLogin } from 'helpers';
 
 const ProductCard = (props: IProductInterface) => {
   const {
@@ -30,7 +32,7 @@ const ProductCard = (props: IProductInterface) => {
     Id,
     ColorAttributes,
   } = props;
-
+  const {accessToken} = useAccessToken();
   const {currency} = useCurrency();
   const {navigate, setParams} = useNavigation<HomeNavigationsType>();
   const routes = useNavigationState(state => state.routes);
@@ -51,13 +53,18 @@ const ProductCard = (props: IProductInterface) => {
   };
 
   const showAddToWishList = () => {
-    setIsAddToCollectionShown(true);
+    if (!!accessToken?.length) {
+      setIsAddToCollectionShown(true);
+    } else {
+      goToLogin();
+    }
   };
 
   const source =
     ImageResponse.Id === 0
       ? LogoSplash
       : {uri: `${BASE_URL}${ImageResponse?.Url}`};
+
   return (
     <>
       <Pressable

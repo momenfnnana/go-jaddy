@@ -40,8 +40,7 @@ const Home = () => {
     refetch: refetchStore,
     isRefetching: isRefetchingrefetchStore,
   } = useQuery(['getStores'], getStores, {
-    // enabled: StoreSettings?.ShowStoresOnHomePage === 'True',
-    enabled: false,
+    enabled: StoreSettings?.ShowStoresOnHomePage === 'True',
   });
   const {
     isLoading: isLoadingSlider,
@@ -73,8 +72,7 @@ const Home = () => {
     refetch: refetchgetBestSellers,
     isRefetching: isRefetchinggetBestSellers,
   } = useQuery(['getBestSellers'], getBestSellers, {
-    // enabled: CatalogSettings?.ShowBestsellersOnHomepage === 'True',
-    enabled: false,
+    enabled: CatalogSettings?.ShowBestsellersOnHomepage === 'True',
   });
 
   const getAllData = () => {

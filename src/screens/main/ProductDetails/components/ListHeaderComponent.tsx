@@ -32,6 +32,7 @@ import {useTranslation} from 'react-i18next';
 import {Boxes, CheckboxList, DropdownList, RadioList} from './attributes';
 import {RatingFiltters} from 'components/RatingFilters';
 import {Ifiltter} from 'screens/main/StoreDetails/StoreDetails';
+import {LogoSplash} from 'assets/images';
 
 interface IListHeaderComponent {
   Product: any;
@@ -302,14 +303,18 @@ const ListHeaderComponent = ({
     justifyContent: 'center',
     alignItems: 'center',
   } as ViewStyle;
+  const source = Product?.Images[activeImageIndex]?.Url
+    ? {uri: `${BASE_URL}${Product?.Images[activeImageIndex]?.Url}`}
+    : LogoSplash;
 
   return (
     <View>
       <ImageBackground
-        source={{
-          uri: `${BASE_URL}${Product?.Images[activeImageIndex]?.Url}`,
-        }}
-        onLoadEnd={onLoadBackgroundEnd}>
+        source={source}
+        onLoadEnd={onLoadBackgroundEnd}
+        imageStyle={{
+          opacity: Product?.Images[activeImageIndex]?.Url ? 1 : 0.5,
+        }}>
         <LinearGradient
           colors={gradientColors}
           style={[
@@ -415,7 +420,10 @@ const ListHeaderComponent = ({
           />
           <View style={[styles.priceContainer, styles.storeWidth]}>
             <Text
-              text={Product?.ProductPrice?.Price}
+              text={(
+                (Product?.ProductPrice?.Price + totalPrice) *
+                productsNumber
+              ).toString()}
               color={colors.orange}
               variant="xLargeBold"
               numberOfLines={1}
@@ -505,9 +513,7 @@ const ListHeaderComponent = ({
               variant="mediumLight"
             />
             <Text style={styles.stockAvailability}>
-              {StockAvailability === ''
-                ? 0
-                : (StockAvailability + totalPrice) * productsNumber}
+              {StockAvailability === '' ? 0 : StockAvailability}
             </Text>
           </View>
           {StockAvailability === '' &&

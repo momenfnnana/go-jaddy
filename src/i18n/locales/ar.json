@@ -58,7 +58,9 @@
   },
   "search": {
     "search-input": "ابحث في المتاجر",
-    "search-result-for": "نتيجة البحث عن:"
+    "search-result-for": "نتيجة البحث عن:",
+    "start-searching": "ابدأ البحث",
+    "no-search-results": "لا يوجد نتائج بحث "
   },
   "product-details": {
     "select-color": "اختر اللون",

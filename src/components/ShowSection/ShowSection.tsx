@@ -67,21 +67,23 @@ const ShowSection = ({
         {/* <View style={styles.goNextArrowContainer}>
           <GoNextArrowIcon />
         </View> */}
-        <FlatList
-          data={data}
-          showsHorizontalScrollIndicator={false}
-          style={{marginHorizontal: -15}}
-          contentContainerStyle={{paddingHorizontal: 15}}
-          keyExtractor={(_, index) => index.toString()}
-          horizontal
-          renderItem={({item}) => (
-            <ProductCard
-              styleContainer={{width: width / 2.2 - 20}}
-              {...item}
-              WishlistEnabled={WishlistEnabled}
-            />
-          )}
-        />
+        {!!data.length && (
+          <FlatList
+            data={data}
+            showsHorizontalScrollIndicator={false}
+            style={{marginHorizontal: -15}}
+            contentContainerStyle={{paddingHorizontal: 15}}
+            keyExtractor={(_, index) => index.toString()}
+            horizontal
+            renderItem={({item}) => (
+              <ProductCard
+                styleContainer={{width: width / 2.2 - 20}}
+                WishlistEnabled={WishlistEnabled}
+                {...item}
+              />
+            )}
+          />
+        )}
       </View>
     </View>
   );

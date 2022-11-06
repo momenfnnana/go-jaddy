@@ -128,21 +128,23 @@ const StoresCarasoule = ({items}: IStoresCarasoule) => {
   };
   return (
     <>
-      <FlatList
-        data={itemsToRender}
-        keyExtractor={(_, index) => index.toString()}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onScroll={scrollHandler}
-        renderItem={({item}) => {
-          return (
-            <StoreItem
-              {...{CONTAINER_WIDTH, item, ITEM_HEIGHT, ITEM_WIDTH, SIZE}}
-            />
-          );
-        }}
-      />
+      {!!itemsToRender.length && (
+        <FlatList
+          data={itemsToRender}
+          keyExtractor={(_, index) => index.toString()}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onScroll={scrollHandler}
+          renderItem={({item}) => {
+            return (
+              <StoreItem
+                {...{CONTAINER_WIDTH, item, ITEM_HEIGHT, ITEM_WIDTH, SIZE}}
+              />
+            );
+          }}
+        />
+      )}
       <Indicators activeIndex={activeIndex} data={itemsToRender} />
     </>
   );

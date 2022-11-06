@@ -29,6 +29,10 @@ type AuthNavigationsType = CompositeNavigationProp<
 interface HomeNavigationsType
   extends NativeStackNavigationProp<HomeRoutes>,
     RouteProp<BottomTabsRoutes> {}
+// type HomeNavigationsType = CompositeNavigationProp<
+//   NativeStackNavigationProp<MainNavigator, 'HomeFlow'>,
+//   NativeStackNavigationProp<BottomTabsRoutes, 'StoresStack'>
+// >;
 
 interface CategoryNavigationsType
   extends NativeStackNavigationProp<CategotyRoutes & BottomTabsRoutes>,

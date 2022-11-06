@@ -33,6 +33,7 @@ import ResetPasswordModal from './components/ForgetPasswordModal';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {LoginScreenNavigationProp} from 'navigators/NavigationsTypes';
 import axios from 'axios';
+import {useAccessToken} from 'hook/useAccessToken';
 
 interface IinitialValues {
   phoneNumber: string;
@@ -64,6 +65,7 @@ const loginSchema = Yub.object().shape({
     .min(8, 'password must being at least 8 characters'),
 });
 const Login = () => {
+  const {reload} = useAccessToken();
   const {width, height} = useWindowDimensions();
   const {top} = useSafeAreaInsets();
   const {navigate, canGoBack, goBack} =
@@ -94,6 +96,7 @@ const Login = () => {
     doLogin_service,
     {
       onSuccess: data => {
+        reload(data.data?.AccessToken);
         return data;
       },
       onError: error => {

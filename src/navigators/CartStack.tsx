@@ -1,7 +1,7 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {CartScreen} from 'screens';
+import {CartScreen, ContinueOrderStepsScreen} from 'screens';
 import {colors, font} from 'theme';
 import {CartRoutes} from './RoutesTypes';
 
@@ -19,6 +19,11 @@ const CartStack = () => {
         headerTitleAlign: 'center',
       }}>
       <Stack.Screen component={CartScreen} name="Cart" />
+      <Stack.Screen
+        options={{headerShown: false}}
+        component={ContinueOrderStepsScreen}
+        name="ContinueOrderSteps"
+      />
     </Stack.Navigator>
   );
 };

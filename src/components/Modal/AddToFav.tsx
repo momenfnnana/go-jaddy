@@ -16,6 +16,7 @@ import {colors, spacing} from 'theme';
 import {useTranslation} from 'react-i18next';
 import {BASE_URL} from 'utils/Axios';
 import {WishlistContext} from 'context/WishlistContext';
+import {useAccessToken} from 'hook/useAccessToken';
 
 const CARD_SIZE: number = 43;
 
@@ -40,6 +41,7 @@ const AddToFav = ({
   setIsAddToCollectionShown,
   ProductId,
 }: IAddToFav) => {
+  const {accessToken} = useAccessToken();
   const {isRefetch} = useContext(WishlistContext);
   const [showInput, setShowInput] = useState<boolean>(false);
   const [selectedWishlist, setSelectedWishlist] = useState<number | string>();
@@ -91,7 +93,7 @@ const AddToFav = ({
   }, [isLoadingAddToWishlist, isSuccessAddToWishlist]);
   useEffect(() => {
     refetchWishlists();
-  }, [isRefetch]);
+  }, [isRefetch, accessToken]);
   return (
     <Modal
       isVisible={isAddToCollectionShown}

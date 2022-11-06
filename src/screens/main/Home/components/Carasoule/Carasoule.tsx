@@ -89,37 +89,39 @@ const Carasoule = ({containerStyle, data}: ICarasoule) => {
 
   return (
     <View style={containerStyle}>
-      <FlatList
-        data={data}
-        keyExtractor={(_, index) => index.toString()}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        decelerationRate={0}
-        style={flatListStyle}
-        snapToInterval={width - 30}
-        onScroll={scrollHandler}
-        renderItem={({
-          item: {imageUrl, Description, Image, MobileImage, Link, ...rest},
-        }) => (
-          <Pressable onPress={() => Linking.openURL(Link)}>
-            <ProgressiveImage
-              source={{uri: `${BASE_URL}${MobileImage?.Url}`}}
-              thumbnailSource={{uri: `${BASE_URL}${MobileImage?.ThumbUrl}`}}
-              containerStyle={customStyle}
-              variant="ImageBackground">
-              <View style={[styles.titleContainer, customTitleContainer]}>
-                <View style={styles.tab} />
-                <Text
-                  tx={Description}
-                  variant="smallBold"
-                  color={colors.white}
-                  style={styles.title}
-                />
-              </View>
-            </ProgressiveImage>
-          </Pressable>
-        )}
-      />
+      {!!data.length && (
+        <FlatList
+          data={data}
+          keyExtractor={(_, index) => index.toString()}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          decelerationRate={0}
+          style={flatListStyle}
+          snapToInterval={width - 30}
+          onScroll={scrollHandler}
+          renderItem={({
+            item: {imageUrl, Description, Image, MobileImage, Link, ...rest},
+          }) => (
+            <Pressable onPress={() => Linking.openURL(Link)}>
+              <ProgressiveImage
+                source={{uri: `${BASE_URL}${MobileImage?.Url}`}}
+                thumbnailSource={{uri: `${BASE_URL}${MobileImage?.ThumbUrl}`}}
+                containerStyle={customStyle}
+                variant="ImageBackground">
+                <View style={[styles.titleContainer, customTitleContainer]}>
+                  <View style={styles.tab} />
+                  <Text
+                    tx={Description}
+                    variant="smallBold"
+                    color={colors.white}
+                    style={styles.title}
+                  />
+                </View>
+              </ProgressiveImage>
+            </Pressable>
+          )}
+        />
+      )}
       <Indicators activeIndex={activeIndex} data={data} />
     </View>
   );

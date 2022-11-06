@@ -50,6 +50,7 @@ export type CategotyRoutes = {
 
 export type CartRoutes = {
   Cart: undefined;
+  ContinueOrderSteps: undefined;
 };
 
 export type StoresRoutes = {

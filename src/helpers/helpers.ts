@@ -2,6 +2,7 @@ import i18next from 'i18next';
 import {Linking, Platform} from 'react-native';
 import Snackbar from 'react-native-snackbar';
 import {colors} from 'theme';
+import * as RootNavigation from 'navigators/RootNavigation';
 
 export const getFullName = (...names: (string | null | undefined)[]) => {
   return names.filter(Boolean).join(' ');
@@ -61,4 +62,8 @@ export const showErrorMessage = (errorMessage: string) => {
     duration: Snackbar.LENGTH_SHORT,
     backgroundColor: colors.red,
   });
+};
+
+export const goToLogin = () => {
+  RootNavigation.navigate('AuthFlow', {screen: 'Login'} as any);
 };

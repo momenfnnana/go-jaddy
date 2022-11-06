@@ -8,6 +8,7 @@ import {
 } from 'components';
 import {
   FlatList,
+  Image,
   Keyboard,
   Pressable,
   StyleSheet,
@@ -17,13 +18,15 @@ import {
 import {colors, spacing} from 'theme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
-import {useInfiniteQuery, useMutation} from '@tanstack/react-query';
+import {useInfiniteQuery} from '@tanstack/react-query';
 import {getSearchResults} from 'services/Home';
 import {UserContext} from 'context/UserContext';
 import {useCurrency} from 'hook/useCurrency';
 import {useRoute} from '@react-navigation/native';
 import {HomeNavigationsType} from 'navigators/NavigationsTypes';
 import {getCategoryProducts} from 'services/Category';
+import {LogoSplash} from 'assets/images';
+import Octicons from 'react-native-vector-icons/Octicons';
 
 const FILTER_ICON_SIZE = 26;
 type IshowListHandler = 'list' | 'grid';
@@ -32,6 +35,7 @@ const Search = () => {
   const [searchText, setSearchText] = useState<string>('');
   const {params} = useRoute<HomeNavigationsType>();
   const [viewType, setViewType] = useState<IshowListHandler>('grid');
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const {currency} = useCurrency();
   const showListHandler = (value: IshowListHandler) => {
     setViewType(value);
@@ -66,23 +70,10 @@ const Search = () => {
     return () => remove();
   }, [params]);
 
-  // const {mutate, isLoading, data} = useMutation(getSearchResults, {
-  //   onSuccess: data => {
-  //     return data;
-  //   },
-  //   onError: error => {
-  //     return error;
-  //   },
-  // });
-
   const {
     data,
     isFetching,
-    hasNextPage: hasNextPageReviews,
-    fetchNextPage,
-    refetch: refetchReviews,
-    isFetchingNextPage,
-    isRefetching: isRefetchingReviews,
+    refetch: refetchSearchResults,
   } = useInfiniteQuery(
     [`getSearchResults${searchText}`],
     ({pageParam}: any) =>
@@ -95,6 +86,10 @@ const Search = () => {
       }),
     {
       enabled: false,
+      onSuccess: data => {
+        setIsSubmitted(true);
+        return data;
+      },
       getNextPageParam: (lastPage: any) => {
         if (
           lastPage?.data?.ProductReviews?.Page <
@@ -112,8 +107,7 @@ const Search = () => {
       searchText.length >
       parseInt(settings?.SearchSettings?.InstantSearchTermMinLength)
     ) {
-      refetchReviews();
-      // mutate({searchText, CurrencyId: currency?.Id});
+      refetchSearchResults();
     }
   };
 
@@ -152,105 +146,131 @@ const Search = () => {
           onSubmitEditing={SearchHandler}
           autoFocus={true}
         />
-        <View style={[styles.row, styles.resultsHeader]}>
-          <View style={styles.row}>
-            <Text
-              tx={
-                (params as any)?.title?.length > 0
-                  ? 'search.categoryTitle'
-                  : 'search.search-result-for'
-              }
-              variant="smallRegular"
-            />
-            <Text
-              text={` ${
-                (params as any)?.title?.length > 0
-                  ? (params as any)?.title
-                  : searchText
-              }`}
-              variant="smallBold"
-            />
-          </View>
-          <View style={[styles.row, styles.viewFilters]}>
-            <Pressable
-              style={[
-                styles.viewIconContainer,
-                {
-                  backgroundColor:
-                    viewType === 'list' ? colors.secondary : undefined,
-                  marginRight: 10,
-                },
-              ]}
-              onPress={() => showListHandler('list')}>
-              <Feather
-                name="list"
-                size={18}
-                color={viewType === 'list' ? colors.white : colors.grayMain}
+        {!!productsList?.length && (
+          <View style={[styles.row, styles.resultsHeader]}>
+            <View style={styles.row}>
+              <Text
+                tx={
+                  (params as any)?.title?.length > 0
+                    ? 'search.categoryTitle'
+                    : 'search.search-result-for'
+                }
+                variant="smallRegular"
               />
-            </Pressable>
-            <Pressable
-              style={[
-                styles.viewIconContainer,
-                {
-                  backgroundColor:
-                    viewType === 'grid' ? colors.secondary : undefined,
-                },
-              ]}
-              onPress={() => showListHandler('grid')}>
-              <Ionicons
-                name="grid-outline"
-                size={18}
-                color={viewType === 'grid' ? colors.white : colors.grayMain}
+              <Text
+                text={` ${
+                  (params as any)?.title?.length > 0
+                    ? (params as any)?.title
+                    : searchText
+                }`}
+                variant="smallBold"
               />
-            </Pressable>
+            </View>
+            <View style={[styles.row, styles.viewFilters]}>
+              <Pressable
+                style={[
+                  styles.viewIconContainer,
+                  {
+                    backgroundColor:
+                      viewType === 'list' ? colors.secondary : undefined,
+                    marginRight: 10,
+                  },
+                ]}
+                onPress={() => showListHandler('list')}>
+                <Feather
+                  name="list"
+                  size={18}
+                  color={viewType === 'list' ? colors.white : colors.grayMain}
+                />
+              </Pressable>
+              <Pressable
+                style={[
+                  styles.viewIconContainer,
+                  {
+                    backgroundColor:
+                      viewType === 'grid' ? colors.secondary : undefined,
+                  },
+                ]}
+                onPress={() => showListHandler('grid')}>
+                <Ionicons
+                  name="grid-outline"
+                  size={18}
+                  color={viewType === 'grid' ? colors.white : colors.grayMain}
+                />
+              </Pressable>
+            </View>
           </View>
-        </View>
-        {viewType === 'grid' ? (
-          <FlatList
-            key={'_'}
-            data={productsList}
-            keyExtractor={item => item?.Id}
-            contentContainerStyle={{
-              paddingTop: spacing.large,
-              paddingHorizontal: spacing.content,
-            }}
-            numColumns={2}
-            renderItem={({item, index}) => {
-              return (
-                <ProductCard
-                  styleContainer={{
-                    marginRight: index % 2 == 0 ? 10 : 0,
-                  }}
+        )}
+        {!!productsList?.length ? (
+          viewType === 'grid' ? (
+            <FlatList
+              key={'_'}
+              data={productsList}
+              keyExtractor={item => item?.Id}
+              contentContainerStyle={{
+                paddingTop: spacing.large,
+                paddingHorizontal: spacing.content,
+              }}
+              numColumns={2}
+              renderItem={({item, index}) => {
+                return (
+                  <ProductCard
+                    styleContainer={{
+                      marginRight: index % 2 == 0 ? 10 : 0,
+                    }}
+                    {...item}
+                    WishlistEnabled={
+                      productsModel && productsModel[0].WishlistEnabled
+                    }
+                  />
+                );
+              }}
+            />
+          ) : (
+            <FlatList
+              key={'#'}
+              data={productsList}
+              keyExtractor={item => item?.Id}
+              contentContainerStyle={{
+                paddingHorizontal: spacing.medium - 2,
+              }}
+              numColumns={1}
+              renderItem={({item}) => (
+                <RowProductCard
                   {...item}
+                  currency={currency}
                   WishlistEnabled={
                     productsModel && productsModel[0].WishlistEnabled
                   }
+                  SupportMultiWishlists={
+                    settings?.ShoppingCartSettings?.SupportMultiWishlists
+                  }
                 />
-              );
-            }}
-          />
+              )}
+            />
+          )
         ) : (
-          <FlatList
-            key={'#'}
-            data={productsList}
-            keyExtractor={item => item?.Id}
-            contentContainerStyle={{
-              paddingHorizontal: spacing.medium - 2,
-            }}
-            numColumns={1}
-            renderItem={({item}) => (
-              <RowProductCard
-                {...item}
-                currency={currency}
-                WishlistEnabled={
-                  productsModel && productsModel[0].WishlistEnabled
-                }
-                SupportMultiWishlists={
-                  settings?.ShoppingCartSettings?.SupportMultiWishlists
-                }
-              />
+          <View style={styles.emptySearchResultsContainer}>
+            {isSubmitted ? (
+              <>
+                <Octicons
+                  name="no-entry"
+                  color={colors.primary + 70}
+                  size={70}
+                />
+                <Text tx="search.no-search-results" />
+              </>
+            ) : (
+              <>
+                <Image source={LogoSplash} style={styles.emptyResultsLogo} />
+                <Text
+                  tx="search.start-searching"
+                  variant="largeBold"
+                  color={colors.black + 99}
+                />
+              </>
             )}
-          />
+          </View>
         )}
       </View>
     </TouchableWithoutFeedback>
@@ -291,5 +311,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  emptySearchResultsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyResultsLogo: {
+    opacity: 0.5,
   },
 });
