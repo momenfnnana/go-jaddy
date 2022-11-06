@@ -17,10 +17,13 @@ import {ActivityIndicator} from 'react-native-paper';
 import {getAllStores} from 'services/Stores';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import EmptyPage from 'components/EmptyPage/EmptyPage';
+import {readAccessToken} from 'constants';
+import {useLogged} from 'hook/useLogged';
 
 const Stores = () => {
   const {width} = useWindowDimensions();
   const {navigate} = useNavigation<any>();
+  const {isLogged} = useLogged(true);
   const [typeStores, setTypeStores] = useState('all');
   const {
     data,
@@ -76,63 +79,75 @@ const Stores = () => {
         horizontal={false}
         data={isError ? [1] : data?.pages.map(page => page.data.Stores).flat()}
         numColumns={2}
-        ListHeaderComponent={() => (
-          <View
-            style={{
-              flexDirection: 'row',
-              paddingHorizontal: 10,
-              marginBottom: 20,
-            }}>
-            <Pressable
-              onPress={() => setTypeStores('all')}
+        ListEmptyComponent={
+          <EmptyPage
+            title="EmptyPage.store-follow-title"
+            descritopn="EmptyPage.store-follow-description"
+          />
+        }
+        ListHeaderComponent={() =>
+          isLogged ? (
+            <View
               style={{
-                flex: 1,
-                paddingVertical: 10,
-                borderRadius: 6,
-                backgroundColor: typeStores == 'all' ? '#F3FBFF' : undefined,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderWidth: 1,
-                borderColor:
-                  typeStores != 'all' ? colors.reloadColor : colors.transparent,
+                flexDirection: 'row',
+                paddingHorizontal: 10,
+                marginBottom: 20,
               }}>
-              <Text
-                tx="stores.allStores"
-                variant="smallBold"
-                center
-                color={
-                  typeStores == 'all' ? colors.primary : colors.brouwnLight
-                }
-              />
-            </Pressable>
-            <View style={{width: 10, height: 2}} />
-            <Pressable
-              onPress={() => setTypeStores('followed')}
-              style={{
-                flex: 1,
-                paddingVertical: 10,
-                borderRadius: 6,
-                backgroundColor:
-                  typeStores == 'followed' ? '#F3FBFF' : undefined,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderWidth: 1,
-                borderColor:
-                  typeStores != 'followed'
-                    ? colors.reloadColor
-                    : colors.transparent,
-              }}>
-              <Text
-                tx="stores.FollowedStores"
-                variant="smallBold"
-                center
-                color={
-                  typeStores == 'followed' ? colors.primary : colors.brouwnLight
-                }
-              />
-            </Pressable>
-          </View>
-        )}
+              <Pressable
+                onPress={() => setTypeStores('all')}
+                style={{
+                  flex: 1,
+                  paddingVertical: 10,
+                  borderRadius: 6,
+                  backgroundColor: typeStores == 'all' ? '#F3FBFF' : undefined,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderWidth: 1,
+                  borderColor:
+                    typeStores != 'all'
+                      ? colors.reloadColor
+                      : colors.transparent,
+                }}>
+                <Text
+                  tx="stores.allStores"
+                  variant="smallBold"
+                  center
+                  color={
+                    typeStores == 'all' ? colors.primary : colors.brouwnLight
+                  }
+                />
+              </Pressable>
+              <View style={{width: 10, height: 2}} />
+              <Pressable
+                onPress={() => setTypeStores('followed')}
+                style={{
+                  flex: 1,
+                  paddingVertical: 10,
+                  borderRadius: 6,
+                  backgroundColor:
+                    typeStores == 'followed' ? '#F3FBFF' : undefined,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderWidth: 1,
+                  borderColor:
+                    typeStores != 'followed'
+                      ? colors.reloadColor
+                      : colors.transparent,
+                }}>
+                <Text
+                  tx="stores.FollowedStores"
+                  variant="smallBold"
+                  center
+                  color={
+                    typeStores == 'followed'
+                      ? colors.primary
+                      : colors.brouwnLight
+                  }
+                />
+              </Pressable>
+            </View>
+          ) : null
+        }
         ListFooterComponent={
           isFetchingNextPage
             ? () => <ActivityIndicator size={'small'} color={colors.primary} />
@@ -144,16 +159,6 @@ const Stores = () => {
           paddingTop: spacing.large,
         }}
         renderItem={({item}) => {
-          if (isError) {
-            return (
-              <View style={{flex: 1}}>
-                <EmptyPage
-                  title="No Stores to show"
-                  descritopn="go to all stores then follow them"
-                />
-              </View>
-            );
-          }
           return (
             <Pressable
               onPress={() => {

@@ -2,7 +2,7 @@ import {Pressable, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {colors} from 'theme';
 import {Loader, Text} from 'components';
-import {useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery} from '@tanstack/react-query';
 import {deleteAddress, setDefulatAddress} from 'services/Addresses';
 import {useNavigation} from '@react-navigation/native';
 import {PreviousAddressNavigationProp} from 'navigators/NavigationsTypes';
@@ -10,35 +10,25 @@ import {IAddress} from 'navigators/RoutesTypes';
 
 interface IAddressItem {
   item: IAddress;
-  isDefault: number;
-  setDefault: (id: number) => void;
   setDeletedItem: (id: number) => void;
+  refetchAddresses: () => void;
 }
 
-const AddressItem = ({
-  item,
-  isDefault,
-  setDefault,
-  setDeletedItem,
-}: IAddressItem) => {
+const AddressItem = ({item, setDeletedItem,refetchAddresses}: IAddressItem) => {
   const [pressedDefualt, setPressedDefualt] = useState<number>(-1);
   const [pressedDelete, setPressedDelete] = useState<number>(-1);
   const {navigate} = useNavigation<PreviousAddressNavigationProp>();
   const {
     isLoading,
-    isFetching: isFetchingSetDefulatAddress,
-    refetch: refetchSetDefulatAddress,
-  } = useQuery(
-    [`setDefulatAddress${item.Id}`],
-    () => setDefulatAddress({id: pressedDefualt}),
-    {
-      enabled: false,
-      onSuccess() {
-        setDefault(pressedDefualt);
-        setPressedDefualt(-1);
-      },
-    },
-  );
+    // isFetching: isFetchingSetDefulatAddress,
+    // refetch: refetchSetDefulatAddress,
+    mutate,
+  } = useMutation([`setDefulatAddress${item.Id}`], setDefulatAddress, {
+    onSuccess:(data)=>{
+      refetchAddresses()
+      return data
+    }
+  });
 
   const {isFetching: isFetchingDeleteAddress, refetch: refetchDeleteAddress} =
     useQuery(
@@ -53,11 +43,11 @@ const AddressItem = ({
       },
     );
 
-  useEffect(() => {
-    if (pressedDefualt != -1) {
-      refetchSetDefulatAddress();
-    }
-  }, [pressedDefualt]);
+  // useEffect(() => {
+  //   if (pressedDefualt != -1) {
+  //     refetchSetDefulatAddress();
+  //   }
+  // }, [pressedDefualt]);
 
   useEffect(() => {
     if (pressedDelete != -1) {
@@ -129,18 +119,19 @@ const AddressItem = ({
             paddingVertical: 5,
             paddingHorizontal: 15,
             borderRadius: 7,
-            opacity: isDefault === item.Id ? 1 : 0,
+            opacity: item.IsDefault ? 1 : 0,
           }}>
           <Text tx="previousTitles.defultLabel" variant="xSmallBold" />
         </View>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          {isDefault !== item.Id && (
+          {!item.IsDefault && (
             <Pressable
-              disabled={isFetchingSetDefulatAddress}
+              disabled={isLoading}
               onPress={() => {
-                setPressedDefualt(item.Id);
+                // setPressedDefualt(item.Id);
+                mutate({id: item.Id});
               }}>
-              {isFetchingSetDefulatAddress ? (
+              {isLoading ? (
                 <Loader size={'small'} />
               ) : (
                 <Text

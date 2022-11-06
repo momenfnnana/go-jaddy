@@ -1,4 +1,4 @@
-import {useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute, CommonActions} from '@react-navigation/native';
 import {
   Loader,
   ProductCard,
@@ -7,10 +7,11 @@ import {
   ReviewList,
   RateModal,
 } from 'components';
+
 import {IStores} from 'navigators/NavigationsTypes';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {View, Pressable, FlatList, Image} from 'react-native';
+import {View, Pressable, FlatList, Image, Animated} from 'react-native';
 import {colors, spacing} from 'theme';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
@@ -33,6 +34,9 @@ import {getCategoryProducts} from 'services/Category';
 import MainTab from './components/MainTab';
 import ArrowIcon from 'components/Arrow';
 import EmptyPage from 'components/EmptyPage/EmptyPage';
+import {LogoSplash} from 'assets/images';
+import {useLogged} from 'hook/useLogged';
+import {useProtectedFunction} from 'hook/useProdectedFunction';
 
 export interface Ifiltter {
   withImage: boolean;
@@ -47,6 +51,9 @@ const tabs: string[] = [
 ];
 const StoreDetails = () => {
   const {params} = useRoute<IStores>();
+  const {navigate, dispatch} = useNavigation();
+  const {isLogged} = useLogged(true);
+  const {protectedFunction} = useProtectedFunction();
   const [isRateModalShown, setIsRateModalShown] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>('');
   const [tab, setTab] = useState<number>(0);
@@ -58,7 +65,15 @@ const StoreDetails = () => {
     withImage: false,
   });
   const {t} = useTranslation();
-
+  const scrollOffsetY = useRef(new Animated.Value(0)).current;
+  const Max_Header_Height = 100;
+  const Min_Header_Height = 0;
+  const Scroll_Distance = 100;
+  const animatedHeaderHeight = scrollOffsetY.interpolate({
+    inputRange: [0, Scroll_Distance],
+    outputRange: [Max_Header_Height, Min_Header_Height],
+    extrapolate: 'clamp',
+  });
   const {
     data: storeReviewsData,
     isLoading: isLoadingStoreReviews,
@@ -272,6 +287,12 @@ const StoreDetails = () => {
       fetchNextPageSearch();
     }
   };
+  const isExistCoverImage = storeDetailsData.data?.StoreInfo?.CoverImage;
+  const sourceCover = !isExistCoverImage
+    ? LogoSplash
+    : {
+        uri: BASE_URL + isExistCoverImage?.Url,
+      };
 
   return (
     <View style={{flex: 1, backgroundColor: colors.white}}>
@@ -386,7 +407,7 @@ const StoreDetails = () => {
             </View>
             <Pressable
               onPress={() => {
-                refetchrefreshFollowStore();
+                protectedFunction({func: () => refetchrefreshFollowStore()});
               }}
               style={{
                 flexDirection: 'row',
@@ -415,13 +436,17 @@ const StoreDetails = () => {
           </View>
         }
       />
-      <Image
-        resizeMode="contain"
-        style={{height: 100, width: '100%'}}
-        source={{
-          uri: BASE_URL + storeDetailsData.data?.StoreInfo?.CoverImage?.Url,
+
+      <Animated.Image
+        resizeMode="cover"
+        style={{
+          height: animatedHeaderHeight,
+          width: '100%',
+          opacity: isExistCoverImage ? 1 : 0.5,
         }}
+        source={sourceCover}
       />
+
       <View
         style={{
           flexDirection: 'row',
@@ -468,6 +493,10 @@ const StoreDetails = () => {
       </View>
       {tab == 0 && (
         <MainTab
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
+            {useNativeDriver: false},
+          )}
           setCatProductId={setCatProductId}
           setSubCatId={setSubCatId}
           storeId={params?.storeId}
@@ -476,6 +505,10 @@ const StoreDetails = () => {
       )}
       {tab == 1 && (
         <FlatList
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
+            {useNativeDriver: false},
+          )}
           key={'#new'}
           onEndReached={loadMoreNew}
           onEndReachedThreshold={0.7}
@@ -514,6 +547,10 @@ const StoreDetails = () => {
       )}
       {tab == 2 && (
         <FlatList
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
+            {useNativeDriver: false},
+          )}
           key={'#Offers'}
           onEndReached={loadMoreOffers}
           onEndReachedThreshold={0.7}
@@ -552,6 +589,10 @@ const StoreDetails = () => {
       )}
       {tab == 3 && (
         <FlatList
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
+            {useNativeDriver: false},
+          )}
           key={'#categories'}
           data={StoreMainData?.pages.map(page => page.data.Categories).flat()}
           numColumns={1}
@@ -577,6 +618,10 @@ const StoreDetails = () => {
       )}
       {tab == 4 && (
         <FlatList
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
+            {useNativeDriver: false},
+          )}
           keyExtractor={(i, _) => _.toString()}
           ListHeaderComponent={
             !!storeReviewsData?.pages
@@ -590,7 +635,7 @@ const StoreDetails = () => {
                 RatingSum={storeDetailsData.data.ReviewOverview.RatingSum}
                 TotalReviews={storeDetailsData.data.ReviewOverview.TotalReviews}
                 onPressRate={() => {
-                  setIsRateModalShown(true);
+                  protectedFunction({func: () => setIsRateModalShown(true)});
                 }}
               />
             ) : undefined
@@ -610,6 +655,10 @@ const StoreDetails = () => {
       {tab == 5 &&
         (isSuccessSearch && !isLoadingStoreSearch ? (
           <FlatList
+            onScroll={Animated.event(
+              [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
+              {useNativeDriver: false},
+            )}
             data={StoreSearchData?.pages
               .map(page => page.data.ProductSummary.Items)
               .flat()}
@@ -657,6 +706,10 @@ const StoreDetails = () => {
           </View>
         ) : (
           <FlatList
+            onScroll={Animated.event(
+              [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
+              {useNativeDriver: false},
+            )}
             key={'#Product_categories'}
             onEndReached={() => {
               if (hasNextPage) {

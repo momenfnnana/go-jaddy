@@ -255,7 +255,9 @@
     "addresses-description": "To add address, press on add icon in header",
     "store-follow-title": "No stores to show",
     "store-follow-description": "go to all stores then follow them",
-    "no-reviews-title": "No reviews added before"
+    "no-reviews-title": "No reviews added before",
+    "categories-title": "No categories to show",
+    "stores-title": "No stores to show"
   },
   "api": {
     "account": {

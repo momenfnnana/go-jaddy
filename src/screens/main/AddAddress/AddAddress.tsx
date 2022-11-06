@@ -131,19 +131,6 @@ const AddAddress = () => {
 
   const onRegisterHandle = () => {};
 
-  if (isLoadingaddAddress || isLoadingEditAddress) {
-    return (
-      <Loader
-        size={'large'}
-        containerStyle={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      />
-    );
-  }
-
   return (
     <View>
       <ScrollView
@@ -432,6 +419,7 @@ const AddAddress = () => {
                   />
                 </View>
                 <Button
+                  isLoading={isLoadingaddAddress || isLoadingEditAddress}
                   onPress={handleSubmit}
                   style={{marginBottom: 10}}
                   title="addAddress.submitBtn"
