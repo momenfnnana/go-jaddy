@@ -18,6 +18,7 @@ import {useTranslation} from 'react-i18next';
 import {LogoSplash} from 'assets/images';
 import {useAccessToken} from 'hook/useAccessToken';
 import {goToLogin} from 'helpers';
+import {useProtectedFunction} from 'hook/useProdectedFunction';
 
 const ProductCard = (props: IProductInterface) => {
   const {
@@ -32,6 +33,7 @@ const ProductCard = (props: IProductInterface) => {
     Id,
     ColorAttributes,
   } = props;
+  const {protectedFunction} = useProtectedFunction();
   const {accessToken} = useAccessToken();
   const {currency} = useCurrency();
   const {navigate, setParams} = useNavigation<HomeNavigationsType>();
@@ -53,11 +55,7 @@ const ProductCard = (props: IProductInterface) => {
   };
 
   const showAddToWishList = () => {
-    if (!!accessToken?.length) {
-      setIsAddToCollectionShown(true);
-    } else {
-      goToLogin();
-    }
+    protectedFunction({func: () => setIsAddToCollectionShown(true)});
   };
 
   const source =
