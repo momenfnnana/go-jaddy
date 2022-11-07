@@ -9,6 +9,7 @@ import {UserContext} from 'context/UserContext';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {uploadAvatar} from 'services/Profile';
 import {BASE_URL} from 'utils/Axios';
+import {AvatarPerson} from 'assets/images';
 
 interface IHeaderAccount {
   setEditInfo: (val: boolean) => void;
@@ -136,11 +137,13 @@ const HeaderAccount = ({
             backgroundColor: colors.white,
           }}>
           <Image
-            source={{
-              uri: image.uri
-                ? image.uri
-                : 'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg',
-            }}
+            source={
+              image.uri
+                ? {
+                    uri: image.uri,
+                  }
+                : AvatarPerson
+            }
             style={{
               position: 'absolute',
               width: '100%',
