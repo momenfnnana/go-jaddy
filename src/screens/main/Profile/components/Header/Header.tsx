@@ -6,9 +6,10 @@ import {colors, spacing} from 'theme';
 import {Text} from 'components';
 import {BASE_URL} from 'utils/Axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
+import {CommonActions, useNavigation} from '@react-navigation/native';
 import {ProfileScreenNavigationProp} from 'navigators/NavigationsTypes';
 import {setAxiosAccessToken} from 'axiosConfig';
+import {useProtectedFunction} from 'hook/useProdectedFunction';
 
 interface IHeader {
   isLogged: boolean;
@@ -16,13 +17,19 @@ interface IHeader {
 
 const Header = ({isLogged}: IHeader) => {
   const {setUserData, setAccessToken, userData} = useContext(UserContext);
-  const {navigate} = useNavigation<ProfileScreenNavigationProp>();
+  const {protectedFunction} = useProtectedFunction();
+  const {navigate, dispatch} = useNavigation<ProfileScreenNavigationProp>();
   const logoutHandler = () => {
     AsyncStorage.removeItem('accessToken');
     setAxiosAccessToken('');
     setUserData({});
     setAccessToken('');
-    navigate('AuthFlow', {screen: 'Login'} as any);
+    dispatch(
+      CommonActions.reset({
+        index: 1,
+        routes: [{name: 'AuthFlow', params: {screen: 'Login'}}],
+      }),
+    );
   };
   return (
     <View style={styles.container}>
