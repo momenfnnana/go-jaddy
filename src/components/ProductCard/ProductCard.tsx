@@ -17,7 +17,7 @@ import {BASE_URL} from 'utils/Axios';
 import {useTranslation} from 'react-i18next';
 import {LogoSplash} from 'assets/images';
 import {useAccessToken} from 'hook/useAccessToken';
-import { goToLogin } from 'helpers';
+import {goToLogin} from 'helpers';
 
 const ProductCard = (props: IProductInterface) => {
   const {
@@ -132,12 +132,14 @@ const ProductCard = (props: IProductInterface) => {
               color={colors.orange}
               numberOfLines={1}
             />
-            <Text
-              text={currency?.Symbol}
-              variant="xSmallRegular"
-              color={colors.tabsColor}
-              style={styles.currency}
-            />
+            {Price?.Price ? (
+              <Text
+                text={currency?.Symbol}
+                variant="xSmallRegular"
+                color={colors.tabsColor}
+                style={styles.currency}
+              />
+            ) : null}
           </View>
         </View>
         <View style={styles.rateAndColorsContainer}>
