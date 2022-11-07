@@ -16,8 +16,6 @@ import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
 import {useTranslation} from 'react-i18next';
 import {LogoSplash} from 'assets/images';
-import {useAccessToken} from 'hook/useAccessToken';
-import {goToLogin} from 'helpers';
 import {useProtectedFunction} from 'hook/useProdectedFunction';
 
 const ProductCard = (props: IProductInterface) => {
@@ -27,14 +25,12 @@ const ProductCard = (props: IProductInterface) => {
     Badges,
     Name,
     RatingSum,
-    CategoryName,
     WishlistEnabled,
     styleContainer,
     Id,
     ColorAttributes,
   } = props;
   const {protectedFunction} = useProtectedFunction();
-  const {accessToken} = useAccessToken();
   const {currency} = useCurrency();
   const {navigate, setParams} = useNavigation<HomeNavigationsType>();
   const routes = useNavigationState(state => state.routes);

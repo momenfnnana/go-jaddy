@@ -11,7 +11,7 @@ import {IWishListItem} from './types';
 const WishList = () => {
   const {setOptions} = useNavigation();
   const [wishlistData, setWishlistData] = useState<IWishListItem[]>([]);
-  const {data, isLoading, refetch} = useQuery(['getWishlist'], getWishlist);
+  const {data, isFetching, refetch} = useQuery(['getWishlist'], getWishlist);
   const onPress = () => {
     const newArray: IWishListItem[] = [
       ...data?.data?.Wishlists,
@@ -40,9 +40,11 @@ const WishList = () => {
   useLayoutEffect(() => {
     setOptions({
       headerLeft: () => <BackButton />,
-      headerRight: () => <AddHeaderBtn onPress={onPress} />,
+      headerRight: () => (
+        <AddHeaderBtn onPress={onPress} disabled={isFetching} />
+      ),
     });
-  }, []);
+  }, [isFetching]);
 
   useEffect(() => {
     if (data?.data?.Wishlists) {
@@ -50,7 +52,7 @@ const WishList = () => {
     }
   }, [data?.data?.Wishlists]);
 
-  if (isLoading) {
+  if (isFetching) {
     return <Loader size={'large'} containerStyle={styles.loader} />;
   }
 

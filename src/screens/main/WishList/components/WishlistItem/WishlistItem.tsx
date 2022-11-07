@@ -166,26 +166,24 @@ const WishlistItem = ({
         />
       </View>
       {isEdititingCollectionName ? (
-        <View>
-          <CollectionNameInput
-            placeholder="wishlist.collection-name"
-            value={collectionName}
-            onChangeText={setCollectionName}
-            containerStyle={styles.collectionNameInput}
-            rightIcon={
-              <Pressable
-                onPress={editCollectionNameHandler}
-                style={styles.checkboxContainer}
-                disabled={isLoadingEditWishlistName || isLoadingCreateWishList}>
-                {isLoadingEditWishlistName || isLoadingCreateWishList ? (
-                  <Loader size={'small'} />
-                ) : (
-                  <AntDesign name={'check'} size={15} color={colors.white} />
-                )}
-              </Pressable>
-            }
-          />
-        </View>
+        <CollectionNameInput
+          placeholder="wishlist.collection-name"
+          value={collectionName}
+          onChangeText={setCollectionName}
+          containerStyle={styles.collectionNameInput}
+          rightIcon={
+            <Pressable
+              onPress={editCollectionNameHandler}
+              style={styles.checkboxContainer}
+              disabled={isLoadingEditWishlistName || isLoadingCreateWishList}>
+              {isLoadingEditWishlistName || isLoadingCreateWishList ? (
+                <Loader size={'small'} />
+              ) : (
+                <AntDesign name={'check'} size={15} color={colors.white} />
+              )}
+            </Pressable>
+          }
+        />
       ) : (
         <Pressable
           onPress={onPressEditCollectionName}
@@ -242,7 +240,6 @@ export default WishlistItem;
 
 const styles = StyleSheet.create({
   wishlistItemContainer: {
-    width: '50%',
     padding: 15,
   },
   wishlistItemContentContainer: {
