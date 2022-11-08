@@ -81,7 +81,10 @@
     "send": "Send",
     "load-more": "Load more",
     "continue": "Continue",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "select-country": "Select country",
+    "Palestine": "Palestine",
+    "Israel": "Israel"
   },
   "carasoule": {
     "name": "clothes title goes here"
