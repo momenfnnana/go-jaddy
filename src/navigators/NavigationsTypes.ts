@@ -85,6 +85,7 @@ type AddAddressNavigationProp = NativeStackNavigationProp<
   ProfileRoutes,
   'AddAddress'
 >;
+type AddAddressRouteProp = RouteProp<ProfileRoutes, 'AddAddress'>;
 
 type WishlistDetailsScreenNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<ProfileRoutes, 'WishlistDetails'>,
@@ -121,4 +122,5 @@ export type {
   IProductNavigation,
   PreviousAddressNavigationProp,
   AddAddressNavigationProp,
+  AddAddressRouteProp,
 };

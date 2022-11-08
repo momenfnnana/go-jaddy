@@ -50,6 +50,16 @@
     "forget-password": "نسيت كلمة المرور",
     "forget-password-description": "هل نسيت كلمة المرور؟ لا مشكلة يمكنك ارجاع البريد الالكتروني المسجل لاستلام كود الاستعادة"
   },
+  "register": {
+    "buyerAccount": "حساب مشتري",
+    "sellerAccount": "حساب تاجر",
+    "newRegister": "تسجيل جديد",
+    "confirmPassword": "تأكيد كلمة السر",
+    "shareDetails": "متحمس لمشاركة التطبيق مع صديقك؟",
+    "referFriend": "ترشيح لصديق",
+    "storeName": "اسم المتجر",
+    "storeImage": "صورة المتجر"
+  },
   "home": {
     "arrival": "وصل",
     "news": "مؤخرا",
@@ -173,7 +183,15 @@
     "cancel": "تراجع",
     "select-country": "اختر الدولة",
     "Palestine": "فلسطين",
-    "Israel": "اسرائيل"
+    "Israel": "اسرائيل",
+    "oldPassword": "كلمة السر القديمة",
+    "see-more": "عرض المزيد",
+    "firstName": "الاسم الأول",
+    "lastName": "الاسم العائلة",
+    "email": "البريد الالكتروني",
+    "customerStoreName": "اسم متجر المستهلك",
+    "verifyAccount": "تحقق من الحساب",
+    "verifyModalText": "يرجى كتابة رمز التحقق المرسل إلى"
   },
   "EmptyPage": {
     "product-description": "اذهب للرئيسية واكتشف المنتجات",
@@ -183,5 +201,86 @@
     "store-follow-title": "لا يوجد متاجر",
     "store-follow-description": "اذهب لكل المتاجر وتابع منها",
     "no-reviews-title": "لم يتم اضافة تقييمات"
+  },
+  "validation": {
+    "firstName": "الاسم الأول مطلوب",
+    "lastName": "الاسم العائلة مطلوب",
+    "email": "البريد الالكتروني مطلوب",
+    "email-template": "يجب كتابة ايميل صالح",
+    "phoneNumber-length": "يجب أن يكون عدد الأرقام {{length}}",
+    "phoneNumber-template": "يجب أن يكون رقم صالح",
+    "phoneNumber": "رقم الهاتف مطلوب",
+    "address": "العنوان {{number}} مطلوب",
+    "city": "اسم المدينة مطلوب",
+    "password": "كلمة المرور مطلوبة",
+    "password-min": "كلمة السر يجب على الأقل أن تحتوي {{number}} حرف",
+    "password-lowercase": "كلمة السر يجب أن تحتوي على أحرف صغيرة",
+    "password-uppercase": "كلمة السر يجب أن تحتوي على أحرف كبيرة",
+    "password-special": "كلمة السر يجب أن تحتوي على رموز",
+    "confirmPassword": "تأكيد كلمة السر مطلوب",
+    "confirmPassword-match": "كلمات السر غير متطابقة"
+  },
+  "previousTitles": {
+    "titleHeader": "العناوين السابقة",
+    "phoneNumber": "الهاتف: {{phoneNumber}}",
+    "chargeLabel": "عنوان الشحن",
+    "defultLabel": "افتراضي",
+    "defualtBtn": "تعيين كافتراضي",
+    "editBtn": "تعديل",
+    "deleteBtn": "حدف"
+  },
+  "returnProducts": {
+    "titleHeader": "ارجاع المنتجات",
+    "orderNum": "المرجع رقم #{{orderNum}}",
+    "productName": "المنتج",
+    "ReturnReason": "سبب الإرجاع",
+    "ReturnCommand": "أمر الإرجاع",
+    "orderDate": "تاريخ الطلب",
+    "comment": "تعليقك"
+  },
+  "customerPoints": {
+    "titleHeader": "رصيد النقاط",
+    "points": "{{points}} النقاط",
+    "equivalent": "تعادل {{money}}"
+  },
+  "addAddress": {
+    "titleHeader": "اضافة عنوان جديد",
+    "description": "يمكنك حذف/تعديل أي موقع من المواقع المضافة بكل سهولة بعد عملية الاضافة",
+    "coName": "الشركة",
+    "fName": "الاسم الاول",
+    "lName": "اسم العائلة",
+    "address1": "العنوان 1",
+    "address2": "العنوان 2",
+    "country": "الدولة",
+    "state": "المقاطعة",
+    "city": "المدينة",
+    "email": "البريد الالكتروني",
+    "phone": "رقم الهاتف",
+    "fax": "رقم الفاكس",
+    "countries-def": "اختر الدولة",
+    "states-select-country": "اختر الدولة أولا",
+    "states-def": "اختر المقاطعة",
+    "setDefualt": "تعيين كإفتراضي",
+    "submitBtn": "تابع"
+  },
+  "profileDetails": {
+    "titleHeader": "تفاصيل الحساب",
+    "myInfo": "معلوماتي",
+    "changePhoto": "تغيير الصورة",
+    "password": "كلمة المرور",
+    "submitBtn": "حفظ التغييرات"
+  },
+  "modal": {
+    "successTitle": "هل أنت متأكد من هذه العملية؟",
+    "faildTitle": "هل أنت متأكد من الحذف؟",
+    "confirmBtn": "تأكيد",
+    "cancelBtn": "حذف",
+    "BillTitle": "فاتورة الطلب",
+    "TotalProducts": "إجمالي المنتجات",
+    "RewardPoints": "النقاط",
+    "DiscoundCode": "كوبون الخصم",
+    "total": "الاجمالي",
+    "submitTotalModal": "إتمام الطلب",
+    "tax": "الضريبة"
   }
 }

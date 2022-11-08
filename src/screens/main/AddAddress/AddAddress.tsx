@@ -25,23 +25,10 @@ import {t} from 'i18next';
 import {useTranslation} from 'react-i18next';
 import {
   AddAddressNavigationProp,
+  AddAddressRouteProp,
   PreviousAddressNavigationProp,
 } from 'navigators/NavigationsTypes';
-
-const phoneRegExp =
-  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-
-const addressSchema = Yup.object().shape({
-  firstName: Yup.string().required('first name is required'),
-  lastName: Yup.string().required('last name is required'),
-  address1: Yup.string().required('address 1 is required'),
-  city: Yup.string().required('city is required'),
-  email: Yup.string().email().required('email is required'),
-  phoneNumber: Yup.string()
-    .length(15, 'must be 15 characters')
-    .matches(phoneRegExp, 'phone number is not valid')
-    .required('phone number is required'),
-});
+import {useSchema} from 'hook/useSchema';
 
 interface ISelectedState {
   item: any;
@@ -51,14 +38,15 @@ interface ISelectedState {
 
 const AddAddress = () => {
   const {setOptions, navigate} = useNavigation<AddAddressNavigationProp>();
-  const {params} = useRoute();
+  const {params} = useRoute<AddAddressRouteProp>();
+  const {addressSchema} = useSchema();
   const [isDefualt, setDefualt] = useState<boolean>(
     params?.item?.IsDefault || false,
   );
   const [countrySelected, setCountrySelected] = useState<any>({});
   const {t} = useTranslation();
   const [stateSelected, setStateSelected] = useState<ISelectedState>({
-    item: {Value: (params as any)?.item?.StateId},
+    item: {Value: params?.item?.StateId},
     isExistData: false,
     defualtText: t('addAddress.states-select-country'),
   });
@@ -79,7 +67,7 @@ const AddAddress = () => {
     getCountries,
     {
       onSuccess: data => {
-        if ((params as any)?.item) {
+        if (params?.item) {
           const item = data.data.find(
             (i: any) => i.Value == params?.item?.CountryId,
           );
@@ -378,6 +366,7 @@ const AddAddress = () => {
                 />
                 <InputField
                   value={values.email}
+                  keyboardType="email-address"
                   onChangeText={handleChange('email')}
                   onBlur={handleBlur('email')}
                   placeholder={'addAddress.email'}
@@ -388,6 +377,7 @@ const AddAddress = () => {
                 />
                 <InputField
                   value={values.phoneNumber}
+                  keyboardType="numeric"
                   onChangeText={handleChange('phoneNumber')}
                   onBlur={handleBlur('phoneNumber')}
                   placeholder={'addAddress.phone'}

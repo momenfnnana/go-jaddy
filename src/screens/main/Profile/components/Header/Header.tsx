@@ -10,13 +10,12 @@ import {CommonActions, useNavigation} from '@react-navigation/native';
 import {ProfileScreenNavigationProp} from 'navigators/NavigationsTypes';
 import {setAxiosAccessToken} from 'axiosConfig';
 import {useProtectedFunction} from 'hook/useProdectedFunction';
+import {useLogged} from 'hook/useLogged';
+import {AvatarPerson} from 'assets/images';
 
-interface IHeader {
-  isLogged: boolean;
-}
-
-const Header = ({isLogged}: IHeader) => {
+const Header = () => {
   const {setUserData, setAccessToken, userData} = useContext(UserContext);
+  const {isLogged} = useLogged();
   const {protectedFunction} = useProtectedFunction();
   const {navigate, dispatch} = useNavigation<ProfileScreenNavigationProp>();
   const logoutHandler = () => {
@@ -38,7 +37,11 @@ const Header = ({isLogged}: IHeader) => {
           {isLogged ? (
             <Image
               style={styles.profileImageContainer}
-              source={{uri: `${BASE_URL}${userData?.Avatar?.Url}`}}
+              source={
+                userData?.Avatar?.Url
+                  ? {uri: `${BASE_URL}${userData?.Avatar?.Url}`}
+                  : AvatarPerson
+              }
             />
           ) : (
             <Ionicons name="person" color={colors.white} size={28} />

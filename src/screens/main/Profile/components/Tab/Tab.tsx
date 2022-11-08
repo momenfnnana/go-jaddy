@@ -7,10 +7,10 @@ import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
 import {ProfileScreenNavigationProp} from 'navigators/NavigationsTypes';
 import {ITab} from '../../Lists/UnAuthList';
+import {useProtectedFunction} from 'hook/useProdectedFunction';
 
 interface ITabCustom extends ITab {
   showDevider: boolean;
-  isLogged: boolean;
 }
 const Tab = ({
   icon,
@@ -19,18 +19,14 @@ const Tab = ({
   bottomSection,
   showDevider = true,
   goTo,
-  isLogged,
 }: ITabCustom) => {
   const {currency} = useCurrency();
   const {t} = useTranslation();
+  const {protectedFunction} = useProtectedFunction();
   const {navigate} = useNavigation<ProfileScreenNavigationProp>();
   const onPressTab = () => {
-    if (isLogged) {
-      if (goTo) {
-        navigate(goTo);
-      }
-    } else {
-      navigate('AuthFlow', {screen: 'Login'} as any);
+    if (goTo) {
+      protectedFunction({func: () => navigate(goTo)});
     }
   };
   return (

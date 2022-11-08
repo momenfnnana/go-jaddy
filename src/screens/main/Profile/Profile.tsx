@@ -14,11 +14,12 @@ import {getUserData} from 'services/Profile';
 import {readAccessToken} from 'constants';
 import {AuthList, UnAuthList} from './Lists';
 import {useDropDownContext} from 'context/dropdownContext';
+import {useLogged} from 'hook/useLogged';
 
 const Profile = () => {
   const {setUserData, accessToken} = useContext(UserContext);
+  const {isLogged} = useLogged();
   const {setIsDropDownShown} = useDropDownContext();
-  const [isLogged, setIsLogged] = useState<boolean>(false);
   const {
     data,
     isLoading: isLoadingUserData,
@@ -29,16 +30,6 @@ const Profile = () => {
   const closeOpenedModals = () => {
     setIsDropDownShown(false);
   };
-
-  useEffect(() => {
-    readAccessToken().then(res => {
-      if (res) {
-        setIsLogged(true);
-      } else {
-        setIsLogged(false);
-      }
-    });
-  }, []);
 
   useEffect(() => {
     if (data) {
@@ -58,18 +49,11 @@ const Profile = () => {
     <ScrollView>
       <TouchableWithoutFeedback onPress={closeOpenedModals}>
         <View style={styles.container}>
-          <Header isLogged={isLogged} />
-          {isLogged && (
-            <Section
-              title="screens-tabs.profile"
-              list={AuthList}
-              isLogged={isLogged}
-            />
-          )}
+          <Header />
+          {isLogged && <Section title="screens-tabs.profile" list={AuthList} />}
           <Section
             title={isLogged ? 'profile.others' : undefined}
             list={UnAuthList}
-            isLogged={isLogged}
           />
         </View>
       </TouchableWithoutFeedback>
