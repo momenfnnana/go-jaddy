@@ -6,7 +6,7 @@ import {Text} from 'components';
 import {TextInput} from 'react-native-paper';
 import {FormikErrors, FormikTouched} from 'formik';
 
-interface IInputField extends TextInputProps {
+export interface IInputField extends TextInputProps {
   rightIcon?: ReactNode;
   leftIcon?: ReactNode;
   containerStyle?: ViewStyle;
@@ -59,13 +59,6 @@ const InputField = ({
           fonts: {regular: {fontFamily: font.regular}},
           roundness: 8,
         }}
-        label={
-          label
-            ? t(label)
-            : placeholder
-            ? t(placeholder)
-            : t('common.phone-numebr')
-        }
         placeholder={placeholder ? t(placeholder) : t('common.phone-numebr')}
         style={[styles.textInput, {flex: 1}]}
         autoCapitalize="none"
