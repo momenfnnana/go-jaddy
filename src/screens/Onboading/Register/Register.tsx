@@ -4,28 +4,30 @@ import {
   Image,
   useWindowDimensions,
   ImageBackground,
-  SafeAreaView,
   Pressable,
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
-  ImageSourcePropType,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
-import React, {ReactNode, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {RegisterHeader, RegisterLogo, ShareImage} from './images';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {colors, spacing} from 'theme';
-import {BackButton, Button, InputField, Text} from 'components';
-import {PalestineFlag} from 'assets/images';
+import {
+  BackButton,
+  Button,
+  InputField,
+  PhoneNumberInput,
+  Text,
+} from 'components';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import {FacebookIcon, GoogleIcon, VisibilityEyeIcon} from 'assets/icons';
-import {useMutation, useQuery} from '@tanstack/react-query';
+import {FacebookIcon, GoogleIcon} from 'assets/icons';
+import {useMutation} from '@tanstack/react-query';
 import {createAccount} from 'services/Register';
 import {UserContext} from 'context/UserContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -36,10 +38,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import axios from 'axios';
 import {RegisterScreenNavigationProp} from 'navigators/NavigationsTypes';
 
-interface IFlag {
-  imageUrl: ImageSourcePropType;
-  introructionNumber: string;
-}
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
@@ -81,10 +79,7 @@ const Register = () => {
   const [email, setEmail] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const {top, bottom} = useSafeAreaInsets();
-  const [selectedFlag, setSelectedFlag] = useState<IFlag>({
-    imageUrl: PalestineFlag,
-    introructionNumber: '970',
-  });
+  const [countryCode, setCountryCode] = useState<string>();
   const onRegisterHandle = (values: any) => {
     const data = new FormData();
     setEmail(values.email);
@@ -92,7 +87,7 @@ const Register = () => {
     data.append('CustomerType', isSeller ? 'Seller' : 'Buyer');
     data.append('FirstName', values.firstName);
     data.append('LastName', values.lastName);
-    data.append('PhoneNumber', values.phoneNumber);
+    data.append('PhoneNumber', countryCode + values.phoneNumber);
     data.append('Email', values.email);
     data.append('Password', values.password);
     data.append('ConfirmPassword', values.confirmPassword);
@@ -125,6 +120,10 @@ const Register = () => {
 
   const showCPassword = () => {
     setIsCPasswordShown(currentValue => !currentValue);
+  };
+
+  const onChangeCountry = (value: string) => {
+    setCountryCode(value);
   };
 
   useEffect(() => {
@@ -326,7 +325,14 @@ const Register = () => {
           }}
           onSubmit={onRegisterHandle}
           validationSchema={loginSchema}>
-          {({handleChange, handleBlur, handleSubmit, values, errors}) => {
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+          }) => {
             return (
               <>
                 {isSeller && (
@@ -336,7 +342,10 @@ const Register = () => {
                     onBlur={handleBlur('storeName')}
                     containerStyle={styles.inputContainer}
                     placeholder={'register.storeName'}
-                    error={errors.storeName}
+                    error={{
+                      value: errors.email,
+                      touched: touched.email,
+                    }}
                   />
                 )}
                 <InputField
@@ -345,7 +354,10 @@ const Register = () => {
                   onBlur={handleBlur('firstName')}
                   containerStyle={styles.inputContainer}
                   placeholder={'common.firstName'}
-                  error={errors.firstName}
+                  error={{
+                    value: errors.firstName,
+                    touched: touched.firstName,
+                  }}
                 />
                 <InputField
                   value={values.lastName}
@@ -353,31 +365,18 @@ const Register = () => {
                   onChangeText={handleChange('lastName')}
                   onBlur={handleBlur('lastName')}
                   containerStyle={styles.inputContainer}
-                  error={errors.lastName}
+                  error={{
+                    value: errors.lastName,
+                    touched: touched.lastName,
+                  }}
                 />
-                <InputField
+                <PhoneNumberInput
                   value={values.phoneNumber}
-                  keyboardType="phone-pad"
                   onChangeText={handleChange('phoneNumber')}
                   onBlur={handleBlur('phoneNumber')}
-                  error={errors.phoneNumber}
-                  disabledRight
-                  rightIcon={
-                    <Pressable style={[styles.row]}>
-                      <Text
-                        text={selectedFlag.introructionNumber}
-                        variant="smallRegular"
-                        color={colors.brouwnLight}
-                        style={{fontSize: 11}}
-                      />
-                      <Image
-                        source={selectedFlag.imageUrl}
-                        style={[styles.flag, styles.introNumber]}
-                        resizeMode="center"
-                      />
-                    </Pressable>
-                  }
-                  containerStyle={styles.inputContainer}
+                  errorValue={errors.phoneNumber}
+                  errorTouched={touched.phoneNumber}
+                  onChangeCountry={onChangeCountry}
                 />
                 <InputField
                   value={values.email}
@@ -386,7 +385,10 @@ const Register = () => {
                   onChangeText={handleChange('email')}
                   onBlur={handleBlur('email')}
                   containerStyle={styles.inputContainer}
-                  error={errors.email}
+                  error={{
+                    value: errors.email,
+                    touched: touched.email,
+                  }}
                 />
                 <InputField
                   value={values.password}
@@ -394,7 +396,10 @@ const Register = () => {
                   onChangeText={handleChange('password')}
                   onBlur={handleBlur('password')}
                   secureTextEntry={!isPasswordShow}
-                  error={errors.password}
+                  error={{
+                    value: errors.password,
+                    touched: touched.password,
+                  }}
                   onPressRightIcon={showPassword}
                   rightIcon={
                     <MaterialCommunityIcons
@@ -411,7 +416,10 @@ const Register = () => {
                   onChangeText={handleChange('confirmPassword')}
                   onBlur={handleBlur('confirmPassword')}
                   secureTextEntry={!isCPasswordShow}
-                  error={errors.confirmPassword}
+                  error={{
+                    value: errors.confirmPassword,
+                    touched: touched.confirmPassword,
+                  }}
                   onPressRightIcon={showCPassword}
                   rightIcon={
                     <MaterialCommunityIcons
@@ -533,7 +541,6 @@ const styles = StyleSheet.create({
   mainImage: {
     alignSelf: 'center',
   },
-  introNumber: {},
   linearGradient: {
     backgroundColor: '#D9DFFF',
   },
@@ -545,10 +552,6 @@ const styles = StyleSheet.create({
   welcomeGoJaddy: {
     marginHorizontal: spacing.tiny,
     marginBottom: spacing.xxxLarge,
-  },
-  flag: {
-    width: 30,
-    height: 30,
   },
 
   formContainer: {

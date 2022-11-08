@@ -1,22 +1,18 @@
+import React from 'react';
 import {
-  Image,
   Pressable,
   SafeAreaView,
   StyleSheet,
   View,
   ViewStyle,
 } from 'react-native';
-import React, {ReactNode, useState} from 'react';
 import {colors, spacing} from 'theme';
 import Icon from 'react-native-vector-icons/AntDesign';
-import {Button, InputField, Text} from 'components';
+import {Button, InputField, PhoneNumberInput, Text} from 'components';
 import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {AuthRoutes} from 'navigators/RoutesTypes';
 import {Formik} from 'formik';
 import * as Yub from 'yup';
 import {useTranslation} from 'react-i18next';
-import {PalestineFlag} from 'assets/images';
 import {AuthNavigationsType} from 'navigators/NavigationsTypes';
 
 interface IAnonymousModalProps {
@@ -31,12 +27,6 @@ interface IinitialValues {
   phoneNumber: string;
   userName: string;
 }
-interface IFlag {
-  imageUrl: ReactNode;
-  introructionNumber: string;
-}
-const ICON_WIDTH = 30;
-const SIZE = 18;
 
 const initialValues: IinitialValues = {
   phoneNumber: '',
@@ -54,12 +44,9 @@ const AnonymousModal: React.FC<IAnonymousModalProps> = ({
 }) => {
   const {navigate} = useNavigation<AuthNavigationsType>();
   const {t} = useTranslation();
-  const [selectedFlag, setSelectedFlag] = useState<IFlag>({
-    imageUrl: PalestineFlag,
-    introructionNumber: '970',
-  });
 
   const onSubmitLogin = values => {};
+  const onChangeCountry = () => {};
   return (
     <>
       {visibleAnonymousModal && (
@@ -96,7 +83,14 @@ const AnonymousModal: React.FC<IAnonymousModalProps> = ({
                 initialValues={initialValues}
                 onSubmit={onSubmitLogin}
                 validationSchema={loginSchema}>
-                {({handleChange, handleBlur, handleSubmit, values, errors}) => (
+                {({
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                  values,
+                  errors,
+                  touched,
+                }) => (
                   <View>
                     <InputField
                       value={values.userName}
@@ -113,37 +107,16 @@ const AnonymousModal: React.FC<IAnonymousModalProps> = ({
                         {errors.userName}
                       </Text>
                     )}
-                    <InputField
+                    <PhoneNumberInput
                       value={values.phoneNumber}
                       onChangeText={handleChange('phoneNumber')}
                       onBlur={handleBlur('phoneNumber')}
-                      containerStyle={styles.inputContainerStyle}
+                      errorValue={errors.phoneNumber}
+                      errorTouched={touched.phoneNumber}
+                      onChangeCountry={onChangeCountry}
                       style={{}}
-                      rightIcon={
-                        <Pressable style={styles.row}>
-                          <View style={styles.introNumber}>
-                            <Text
-                              text={selectedFlag.introructionNumber}
-                              variant="smallRegular"
-                              color={colors.brouwnLight}
-                            />
-                          </View>
-                          <Image
-                            source={selectedFlag.imageUrl}
-                            style={[styles.flag, styles.introNumber]}
-                            resizeMode="contain"
-                          />
-                        </Pressable>
-                      }
+                      containerStyle={styles.inputContainerStyle}
                     />
-                    {errors.phoneNumber && (
-                      <Text
-                        variant="error"
-                        color={colors.red}
-                        style={styles.errorMessage}>
-                        {errors.phoneNumber}
-                      </Text>
-                    )}
                     <Button
                       onPress={handleSubmit}
                       title="buttons.continue"
@@ -214,19 +187,6 @@ const styles = StyleSheet.create({
   },
   inputContainerStyle: {
     marginVertical: spacing.medium,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'center',
-  },
-  introNumber: {
-    maxWidth: ICON_WIDTH,
-    minWidth: ICON_WIDTH,
-  },
-  flag: {
-    width: SIZE,
-    height: SIZE,
   },
   errorMessage: {
     marginHorizontal: spacing.large,
