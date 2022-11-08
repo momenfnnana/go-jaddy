@@ -8,8 +8,8 @@ interface IAttributes {
 }
 
 interface IAddCartItem {
-  productId: number;
-  quantityToAdd: number;
+  ProductId: number;
+  QuantityToAdd: number;
   SelectedAttributes?: IAttributes[];
 }
 
@@ -27,14 +27,12 @@ export const getCartSummary = () =>
   });
 
 export const addCartProducts = ({
-  productId,
-  quantityToAdd,
+  ProductId,
+  QuantityToAdd,
   SelectedAttributes,
 }: IAddCartItem) => {
   const body = {
-    Items: [
-      {ProductId: productId, QuantityToAdd: quantityToAdd, SelectedAttributes},
-    ],
+    Items: [{ProductId, QuantityToAdd, SelectedAttributes}],
   };
   return axios(`${BASE_URL}/api/custom/cart/AddCartItems`, {
     method: 'post',
