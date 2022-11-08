@@ -10,17 +10,21 @@ import {
   KeyboardAvoidingView,
   Platform,
   Keyboard,
-  ImageSourcePropType,
 } from 'react-native';
-import {LoginMain, PalestineFlag} from 'assets/images';
+import {LoginMain} from 'assets/images';
 import LinearGradient from 'react-native-linear-gradient';
-import {BackButton, Button, InputField, Loader, Spacer, Text} from 'components';
+import {
+  BackButton,
+  Button,
+  InputField,
+  Spacer,
+  Text,
+  PhoneNumberInput,
+} from 'components';
 import {colors, spacing} from 'theme';
 import {FacebookIcon, GojaddyLoginIcon, GoogleIcon} from 'assets/icons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
-import {AuthRoutes, HomeRoutes, MainNavigator} from 'navigators/RoutesTypes';
 import {Formik} from 'formik';
 import * as Yub from 'yup';
 import {useTranslation} from 'react-i18next';
@@ -39,21 +43,15 @@ interface IinitialValues {
   phoneNumber: string;
   password: string;
 }
-interface IFlag {
-  imageUrl: ImageSourcePropType;
-  introructionNumber: string;
-}
 
-const SIZE = 18;
 export const ICON_WIDTH = 30;
 const topFieldsSpace = 20;
-const GO_BACK_SIZE = 36;
 
 const GredientFrom = '#AFB2B500';
 const GredientTo = '#231D2590';
 
 const initialValues: IinitialValues = {
-  phoneNumber: '00980595700501',
+  phoneNumber: '05957025222',
   password: 'Password$1',
 };
 const loginSchema = Yub.object().shape({
@@ -64,18 +62,14 @@ const loginSchema = Yub.object().shape({
     .required('password is required')
     .min(8, 'password must being at least 8 characters'),
 });
+
 const Login = () => {
   const {reload} = useAccessToken();
   const {width, height} = useWindowDimensions();
   const {top} = useSafeAreaInsets();
-  const {navigate, canGoBack, goBack} =
-    useNavigation<LoginScreenNavigationProp>();
+  const {navigate, canGoBack} = useNavigation<LoginScreenNavigationProp>();
   const {t} = useTranslation();
-  const {setUserData, setAccessToken} = useContext(UserContext);
-  const [selectedFlag, setSelectedFlag] = useState<IFlag>({
-    imageUrl: PalestineFlag,
-    introructionNumber: '970',
-  });
+  const {setAccessToken} = useContext(UserContext);
   const [isPasswordShow, setIsPasswordShown] = useState<boolean>(false);
   const [isAnonymousModalOpened, setIsAnonymousModalOpened] =
     useState<boolean>(false);
@@ -83,6 +77,7 @@ const Login = () => {
     useState<boolean>(false);
   const [isSetPassModalOpened, setSetPassModalOpened] =
     useState<boolean>(false);
+  const [countryCode, setCountryCode] = useState<string>('970');
   const mainImageStyle: ImageStyle = {
     width: width * 0.9,
     height: height * 0.5,
@@ -107,7 +102,7 @@ const Login = () => {
 
   const doLogin = (values: any) => {
     const data = {
-      PhoneNumber: values.phoneNumber,
+      PhoneNumber: countryCode + values.phoneNumber,
       Password: values.password,
     };
     mutate(data);
@@ -131,6 +126,10 @@ const Login = () => {
 
   const onCodeSent = (value: boolean) => {
     value && setSetPassModalOpened(true);
+  };
+
+  const onChangeCountry = (value: string) => {
+    setCountryCode(value);
   };
 
   useEffect(() => {
@@ -196,58 +195,25 @@ const Login = () => {
           initialValues={initialValues}
           onSubmit={doLogin}
           validationSchema={loginSchema}>
-          {({handleChange, handleBlur, handleSubmit, values, errors}) => (
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+          }) => (
             <View style={styles.formContainer}>
               <View style={styles.inputsContainer}>
                 <View style={styles.feildContainer}>
-                  <InputField
+                  <PhoneNumberInput
                     value={values.phoneNumber}
-                    keyboardType="phone-pad"
                     onChangeText={handleChange('phoneNumber')}
                     onBlur={handleBlur('phoneNumber')}
-                    error={errors.phoneNumber}
-                    disabledRight
-                    rightIcon={
-                      <Pressable style={[styles.row]}>
-                        <Text
-                          text={selectedFlag.introructionNumber}
-                          variant="smallRegular"
-                          color={colors.brouwnLight}
-                          style={{fontSize: 11}}
-                        />
-                        <Image
-                          source={selectedFlag.imageUrl}
-                          style={[styles.flag, styles.introNumber]}
-                          resizeMode="center"
-                        />
-                      </Pressable>
-                    }
-                    containerStyle={styles.inputContainer}
+                    errorTouched={touched.phoneNumber}
+                    errorValue={errors.phoneNumber}
+                    onChangeCountry={onChangeCountry}
                   />
-                  {/* <InputField
-                      value={values.phoneNumber}
-                      keyboardType="phone-pad"
-                      onChangeText={handleChange('phoneNumber')}
-                      onBlur={handleBlur('phoneNumber')}
-                      disabledRight
-                      rightIcon={
-                        <Pressable style={styles.row}>
-                          <View style={styles.introNumber}>
-                            <Text
-                              text={selectedFlag.introructionNumber}
-                              variant="smallRegular"
-                              color={colors.brouwnLight}
-                            />
-                          </View>
-                          <Image
-                            source={selectedFlag.imageUrl}
-                            style={[styles.flag, styles.introNumber]}
-                            resizeMode="contain"
-                          />
-                        </Pressable>
-                      }
-                      error={errors.phoneNumber}
-                    /> */}
                 </View>
                 <View style={styles.feildContainer}>
                   <InputField
@@ -265,7 +231,10 @@ const Login = () => {
                       />
                     }
                     containerStyle={styles.inputContainer}
-                    error={errors.password}
+                    error={{
+                      value: errors.password,
+                      touched: touched.password,
+                    }}
                   />
                 </View>
               </View>
@@ -364,14 +333,6 @@ const styles = StyleSheet.create({
     marginHorizontal: spacing.tiny,
     marginBottom: spacing.xxxLarge,
   },
-  flag: {
-    width: SIZE,
-    height: SIZE,
-  },
-  introNumber: {
-    maxWidth: ICON_WIDTH,
-    minWidth: ICON_WIDTH,
-  },
   formContainer: {
     backgroundColor: colors.white,
     paddingHorizontal: spacing.normal - 1,
@@ -441,5 +402,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: spacing.huge,
+  },
+  justifyBtw: {
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: spacing.huge,
+    paddingBottom: spacing.normal,
+    marginBottom: spacing.normal,
+    borderBottomColor: colors.disabledBackground,
+    borderBottomWidth: 1,
   },
 });
