@@ -558,8 +558,9 @@ const ListHeaderComponent = ({
               style={{flex: 0.5}}
               onPress={() =>
                 mutateAddToCart({
-                  productId: ProductId,
-                  quantityToAdd: productsNumber,
+                  ProductId,
+                  QuantityToAdd: productsNumber,
+                  SelectedAttributes: [],
                 })
               }>
               {isLoadingAddToCart ? (
