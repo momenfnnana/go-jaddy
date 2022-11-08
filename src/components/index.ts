@@ -1,7 +1,7 @@
 export {default as Button} from './Button';
 export {default as Text} from './Text';
 export {default as ScreenContainer} from './ScreenContainer';
-export {default as InputField} from './InputField';
+export {default as InputField, PhoneNumberInput} from './InputField';
 export {default as Spacer} from './Spacer';
 export {default as MainHeader} from './MainHeader';
 export {default as SearchInput} from './SearchInput';
@@ -19,3 +19,4 @@ export {default as BackButton} from './BackButton';
 export {default as AddHeaderBtn} from './AddHeaderBtn';
 export {default as RateModal} from './RateModal';
 export {default as ProgressiveImage} from './ProgressiveImage';
+export {default as CountryPicker} from './CountryPicker';
