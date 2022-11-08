@@ -20,9 +20,9 @@ const SwitchLang = () => {
   const {data} = useQuery(['getLanguages'], getLanguages);
   const [refreshLanguage, setRefreshLanguage] = useState<boolean>(false);
   const {language} = useLanguage(refreshLanguage);
-  const confirmLanguage = async (languageCode: string) => {
+  const confirmLanguage = async (languageCode: string, languageId: string) => {
     i18n.changeLanguage(languageCode);
-    AsyncStorage.setItem('languageId', languageCode!);
+    AsyncStorage.setItem('languageId', languageId!);
     if (languageCode == 'en') {
       if (I18nManager.isRTL) {
         await I18nManager.forceRTL(false);
@@ -37,7 +37,7 @@ const SwitchLang = () => {
   };
 
   const changeLanguageHandler = (item: ILanguage) => {
-    confirmLanguage(item.CultureCode);
+    confirmLanguage(item.CultureCode, item.Id.toString());
   };
 
   return (
@@ -50,13 +50,15 @@ const SwitchLang = () => {
             styles.languageBtnContainer,
             {
               backgroundColor:
-                item.CultureCode === language ? colors.primary : 'transparent',
+                item.Id.toString() === language
+                  ? colors.primary
+                  : 'transparent',
             },
           ]}>
           <Text
             text={item?.Name}
             color={
-              item.CultureCode === language
+              item.Id.toString() === language
                 ? colors.white
                 : colors.languagesSwitchText
             }

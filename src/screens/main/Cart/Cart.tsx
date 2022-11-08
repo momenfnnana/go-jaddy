@@ -246,6 +246,21 @@ const Cart = () => {
                   />
                 </View>
               )}
+              {summaryData?.data?.Tax && (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    paddingBottom: 10,
+                    borderBottomWidth: 0.5,
+                    borderBottomColor: colors.border,
+                    marginTop: 10,
+                  }}>
+                  <Text variant="mediumRegular" tx="modal.tax" />
+                  <Text variant="mediumRegular" text={summaryData?.data?.Tax} />
+                </View>
+              )}
               <View
                 style={{
                   flexDirection: 'row',

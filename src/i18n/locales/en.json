@@ -244,6 +244,7 @@
     "RewardPoints": "Reward Points",
     "DiscoundCode": "Discound Code",
     "total": "Total",
+    "tax": "tax",
     "submitTotalModal": "Done Requset"
   },
   "EmptyPage": {
@@ -256,6 +257,24 @@
     "no-reviews-title": "No reviews added before",
     "categories-title": "No categories to show",
     "stores-title": "No stores to show"
+  },
+  "validation": {
+    "firstName": "first name is required",
+    "lastName": "last name is required",
+    "email": "email is required",
+    "email-template": "email must be a valid email",
+    "phoneNumber-length": "must be {{length}} characters",
+    "phoneNumber-template": "must be a valid phone number",
+    "phoneNumber": "phone number is required",
+    "address": "address {{number}} is required",
+    "city": "city is required",
+    "password": "password is required",
+    "password-min": "password must being at least {{number}} characters",
+    "password-lowercase": "password must contain lowercase",
+    "password-uppercase": "password must contain uppercase",
+    "password-special": "password must contain special characters",
+    "confirmPassword": "confirm password is required",
+    "confirmPassword-match": "passwords not matched"
   },
   "api": {
     "account": {

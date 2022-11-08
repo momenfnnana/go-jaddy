@@ -40,6 +40,7 @@ export interface IAddress {
   Email: string;
   PhoneNumber: string;
   FaxNumber: string;
+  StateId: string;
   IsDefault: boolean;
 }
 

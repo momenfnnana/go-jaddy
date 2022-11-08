@@ -17,39 +17,16 @@ import {UserContext} from 'context/UserContext';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {changePassword, changeUserInfo, getUserData} from 'services/Profile';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
-const phoneRegExp =
-  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+import {useSchema} from 'hook/useSchema';
 
 interface IFlag {
   imageUrl: ImageSourcePropType;
   introructionNumber: string;
 }
 
-const updateProfileSchema = Yup.object().shape({
-  firstName: Yup.string().required('first name is required'),
-  lastName: Yup.string().required('last name is required'),
-  email: Yup.string().email().required('email is required'),
-  phoneNumber: Yup.string()
-    .length(15, 'phone number must be 15 characters in length')
-    .matches(phoneRegExp, 'phone number is not valid')
-    .required('phone number is required'),
-});
-
-const updatePasswordSchema = Yup.object().shape({
-  oldPassword: Yup.string()
-    .required('Old Password name is required')
-    .min(8, 'password must being at least 8 characters'),
-  newPassword: Yup.string()
-    .required('new Password is required')
-    .min(8, 'password must being at least 8 characters'),
-  confirmPassword: Yup.string()
-    .required('confirm password is required')
-    .oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
-});
-
 const ProfileDetails = () => {
   const {settings} = useContext(UserContext);
+  const {defualtSchema, updatePasswordSchema} = useSchema();
   const [isEditInfo, setEditInfo] = useState<boolean>(true);
   const [imageId, setImageId] = useState<number>(-1);
   const [isOldPasswordShow, setIsOldPasswordShown] = useState<boolean>(false);
@@ -172,7 +149,7 @@ const ProfileDetails = () => {
                 email: data?.data.Email,
               }}
               onSubmit={onUpdateProfileHandle}
-              validationSchema={updateProfileSchema}>
+              validationSchema={defualtSchema}>
               {({
                 handleChange,
                 handleBlur,

@@ -10,9 +10,13 @@ import i18n from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import en from 'i18n/locales/en.json';
 import ar from 'i18n/locales/ar.json';
-import {readLanguage, readAccessToken} from 'constants';
+import {readLanguage, readAccessToken, readLocalCurrencies} from 'constants';
 import {UserProvider} from 'context/UserContext';
-import {setAxiosAccessToken, setAxiosLanguage} from 'axiosConfig';
+import {
+  setAxiosAccessToken,
+  setAxiosCurrencyId,
+  setAxiosLanguage,
+} from 'axiosConfig';
 import {ScreenProvider} from 'context/ScreenContext';
 import {WishlistProvider} from 'context/WishlistContext';
 import queryClient from 'queryClient';
@@ -35,11 +39,16 @@ export default function App() {
         setAxiosAccessToken(accessToken);
       }
     });
+    readLocalCurrencies().then((currencyId: any) => {
+      if (currencyId) {
+        setAxiosCurrencyId(currencyId);
+      }
+    });
     readLanguage().then((res: string | null) => {
-      setAxiosLanguage(res || 'ar');
-      setIsAr(res === 'ar' ? true : false);
+      setAxiosLanguage(res || '2');
+      setIsAr(res === '2' ? true : false);
       i18n.use(initReactI18next).init({
-        lng: res || 'ar',
+        lng: res === '2' ? 'ar' : 'en',
         resources,
         fallbackLng: 'en', // use en if detected lng is not available
         interpolation: {
