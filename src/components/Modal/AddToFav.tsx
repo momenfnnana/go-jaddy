@@ -115,7 +115,14 @@ const AddToFav = ({
                 initialValues={collectionsInitialValues}
                 validationSchema={addCollectionSchema}
                 onSubmit={addCollectionHandler}>
-                {({values, handleChange, handleBlur, errors, handleSubmit}) => (
+                {({
+                  values,
+                  handleChange,
+                  handleBlur,
+                  errors,
+                  touched,
+                  handleSubmit,
+                }) => (
                   <>
                     <Pressable
                       onPress={showAddCollectionInput}
@@ -156,7 +163,10 @@ const AddToFav = ({
                             />
                           )
                         }
-                        error={errors.collectionName}
+                        error={{
+                          value: errors.collectionName,
+                          touched: touched.collectionName,
+                        }}
                       />
                     )}
                   </>
@@ -218,7 +228,14 @@ const AddToFav = ({
             initialValues={collectionsInitialValues}
             validationSchema={addCollectionSchema}
             onSubmit={addCollectionHandler}>
-            {({values, handleChange, handleBlur, errors, handleSubmit}) => (
+            {({
+              values,
+              handleChange,
+              handleBlur,
+              errors,
+              touched,
+              handleSubmit,
+            }) => (
               <>
                 <Pressable
                   onPress={showAddCollectionInput}
@@ -253,7 +270,10 @@ const AddToFav = ({
                         />
                       )
                     }
-                    error={errors.collectionName}
+                    error={{
+                      value: errors.collectionName,
+                      touched: touched.collectionName,
+                    }}
                   />
                 )}
               </>

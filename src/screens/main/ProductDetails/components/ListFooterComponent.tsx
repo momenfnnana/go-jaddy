@@ -220,7 +220,14 @@ const ListFooterComponent = ({
           initialValues={ratingInitialValues}
           validationSchema={ratingSchema}
           onSubmit={addRatingHandler}>
-          {({values, handleChange, handleBlur, errors, handleSubmit}) => {
+          {({
+            values,
+            handleChange,
+            handleBlur,
+            errors,
+            touched,
+            handleSubmit,
+          }) => {
             return (
               <View style={styles.formContainer}>
                 <InputField
@@ -229,7 +236,10 @@ const ListFooterComponent = ({
                   onBlur={handleBlur('ReviewText')}
                   placeholder={t('product-details.rate-field')}
                   style={{}}
-                  error={errors.ReviewText}
+                  error={{
+                    value: errors.ReviewText,
+                    touched: touched.ReviewText,
+                  }}
                 />
                 <Switch
                   isActive={addImagesVisible}

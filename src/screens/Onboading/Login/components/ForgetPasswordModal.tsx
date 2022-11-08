@@ -107,14 +107,24 @@ const ResetPasswordModal: React.FC<IResetPasswordModalProps> = ({
                 initialValues={initialValues}
                 onSubmit={onSubmitLogin}
                 validationSchema={loginSchema}>
-                {({handleChange, handleBlur, handleSubmit, values, errors}) => (
+                {({
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                  values,
+                  errors,
+                  touched,
+                }) => (
                   <View>
                     <InputField
                       value={values.email}
                       onChangeText={handleChange('email')}
                       onBlur={handleBlur('email')}
                       placeholder={t('common.email')}
-                      error={errors.email}
+                      error={{
+                        value: errors.email,
+                        touched: touched.email,
+                      }}
                       style={{}}
                     />
                     {isError && (
