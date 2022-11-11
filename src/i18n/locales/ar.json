@@ -158,7 +158,8 @@
     "useDiscountCode": "استخدم كود خصم",
     "submitBtn": "اتمام الطلب",
     "total": "الاجمالي ({{currency}})",
-    "discountPlaceholder": "كود الخصم"
+    "discountPlaceholder": "كود الخصم",
+    "added-successfull": "تم إضافة المنتج بنجاح"
   },
   "api": {
     "account": {
@@ -269,6 +270,10 @@
     "changePhoto": "تغيير الصورة",
     "password": "كلمة المرور",
     "submitBtn": "حفظ التغييرات"
+  },
+  "checkout": {
+    "payment-address": "عنوان الدفع",
+    "address-to-recieve-invoice": "العنوان الذي ستصل عليه الفاتورة"
   },
   "modal": {
     "successTitle": "هل أنت متأكد من هذه العملية؟",

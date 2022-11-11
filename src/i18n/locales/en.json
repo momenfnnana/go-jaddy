@@ -187,7 +187,8 @@
     "useDiscountCode": "use discount code",
     "submitBtn": "request done",
     "total": "Total ({{currency}})",
-    "discountPlaceholder": "discount code"
+    "discountPlaceholder": "discount code",
+    "added-successfull": "Added successfully"
   },
   "previousTitles": {
     "titleHeader": "Previous Addresses",
@@ -238,6 +239,10 @@
     "changePhoto": "Change Photo",
     "password": "Password",
     "submitBtn": "Save Changes"
+  },
+  "checkout": {
+    "payment-address": "Payment address",
+    "address-to-recieve-invoice": "The address to which the invoice will be received"
   },
   "modal": {
     "successTitle": "are you sure from confirm?",
