@@ -49,7 +49,7 @@ const SearchInput = ({
             {
               flex: 1,
               color: textColor,
-              textAlign: language == 'ar' ? 'right' : 'left',
+              textAlign: language == '2' ? 'right' : 'left',
             },
           ]}
           autoCapitalize="none"

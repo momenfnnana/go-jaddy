@@ -20,7 +20,7 @@ const ArrowIcon = ({
 }: IArrowProps) => {
   const [isAr, setAr] = useState(false);
   useEffect(() => {
-    readLanguage().then(lang => setAr(lang == 'ar'));
+    readLanguage().then(lang => setAr(lang == '2'));
   }, []);
   return (
     <MaterialIcons

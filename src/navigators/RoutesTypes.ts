@@ -67,6 +67,7 @@ export type ProfileRoutes = {
   AddAddress: {item?: IAddress} | undefined;
   ProfileDetails: undefined;
   WishlistDetails: {Id: number; title: string};
+  OrdersList: {isOrederRequest?: boolean};
 };
 
 export type AuthRoutes = {

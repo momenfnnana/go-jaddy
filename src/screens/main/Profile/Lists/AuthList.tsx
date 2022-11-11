@@ -12,6 +12,7 @@ export const data: ITab[] = [
     id: 2,
     title: 'profile.request-list',
     icon: <ProfileIconTab />,
+    goTo: 'OrdersList',
   },
   {
     id: 3,
