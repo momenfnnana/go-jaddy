@@ -20,3 +20,4 @@ export {default as AddHeaderBtn} from './AddHeaderBtn';
 export {default as RateModal} from './RateModal';
 export {default as ProgressiveImage} from './ProgressiveImage';
 export {default as CountryPicker} from './CountryPicker';
+export {default as AddressItem} from './AddressItem';

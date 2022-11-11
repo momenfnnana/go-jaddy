@@ -6,15 +6,23 @@ import {useMutation, useQuery} from '@tanstack/react-query';
 import {deleteAddress, setDefulatAddress} from 'services/Addresses';
 import {useNavigation} from '@react-navigation/native';
 import {PreviousAddressNavigationProp} from 'navigators/NavigationsTypes';
-import {IAddress} from 'navigators/RoutesTypes';
+import {IAddress} from 'types';
 
 interface IAddressItem {
   item: IAddress;
-  setDeletedItem: (id: number) => void;
-  refetchAddresses: () => void;
+  setDeletedItem?: (id: number) => void;
+  refetchAddresses?: () => void;
+  isSelectAddress?: boolean;
+  onPressAddress?: () => void;
 }
 
-const AddressItem = ({item, setDeletedItem,refetchAddresses}: IAddressItem) => {
+const AddressItem = ({
+  item,
+  setDeletedItem,
+  refetchAddresses,
+  isSelectAddress = false,
+  onPressAddress,
+}: IAddressItem) => {
   const [pressedDefualt, setPressedDefualt] = useState<number>(-1);
   const [pressedDelete, setPressedDelete] = useState<number>(-1);
   const {navigate} = useNavigation<PreviousAddressNavigationProp>();
@@ -24,10 +32,10 @@ const AddressItem = ({item, setDeletedItem,refetchAddresses}: IAddressItem) => {
     // refetch: refetchSetDefulatAddress,
     mutate,
   } = useMutation([`setDefulatAddress${item.Id}`], setDefulatAddress, {
-    onSuccess:(data)=>{
-      refetchAddresses()
-      return data
-    }
+    onSuccess: data => {
+      refetchAddresses?.();
+      return data;
+    },
   });
 
   const {isFetching: isFetchingDeleteAddress, refetch: refetchDeleteAddress} =
@@ -37,7 +45,7 @@ const AddressItem = ({item, setDeletedItem,refetchAddresses}: IAddressItem) => {
       {
         enabled: false,
         onSuccess() {
-          setDeletedItem(pressedDelete);
+          setDeletedItem?.(pressedDelete);
           setPressedDelete(-1);
         },
       },
@@ -56,7 +64,9 @@ const AddressItem = ({item, setDeletedItem,refetchAddresses}: IAddressItem) => {
   }, [pressedDelete]);
 
   return (
-    <View
+    <Pressable
+      onPress={onPressAddress}
+      disabled={isSelectAddress}
       style={{
         paddingHorizontal: 30,
         paddingVertical: 20,
@@ -90,83 +100,87 @@ const AddressItem = ({item, setDeletedItem,refetchAddresses}: IAddressItem) => {
             numberOfLines={1}
           />
         </View>
-        <View style={{flex: 1, alignItems: 'flex-end'}}>
-          <View
-            style={{
-              paddingVertical: 5,
-              paddingHorizontal: 10,
-              borderRadius: 5,
-              backgroundColor: colors.secondary,
-            }}>
-            <Text
-              tx="previousTitles.chargeLabel"
-              color={colors.white}
-              variant="xSmallBold"
-            />
+        {!isSelectAddress && (
+          <View style={{flex: 1, alignItems: 'flex-end'}}>
+            <View
+              style={{
+                paddingVertical: 5,
+                paddingHorizontal: 10,
+                borderRadius: 5,
+                backgroundColor: colors.secondary,
+              }}>
+              <Text
+                tx="previousTitles.chargeLabel"
+                color={colors.white}
+                variant="xSmallBold"
+              />
+            </View>
           </View>
-        </View>
+        )}
       </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginTop: 20,
-        }}>
+      {!isSelectAddress && (
         <View
           style={{
-            backgroundColor: colors.gray[200],
-            paddingVertical: 5,
-            paddingHorizontal: 15,
-            borderRadius: 7,
-            opacity: item.IsDefault ? 1 : 0,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: 20,
           }}>
-          <Text tx="previousTitles.defultLabel" variant="xSmallBold" />
-        </View>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          {!item.IsDefault && (
+          <View
+            style={{
+              backgroundColor: colors.gray[200],
+              paddingVertical: 5,
+              paddingHorizontal: 15,
+              borderRadius: 7,
+              opacity: item.IsDefault ? 1 : 0,
+            }}>
+            <Text tx="previousTitles.defultLabel" variant="xSmallBold" />
+          </View>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {!item.IsDefault && (
+              <Pressable
+                disabled={isLoading}
+                onPress={() => {
+                  // setPressedDefualt(item.Id);
+                  mutate({id: item.Id});
+                }}>
+                {isLoading ? (
+                  <Loader size={'small'} />
+                ) : (
+                  <Text
+                    tx="previousTitles.defualtBtn"
+                    color={colors.gray[500]}
+                    variant="smallRegular"
+                  />
+                )}
+              </Pressable>
+            )}
             <Pressable
-              disabled={isLoading}
               onPress={() => {
-                // setPressedDefualt(item.Id);
-                mutate({id: item.Id});
+                navigate('AddAddress', {item});
+              }}
+              style={{marginHorizontal: 10}}>
+              <Text tx="previousTitles.editBtn" variant="smallRegular" />
+            </Pressable>
+            <Pressable
+              disabled={isFetchingDeleteAddress}
+              onPress={() => {
+                setPressedDelete(item.Id);
               }}>
-              {isLoading ? (
-                <Loader size={'small'} />
+              {isFetchingDeleteAddress ? (
+                <Loader size={'small'} color={colors.red} />
               ) : (
                 <Text
-                  tx="previousTitles.defualtBtn"
-                  color={colors.gray[500]}
+                  tx="previousTitles.deleteBtn"
+                  color={colors.red}
                   variant="smallRegular"
                 />
               )}
             </Pressable>
-          )}
-          <Pressable
-            onPress={() => {
-              navigate('AddAddress', {item});
-            }}
-            style={{marginHorizontal: 10}}>
-            <Text tx="previousTitles.editBtn" variant="smallRegular" />
-          </Pressable>
-          <Pressable
-            disabled={isFetchingDeleteAddress}
-            onPress={() => {
-              setPressedDelete(item.Id);
-            }}>
-            {isFetchingDeleteAddress ? (
-              <Loader size={'small'} color={colors.red} />
-            ) : (
-              <Text
-                tx="previousTitles.deleteBtn"
-                color={colors.red}
-                variant="smallRegular"
-              />
-            )}
-          </Pressable>
+          </View>
         </View>
-      </View>
-    </View>
+      )}
+    </Pressable>
   );
 };
 
