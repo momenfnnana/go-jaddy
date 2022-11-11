@@ -1,4 +1,5 @@
 import {IProductInterface, ISearchInterface} from 'screens/main/Home/types';
+import {IAddress} from 'types';
 export type MainNavigator = {
   HomeFlow: BottomTabsRoutes;
   AuthFlow: AuthRoutes;
@@ -25,23 +26,6 @@ interface CategoryParams {
 }
 interface StoreParams {
   storeId: number;
-}
-
-export interface IAddress {
-  Id: number;
-  Company: string;
-  FirstName: string;
-  LastName: string;
-  Address1: string;
-  Address2: string;
-  CountryId: number;
-  CountryName: string;
-  City: string;
-  Email: string;
-  PhoneNumber: string;
-  FaxNumber: string;
-  StateId: string;
-  IsDefault: boolean;
 }
 
 export type CategotyRoutes = {

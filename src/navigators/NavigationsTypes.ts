@@ -14,6 +14,7 @@ import {
 import {
   AuthRoutes,
   BottomTabsRoutes,
+  CartRoutes,
   CategotyRoutes,
   HomeRoutes,
   MainNavigator,
@@ -42,6 +43,9 @@ type IHome = NativeStackScreenProps<BottomTabsRoutes, 'HomeStack'>;
 
 type ICategories = NativeStackScreenProps<BottomTabsRoutes, 'CategoriesStack'>;
 
+type ICart = NativeStackScreenProps<BottomTabsRoutes, 'Cart'>;
+
+type CartScreenNavigationProp = NativeStackNavigationProp<CartRoutes, 'Cart'>;
 // interface IStores
 //   extends NativeStackScreenProps<BottomTabsRoutes, 'StoresStack'>,
 //     RouteProp<StoresRoutes>,
@@ -111,6 +115,7 @@ export type {
   CategoryNavigationsType,
   IHome,
   ICategories,
+  ICart,
   IStores,
   ICategoryDetails,
   LoginScreenNavigationProp,
@@ -123,4 +128,5 @@ export type {
   PreviousAddressNavigationProp,
   AddAddressNavigationProp,
   AddAddressRouteProp,
+  CartScreenNavigationProp,
 };
