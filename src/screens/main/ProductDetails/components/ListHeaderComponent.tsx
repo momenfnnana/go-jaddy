@@ -1,4 +1,10 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {
   View,
   ImageBackground,
@@ -12,13 +18,12 @@ import {
   ScrollView,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {DiscountIcon, ShareIcon, StarFilledIcon} from 'assets/icons';
+import {DiscountIcon, ShareIcon} from 'assets/icons';
 import {AddToFav, InputField, Loader, Text} from 'components';
 import ArrowIcon from 'components/Arrow';
-import {colors, spacing, font} from 'theme';
+import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
 import ProductImagesList from './ProductImagesList';
-import {CartContext} from 'context/CartContext';
 import NotifyMeOnAvailable from './NotifyMeOnAvailable';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -28,11 +33,17 @@ import LinearGradient from 'react-native-linear-gradient';
 import {CategoryNavigationsType} from 'navigators/NavigationsTypes';
 import {useMutation} from '@tanstack/react-query';
 import {addCartProducts} from 'services/Cart';
-import {useTranslation} from 'react-i18next';
 import {Boxes, CheckboxList, DropdownList, RadioList} from './attributes';
 import {RatingFiltters} from 'components/RatingFilters';
 import {Ifiltter} from 'screens/main/StoreDetails/StoreDetails';
 import {LogoSplash} from 'assets/images';
+import {useProtectedFunction} from 'hook/useProdectedFunction';
+import {useLogged} from 'hook/useLogged';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {CART} from 'types';
+import Snackbar from 'react-native-snackbar';
+import {useTranslation} from 'react-i18next';
+import {UserContext} from 'context/UserContext';
 
 interface IListHeaderComponent {
   Product: any;
@@ -98,6 +109,9 @@ const ListHeaderComponent = ({
   reviewsList,
 }: IListHeaderComponent) => {
   const {t} = useTranslation();
+  const {setUpdateProducts, updateProducts} = useContext(UserContext);
+  const {protectedFunction} = useProtectedFunction();
+  const {isLogged} = useLogged();
   const {navigate, goBack, canGoBack} =
     useNavigation<CategoryNavigationsType>();
   const [productsNumber, setProductsNumber] = useState<number>(1);
@@ -125,7 +139,7 @@ const ListHeaderComponent = ({
   };
 
   const gradientColors = ['#00000070', '#ffffff00'];
-
+  const initialFilterValues = {ratings: [], withImage: false};
   const ShowDiscountBadge: boolean = Product?.ShowDiscountBadge;
   const DisplayProductReviews: boolean = Product?.DisplayProductReviews;
   const ProductPrice = Product?.ProductPrice;
@@ -164,28 +178,8 @@ const ListHeaderComponent = ({
     }
   };
 
-  const onPressFilter = (value: string) => {
-    if (value === 'all' || value === 'with-images') {
-      if (!selectedFilter.includes(value)) {
-        const newlist = [...selectedFilter, value];
-        setSelectedFilter(newlist);
-      } else {
-        const newlist = selectedFilter.filter(item => item !== value);
-        setSelectedFilter(newlist);
-      }
-      return;
-    }
-    if (!ratingFilters.includes(value)) {
-      const newlist = [...ratingFilters, value];
-      setRatingFilters(newlist);
-    } else {
-      const newlist = ratingFilters.filter(item => item !== value);
-      setRatingFilters(newlist);
-    }
-  };
-
   const onPressHeart = () => {
-    onOpenAddToCollection();
+    protectedFunction({func: () => onOpenAddToCollection()});
   };
   const onSelect = (value: any, attributesList: any[]) => {
     const foundParent = selectedAttributes.find((item: any) => {
@@ -280,6 +274,77 @@ const ListHeaderComponent = ({
     },
     [attributes],
   );
+
+  const doAddToCart = async () => {
+    if (isLogged) {
+      mutateAddToCart({
+        ProductId,
+        QuantityToAdd: productsNumber,
+        SelectedAttributes: [],
+      });
+    } else {
+      const cartItems = await AsyncStorage.getItem(CART);
+      const cartArray = JSON.parse(cartItems as any) as any[];
+      if (!!cartArray.length) {
+        const foundedItem = cartArray.find(item => {
+          return item.Id === ProductId;
+        });
+        const filteredArray = cartArray.filter(item => {
+          return item.Id !== ProductId;
+        });
+        if (foundedItem) {
+          filteredArray.push({
+            ...foundedItem,
+            Id: ProductId,
+            AttributesSelection: [],
+            QuantityToAdd: foundedItem.productsNumber
+              ? foundedItem.productsNumber + 1
+              : 1,
+          });
+          AsyncStorage.setItem(CART, JSON.stringify(filteredArray)).then(() => {
+            Snackbar.show({
+              text: t('cart.added-successfull'),
+              duration: Snackbar.LENGTH_SHORT,
+              backgroundColor: colors.success,
+            });
+          });
+        } else {
+          cartArray.push({
+            ...Product,
+            Id: ProductId,
+            AttributesSelection: [],
+            QuantityToAdd: productsNumber,
+          });
+        }
+        AsyncStorage.setItem(CART, JSON.stringify(cartArray)).then(() => {
+          Snackbar.show({
+            text: t('cart.added-successfull'),
+            duration: Snackbar.LENGTH_SHORT,
+            backgroundColor: colors.success,
+          });
+        });
+      } else {
+        AsyncStorage.setItem(
+          CART,
+          JSON.stringify([
+            {
+              ...Product,
+              Id: ProductId,
+              AttributesSelection: [],
+              QuantityToAdd: productsNumber,
+            },
+          ]),
+        ).then(() => {
+          Snackbar.show({
+            text: t('cart.added-successfull'),
+            duration: Snackbar.LENGTH_SHORT,
+            backgroundColor: colors.success,
+          });
+        });
+      }
+      setUpdateProducts(!updateProducts);
+    }
+  };
   useEffect(() => {
     if (Product?.Attributes) {
       const newItems = Product?.Attributes.map((element: IAttributes) => {
@@ -556,13 +621,7 @@ const ListHeaderComponent = ({
             <Pressable
               disabled={isLoadingAddToCart}
               style={{flex: 0.5}}
-              onPress={() =>
-                mutateAddToCart({
-                  ProductId,
-                  QuantityToAdd: productsNumber,
-                  SelectedAttributes: [],
-                })
-              }>
+              onPress={doAddToCart}>
               {isLoadingAddToCart ? (
                 <Loader color={colors.white} size={'small'} />
               ) : (
@@ -578,7 +637,7 @@ const ListHeaderComponent = ({
             <AntDesign name="heart" color={colors.red} size={20} />
           </Pressable>
         </View>
-        {!!reviewsList.length && (
+        {(!!reviewsList.length || initialFilterValues !== selectedFilter) && (
           <RatingFiltters
             style={{paddingHorizontal: spacing.content}}
             setSelectedFilter={setSelectedFilter}
