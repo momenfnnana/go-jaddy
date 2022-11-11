@@ -32,3 +32,7 @@ export {default as EditIcon} from './svg/edit.svg';
 export {default as GoJaddyRedIcon} from './svg/go-jaddy-red.svg';
 export {default as AddCartIcon} from './svg/add-cart.svg';
 export {default as TrashIcon} from './svg/trash.svg';
+export {default as PaymentAddress} from './svg/payment-address.svg';
+export {default as PaymentMethods} from './svg/payment-methods.svg';
+export {default as PaymentShippingAddress} from './svg/payment-shipping-address.svg';
+export {default as PaymentConfirmation} from './svg/payment-confirmation.svg';
