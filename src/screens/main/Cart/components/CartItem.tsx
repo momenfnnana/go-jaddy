@@ -20,7 +20,10 @@ interface ICartItem {
 
 const CartItem = ({item, setData}: ICartItem) => {
   const {currency} = useCurrency();
-  const [quantity, setQuantity] = useState<number>(item?.EnteredQuantity || 0);
+  const [quantity, setQuantity] = useState<number>(
+    item?.EnteredQuantity || item?.QuantityToAdd || 0,
+  );
+
   const {
     refetch: refetchEditItem,
     isFetching: isFetchingEditItem,
@@ -61,9 +64,11 @@ const CartItem = ({item, setData}: ICartItem) => {
   }, [quantity]);
 
   useEffect(() => {
-    setQuantity(item?.EnteredQuantity);
+    setQuantity(item?.EnteredQuantity || 0);
   }, [item?.EnteredQuantity]);
-
+  const imageUrl = item?.Image?.Url
+    ? BASE_URL + item?.Image?.Url
+    : BASE_URL + item?.Images[0]?.Url;
   return (
     <View
       style={{
@@ -76,7 +81,7 @@ const CartItem = ({item, setData}: ICartItem) => {
       }}>
       <View style={{flex: 1}}>
         <Text
-          tx={item.ProductName}
+          tx={item.ProductName || item.Name}
           variant="smallBold"
           style={{fontSize: 12}}
         />
@@ -110,7 +115,7 @@ const CartItem = ({item, setData}: ICartItem) => {
           </Pressable>
 
           <Text
-            text={item?.EnteredQuantity}
+            text={quantity.toString()}
             variant="smallBold"
             style={{marginRight: 10}}
           />
@@ -142,7 +147,10 @@ const CartItem = ({item, setData}: ICartItem) => {
           </Pressable>
 
           <Text
-            text={item?.SubTotal + ' ' + currency?.Symbol}
+            text={
+              item?.SubTotal ||
+              item?.ProductPrice?.Price + ' ' + currency?.Symbol
+            }
             color={colors.primary}
             variant="smallExtraBold"
           />
@@ -158,7 +166,9 @@ const CartItem = ({item, setData}: ICartItem) => {
         }}>
         <Image
           style={{width: '100%', height: '100%', resizeMode: 'contain'}}
-          source={{uri: BASE_URL + item?.Image?.Url}}
+          source={{
+            uri: imageUrl,
+          }}
         />
       </View>
     </View>
