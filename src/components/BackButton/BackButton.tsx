@@ -9,7 +9,7 @@ interface IBackButton extends PressableProps {
   size?: number;
 }
 
-const BackButton = ({color, size = 20, ...rest}: IBackButton) => {
+const BackButton = ({color, size = spacing.large, ...rest}: IBackButton) => {
   const {goBack} = useNavigation();
   return (
     <Pressable onPress={goBack} style={styles.container} {...rest}>
@@ -22,7 +22,7 @@ export default BackButton;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.white + 18,
-    padding: 8,
+    padding: spacing.small,
     borderRadius: spacing.small + 2,
   },
 });

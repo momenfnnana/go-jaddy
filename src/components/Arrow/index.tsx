@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {colors} from 'theme';
 import {readLanguage} from 'constants';
+import {useLanguage} from 'hook/useLanguage';
 
 interface IArrowProps {
   onPress?: () => void;
@@ -18,17 +19,18 @@ const ArrowIcon = ({
   name = 'keyboard-backspace',
   style,
 }: IArrowProps) => {
-  const [isAr, setAr] = useState(false);
-  useEffect(() => {
-    readLanguage().then(lang => setAr(lang == 'ar'));
-  }, []);
+  const {language} = useLanguage();
+  
   return (
     <MaterialIcons
       onPress={onPress}
       name={name}
       size={size}
       color={color}
-      style={[{transform: [{rotate: isAr ? '180deg' : '0deg'}]}, style]}
+      style={[
+        {transform: [{rotate: language === '1' ? '0deg' : '180deg'}]},
+        style,
+      ]}
     />
   );
 };

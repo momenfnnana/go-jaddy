@@ -5,6 +5,7 @@ import {colors, font, spacing} from 'theme';
 import {Text} from 'components';
 import {TextInput} from 'react-native-paper';
 import {FormikErrors, FormikTouched} from 'formik';
+import {useLanguage} from 'hook/useLanguage';
 
 export interface IInputField extends TextInputProps {
   rightIcon?: ReactNode;
@@ -45,6 +46,7 @@ const InputField = ({
   ...rest
 }: IInputField) => {
   const {t} = useTranslation();
+  const {language} = useLanguage();
   return (
     <View style={containerStyle}>
       <TextInput
@@ -60,9 +62,11 @@ const InputField = ({
           roundness: 8,
         }}
         placeholder={placeholder ? t(placeholder) : t('common.phone-numebr')}
-        style={[styles.textInput, {flex: 1}]}
+        style={[
+          styles.textInput,
+          {flex: 1, textAlign: language === '1' ? 'left' : 'right'},
+        ]}
         autoCapitalize="none"
-        {...rest}
         right={
           rightIcon && (
             <TextInput.Icon

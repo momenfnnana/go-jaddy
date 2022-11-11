@@ -52,6 +52,7 @@ const SearchHeader = ({
           value={value}
           onChangeText={setValue}
           onSubmitEditing={onSubmitEditing}
+          search
           rightIcon={
             filterIcon && (
               <Pressable style={styles.filterContainer}>
