@@ -23,6 +23,7 @@ const SwitchLang = () => {
   const confirmLanguage = async (languageCode: string, languageId: string) => {
     i18n.changeLanguage(languageCode);
     AsyncStorage.setItem('languageId', languageId!);
+    setRefreshLanguage(currentValue => !currentValue);
     if (languageCode == 'en') {
       if (I18nManager.isRTL) {
         await I18nManager.forceRTL(false);

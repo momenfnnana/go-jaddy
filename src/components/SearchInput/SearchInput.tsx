@@ -40,7 +40,7 @@ const SearchInput = ({containerStyle}: ISearchInput) => {
         onPressIn={onPressIn}
         style={[
           styles.input,
-          {textAlign: language === 'ar' ? 'right' : 'left'},
+          {textAlign: language === '2' ? 'right' : 'left'},
         ]}
       />
     </Pressable>

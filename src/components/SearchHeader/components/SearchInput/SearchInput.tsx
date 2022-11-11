@@ -19,6 +19,7 @@ interface ISearchInput extends TextInputProps {
   placeholder?: string;
   error?: string;
   textColor?: string;
+  search?: boolean;
 }
 
 const SearchInput = ({
@@ -28,6 +29,7 @@ const SearchInput = ({
   placeholder,
   error,
   textColor,
+  search,
   ...rest
 }: ISearchInput) => {
   const {t} = useTranslation();
@@ -49,7 +51,11 @@ const SearchInput = ({
             {
               flex: 1,
               color: textColor,
-              textAlign: language == 'ar' ? 'right' : 'left',
+              textAlign: search
+                ? undefined
+                : language == '2'
+                ? 'right'
+                : 'left',
             },
           ]}
           autoCapitalize="none"
