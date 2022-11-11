@@ -11,7 +11,6 @@ import {Header, Section} from './components';
 import {spacing} from 'theme';
 import {useQuery} from '@tanstack/react-query';
 import {getUserData} from 'services/Profile';
-import {readAccessToken} from 'constants';
 import {AuthList, UnAuthList} from './Lists';
 import {useDropDownContext} from 'context/dropdownContext';
 import {useLogged} from 'hook/useLogged';
@@ -21,21 +20,20 @@ const Profile = () => {
   const {isLogged} = useLogged();
   const {setIsDropDownShown} = useDropDownContext();
   const {
-    data,
     isLoading: isLoadingUserData,
     refetch,
     isRefetching,
-  } = useQuery(['getUserData'], getUserData);
+  } = useQuery(['getUserData'], getUserData, {
+    enabled: false,
+    onSuccess: data => {
+      setUserData(data.data);
+      return data;
+    },
+  });
 
   const closeOpenedModals = () => {
     setIsDropDownShown(false);
   };
-
-  useEffect(() => {
-    if (data) {
-      setUserData(data.data);
-    }
-  }, [data]);
 
   useEffect(() => {
     refetch();
