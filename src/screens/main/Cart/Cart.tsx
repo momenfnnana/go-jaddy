@@ -58,7 +58,7 @@ const Cart = () => {
   const [isUsedPoints, setUsedPoints] = useState<boolean>(false);
   const [isShowPointsModel, setShowPointsModel] = useState<boolean>(false);
   const [isShowSummaryModel, setShowSummaryModel] = useState<boolean>(false);
-  const [localData, setLocalData] = useState<any[]>();
+  const [localData, setLocalData] = useState<any[]>([]);
   const {currency} = useCurrency();
 
   const {
@@ -71,6 +71,7 @@ const Cart = () => {
       setData(data.data);
     },
   });
+
   const {
     data: summaryData,
     isLoading: isLoadingSummary,
@@ -114,12 +115,15 @@ const Cart = () => {
   const onSubmit = () => {
     navigate('ContinueOrderSteps');
   };
+
   useEffect(() => {
     if (!isLogged) {
       (async () => {
         const cartItems = await AsyncStorage.getItem(CART);
         const cartArray = JSON.parse(cartItems as any) as any[];
-        setLocalData(cartArray);
+        if (cartArray) {
+          setLocalData(cartArray);
+        }
       })();
     }
   }, [isLogged, updateProducts]);
@@ -136,7 +140,10 @@ const Cart = () => {
     );
   }
 
-  if (data?.Items?.length == 0 || isError) {
+  if (
+    (isLogged && data?.Items?.length == 0) ||
+    (!isLogged && localData?.length == 0)
+  ) {
     return (
       <View style={{flex: 1}}>
         <EmptyPage
@@ -147,6 +154,14 @@ const Cart = () => {
       </View>
     );
   }
+
+  const cartProducts = () => {
+    if (!isLogged) {
+      return localData;
+    } else {
+      return data?.Items;
+    }
+  };
 
   return (
     <View style={{flex: 1}}>
@@ -318,14 +333,13 @@ const Cart = () => {
       </Modal>
       <FlatList
         contentContainerStyle={{
-          marginHorizontal: spacing.content,
+          paddingHorizontal: spacing.content,
           paddingTop: 10,
         }}
-        data={localData || data?.Items}
+        data={cartProducts()}
         keyExtractor={(i, _) => _.toString()}
         renderItem={({item}) => <CartItem item={item} setData={setData} />}
       />
-
       {isLogged && (
         <View style={{marginTop: 20, paddingHorizontal: spacing.content}}>
           <View

@@ -19,6 +19,7 @@ const Tab = ({
   bottomSection,
   showDevider = true,
   goTo,
+  params,
 }: ITabCustom) => {
   const {currency} = useCurrency();
   const {t} = useTranslation();
@@ -26,7 +27,7 @@ const Tab = ({
   const {navigate} = useNavigation<ProfileScreenNavigationProp>();
   const onPressTab = () => {
     if (goTo) {
-      protectedFunction({func: () => navigate(goTo)});
+      protectedFunction({func: () => navigate(goTo, params)});
     }
   };
   return (

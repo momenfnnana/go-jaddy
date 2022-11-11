@@ -1,7 +1,7 @@
 import {View, Pressable, Platform, FlatList} from 'react-native';
 import React, {useLayoutEffect, useState} from 'react';
 import {BackButton, Loader, Text} from 'components';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {colors, spacing} from 'theme';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {SearchInput} from 'components/SearchHeader/components';
@@ -9,15 +9,22 @@ import {FilterIcon, OrderIcon} from 'assets/icons';
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {getStoreOrders} from 'services/Orders';
 import moment from 'moment';
+// import ar from 'moment/';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {useCurrency} from 'hook/useCurrency';
 import {useLanguage} from 'hook/useLanguage';
+import EmptyPage from 'components/EmptyPage/EmptyPage';
+import {useTranslation} from 'react-i18next';
+import {OrdersRouteProp} from 'navigators/NavigationsTypes';
+require('moment/locale/ar.js');
 
 const GO_BACK_SIZE = 36;
 const ICON_SIZE = 20;
 
 const OrdersList = () => {
+  const {t} = useTranslation();
+  const {params} = useRoute<OrdersRouteProp>();
   const {setOptions} = useNavigation();
   const {currency} = useCurrency();
   const [searchText, setSearchText] = useState<string>('');
@@ -25,6 +32,9 @@ const OrdersList = () => {
   useLayoutEffect(() => {
     setOptions({
       headerLeft: () => <BackButton />,
+      headerTitle: params?.isOrederRequest
+        ? t('myOrders.orderRequestTitleHeader')
+        : t('myOrders.titleHeader'),
     });
   }, []);
 
@@ -115,6 +125,12 @@ const OrdersList = () => {
       <FlatList
         data={StoreOrdersData?.pages.map(page => page.data.Orders).flat()}
         keyExtractor={(i, _) => _.toString()}
+        ListEmptyComponent={
+          <EmptyPage
+            descritopn="EmptyPage.product-description"
+            title="EmptyPage.product-title"
+          />
+        }
         contentContainerStyle={{
           paddingHorizontal: spacing.content,
         }}
@@ -157,6 +173,7 @@ const OrdersList = () => {
                   variant="xSmallRegular"
                   color="#747474"
                   text={moment(item?.CreatedOn)
+                    .locale(language == '2' ? 'ar' : 'en')
                     .format('YYYY/MM/DD, hh:mm A')
                     .toString()}
                 />
@@ -193,7 +210,7 @@ const OrdersList = () => {
                       color="#747474"
                       txOptions={{
                         time: moment(item?.CreatedOn)
-                          .locale('ar')
+                          .locale(language == '2' ? 'ar' : 'en')
                           .format('YYYY/MM/DD, hh:mm A')
                           .toString(),
                       }}

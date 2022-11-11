@@ -133,7 +133,9 @@
     "payment-information": "معلومـات الدفع",
     "previous-titles": "العناوين السابقة",
     "return-products": "ارجــاع المـــنتجات",
-    "score-balance": "رصيــــــد النـقــاط"
+    "score-balance": "رصيــــــد النـقــاط",
+    "products-list": "قائمة المنـتــجـات",
+    "purchases-list": "طلبـــات الشـــراء"
   },
 
   "wishlist": {
@@ -274,6 +276,13 @@
   "checkout": {
     "payment-address": "عنوان الدفع",
     "address-to-recieve-invoice": "العنوان الذي ستصل عليه الفاتورة"
+  },
+  "myOrders": {
+    "titleHeader": "طلباتي",
+    "orderRequestTitleHeader": "طلبات الشراء",
+    "placeholderSearch": "ابحث برقم الطلب",
+    "total": "الاجمالي ({{currency}} - {{itemNumber}} عنصر)",
+    "chargeTime": "تاريخ الشحن {{time}}"
   },
   "modal": {
     "successTitle": "هل أنت متأكد من هذه العملية؟",

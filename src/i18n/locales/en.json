@@ -163,7 +163,9 @@
     "payment-information": "Payment information",
     "previous-titles": "Previous addresses",
     "return-products": "Return products",
-    "score-balance": "Score balance"
+    "score-balance": "Score balance",
+    "products-list": "Product List",
+    "purchases-list": "Purchases List"
   },
   "wishlist": {
     "title": "Wishlist",
@@ -246,6 +248,7 @@
   },
   "myOrders": {
     "titleHeader": "My Orders",
+    "orderRequestTitleHeader": "Purchase Orders",
     "placeholderSearch": "search by order number",
     "total": "Total ({{currency}} - {{itemNumber}} item)",
     "chargeTime": "charge time {{time}}"

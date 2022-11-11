@@ -20,6 +20,7 @@ export interface ITab {
     | 'CustomerPoints'
     | 'ProfileDetails'
     | 'OrdersList';
+  params?: any | any[];
 }
 
 export const data: ITab[] = [

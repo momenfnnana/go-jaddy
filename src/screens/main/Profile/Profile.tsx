@@ -16,7 +16,7 @@ import {useDropDownContext} from 'context/dropdownContext';
 import {useLogged} from 'hook/useLogged';
 
 const Profile = () => {
-  const {setUserData, accessToken} = useContext(UserContext);
+  const {setUserData, accessToken, userData} = useContext(UserContext);
   const {isLogged} = useLogged();
   const {setIsDropDownShown} = useDropDownContext();
   const {
@@ -48,7 +48,12 @@ const Profile = () => {
       <TouchableWithoutFeedback onPress={closeOpenedModals}>
         <View style={styles.container}>
           <Header />
-          {isLogged && <Section title="screens-tabs.profile" list={AuthList} />}
+          {isLogged && (
+            <Section
+              title="screens-tabs.profile"
+              list={AuthList({userType: userData?.UserType})}
+            />
+          )}
           <Section
             title={isLogged ? 'profile.others' : undefined}
             list={UnAuthList}
