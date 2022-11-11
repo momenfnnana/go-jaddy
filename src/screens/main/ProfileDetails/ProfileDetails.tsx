@@ -4,9 +4,17 @@ import {
   Pressable,
   Image,
   ImageSourcePropType,
+  StyleSheet,
 } from 'react-native';
 import React, {useContext, useLayoutEffect, useState} from 'react';
-import {BackButton, Button, InputField, Loader, Text} from 'components';
+import {
+  BackButton,
+  Button,
+  InputField,
+  Loader,
+  PhoneNumberInput,
+  Text,
+} from 'components';
 import {useNavigation} from '@react-navigation/native';
 import {colors, spacing} from 'theme';
 import HeaderAccount from './components/HeaderAccount';
@@ -19,6 +27,7 @@ import {changePassword, changeUserInfo, getUserData} from 'services/Profile';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useSchema} from 'hook/useSchema';
 
+const topFieldsSpace = 20;
 interface IFlag {
   imageUrl: ImageSourcePropType;
   introructionNumber: string;
@@ -109,6 +118,10 @@ const ProfileDetails = () => {
     setIsCPasswordShown(currentValue => !currentValue);
   };
 
+  const onChangeCountry = (value: string) => {
+    console.log({value});
+  };
+
   const enableUpload =
     settings.CustomerSettings.AllowCustomersToUploadAvatars == 'True';
   const enableChangeData =
@@ -158,7 +171,6 @@ const ProfileDetails = () => {
                 errors,
                 touched,
               }) => {
-                console.log({errors});
                 return (
                   <>
                     <InputField
@@ -170,6 +182,7 @@ const ProfileDetails = () => {
                         touched: touched.firstName,
                         value: errors.firstName,
                       }}
+                      style={{}}
                     />
                     <InputField
                       value={values.lastName}
@@ -181,7 +194,18 @@ const ProfileDetails = () => {
                         value: errors.lastName,
                       }}
                     />
-                    <InputField
+                    <PhoneNumberInput
+                      disabled={!enableChangeData}
+                      value={values.phoneNumber}
+                      onChangeText={handleChange('phoneNumber')}
+                      onBlur={handleBlur('phoneNumber')}
+                      error={{
+                        touched: touched.phoneNumber,
+                        value: errors.phoneNumber,
+                      }}
+                      onChangeCountry={onChangeCountry}
+                    />
+                    {/* <InputField
                       disabled={!enableChangeData}
                       value={values.phoneNumber}
                       keyboardType="phone-pad"
@@ -212,7 +236,7 @@ const ProfileDetails = () => {
                           />
                         </Pressable>
                       }
-                    />
+                    /> */}
                     <InputField
                       disabled={!enableChangeData}
                       value={values.email}
@@ -334,3 +358,15 @@ const ProfileDetails = () => {
 };
 
 export default ProfileDetails;
+const styles = StyleSheet.create({
+  formContainer: {
+    backgroundColor: colors.white,
+    paddingHorizontal: spacing.normal - 1,
+  },
+  inputsContainer: {
+    marginTop: -topFieldsSpace,
+  },
+  feildContainer: {
+    marginBottom: spacing.large,
+  },
+});
