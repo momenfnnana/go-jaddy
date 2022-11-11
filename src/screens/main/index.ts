@@ -15,3 +15,4 @@ export {default as AddAddressScreen} from './AddAddress';
 export {default as ProfileDetailsScreen} from './ProfileDetails';
 export {default as WishlistDetails} from './WishlistDetails';
 export {ContinueOrderStepsScreen} from './checkout';
+export {default as OrdersListScreen} from './OrdersList';

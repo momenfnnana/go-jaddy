@@ -16,6 +16,7 @@ export {
   WishListScreen,
   WishlistDetails,
   ContinueOrderStepsScreen,
+  OrdersListScreen,
 } from './main';
 export {
   OnboardingScreen,

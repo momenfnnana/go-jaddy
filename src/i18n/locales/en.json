@@ -159,7 +159,7 @@
     "login": "Login",
     "others": "Others",
     "account-details": "Account details",
-    "request-list": "Request list",
+    "request-list": "Orders list",
     "payment-information": "Payment information",
     "previous-titles": "Previous addresses",
     "return-products": "Return products",
@@ -243,6 +243,12 @@
   "checkout": {
     "payment-address": "Payment address",
     "address-to-recieve-invoice": "The address to which the invoice will be received"
+  },
+  "myOrders": {
+    "titleHeader": "My Orders",
+    "placeholderSearch": "search by order number",
+    "total": "Total ({{currency}} - {{itemNumber}} item)",
+    "chargeTime": "charge time {{time}}"
   },
   "modal": {
     "successTitle": "are you sure from confirm?",

@@ -1,8 +1,7 @@
-import {View, Text, TextStyle} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
+import {TextStyle} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {colors} from 'theme';
-import {readLanguage} from 'constants';
 import {useLanguage} from 'hook/useLanguage';
 
 interface IArrowProps {
@@ -20,7 +19,7 @@ const ArrowIcon = ({
   style,
 }: IArrowProps) => {
   const {language} = useLanguage();
-  
+
   return (
     <MaterialIcons
       onPress={onPress}
