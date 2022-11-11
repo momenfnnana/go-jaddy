@@ -38,6 +38,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {LoginScreenNavigationProp} from 'navigators/NavigationsTypes';
 import axios from 'axios';
 import {useAccessToken} from 'hook/useAccessToken';
+import {addCartProducts} from 'services/Cart';
+import {CART} from 'types';
 
 interface IinitialValues {
   phoneNumber: string;
@@ -69,7 +71,7 @@ const Login = () => {
   const {top} = useSafeAreaInsets();
   const {navigate, canGoBack} = useNavigation<LoginScreenNavigationProp>();
   const {t} = useTranslation();
-  const {setAccessToken} = useContext(UserContext);
+  const {setAccessToken, updateProducts} = useContext(UserContext);
   const [isPasswordShow, setIsPasswordShown] = useState<boolean>(false);
   const [isAnonymousModalOpened, setIsAnonymousModalOpened] =
     useState<boolean>(false);
@@ -78,6 +80,7 @@ const Login = () => {
   const [isSetPassModalOpened, setSetPassModalOpened] =
     useState<boolean>(false);
   const [countryCode, setCountryCode] = useState<string>('970');
+  const [localData, setLocalData] = useState<any[]>();
   const mainImageStyle: ImageStyle = {
     width: width * 0.9,
     height: height * 0.5,
@@ -86,19 +89,38 @@ const Login = () => {
   const goRegister = () => {
     navigate('Register');
   };
-
-  const {mutate, isLoading, isError, error, isSuccess, data} = useMutation(
-    doLogin_service,
-    {
-      onSuccess: data => {
-        reload(data.data?.AccessToken);
-        return data;
-      },
-      onError: error => {
-        return error;
-      },
+  const {mutate: mutateAddToCart} = useMutation(addCartProducts, {
+    onSuccess: data => {
+      AsyncStorage.removeItem(CART);
+      return data;
     },
-  );
+  });
+
+  const {mutate, isLoading, isError, error} = useMutation(doLogin_service, {
+    onSuccess: data => {
+      const {AccessToken, RememberMe} = data.data;
+      setAccessToken(AccessToken);
+      navigate('HomeFlow', {screen: 'HomeStack'} as any);
+      if (!RememberMe) {
+        axios.defaults.headers.common['AccessToken'] = `${AccessToken}`;
+        AsyncStorage.setItem('accessToken', AccessToken);
+      }
+      reload(data.data?.AccessToken);
+      if (localData && !!localData.length) {
+        localData?.map(item => {
+          mutateAddToCart({
+            ProductId: item?.Id,
+            QuantityToAdd: item?.QuantityToAdd || 1,
+            SelectedAttributes: [],
+          });
+        });
+      }
+      return data;
+    },
+    onError: error => {
+      return error;
+    },
+  });
 
   const doLogin = (values: any) => {
     const data = {
@@ -133,16 +155,12 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (isSuccess) {
-      const {AccessToken, RememberMe} = data.data;
-      setAccessToken(AccessToken);
-      navigate('HomeFlow', {screen: 'HomeStack'} as any);
-      if (!RememberMe) {
-        axios.defaults.headers.common['AccessToken'] = `${AccessToken}`;
-        AsyncStorage.setItem('accessToken', AccessToken);
-      }
-    }
-  }, [isSuccess]);
+    (async () => {
+      const cartItems = await AsyncStorage.getItem(CART);
+      const cartArray = JSON.parse(cartItems as any) as any[];
+      setLocalData(cartArray);
+    })();
+  }, [updateProducts]);
 
   return (
     <KeyboardAvoidingView

@@ -37,6 +37,8 @@ import {VerifyAccountModal} from './components';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import axios from 'axios';
 import {RegisterScreenNavigationProp} from 'navigators/NavigationsTypes';
+import {addCartProducts} from 'services/Cart';
+import {CART} from 'types';
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -80,6 +82,7 @@ const Register = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const {top, bottom} = useSafeAreaInsets();
   const [countryCode, setCountryCode] = useState<string>();
+  const [localData, setLocalData] = useState<any[]>();
   const onRegisterHandle = (values: any) => {
     const data = new FormData();
     setEmail(values.email);
@@ -102,10 +105,41 @@ const Register = () => {
 
     mutate(data);
   };
+
+  const {mutate: mutateAddToCart} = useMutation(addCartProducts, {
+    onSuccess: data => {
+      AsyncStorage.removeItem(CART);
+      return data;
+    },
+  });
   const {mutate, isLoading, isError, error, isSuccess, data} = useMutation(
     createAccount,
     {
       onSuccess: data => {
+        setUserData({
+          ...data?.data,
+        });
+        if (
+          (settings as any).CustomerSettings.UserRegistrationType == 'Standard'
+        ) {
+          AsyncStorage.setItem('accessToken', data.data.AccessToken);
+          axios.defaults.headers.common[
+            'AccessToken'
+          ] = `${data.data.AccessToken}`;
+          setAccessToken(data.data.AccessToken);
+          navigate('HomeFlow', {screen: 'HomeStack'} as any);
+        } else {
+          setVerifyModalShow(true);
+        }
+        if (localData && !!localData.length) {
+          localData?.map(item => {
+            mutateAddToCart({
+              ProductId: item?.Id,
+              QuantityToAdd: item?.QuantityToAdd || 1,
+              SelectedAttributes: [],
+            });
+          });
+        }
         return data;
       },
       onError: error => {
@@ -125,26 +159,6 @@ const Register = () => {
   const onChangeCountry = (value: string) => {
     setCountryCode(value);
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      setUserData({
-        ...data?.data,
-      });
-      if (
-        (settings as any).CustomerSettings.UserRegistrationType == 'Standard'
-      ) {
-        AsyncStorage.setItem('accessToken', data.data.AccessToken);
-        axios.defaults.headers.common[
-          'AccessToken'
-        ] = `${data.data.AccessToken}`;
-        setAccessToken(data.data.AccessToken);
-        navigate('HomeFlow', {screen: 'HomeStack'} as any);
-      } else {
-        setVerifyModalShow(true);
-      }
-    }
-  }, [data]);
 
   const useLibraryHandler = async () => {
     const options: any = {
