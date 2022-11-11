@@ -8,7 +8,7 @@ import {
   Platform,
   StyleSheet,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {useQueries, useQuery} from '@tanstack/react-query';
 import {
   applyDiscountCart,
@@ -30,12 +30,22 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import {GoJaddyRedIcon} from 'assets/icons';
 import {SuccessModalImg} from 'assets/images';
 import EmptyPage from 'components/EmptyPage/EmptyPage';
+import {useLogged} from 'hook/useLogged';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {CART} from 'types';
+import {UserContext} from 'context/UserContext';
+import {useNavigation} from '@react-navigation/native';
+import {CartScreenNavigationProp} from 'navigators/NavigationsTypes';
 
 const Cart = () => {
-  const {isLoading, isRefetching, isError} = useQuery(
+  const {navigate} = useNavigation<CartScreenNavigationProp>();
+  const {updateProducts} = useContext(UserContext);
+  const {isLogged} = useLogged();
+  const {isLoading, isFetching, isRefetching, isError} = useQuery(
     ['cartProducts'],
     getCartProducts,
     {
+      enabled: isLogged || false,
       onSuccess(data) {
         setData(data.data);
         setUsedPoints(data.data?.RewardPoints?.UseRewardPoints);
@@ -48,6 +58,7 @@ const Cart = () => {
   const [isUsedPoints, setUsedPoints] = useState<boolean>(false);
   const [isShowPointsModel, setShowPointsModel] = useState<boolean>(false);
   const [isShowSummaryModel, setShowSummaryModel] = useState<boolean>(false);
+  const [localData, setLocalData] = useState<any[]>();
   const {currency} = useCurrency();
 
   const {
@@ -100,8 +111,20 @@ const Cart = () => {
   const onUsedPoints = () => {
     setUsedPoints(!isUsedPoints);
   };
+  const onSubmit = () => {
+    navigate('ContinueOrderSteps');
+  };
+  useEffect(() => {
+    if (!isLogged) {
+      (async () => {
+        const cartItems = await AsyncStorage.getItem(CART);
+        const cartArray = JSON.parse(cartItems as any) as any[];
+        setLocalData(cartArray);
+      })();
+    }
+  }, [isLogged, updateProducts]);
 
-  if (isLoading || isRefetching) {
+  if ((isLoading && isLogged) || (isFetching && !isLogged) || isRefetching) {
     return (
       <Loader
         containerStyle={{
@@ -126,9 +149,7 @@ const Cart = () => {
   }
 
   return (
-    <View
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{flex: 1}}>
+    <View style={{flex: 1}}>
       <Modal
         isVisible={isShowPointsModel}
         onBackdropPress={() => {
@@ -300,122 +321,126 @@ const Cart = () => {
           marginHorizontal: spacing.content,
           paddingTop: 10,
         }}
-        data={data?.Items}
+        data={localData || data?.Items}
         keyExtractor={(i, _) => _.toString()}
         renderItem={({item}) => <CartItem item={item} setData={setData} />}
       />
 
-      <View style={{marginTop: 20, paddingHorizontal: spacing.content}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: 10,
-          }}>
-          <Text tx="cart.discountCode" variant="smallRegular" size={14} />
+      {isLogged && (
+        <View style={{marginTop: 20, paddingHorizontal: spacing.content}}>
           <View
             style={{
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              borderRadius: 20,
-              backgroundColor: '#EEEEEE',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: 10,
             }}>
-            <Text
-              size={12}
-              tx="cart.useDiscountCode"
+            <Text tx="cart.discountCode" variant="smallRegular" size={14} />
+            <View
+              style={{
+                paddingHorizontal: 10,
+                paddingVertical: 5,
+                borderRadius: 20,
+                backgroundColor: '#EEEEEE',
+              }}>
+              <Text
+                size={12}
+                tx="cart.useDiscountCode"
+                color={colors.secondary}
+                variant="smallBold"
+              />
+            </View>
+          </View>
+          <View
+            style={{
+              height: 50,
+              borderRadius: 6,
+              borderWidth: 1.5,
+              borderColor: colors.secondary,
+              borderStyle: 'dashed',
+              backgroundColor: '#4B95550F',
+              flexDirection: 'row',
+              alignItems: 'center',
+              overflow: 'hidden',
+            }}>
+            <TextInput
+              value={discountCode}
+              onChangeText={setDiscountCode}
+              placeholder={t('cart.discountPlaceholder')}
+              style={{
+                flex: 1,
+                height: '100%',
+                fontFamily: font.regular,
+                paddingHorizontal: 10,
+              }}
+            />
+            {discountCode.length > 0 && !data?.DiscountBox?.IsWarning && (
+              <Pressable
+                onPress={() => {
+                  refetchApplyDis();
+                }}
+                disabled={isRefetchingApplyDis}>
+                <MaterialCommunityIcons
+                  name="check"
+                  color={colors.success}
+                  size={14}
+                  style={{
+                    padding: 2,
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: colors.success,
+                    marginLeft: 10,
+                  }}
+                />
+              </Pressable>
+            )}
+            {data?.DiscountBox?.IsWarning && (
+              <Pressable
+                onPress={() => refetchRemoveDis()}
+                disabled={isRefetchingRemoveDis}>
+                <Entypo name="circle-with-cross" color={colors.red} size={24} />
+              </Pressable>
+            )}
+            <MaterialCommunityIcons
+              name="percent"
               color={colors.secondary}
-              variant="smallBold"
+              size={14}
+              style={{
+                padding: 2,
+                borderRadius: 10,
+                borderWidth: 1,
+                borderColor: colors.secondary,
+                marginHorizontal: 10,
+              }}
             />
           </View>
         </View>
-        <View
-          style={{
-            height: 50,
-            borderRadius: 6,
-            borderWidth: 1.5,
-            borderColor: colors.secondary,
-            borderStyle: 'dashed',
-            backgroundColor: '#4B95550F',
-            flexDirection: 'row',
-            alignItems: 'center',
-            overflow: 'hidden',
-          }}>
-          <TextInput
-            value={discountCode}
-            onChangeText={setDiscountCode}
-            placeholder={t('cart.discountPlaceholder')}
-            style={{
-              flex: 1,
-              height: '100%',
-              fontFamily: font.regular,
-              paddingHorizontal: 10,
-            }}
-          />
-          {discountCode.length > 0 && !data?.DiscountBox?.IsWarning && (
-            <Pressable
-              onPress={() => {
-                refetchApplyDis();
-              }}
-              disabled={isRefetchingApplyDis}>
-              <MaterialCommunityIcons
-                name="check"
-                color={colors.success}
-                size={14}
-                style={{
-                  padding: 2,
-                  borderRadius: 10,
-                  borderWidth: 1,
-                  borderColor: colors.success,
-                  marginLeft: 10,
-                }}
-              />
-            </Pressable>
-          )}
-          {data?.DiscountBox?.IsWarning && (
-            <Pressable
-              onPress={() => refetchRemoveDis()}
-              disabled={isRefetchingRemoveDis}>
-              <Entypo name="circle-with-cross" color={colors.red} size={24} />
-            </Pressable>
-          )}
-          <MaterialCommunityIcons
-            name="percent"
-            color={colors.secondary}
-            size={14}
-            style={{
-              padding: 2,
-              borderRadius: 10,
-              borderWidth: 1,
-              borderColor: colors.secondary,
-              marginHorizontal: 10,
-            }}
-          />
-        </View>
-      </View>
+      )}
       <View style={{marginTop: 20, paddingHorizontal: spacing.content}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: 10,
-          }}>
-          <Text
-            tx={data?.RewardPoints?.RewardPointsMessage}
-            variant="smallRegular"
-          />
-          <Switch
-            value={isUsedPoints}
-            onValueChange={() => {
-              if (!isFetchingApplyPoints) {
-                // refetchApplyPoints();
-                setShowPointsModel(true);
-              }
-            }}
-            color={colors.primary}
-          />
-        </View>
+        {isLogged && (
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: 10,
+            }}>
+            <Text
+              tx={data?.RewardPoints?.RewardPointsMessage}
+              variant="smallRegular"
+            />
+            <Switch
+              value={isUsedPoints}
+              onValueChange={() => {
+                if (!isFetchingApplyPoints) {
+                  // refetchApplyPoints();
+                  setShowPointsModel(true);
+                }
+              }}
+              color={colors.primary}
+            />
+          </View>
+        )}
         <View
           style={{
             flexDirection: 'row',
@@ -423,39 +448,41 @@ const Cart = () => {
             marginBottom: 10,
           }}>
           <View style={{flex: 1}}>
-            <Button title="cart.submitBtn" />
+            <Button title="cart.submitBtn" onPress={onSubmit} />
           </View>
-          <View
-            style={{
-              marginLeft: 6,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Pressable
-              onPress={() => {
-                refetchSummary();
-                setShowSummaryModel(true);
-              }}
-              style={{flexDirection: 'row', alignItems: 'center'}}>
-              <MaterialIcons
-                name={`keyboard-arrow-down`}
-                size={18}
-                color={colors.black}
-              />
+          {isLogged && (
+            <View
+              style={{
+                marginLeft: 6,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Pressable
+                onPress={() => {
+                  refetchSummary();
+                  setShowSummaryModel(true);
+                }}
+                style={{flexDirection: 'row', alignItems: 'center'}}>
+                <MaterialIcons
+                  name={`keyboard-arrow-down`}
+                  size={18}
+                  color={colors.black}
+                />
+                <Text
+                  txOptions={{currency: currency?.Symbol}}
+                  tx="cart.total"
+                  color={colors.reloadColor}
+                  variant="xSmallRegular"
+                />
+              </Pressable>
               <Text
                 txOptions={{currency: currency?.Symbol}}
-                tx="cart.total"
-                color={colors.reloadColor}
-                variant="xSmallRegular"
+                text={data?.Total}
+                color={colors.primary}
+                variant="xLargeBold"
               />
-            </Pressable>
-            <Text
-              txOptions={{currency: currency?.Symbol}}
-              text={data?.Total}
-              color={colors.primary}
-              variant="xLargeBold"
-            />
-          </View>
+            </View>
+          )}
         </View>
       </View>
     </View>
