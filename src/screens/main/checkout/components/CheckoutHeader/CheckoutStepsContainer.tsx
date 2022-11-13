@@ -20,7 +20,10 @@ const StepContainer = ({children, isActive}: IStepContainer) => (
   <View
     style={[
       styles.stepContainer,
-      {backgroundColor: isActive ? colors.secondary : colors.white},
+      {
+        backgroundColor: isActive ? colors.secondary : colors.white,
+        borderColor: isActive ? colors.secondary + 25 : colors.reloadColor,
+      },
     ]}>
     {children}
   </View>
@@ -79,5 +82,6 @@ const styles = StyleSheet.create({
     borderRadius: spacing.xxxLarge * 0.5,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
   },
 });
