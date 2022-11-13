@@ -16,6 +16,7 @@ import {
   StyleSheet,
   Platform,
   ScrollView,
+  Share,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {DiscountIcon, ShareIcon} from 'assets/icons';
@@ -345,6 +346,13 @@ const ListHeaderComponent = ({
       setUpdateProducts(!updateProducts);
     }
   };
+
+  const onPressShare = async () => {
+    await Share.share({
+      url: Product.ShareLink,
+    });
+  };
+
   useEffect(() => {
     if (Product?.Attributes) {
       const newItems = Product?.Attributes.map((element: IAttributes) => {
@@ -409,7 +417,9 @@ const ListHeaderComponent = ({
                 {/* <Pressable style={styles.singleRightIcon}>
                   <CartIcon stroke={colors.white} />
                 </Pressable> */}
-                <Pressable style={styles.singleRightIcon}>
+                <Pressable
+                  style={styles.singleRightIcon}
+                  onPress={onPressShare}>
                   <ShareIcon color={colors.white} />
                 </Pressable>
               </View>
