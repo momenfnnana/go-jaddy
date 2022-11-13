@@ -169,14 +169,7 @@ const OrdersList = () => {
                   color={item?.StatusColor}
                   variant="xSmallBold"
                 />
-                <Text
-                  variant="xSmallRegular"
-                  color="#747474"
-                  text={moment(item?.CreatedOn)
-                    .locale(language == '2' ? 'ar' : 'en')
-                    .format('YYYY/MM/DD, hh:mm A')
-                    .toString()}
-                />
+                <Text variant="xSmallBold" text={'#' + item?.OrderNumber} />
               </View>
               <View
                 style={{

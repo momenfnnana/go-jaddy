@@ -23,6 +23,10 @@ interface ICheckoutAddress {
   index: number;
   onSelect: () => void;
 }
+
+interface ICheckoutStep {
+  setActiveStep?: any;
+}
 interface IInitialValues {
   companyName: string;
   firstName: string;
@@ -61,7 +65,7 @@ const RenderItem = ({item, onSelect}: ICheckoutAddress) => {
   );
 };
 
-const CheckoutFirstStep = () => {
+const CheckoutFirstStep = ({setActiveStep}: ICheckoutStep) => {
   const {t} = useTranslation();
   const {addressSchema} = useSchema();
   const [stateSelected, setStateSelected] = useState<ISelectedState>({
@@ -402,7 +406,10 @@ const CheckoutFirstStep = () => {
                   </View>
                   <Button
                     isLoading={isLoadingaddAddress}
-                    onPress={handleSubmit}
+                    onPress={() => {
+                      setActiveStep(2);
+                      handleSubmit();
+                    }}
                     style={{marginBottom: 10}}
                     title="addAddress.submitBtn"
                   />

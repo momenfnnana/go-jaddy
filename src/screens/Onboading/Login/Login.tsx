@@ -40,6 +40,7 @@ import axios from 'axios';
 import {useAccessToken} from 'hook/useAccessToken';
 import {addCartProducts} from 'services/Cart';
 import {CART} from 'types';
+import {useSchema} from 'hook/useSchema';
 
 interface IinitialValues {
   phoneNumber: string;
@@ -56,17 +57,10 @@ const initialValues: IinitialValues = {
   phoneNumber: '05957025222',
   password: 'Password$1',
 };
-const loginSchema = Yub.object().shape({
-  phoneNumber: Yub.number()
-    .required('phone number must be string')
-    .min(10, 'phone number must be at least 10 characters'),
-  password: Yub.string()
-    .required('password is required')
-    .min(8, 'password must being at least 8 characters'),
-});
 
 const Login = () => {
   const {reload} = useAccessToken();
+  const {loginSchema} = useSchema();
   const {width, height} = useWindowDimensions();
   const {top} = useSafeAreaInsets();
   const {navigate, canGoBack} = useNavigation<LoginScreenNavigationProp>();
@@ -124,8 +118,10 @@ const Login = () => {
 
   const doLogin = (values: any) => {
     const data = {
-      PhoneNumber: countryCode + values.phoneNumber,
-      Password: values.password,
+      // PhoneNumber: countryCode + values.phoneNumber,
+      // Password: values.password,
+      phoneNumber: '121234567891012',
+      password: '/9875410Bara',
     };
     mutate(data);
   };

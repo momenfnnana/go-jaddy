@@ -244,6 +244,10 @@
   },
   "checkout": {
     "payment-address": "Payment address",
+    "checkout-method-title": "Choose charge method",
+    "checkout-delivery-address": "Delivery Address",
+    "checkout-delivery-description": "Where will the goods arrive?",
+    "checkout-same-address": "Use the same payment address",
     "address-to-recieve-invoice": "The address to which the invoice will be received"
   },
   "myOrders": {
@@ -251,7 +255,7 @@
     "orderRequestTitleHeader": "Purchase Orders",
     "placeholderSearch": "search by order number",
     "total": "Total ({{currency}} - {{itemNumber}} item)",
-    "chargeTime": "charge time {{time}}"
+    "chargeTime": "order time {{time}}"
   },
   "modal": {
     "successTitle": "are you sure from confirm?",
