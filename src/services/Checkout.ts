@@ -4,3 +4,7 @@ import {BASE_URL} from 'utils/Axios';
 export const getCheckoutAddresses = () => {
   return axios.get(`${BASE_URL}/api/custom/checkout/GetAddresses`);
 };
+
+export const getCheckoutMethods = () => {
+  return axios.get(`${BASE_URL}/api/custom/checkout/GetShippingMethods`);
+};

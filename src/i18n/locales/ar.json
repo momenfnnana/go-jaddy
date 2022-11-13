@@ -275,6 +275,7 @@
   },
   "checkout": {
     "payment-address": "عنوان الدفع",
+    "checkout-method-title": "اختر طريقة الشحن",
     "address-to-recieve-invoice": "العنوان الذي ستصل عليه الفاتورة"
   },
   "myOrders": {
@@ -282,7 +283,7 @@
     "orderRequestTitleHeader": "طلبات الشراء",
     "placeholderSearch": "ابحث برقم الطلب",
     "total": "الاجمالي ({{currency}} - {{itemNumber}} عنصر)",
-    "chargeTime": "تاريخ الشحن {{time}}"
+    "chargeTime": "تاريخ الطلب {{time}}"
   },
   "modal": {
     "successTitle": "هل أنت متأكد من هذه العملية؟",

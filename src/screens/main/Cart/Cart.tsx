@@ -166,6 +166,8 @@ const Cart = () => {
     }
   };
 
+  console.log({first: data?.RewardPoints});
+
   return (
     <View style={{flex: 1}}>
       <Modal
@@ -435,7 +437,7 @@ const Cart = () => {
         </View>
       )}
       <View style={{marginTop: 20, paddingHorizontal: spacing.content}}>
-        {isLogged && (
+        {isLogged && data?.RewardPoints.DisplayRewardPoints && (
           <View
             style={{
               flexDirection: 'row',
@@ -446,8 +448,10 @@ const Cart = () => {
             <Text
               tx={data?.RewardPoints?.RewardPointsMessage}
               variant="smallRegular"
+              style={{marginBottom: -spacing.large}}
             />
             <Switch
+              style={{transform: [{scaleX: 0.7}, {scaleY: 0.7}]}}
               value={isUsedPoints}
               onValueChange={() => {
                 if (!isFetchingApplyPoints) {

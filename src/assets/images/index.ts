@@ -17,3 +17,4 @@ export {default as FaildModalImg} from './faildModalImg.svg';
 export {default as SuccessModalImg} from './successImgModal.svg';
 export {default as Withdraw} from './Withdraw.svg';
 export {default as AvatarPerson} from './avatar-person.jpg';
+export {default as HouseIcon} from './house.png';
