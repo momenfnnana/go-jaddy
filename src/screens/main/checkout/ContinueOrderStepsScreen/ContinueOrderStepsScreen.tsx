@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
+import { colors } from 'theme';
 import {
   CheckoutFirstStep,
   CheckoutHeader,
@@ -41,5 +42,6 @@ export default ContinueOrderStepsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.white,
   },
 });
