@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AuthStack, HomeStack} from 'navigators';
 import {MainNavigator} from 'navigators/RoutesTypes';
@@ -24,6 +24,7 @@ const App = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const {accessToken, setSettings, setCurrencies} = useContext(UserContext);
   const {height, width} = useWindowDimensions();
+  const {colors, dark} = useTheme();
   const {
     data,
     isSuccess,
@@ -63,13 +64,15 @@ const App = () => {
   }
 
   return (
-    <NavigationContainer ref={navigationRef}>
+    <NavigationContainer
+      theme={{colors: {...colors, background: '#F5F5F5'}, dark}}
+      ref={navigationRef}>
       <StatusBar barStyle="light-content" />
       <KeyboardAvoidingView
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <Stack.Navigator
-          initialRouteName='HomeFlow'
+          initialRouteName="HomeFlow"
           screenOptions={{headerShown: false}}>
           <Stack.Screen component={HomeStack} name="HomeFlow" />
           <Stack.Screen component={AuthStack} name="AuthFlow" />

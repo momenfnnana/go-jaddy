@@ -140,8 +140,11 @@ const Cart = () => {
     );
   }
 
+  console.log({items: data?.Items?.length});
+
   if (
-    (isLogged && data?.Items?.length == 0) ||
+    (isLogged &&
+      (data?.Items?.length == 0 || data?.Items?.length == undefined)) ||
     (!isLogged && localData?.length == 0)
   ) {
     return (
@@ -282,7 +285,7 @@ const Cart = () => {
                   />
                 </View>
               )}
-              {summaryData?.data?.Tax && (
+              {summaryData?.data?.Tax?.length > 0 && (
                 <View
                   style={{
                     flexDirection: 'row',
@@ -326,6 +329,7 @@ const Cart = () => {
             }}
             onPress={() => {
               // refetchApplyPoints();
+              onSubmit();
               setShowPointsModel(false);
             }}
           />
