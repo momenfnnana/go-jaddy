@@ -1,4 +1,4 @@
-import {Pressable, View} from 'react-native';
+import {Pressable, View, ViewStyle} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {colors} from 'theme';
 import {Loader, Text} from 'components';
@@ -14,6 +14,7 @@ interface IAddressItem {
   refetchAddresses?: () => void;
   isSelectAddress?: boolean;
   onPressAddress?: () => void;
+  containerStyle?: ViewStyle;
 }
 
 const AddressItem = ({
@@ -22,6 +23,7 @@ const AddressItem = ({
   refetchAddresses,
   isSelectAddress = false,
   onPressAddress,
+  containerStyle,
 }: IAddressItem) => {
   const [pressedDefualt, setPressedDefualt] = useState<number>(-1);
   const [pressedDelete, setPressedDelete] = useState<number>(-1);
@@ -67,13 +69,16 @@ const AddressItem = ({
     <Pressable
       onPress={onPressAddress}
       disabled={isSelectAddress}
-      style={{
-        paddingHorizontal: 30,
-        paddingVertical: 20,
-        borderRadius: 8,
-        backgroundColor: colors.white,
-        marginBottom: 10,
-      }}>
+      style={[
+        {
+          paddingHorizontal: 30,
+          paddingVertical: 20,
+          borderRadius: 8,
+          backgroundColor: colors.white,
+          marginBottom: 10,
+        },
+        containerStyle,
+      ]}>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={{flex: 1}}>
           <Text
