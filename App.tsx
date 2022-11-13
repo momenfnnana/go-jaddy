@@ -20,6 +20,7 @@ import {
 import {ScreenProvider} from 'context/ScreenContext';
 import {WishlistProvider} from 'context/WishlistContext';
 import queryClient from 'queryClient';
+import RNBootSplash from 'react-native-bootsplash';
 
 const resources = {
   en: {
@@ -34,6 +35,7 @@ export default function App() {
   const {isConnected} = useNetInfo();
   const [isAr, setIsAr] = useState<boolean>(false);
   useEffect(() => {
+    RNBootSplash.hide();
     readAccessToken().then(accessToken => {
       if (accessToken) {
         setAxiosAccessToken(accessToken);
