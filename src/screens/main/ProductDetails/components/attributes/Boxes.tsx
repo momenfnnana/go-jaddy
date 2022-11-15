@@ -22,6 +22,7 @@ const Boxes = ({
         IsRequired: item.IsRequired,
         IsMultipleChoice: item.IsMultipleChoice,
         VariantAttributeId: item.VariantAttributeId,
+        Name: item.Name,
       },
     });
   };
