@@ -94,7 +94,7 @@ const InputField = ({
           variant="error"
           color={colors.red}
           style={{marginBottom: spacing.large}}>
-          {error.value}
+          {error.value.toString()}
         </Text>
       )}
     </View>
