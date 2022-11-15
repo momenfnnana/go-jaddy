@@ -65,7 +65,8 @@ interface camiraImage {
 }
 
 const Register = () => {
-  const {settings, setUserData, setAccessToken} = useContext(UserContext);
+  const {settings, setUserData, setAccessToken, updateProducts} =
+    useContext(UserContext);
   const {width, height} = useWindowDimensions();
   const {canGoBack, goBack, navigate} =
     useNavigation<RegisterScreenNavigationProp>();
@@ -82,7 +83,7 @@ const Register = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const {top, bottom} = useSafeAreaInsets();
   const [countryCode, setCountryCode] = useState<string>();
-  const [localData, setLocalData] = useState<any[]>();
+  const [localData, setLocalData] = useState<any[]>([]);
   const onRegisterHandle = (values: any) => {
     const data = new FormData();
     setEmail(values.email);
@@ -133,6 +134,13 @@ const Register = () => {
         }
         if (localData && !!localData.length) {
           localData?.map(item => {
+            // const attributesToSend=selectedAttributes.map(item=>{
+            //   return {
+            //     AttributeId:item.AttributeId,
+            //     VariantAttributeId:item.VariantAttributeId,
+            //     AttributeValueId:item.values[0].Id
+            //   }
+            // })
             mutateAddToCart({
               ProductId: item?.Id,
               QuantityToAdd: item?.QuantityToAdd || 1,
@@ -193,7 +201,15 @@ const Register = () => {
       }
     });
   };
-
+  useEffect(() => {
+    (async () => {
+      const cartItems = await AsyncStorage.getItem(CART);
+      const cartArray = JSON.parse(cartItems as any) as any[];
+      if (cartArray) {
+        setLocalData(cartArray);
+      }
+    })();
+  }, [updateProducts]);
   return (
     <KeyboardAvoidingView
       style={styles.cont}

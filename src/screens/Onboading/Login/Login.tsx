@@ -74,7 +74,7 @@ const Login = () => {
   const [isSetPassModalOpened, setSetPassModalOpened] =
     useState<boolean>(false);
   const [countryCode, setCountryCode] = useState<string>('970');
-  const [localData, setLocalData] = useState<any[]>();
+  const [localData, setLocalData] = useState<any[]>([]);
   const mainImageStyle: ImageStyle = {
     width: width * 0.9,
     height: height * 0.5,
@@ -102,10 +102,18 @@ const Login = () => {
       reload(data.data?.AccessToken);
       if (localData && !!localData.length) {
         localData?.map(item => {
+          console.log({Attributes: item?.Attributes});
+          const attributesToSend = item?.Attributes.map((element: any) => {
+            return {
+              AttributeId: element.AttributeId,
+              VariantAttributeId: element.VariantAttributeId,
+              AttributeValueId: element.values[0].Id,
+            };
+          });
           mutateAddToCart({
             ProductId: item?.Id,
             QuantityToAdd: item?.QuantityToAdd || 1,
-            SelectedAttributes: [],
+            SelectedAttributes: attributesToSend,
           });
         });
       }
@@ -118,10 +126,10 @@ const Login = () => {
 
   const doLogin = (values: any) => {
     const data = {
-      // PhoneNumber: countryCode + values.phoneNumber,
-      // Password: values.password,
-      phoneNumber: '121234567891012',
-      password: '/9875410Bara',
+      PhoneNumber: countryCode + values.phoneNumber,
+      Password: values.password,
+      // phoneNumber: '121234567891012',
+      // password: '/9875410Bara',
     };
     mutate(data);
   };
@@ -154,7 +162,9 @@ const Login = () => {
     (async () => {
       const cartItems = await AsyncStorage.getItem(CART);
       const cartArray = JSON.parse(cartItems as any) as any[];
-      setLocalData(cartArray);
+      if (cartArray) {
+        setLocalData(cartArray);
+      }
     })();
   }, [updateProducts]);
 
