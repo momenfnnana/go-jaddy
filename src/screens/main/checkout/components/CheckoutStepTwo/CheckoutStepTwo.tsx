@@ -7,16 +7,16 @@ import {
   View,
 } from 'react-native';
 import React, {useState} from 'react';
-import {Loader, Text} from 'components';
+import {AddAddressComponent, Loader, Text} from 'components';
 import {colors, spacing} from 'theme';
 import {useQuery} from '@tanstack/react-query';
 import {getCheckoutMethods} from 'services/Checkout';
-import {HouseIcon} from 'assets/images';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Switch} from 'react-native-paper';
 import {BASE_URL} from 'utils/Axios';
+import { ICheckoutStep } from '..';
 
-const CheckoutSecondStep = () => {
+const CheckoutStepTwo = ({setActiveStep}: ICheckoutStep) => {
   const [selectedMethod, setselectedMethod] = useState<number>(0);
   const [isSameAddress, setSameAddress] = useState<boolean>(true);
   const {data: dataCheckoutMethods, isLoading: isLoadingCheckoutMethods} =
@@ -136,6 +136,7 @@ const CheckoutSecondStep = () => {
             color={colors.gray[500]}
           />
         </View>
+        <AddAddressComponent onSubmit={() => setActiveStep(3)} />
       </ScrollView>
     </View>
   );
@@ -154,4 +155,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CheckoutSecondStep;
+export default CheckoutStepTwo;

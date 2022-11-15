@@ -1,12 +1,12 @@
 import {View, Text} from 'react-native';
 import React from 'react';
 
-const CheckoutThirdStep = () => {
+const CheckoutStepThree = () => {
   return (
     <View>
-      <Text>CheckoutThirdStep</Text>
+      <Text>CheckoutStepThree</Text>
     </View>
   );
 };
 
-export default CheckoutThirdStep;
+export default CheckoutStepThree;
