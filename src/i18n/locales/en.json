@@ -244,11 +244,30 @@
   },
   "checkout": {
     "payment-address": "Payment address",
+    "shipping-address": "Shipping/delivery address",
     "checkout-method-title": "Choose charge method",
     "checkout-delivery-address": "Delivery Address",
     "checkout-delivery-description": "Where will the goods arrive?",
     "checkout-same-address": "Use the same payment address",
-    "address-to-recieve-invoice": "The address to which the invoice will be received"
+    "address-to-recieve-invoice": "The address to which the invoice will be received",
+    "payment-options": {
+      "cash": "Payment in cash upon receipt",
+      "in-store": "Store payment",
+      "visa-master-card": "Visa/Master Card"
+    },
+    "card-picker-name": "Card holder name",
+    "card-expire-date": "YY/MM",
+    "card-ccv": "CVV",
+    "payment-method": "Payment method",
+    "choose-payment-method-cost": "Select the method of paying the cost of the order",
+    "shipping-method": "Shipping method",
+    "choose-gift": "Choose this product as a gift",
+    "confirm-order-hint-1": "Please check the order total and details on billing address and shipping address, if necessary. You can make corrections to your entry at any time by clicking Back If everything is as requested, you need to deliver your order to us by clicking",
+    "confirm-payment": "Confirm Payment",
+    "confirm-order-hint-2": "I agree to the Terms of Service and abide by them unconditionally. I have read the ",
+    "privacy-terms": "Privacy Terms",
+    "confirm-order-hint-2-2": "and agree that my data that I have provided may be stored electronically",
+    "want-tell-us": "Want to tell us something about this request?"
   },
   "myOrders": {
     "titleHeader": "My Orders",
