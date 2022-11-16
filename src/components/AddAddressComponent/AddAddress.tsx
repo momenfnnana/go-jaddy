@@ -9,7 +9,8 @@ import InputField from 'components/InputField';
 import {colors, font, spacing} from 'theme';
 import SelectDropdown from 'react-native-select-dropdown';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {Loader, Text, Switch, Button} from 'components';
+import {Loader, Text, Button} from 'components';
+import {Switch} from 'react-native-paper';
 
 interface IInitialValues {
   companyName: string;
