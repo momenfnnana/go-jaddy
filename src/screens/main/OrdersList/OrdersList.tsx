@@ -1,5 +1,5 @@
 import {View, Pressable, Platform, FlatList} from 'react-native';
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {BackButton, Loader, Text} from 'components';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {colors, spacing} from 'theme';
@@ -7,7 +7,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {SearchInput} from 'components/SearchHeader/components';
 import {FilterIcon, OrderIcon} from 'assets/icons';
 import {useInfiniteQuery} from '@tanstack/react-query';
-import {getStoreOrders} from 'services/Orders';
+import {getCustomerOrders, getStoreOrders} from 'services/Orders';
 import moment from 'moment';
 // import ar from 'moment/';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -16,7 +16,10 @@ import {useCurrency} from 'hook/useCurrency';
 import {useLanguage} from 'hook/useLanguage';
 import EmptyPage from 'components/EmptyPage/EmptyPage';
 import {useTranslation} from 'react-i18next';
-import {OrdersRouteProp} from 'navigators/NavigationsTypes';
+import {
+  OrdersNavigationProp,
+  OrdersRouteProp,
+} from 'navigators/NavigationsTypes';
 require('moment/locale/ar.js');
 
 const GO_BACK_SIZE = 36;
@@ -25,10 +28,14 @@ const ICON_SIZE = 20;
 const OrdersList = () => {
   const {t} = useTranslation();
   const {params} = useRoute<OrdersRouteProp>();
-  const {setOptions} = useNavigation();
+  const {setOptions, navigate} = useNavigation<OrdersNavigationProp>();
   const {currency} = useCurrency();
-  const [searchText, setSearchText] = useState<string>('');
+  const [search, setSearch] = useState<{
+    isSearching?: boolean;
+    searchText: string;
+  }>({searchText: '', isSearching: false});
   const {language} = useLanguage();
+
   useLayoutEffect(() => {
     setOptions({
       headerLeft: () => <BackButton />,
@@ -41,14 +48,20 @@ const OrdersList = () => {
   const {
     data: StoreOrdersData,
     isLoading: isLoadingStoreOrders,
+    isFetching: isFetchingStoreOrders,
     hasNextPage: hasNextPageStoreOrders,
     fetchNextPage: fetchNextPageStoreOrders,
     refetch: refetchStoreOrders,
     isFetchingNextPage: isFetchingNextPageStoreOrders,
   } = useInfiniteQuery(
     ['StoreOrders'],
-    ({pageParam}) => getStoreOrders({pageParam}),
+    ({pageParam}) =>
+      getStoreOrders({
+        pageParam,
+        orderNumber: search.isSearching ? search.searchText : '',
+      }),
     {
+      enabled: false,
       getNextPageParam: lastPage => {
         if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
           return lastPage?.data?.Page + 1;
@@ -58,13 +71,65 @@ const OrdersList = () => {
     },
   );
 
+  const {
+    data: CustomerOrdersData,
+    isLoading: isLoadingCustomerOrders,
+    isFetching: isFetchingCustomerOrders,
+    hasNextPage: hasNextPageCustomerOrders,
+    fetchNextPage: fetchNextPageCustomerOrders,
+    refetch: refetchCustomerOrders,
+    isFetchingNextPage: isFetchingNextPageCustomerOrders,
+  } = useInfiniteQuery(
+    ['CustomerOrders'],
+    ({pageParam}) =>
+      getCustomerOrders({
+        pageParam,
+        orderNumber: search.isSearching ? search.searchText : '',
+      }),
+    {
+      enabled: false,
+      getNextPageParam: lastPage => {
+        if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
+          return lastPage?.data?.Page + 1;
+        }
+        return null;
+      },
+    },
+  );
+
+  useEffect(() => {
+    if (params?.isOrederRequest) {
+      refetchStoreOrders();
+    } else {
+      refetchCustomerOrders();
+    }
+  }, [params?.isOrederRequest]);
+
+  useEffect(() => {
+    if (params?.isOrederRequest) {
+      if (search.isSearching) {
+        refetchStoreOrders();
+      } else if (search.searchText.length == 0) {
+        setSearch({...search, isSearching: false});
+        refetchStoreOrders();
+      }
+    } else {
+      if (search.isSearching) {
+        refetchCustomerOrders();
+      } else if (search.searchText.length == 0) {
+        setSearch({searchText: '', isSearching: false});
+        refetchCustomerOrders();
+      }
+    }
+  }, [search.searchText, search.isSearching]);
+
   const loadMoreStoreOrders = () => {
     if (hasNextPageStoreOrders) {
       fetchNextPageStoreOrders();
     }
   };
 
-  if (isLoadingStoreOrders) {
+  if (isFetchingStoreOrders || isFetchingCustomerOrders) {
     return (
       <Loader
         size={'large'}
@@ -73,6 +138,21 @@ const OrdersList = () => {
           justifyContent: 'center',
           alignItems: 'center',
         }}
+      />
+    );
+  }
+
+  const data = params?.isOrederRequest ? StoreOrdersData : CustomerOrdersData;
+
+  if (
+    data?.pages.map(page => page.data.Orders).flat().length == 0 &&
+    !search.isSearching
+  ) {
+    return (
+      <EmptyPage
+        descritopn="EmptyPage.product-description"
+        title="EmptyPage.product-title"
+        displayButton
       />
     );
   }
@@ -92,10 +172,12 @@ const OrdersList = () => {
         }}
         placeholderTextColor={colors.gray[400]}
         placeholder={'myOrders.placeholderSearch'}
-        textColor={colors.white}
-        value={searchText}
-        onChangeText={setSearchText}
-        onSubmitEditing={() => {}}
+        textColor={colors.primary}
+        value={search.searchText}
+        onChangeText={val => setSearch({...search, searchText: val})}
+        onSubmitEditing={() => {
+          setSearch({...search, isSearching: true});
+        }}
         rightIcon={
           <Pressable
             style={{
@@ -123,17 +205,12 @@ const OrdersList = () => {
         }
       />
       <FlatList
-        data={StoreOrdersData?.pages.map(page => page.data.Orders).flat()}
+        data={data?.pages.map(page => page.data.Orders).flat()}
         keyExtractor={(i, _) => _.toString()}
-        ListEmptyComponent={
-          <EmptyPage
-            descritopn="EmptyPage.product-description"
-            title="EmptyPage.product-title"
-          />
-        }
         contentContainerStyle={{
           paddingHorizontal: spacing.content,
         }}
+        ListEmptyComponent={<EmptyPage title="EmptyPage.oreder-no-result" />}
         renderItem={({item}) => (
           <View
             style={{
@@ -211,7 +288,8 @@ const OrdersList = () => {
                     />
                   </View>
                 </View>
-                <View
+                <Pressable
+                onPress={()=>navigate("OrdersDetails",{Id:item?.OrderNumber})}
                   style={{
                     width: 30,
                     height: 30,
@@ -227,7 +305,7 @@ const OrdersList = () => {
                     size={15}
                     style={{marginRight: -3}}
                   />
-                </View>
+                </Pressable>
               </View>
             </View>
           </View>

@@ -11,6 +11,7 @@ import {
   WishListScreen,
   WishlistDetails,
   OrdersListScreen,
+  OrdersDetailsScreen,
 } from 'screens';
 import {colors, font} from 'theme';
 import {ProfileRoutes} from './RoutesTypes';
@@ -21,7 +22,6 @@ const Stack = createNativeStackNavigator<ProfileRoutes>();
 
 const ProfileStack = () => {
   const {t} = useTranslation();
-
   return (
     <DropDownProvider>
       <Stack.Navigator
@@ -83,6 +83,7 @@ const ProfileStack = () => {
         />
         <Stack.Screen component={WishlistDetails} name="WishlistDetails" />
         <Stack.Screen component={OrdersListScreen} name="OrdersList" />
+        <Stack.Screen component={OrdersDetailsScreen} name="OrdersDetails" />
       </Stack.Navigator>
     </DropDownProvider>
   );

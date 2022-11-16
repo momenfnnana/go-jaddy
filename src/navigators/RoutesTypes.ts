@@ -53,6 +53,7 @@ export type ProfileRoutes = {
   ProfileDetails: undefined;
   WishlistDetails: {Id: number; title: string};
   OrdersList: {isOrederRequest?: boolean};
+  OrdersDetails: {Id: string};
 };
 
 export type AuthRoutes = {

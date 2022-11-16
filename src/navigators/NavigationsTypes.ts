@@ -91,7 +91,12 @@ type AddAddressNavigationProp = NativeStackNavigationProp<
 >;
 type AddAddressRouteProp = RouteProp<ProfileRoutes, 'AddAddress'>;
 
+type OrdersNavigationProp = NativeStackNavigationProp<
+  ProfileRoutes,
+  'OrdersList'
+>;
 type OrdersRouteProp = RouteProp<ProfileRoutes, 'OrdersList'>;
+type OrdersDetailsRouteProp = RouteProp<ProfileRoutes, 'OrdersDetails'>;
 
 type WishlistDetailsScreenNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<ProfileRoutes, 'WishlistDetails'>,
@@ -132,4 +137,6 @@ export type {
   AddAddressRouteProp,
   CartScreenNavigationProp,
   OrdersRouteProp,
+  OrdersDetailsRouteProp,
+  OrdersNavigationProp,
 };

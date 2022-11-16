@@ -257,6 +257,18 @@
     "total": "Total ({{currency}} - {{itemNumber}} item)",
     "chargeTime": "order time {{time}}"
   },
+  "orderDetails": {
+    "shipping-method": "Shipping Method",
+    "payment-method": "Payment Method",
+    "order-date": "Order Date",
+    "shipping-date": "Shipping Date",
+    "order-status": "Order Status",
+    "shipping-status": "Shipping Status",
+    "payment-address": "Payment Address",
+    "shipping-address": "Shipping/delivery address",
+    "order-invoice": "Order Invoice",
+    "products-list": "Products List"
+  },
   "modal": {
     "successTitle": "are you sure from confirm?",
     "faildTitle": "are you sure from delete?",
@@ -279,7 +291,8 @@
     "store-follow-description": "go to all stores then follow them",
     "no-reviews-title": "No reviews added before",
     "categories-title": "No categories to show",
-    "stores-title": "No stores to show"
+    "stores-title": "No stores to show",
+    "oreder-no-result": "No search results"
   },
   "validation": {
     "firstName": "first name is required",
