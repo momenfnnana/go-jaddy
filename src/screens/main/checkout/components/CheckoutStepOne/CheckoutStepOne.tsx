@@ -1,5 +1,11 @@
 import React from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  View,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 import {AddAddressComponent, AddressItem, Loader, Text} from 'components';
 import {useQuery} from '@tanstack/react-query';
 import {getCheckoutAddresses} from 'services/Checkout';
@@ -36,29 +42,33 @@ const CheckoutStepOne = ({setActiveStep}: ICheckoutStep) => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.componentTitle}>
-        <Text
-          color={colors.primary}
-          variant="mediumBold"
-          tx="checkout.payment-address"
-        />
-        <Text
-          color={colors.arrowColor}
-          variant="smallRegular"
-          tx="checkout.address-to-recieve-invoice"
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <View style={styles.componentTitle}>
+          <Text
+            color={colors.primary}
+            variant="mediumBold"
+            tx="checkout.payment-address"
+          />
+          <Text
+            color={colors.arrowColor}
+            variant="smallRegular"
+            tx="checkout.address-to-recieve-invoice"
+          />
+        </View>
+        <FlatList
+          data={data?.data?.Addresses}
+          keyExtractor={item => item?.Id.toString()}
+          renderItem={data => (
+            <RenderItem {...data} onSelect={onSelectAddress} />
+          )}
+          style={styles.flatList}
+          ListFooterComponent={
+            <AddAddressComponent onSubmit={() => setActiveStep(2)} />
+          }
         />
       </View>
-      <FlatList
-        data={data?.data?.Addresses}
-        keyExtractor={item => item?.Id.toString()}
-        renderItem={data => <RenderItem {...data} onSelect={onSelectAddress} />}
-        style={styles.flatList}
-        ListFooterComponent={
-          <AddAddressComponent onSubmit={() => setActiveStep(2)} />
-        }
-      />
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
