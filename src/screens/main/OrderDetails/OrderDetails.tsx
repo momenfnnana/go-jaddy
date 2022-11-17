@@ -8,6 +8,7 @@ import {getOrdersDetails} from 'services/Orders';
 import {colors, spacing} from 'theme';
 import moment from 'moment';
 import {useLanguage} from 'hook/useLanguage';
+import {useCurrency} from 'hook/useCurrency';
 require('moment/locale/ar.js');
 
 const OrderDetails = () => {
@@ -15,6 +16,7 @@ const OrderDetails = () => {
   const {setOptions} = useNavigation();
   const {language} = useLanguage();
   const {width} = useWindowDimensions();
+  const {currency} = useCurrency();
   useLayoutEffect(() => {
     setOptions({
       tabBarVisible: false,
@@ -244,7 +246,80 @@ const OrderDetails = () => {
             color="#12121260"
             style={{marginBottom: spacing.small}}
           />
-          
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingBottom: 10,
+              borderBottomWidth: 0.5,
+              borderBottomColor: colors.border,
+              marginTop: 20,
+            }}>
+            <Text variant="mediumRegular" tx="modal.TotalProducts" />
+            <Text variant="mediumRegular" text={item?.OrderSubtotal} />
+          </View>
+          {item.DisplayTax && (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                paddingBottom: 10,
+                borderBottomWidth: 0.5,
+                borderBottomColor: colors.border,
+                marginTop: 10,
+              }}>
+              <Text variant="mediumRegular" tx="modal.tax" />
+              <Text variant="mediumRegular" text={item?.Tax} />
+            </View>
+          )}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingBottom: 10,
+              borderBottomWidth: 0.5,
+              borderBottomColor: colors.border,
+              marginTop: 20,
+            }}>
+            <Text variant="mediumRegular" tx="orderDetails.shipping-fee" />
+            <Text variant="mediumRegular" text={item?.OrderShipping} />
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingBottom: 10,
+              borderBottomWidth: 0.5,
+              borderBottomColor: colors.border,
+              marginTop: 10,
+            }}>
+            <Text variant="mediumRegular" tx="modal.DiscoundCode" />
+            <Text variant="mediumRegular" text={item?.OrderTotalDiscount} />
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingBottom: 10,
+              marginTop: 10,
+            }}>
+            <Text
+              variant="mediumBold"
+              color={colors.secondary}
+              tx="modal.total"
+              txOptions={{currencySymbol: currency?.Symbol}}
+            />
+            <Text
+              variant="mediumBold"
+              color={colors.secondary}
+              text={item.OrderTotal}
+            />
+          </View>
         </View>
       </ScrollView>
     </View>

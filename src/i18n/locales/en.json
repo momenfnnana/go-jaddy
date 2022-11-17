@@ -267,6 +267,7 @@
     "payment-address": "Payment Address",
     "shipping-address": "Shipping/delivery address",
     "order-invoice": "Order Invoice",
+    "shipping-fee": "Shipping Fee",
     "products-list": "Products List"
   },
   "modal": {
@@ -278,8 +279,8 @@
     "TotalProducts": "Products Total",
     "RewardPoints": "Reward Points",
     "DiscoundCode": "Discound Code",
-    "total": "Total",
-    "tax": "tax",
+    "total": "Total({{currencySymbol}})",
+    "tax": "Tax",
     "submitTotalModal": "Done Requset"
   },
   "EmptyPage": {
