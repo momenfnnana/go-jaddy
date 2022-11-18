@@ -1,4 +1,4 @@
-import React, {ReactNode} from 'react';
+import React, {ReactNode, useMemo} from 'react';
 import {View, StyleSheet, StatusBar, Pressable, Platform} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, spacing} from 'theme';
@@ -32,10 +32,13 @@ const SearchHeader = ({
   placeholder = 'search.search-input',
 }: ISearchHeader) => {
   const {top} = useSafeAreaInsets();
+  const topSpace = useMemo(()=>{
+    return top
+  },[])
   return (
     <View
       style={{
-        paddingTop: top,
+        paddingTop: topSpace,
         backgroundColor: colors.primary,
         paddingHorizontal: spacing.smaller,
         paddingBottom: spacing.medium,
