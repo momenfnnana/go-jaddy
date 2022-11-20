@@ -13,7 +13,7 @@ interface IAddressItem {
   setDeletedItem?: (id: number) => void;
   refetchAddresses?: () => void;
   isSelectAddress?: boolean;
-  onPressAddress?: () => void;
+  onPressAddress?: (item: IAddress) => void;
   containerStyle?: ViewStyle;
 }
 
@@ -67,8 +67,8 @@ const AddressItem = ({
 
   return (
     <Pressable
-      onPress={onPressAddress}
-      disabled={isSelectAddress}
+      onPress={() => onPressAddress?.(item)}
+      disabled={!isSelectAddress}
       style={[
         {
           paddingHorizontal: 30,

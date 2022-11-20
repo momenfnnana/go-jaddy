@@ -1,16 +1,22 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Formik} from 'formik';
-import {addAddress, getCountries, getStatesByCountry} from 'services/Addresses';
+import {
+  addAddress,
+  addBillingAddress,
+  getCountries,
+  getStatesByCountry,
+} from 'services/Addresses';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {useTranslation} from 'react-i18next';
 import {useSchema} from 'hook/useSchema';
-import InputField from 'components/InputField';
+import InputField, {PhoneNumberInput} from 'components/InputField';
 import {colors, font, spacing} from 'theme';
 import SelectDropdown from 'react-native-select-dropdown';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Loader, Text, Button} from 'components';
 import {Switch} from 'react-native-paper';
+import {IAddress} from 'types';
 
 interface IInitialValues {
   companyName: string;
@@ -40,20 +46,39 @@ interface ISelectedState {
   defualtText: string;
 }
 interface IAddAddressComponent {
-  onSubmit: () => void;
+  onSubmit: (address: IAddress) => void;
+  isBillingAddress?: boolean;
 }
 
-const AddAddressComponent = ({onSubmit}: IAddAddressComponent) => {
+const AddAddressComponent = ({
+  onSubmit,
+  isBillingAddress,
+}: IAddAddressComponent) => {
   const {t} = useTranslation();
   const {addressSchema} = useSchema();
   const {mutate: mutateaddAddress, isLoading: isLoadingaddAddress} =
     useMutation(['addAddress'], addAddress);
   const {
+    mutate: mutateAddBillingAddress,
+    isLoading: isLoadingaddBillingAddress,
+  } = useMutation(addBillingAddress, {
+    onSuccess(data, variables) {
+      onSubmit({
+        ...variables,
+        StateId: variables.StateId.toString(),
+        CountryName: countrySelected.Text,
+        Id: data.data.Properties?.NewAddressId,
+      });
+      return data;
+    },
+  });
+
+  const {
     data: statesData,
     isLoading: isLoadingStates,
     mutate: mutateGetStates,
   } = useMutation(['getStates'], getStatesByCountry, {
-    onError(error, variables, context) {
+    onError(error) {
       setStateSelected({
         ...stateSelected,
         isExistData: false,
@@ -87,26 +112,50 @@ const AddAddressComponent = ({onSubmit}: IAddAddressComponent) => {
     isExistData: false,
     defualtText: t('addAddress.states-select-country'),
   });
+  const [countryCode, setCountryCode] = useState<string>('970');
+  const onChangeCountry = (value: string) => {
+    setCountryCode(value);
+  };
+  const onSubmitForm = (values: any) => {
+    if (isBillingAddress !== undefined) {
+      mutateAddBillingAddress({
+        Address1: values.address1,
+        Address2: values.address2,
+        City: values.city,
+        Company: values.companyName,
+        CountryId: countrySelected?.Value,
+        Email: values.email,
+        FaxNumber: values.fax,
+        FirstName: values.firstName,
+        LastName: values.lastName,
+        PhoneNumber: countryCode + values.phoneNumber,
+        PostalCode: 'PostalCode',
+        StateId: stateSelected.item?.Value,
+        IsDefault: isDefualt,
+      });
+    } else {
+      mutateaddAddress({
+        Address1: values.address1,
+        Address2: values.address2,
+        City: values.city,
+        Company: values.companyName,
+        CountryId: countrySelected?.Value,
+        Email: values.email,
+        FaxNumber: values.fax,
+        FirstName: values.firstName,
+        LastName: values.lastName,
+        PhoneNumber: values.phoneNumber,
+        PostalCode: 'PostalCode',
+        StateId: stateSelected.item?.Value,
+        IsDefault: isDefualt,
+      });
+    }
+  };
+
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={values => {
-        mutateaddAddress({
-          Address1: values.address1,
-          Address2: values.address2,
-          City: values.city,
-          Company: values.companyName,
-          CountryId: countrySelected?.Value,
-          Email: values.email,
-          FaxNumber: values.fax,
-          FirstName: values.firstName,
-          LastName: values.lastName,
-          PhoneNumber: values.phoneNumber,
-          PostalCode: 'PostalCode',
-          StateId: stateSelected.item?.Value,
-          IsDefault: isDefualt,
-        });
-      }}
+      onSubmit={onSubmitForm}
       validationSchema={addressSchema}>
       {({handleChange, handleBlur, handleSubmit, values, errors, touched}) => {
         return (
@@ -197,6 +246,11 @@ const AddAddressComponent = ({onSubmit}: IAddAddressComponent) => {
                         countrySelected.Text ||
                         t('addAddress.countries-def')
                       }
+                      color={
+                        selectedItem?.Text || countrySelected.Text
+                          ? undefined
+                          : colors.gray[400]
+                      }
                     />
                   )
                 }
@@ -251,6 +305,11 @@ const AddAddressComponent = ({onSubmit}: IAddAddressComponent) => {
                     <Text
                       center
                       text={selectedItem?.Text || stateSelected.defualtText}
+                      color={
+                        selectedItem?.Text || stateSelected.defualtText
+                          ? undefined
+                          : colors.gray[400]
+                      }
                     />
                   )
                 }
@@ -307,16 +366,13 @@ const AddAddressComponent = ({onSubmit}: IAddAddressComponent) => {
                 value: errors.email,
               }}
             />
-            <InputField
+            <PhoneNumberInput
               value={values.phoneNumber}
-              keyboardType="numeric"
               onChangeText={handleChange('phoneNumber')}
               onBlur={handleBlur('phoneNumber')}
-              placeholder={'addAddress.phone'}
-              error={{
-                touched: touched.phoneNumber,
-                value: errors.phoneNumber,
-              }}
+              errorTouched={touched.phoneNumber}
+              errorValue={errors.phoneNumber}
+              onChangeCountry={onChangeCountry}
             />
             <InputField
               value={values.fax}
@@ -341,11 +397,8 @@ const AddAddressComponent = ({onSubmit}: IAddAddressComponent) => {
               />
             </View>
             <Button
-              isLoading={isLoadingaddAddress}
-              onPress={() => {
-                onSubmit();
-                handleSubmit();
-              }}
+              isLoading={isLoadingaddAddress || isLoadingaddBillingAddress}
+              onPress={handleSubmit}
               style={{marginBottom: 10}}
               title="addAddress.submitBtn"
             />
