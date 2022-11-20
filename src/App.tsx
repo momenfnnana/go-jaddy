@@ -4,10 +4,12 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AuthStack, HomeStack} from 'navigators';
 import {MainNavigator} from 'navigators/RoutesTypes';
 import {
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   StatusBar,
   StyleSheet,
+  TouchableWithoutFeedback,
   useWindowDimensions,
 } from 'react-native';
 import {Loader} from 'components';
@@ -64,21 +66,25 @@ const App = () => {
   }
 
   return (
-    <NavigationContainer
-      theme={{colors: {...colors, background: '#F5F5F5'}, dark}}
-      ref={navigationRef}>
-      <StatusBar barStyle="light-content" />
-      <KeyboardAvoidingView
-        style={{flex: 1}}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <Stack.Navigator
-          initialRouteName="HomeFlow"
-          screenOptions={{headerShown: false}}>
-          <Stack.Screen component={HomeStack} name="HomeFlow" />
-          <Stack.Screen component={AuthStack} name="AuthFlow" />
-        </Stack.Navigator>
-      </KeyboardAvoidingView>
-    </NavigationContainer>
+    <TouchableWithoutFeedback
+      style={{flex: 1}}
+      onPress={() => Keyboard.dismiss()}>
+      <NavigationContainer
+        theme={{colors: {...colors, background: '#F5F5F5'}, dark}}
+        ref={navigationRef}>
+        <StatusBar barStyle="light-content" />
+        <KeyboardAvoidingView
+          style={{flex: 1}}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <Stack.Navigator
+            initialRouteName="HomeFlow"
+            screenOptions={{headerShown: false}}>
+            <Stack.Screen component={HomeStack} name="HomeFlow" />
+            <Stack.Screen component={AuthStack} name="AuthFlow" />
+          </Stack.Navigator>
+        </KeyboardAvoidingView>
+      </NavigationContainer>
+    </TouchableWithoutFeedback>
   );
 };
 

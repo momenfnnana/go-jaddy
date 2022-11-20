@@ -211,9 +211,7 @@ const Register = () => {
     })();
   }, [updateProducts]);
   return (
-    <KeyboardAvoidingView
-      style={styles.cont}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+    <View style={styles.cont}>
       <ScrollView
         style={{backgroundColor: colors.white}}
         contentContainerStyle={{paddingHorizontal: 15}}>
@@ -542,7 +540,7 @@ const Register = () => {
           />
         )}
       </ScrollView>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 const GO_BACK_SIZE = 36;

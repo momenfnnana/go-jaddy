@@ -24,7 +24,7 @@ import {
 import {colors, spacing} from 'theme';
 import {FacebookIcon, GojaddyLoginIcon, GoogleIcon} from 'assets/icons';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
+import {CommonActions, useNavigation} from '@react-navigation/native';
 import {Formik} from 'formik';
 import * as Yub from 'yup';
 import {useTranslation} from 'react-i18next';
@@ -54,8 +54,10 @@ const GredientFrom = '#AFB2B500';
 const GredientTo = '#231D2590';
 
 const initialValues: IinitialValues = {
-  phoneNumber: '05957025222',
-  password: 'Password$1',
+  phoneNumber: '00970595800504',
+  password: '/9875410Bara',
+  // phoneNumber: '05957025222',
+  // password: 'Password$1',
 };
 
 const Login = () => {
@@ -63,7 +65,8 @@ const Login = () => {
   const {loginSchema} = useSchema();
   const {width, height} = useWindowDimensions();
   const {top} = useSafeAreaInsets();
-  const {navigate, canGoBack} = useNavigation<LoginScreenNavigationProp>();
+  const {navigate, canGoBack, dispatch} =
+    useNavigation<LoginScreenNavigationProp>();
   const {t} = useTranslation();
   const {setAccessToken, updateProducts} = useContext(UserContext);
   const [isPasswordShow, setIsPasswordShown] = useState<boolean>(false);
@@ -94,7 +97,13 @@ const Login = () => {
     onSuccess: data => {
       const {AccessToken, RememberMe} = data.data;
       setAccessToken(AccessToken);
-      navigate('HomeFlow', {screen: 'HomeStack'} as any);
+      dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'HomeFlow', params: {screen: 'HomeStack'}}],
+        }),
+      );
+      // navigate('HomeFlow', {screen: 'HomeStack'} as any);
       if (!RememberMe) {
         axios.defaults.headers.common['AccessToken'] = `${AccessToken}`;
         AsyncStorage.setItem('accessToken', AccessToken);
@@ -126,7 +135,9 @@ const Login = () => {
 
   const doLogin = (values: any) => {
     const data = {
-      PhoneNumber: countryCode + values.phoneNumber,
+      // PhoneNumber: countryCode + values.phoneNumber,
+      // Password: values.password,
+      PhoneNumber: values.phoneNumber,
       Password: values.password,
       // phoneNumber: '121234567891012',
       // password: '/9875410Bara',
@@ -169,11 +180,8 @@ const Login = () => {
   }, [updateProducts]);
 
   return (
-    <KeyboardAvoidingView
-      style={styles.cont}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 27}>
-      <ScrollView>
+    <View style={styles.cont}>
+      <View style={{flex: 1}}>
         <LinearGradient
           colors={[GredientFrom, GredientTo]}
           style={styles.linearGradient}>
@@ -237,6 +245,7 @@ const Login = () => {
                     errorTouched={touched.phoneNumber}
                     errorValue={errors.phoneNumber}
                     onChangeCountry={onChangeCountry}
+                    style={{}}
                   />
                 </View>
                 <View style={styles.feildContainer}>
@@ -247,6 +256,7 @@ const Login = () => {
                     placeholder={t('common.password')}
                     secureTextEntry={!isPasswordShow}
                     onPressRightIcon={showPassword}
+                    style={{}}
                     rightIcon={
                       <MaterialCommunityIcons
                         onPress={showPassword}
@@ -326,8 +336,8 @@ const Login = () => {
           setvisibleResetPasswordModal={setIsResetPassModalOpened}
           success={onCodeSent}
         />
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </View>
+    </View>
   );
 };
 
@@ -347,6 +357,7 @@ const styles = StyleSheet.create({
   },
   linearGradient: {
     backgroundColor: '#D9DFFF',
+    flex: 1,
   },
   row: {
     flexDirection: 'row',
@@ -360,6 +371,7 @@ const styles = StyleSheet.create({
   formContainer: {
     backgroundColor: colors.white,
     paddingHorizontal: spacing.normal - 1,
+    flex: 0.8,
   },
   inputsContainer: {
     marginTop: -topFieldsSpace,

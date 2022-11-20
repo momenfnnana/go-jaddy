@@ -130,7 +130,7 @@ const Home = () => {
                   : spacing.medium * 2),
             }}
           />
-          <StoresCarasoule items={storesData.data?.Stores} />
+          <StoresCarasoule items={storesData?.data?.Stores} />
           <ShowSection
             title="home.arrival"
             coloredTitle="home.news"

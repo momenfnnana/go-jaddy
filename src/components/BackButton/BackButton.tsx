@@ -1,5 +1,5 @@
 import React from 'react';
-import {Pressable, PressableProps, StyleSheet} from 'react-native';
+import {Keyboard, Pressable, PressableProps, StyleSheet} from 'react-native';
 import {colors, spacing} from 'theme';
 import ArrowIcon from 'components/Arrow';
 import {useNavigation} from '@react-navigation/native';
@@ -12,7 +12,15 @@ interface IBackButton extends PressableProps {
 const BackButton = ({color, size = spacing.large, ...rest}: IBackButton) => {
   const {goBack} = useNavigation();
   return (
-    <Pressable onPress={goBack} style={styles.container} {...rest}>
+    <Pressable
+      onPress={() => {
+        Keyboard.dismiss();
+        setTimeout(() => {
+          goBack();
+        }, 50);
+      }}
+      style={styles.container}
+      {...rest}>
       <ArrowIcon size={size} color={color} />
     </Pressable>
   );
