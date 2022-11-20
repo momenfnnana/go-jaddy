@@ -41,7 +41,7 @@ export const useSchema = () => {
       .email('validation.email-template')
       .required(t('validation.email')),
     phoneNumber: Yup.string()
-      .length(14, t('validation.phoneNumber-length', {length: 14}))
+      .length(10, t('validation.phoneNumber-length', {length: 10}))
       .matches(phoneRegExp, t('validation.phoneNumber-template'))
       .required(t('validation.phoneNumber')),
   });
