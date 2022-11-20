@@ -29,7 +29,7 @@ const CheckoutStepFour = () => {
     setIsConfirmed(currentValue => !currentValue);
   };
   return (
-    <ScrollView>
+    <ScrollView style={{zIndex: -1}}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styles.container}>
           <View style={styles.selectedOptions}>

@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {colors} from 'theme';
+import {IAddress} from 'types';
 import {
   CheckoutStepOne,
   CheckoutHeader,
@@ -10,21 +11,36 @@ import {
 } from '../components';
 
 const ContinueOrderStepsScreen = () => {
-  const [activeStep, setActiveStep] = useState<number>(1);
-  console.log({activeStep});
+  const [activeStep, setActiveStep] = useState<number>(2);
+  const [paymentAddress, setPaymentAddress] = useState<IAddress>({});
+  const [shippingAddress, setShippingAddress] = useState<IAddress>({});
+  const [shippingMethod, setShippingMethod] = useState<IAddress>({});
+
   const renderSection = (activeStep: number) => {
     switch (activeStep) {
       case 1:
-        return <CheckoutStepOne setActiveStep={setActiveStep} />;
+        return (
+          <CheckoutStepOne
+            setActiveStep={setActiveStep}
+            setSelectedAddress={setPaymentAddress}
+          />
+        );
         break;
       case 2:
-        return <CheckoutStepTwo setActiveStep={setActiveStep} />;
+        return (
+          <CheckoutStepTwo
+            setActiveStep={setActiveStep}
+            selectedAddress={paymentAddress}
+            setShippingMethod={setShippingMethod}
+            setShippingAddress={setShippingAddress}
+          />
+        );
         break;
       case 3:
         return <CheckoutStepThree setActiveStep={setActiveStep} />;
         break;
       case 4:
-        return <CheckoutStepFour setActiveStep={setActiveStep} />;
+        return <CheckoutStepFour />;
         break;
       default:
       // code block

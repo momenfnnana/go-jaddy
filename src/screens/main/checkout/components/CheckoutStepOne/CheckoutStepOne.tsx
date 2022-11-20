@@ -7,15 +7,19 @@ import {
   Keyboard,
 } from 'react-native';
 import {AddAddressComponent, AddressItem, Loader, Text} from 'components';
-import {useQuery} from '@tanstack/react-query';
-import {getCheckoutAddresses} from 'services/Checkout';
+import {useMutation, useQuery} from '@tanstack/react-query';
+import {getCheckoutAddresses, selectBillingAddress} from 'services/Checkout';
 import {colors, spacing} from 'theme';
 import {IAddress} from 'types';
 import {ICheckoutStep} from '..';
 interface ICheckoutAddress {
   item: IAddress;
   index: number;
-  onSelect: () => void;
+  onSelect: (item: IAddress) => void;
+}
+
+interface ICheckoutStepOne extends ICheckoutStep {
+  setSelectedAddress: (address: IAddress) => void;
 }
 
 const RenderItem = ({item, onSelect}: ICheckoutAddress) => {
@@ -29,13 +33,28 @@ const RenderItem = ({item, onSelect}: ICheckoutAddress) => {
   );
 };
 
-const CheckoutStepOne = ({setActiveStep}: ICheckoutStep) => {
+const CheckoutStepOne = ({
+  setActiveStep,
+  setSelectedAddress,
+}: ICheckoutStepOne) => {
   const {data, isLoading} = useQuery(
     ['getCheckoutAddresses'],
     getCheckoutAddresses,
   );
-  const onSelectAddress = () => {
-    // placeholder the address and do api call if needed
+  const {mutate, isLoading: isLoadingSelectAddress} = useMutation(
+    selectBillingAddress,
+    {
+      onSuccess: data => {
+        setActiveStep(2);
+        return data;
+      },
+    },
+  );
+  const onSelectAddress = (address: IAddress) => {
+    if (address.Id) {
+      setSelectedAddress(address);
+      mutate({addressId: address.Id, isBillingAddress: true});
+    }
   };
   if (isLoading) {
     return <Loader containerStyle={styles.containerStyle} />;
@@ -43,30 +62,42 @@ const CheckoutStepOne = ({setActiveStep}: ICheckoutStep) => {
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.container}>
-        <View style={styles.componentTitle}>
-          <Text
-            color={colors.primary}
-            variant="mediumBold"
-            tx="checkout.payment-address"
-          />
-          <Text
-            color={colors.arrowColor}
-            variant="smallRegular"
-            tx="checkout.address-to-recieve-invoice"
+      <View style={{flex: 1, zIndex: -1}}>
+        {isLoadingSelectAddress && <Loader variant="screenContent" />}
+        <View style={styles.container}>
+          <View style={styles.componentTitle}>
+            <Text
+              color={colors.primary}
+              variant="mediumBold"
+              tx="checkout.payment-address"
+              style={{flex: 1}}
+            />
+            <Text
+              color={colors.arrowColor}
+              variant="smallRegular"
+              tx="checkout.address-to-recieve-invoice"
+              numberOfLines={1}
+              style={{flex: 1}}
+            />
+          </View>
+          <FlatList
+            data={data?.data?.Addresses}
+            keyExtractor={item => item?.Id.toString()}
+            renderItem={data => (
+              <RenderItem {...data} onSelect={onSelectAddress} />
+            )}
+            style={styles.flatList}
+            ListFooterComponent={
+              <AddAddressComponent
+                onSubmit={address => {
+                  setSelectedAddress(address);
+                  setActiveStep(2);
+                }}
+                isBillingAddress={true}
+              />
+            }
           />
         </View>
-        <FlatList
-          data={data?.data?.Addresses}
-          keyExtractor={item => item?.Id.toString()}
-          renderItem={data => (
-            <RenderItem {...data} onSelect={onSelectAddress} />
-          )}
-          style={styles.flatList}
-          ListFooterComponent={
-            <AddAddressComponent onSubmit={() => setActiveStep(2)} />
-          }
-        />
       </View>
     </TouchableWithoutFeedback>
   );

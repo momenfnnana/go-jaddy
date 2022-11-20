@@ -12,7 +12,12 @@ const CheckoutHeader = ({activeStep}: ICheckoutHeader) => {
   return (
     <View style={styles.container}>
       <BackButton />
-      <Text tx="cart.submitBtn" center color="white" variant="mediumRegular" />
+      <Text
+        tx="cart.continue-request"
+        center
+        color="white"
+        variant="mediumRegular"
+      />
       <EmptyView />
       <CheckoutStepsContainer
         containerStyle={styles.stepsContainer}
@@ -38,5 +43,6 @@ const styles = StyleSheet.create({
     bottom: -spacing.medium,
     left: 0,
     right: 0,
+    zIndex: 1,
   },
 });

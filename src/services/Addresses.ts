@@ -52,6 +52,14 @@ export const addAddress = ({...rest}: IAddAddress) =>
     },
   });
 
+export const addBillingAddress = ({...rest}: IAddAddress) =>
+  axios(`${BASE_URL}/api/custom/checkout/NewAddress?isBillingAddress=true`, {
+    method: 'post',
+    data: {
+      ...rest,
+    },
+  });
+
 export const editAddress = ({...rest}: IEditAddress) =>
   axios(`${BASE_URL}/api/custom/addresses/EditAddress?id=${rest.id}`, {
     method: 'post',

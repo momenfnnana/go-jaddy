@@ -6,16 +6,38 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import {Button, Text} from 'components';
+import {Button, Loader, Text} from 'components';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {colors, spacing} from 'theme';
 import {paymentOptions} from '../PaymentOptions';
 import {ICheckoutStep} from '..';
+import {useMutation, useQuery} from '@tanstack/react-query';
+import {getPaymentMethods, selectPaymentMethod} from 'services/Checkout';
 
 const CheckoutStepThree = ({setActiveStep}: ICheckoutStep) => {
-  const [selectedOption, setSelectedOption] = useState<string>(
-    paymentOptions[0].title || '',
+  const [selectedOption, setSelectedOption] = useState<any>({});
+  const {data, isLoading} = useQuery(['getPaymentMethods'], getPaymentMethods, {
+    onSuccess: data => {
+      setSelectedOption(data?.data?.PaymentMethods[0]);
+      return data;
+    },
+  });
+  const {mutate, isLoading: isLoadingSelectPaymentMethod} = useMutation(
+    selectPaymentMethod,
+    {
+      onSuccess: data => {
+        setActiveStep(4);
+        return data;
+      },
+    },
   );
+  const onSubmit = () => {
+    mutate({paymentMethod: selectedOption.PaymentMethodSystemName});
+  };
+  if (isLoading) {
+    return <Loader isPageLoading />;
+  }
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
@@ -24,57 +46,59 @@ const CheckoutStepThree = ({setActiveStep}: ICheckoutStep) => {
             color={colors.primary}
             variant="mediumBold"
             tx="checkout.payment-method"
+            style={{flex: 1}}
           />
           <Text
             color={colors.arrowColor}
             variant="smallRegular"
             tx="checkout.choose-payment-method-cost"
+            numberOfLines={1}
+            style={{flex: 1}}
           />
         </View>
-        {paymentOptions.map(item => {
+        {data?.data?.PaymentMethods.map((item: any) => {
           return (
             <View
               style={[
                 styles.paymentOptionContainer,
                 {
                   backgroundColor:
-                    selectedOption === item.title
-                      ? colors.white
-                      : colors.simiWhite,
+                    selectedOption === item ? colors.white : colors.simiWhite,
                 },
               ]}>
               <Pressable
-                onPress={() => setSelectedOption(item.title)}
+                onPress={() => setSelectedOption(item)}
                 key={item.id}
                 style={styles.optionName}>
                 <MaterialIcons
                   name={`radio-button-${
-                    selectedOption === item.title ? 'on' : 'off'
+                    selectedOption === item ? 'on' : 'off'
                   }`}
                   size={20}
                   color={
-                    selectedOption === item.title
+                    selectedOption === item
                       ? colors.secondary
                       : colors.gray[300]
                   }
                   style={styles.radioButton}
                 />
                 <Text
-                  tx={item.title}
+                  tx={item.Name}
                   color={colors.tabsColor}
                   variant={
-                    selectedOption === item.title ? 'smallBold' : 'smallRegular'
+                    selectedOption === item ? 'smallBold' : 'smallRegular'
                   }
                 />
               </Pressable>
-              {selectedOption === item.title && item.component}
+              {/* {selectedOption === item && item.component} */}
             </View>
           );
         })}
         <Button
           title="addAddress.submitBtn"
           style={styles.submitButton}
-          onPress={() => setActiveStep(4)}
+          onPress={onSubmit}
+          isLoading={isLoadingSelectPaymentMethod}
         />
       </View>
     </TouchableWithoutFeedback>
