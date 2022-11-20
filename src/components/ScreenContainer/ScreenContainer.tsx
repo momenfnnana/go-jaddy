@@ -1,7 +1,7 @@
 import React, {ReactNode} from 'react';
-import {Platform, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {spacing} from 'theme';
+import {colors, spacing} from 'theme';
 
 interface IScreenContainer {
   children: ReactNode;
@@ -29,5 +29,6 @@ export default ScreenContainer;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.white,
   },
 });
