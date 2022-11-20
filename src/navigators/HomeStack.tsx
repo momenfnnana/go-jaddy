@@ -1,5 +1,5 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import { AdidasIcon } from 'assets/images';
+import {AdidasIcon} from 'assets/images';
 import {CartProvider} from 'context/CartContext';
 import React from 'react';
 import {HomeScreen, ProductDetailsScreen, SearchScreen} from 'screens';
