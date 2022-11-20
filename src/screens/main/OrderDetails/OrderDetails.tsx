@@ -1,14 +1,22 @@
-import {View, ScrollView, useWindowDimensions} from 'react-native';
+import {
+  View,
+  ScrollView,
+  useWindowDimensions,
+  FlatList,
+  Image,
+} from 'react-native';
 import React, {useLayoutEffect} from 'react';
-import {BackButton, Loader, Text} from 'components';
+import {BackButton, Button, Loader, Text} from 'components';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {OrdersDetailsRouteProp} from 'navigators/NavigationsTypes';
-import {useQuery} from '@tanstack/react-query';
-import {getOrdersDetails} from 'services/Orders';
+import {useMutation, useQuery} from '@tanstack/react-query';
+import {cancelOrder, getOrdersDetails} from 'services/Orders';
 import {colors, spacing} from 'theme';
 import moment from 'moment';
 import {useLanguage} from 'hook/useLanguage';
 import {useCurrency} from 'hook/useCurrency';
+import {LogoSplash} from 'assets/images';
+import {BASE_URL} from 'utils/Axios';
 require('moment/locale/ar.js');
 
 const OrderDetails = () => {
@@ -24,7 +32,10 @@ const OrderDetails = () => {
       headerTitle: '#' + params?.Id,
     });
   }, []);
-
+  const {isLoading: isLoadingCancelOrder, mutate} = useMutation(
+    ['cancelOrder'],
+    cancelOrder,
+  );
   const {isLoading, data} = useQuery(['getOrderDetails'], () =>
     getOrdersDetails({orderId: params?.Id}),
   );
@@ -43,6 +54,7 @@ const OrderDetails = () => {
   }
 
   const item = data?.data?.OrderDetails;
+  console.log({first: item?.Tax});
   return (
     <View style={{flex: 1}}>
       <ScrollView>
@@ -254,10 +266,9 @@ const OrderDetails = () => {
               paddingBottom: 10,
               borderBottomWidth: 0.5,
               borderBottomColor: colors.border,
-              marginTop: 20,
             }}>
             <Text variant="mediumRegular" tx="modal.TotalProducts" />
-            <Text variant="mediumRegular" text={item?.OrderSubtotal} />
+            <Text variant="mediumRegular" text={item?.OrderSubtotal || 0} />
           </View>
           {item.DisplayTax && (
             <View
@@ -271,7 +282,7 @@ const OrderDetails = () => {
                 marginTop: 10,
               }}>
               <Text variant="mediumRegular" tx="modal.tax" />
-              <Text variant="mediumRegular" text={item?.Tax} />
+              <Text variant="mediumRegular" text={item?.Tax?.toString()} />
             </View>
           )}
           <View
@@ -285,7 +296,10 @@ const OrderDetails = () => {
               marginTop: 20,
             }}>
             <Text variant="mediumRegular" tx="orderDetails.shipping-fee" />
-            <Text variant="mediumRegular" text={item?.OrderShipping} />
+            <Text
+              variant="mediumRegular"
+              text={item?.OrderShipping?.toString()}
+            />
           </View>
           <View
             style={{
@@ -298,14 +312,17 @@ const OrderDetails = () => {
               marginTop: 10,
             }}>
             <Text variant="mediumRegular" tx="modal.DiscoundCode" />
-            <Text variant="mediumRegular" text={item?.OrderTotalDiscount} />
+            <Text
+              variant="mediumRegular"
+              text={item?.OrderTotalDiscount?.toString()}
+            />
           </View>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
-              paddingBottom: 10,
+              paddingBottom: 20,
               marginTop: 10,
             }}>
             <Text
@@ -317,9 +334,95 @@ const OrderDetails = () => {
             <Text
               variant="mediumBold"
               color={colors.secondary}
-              text={item.OrderTotal}
+              text={item.OrderTotal?.toString()}
             />
           </View>
+          <Text
+            tx="orderDetails.products-list"
+            variant="smallRegular"
+            color="#12121260"
+            style={{marginBottom: spacing.small}}
+          />
+          <FlatList
+            data={item?.Items}
+            keyExtractor={(i, _) => _.toString()}
+            renderItem={({item}) => (
+              <View
+                style={{
+                  marginBottom: spacing.small,
+                  backgroundColor: colors.white,
+                  padding: spacing.medium,
+                  borderRadius: spacing.small,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  source={
+                    item?.Image?.Id === 0
+                      ? LogoSplash
+                      : {uri: `${BASE_URL}${item?.Image?.Url}`}
+                  }
+                  style={{
+                    opacity: item?.Image?.Id === 0 ? 0.5 : 1,
+                    borderRadius: spacing.small,
+                    backgroundColor: colors.white,
+                    height: 75,
+                    width: 90,
+                    marginRight: spacing.small,
+                  }}
+                  resizeMode="contain"
+                />
+                <View style={{flex: 1}}>
+                  <Text
+                    text={item?.ProductName}
+                    variant="mediumBold"
+                    style={{marginBottom: spacing.tiny}}
+                  />
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <Text
+                        text={item?.SubTotal + ' ' + currency?.Symbol}
+                        color={colors.secondary}
+                        variant="mediumExtraBold"
+                        style={{marginRight: spacing.tiny}}
+                      />
+                      <Text
+                        text={'×' + ' ' + item?.Quantity}
+                        color={colors.primary}
+                        variant="mediumExtraBold"
+                      />
+                    </View>
+                    <View
+                      style={{
+                        width: 50,
+                        height: 30,
+                        backgroundColor: colors.arrowColor,
+                      }}></View>
+                  </View>
+                </View>
+              </View>
+            )}
+          />
+          {item?.OrderStatus !== 'Cancelled' && (
+            <Button
+              isLoading={isLoadingCancelOrder}
+              onPress={() => mutate({orderId: item?.Id})}
+              title="orderDetails.cancelBtn"
+              variant="Secondary"
+              style={{
+                borderColor: colors.red,
+                marginTop: spacing.normal,
+                marginBottom: spacing.small,
+                backgroundColor: colors.transparent,
+              }}
+              color={colors.red}
+            />
+          )}
         </View>
       </ScrollView>
     </View>

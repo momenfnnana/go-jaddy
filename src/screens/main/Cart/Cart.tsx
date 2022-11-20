@@ -140,8 +140,6 @@ const Cart = () => {
     );
   }
 
-  console.log({items: data?.Items?.length});
-
   if (
     (isLogged &&
       (data?.Items?.length == 0 || data?.Items?.length == undefined)) ||

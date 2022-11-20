@@ -17,9 +17,9 @@ export const useSchema = () => {
   const passwordValidation = Yup.string()
     .required(t('validation.password'))
     .min(
-      settings.CustomerSettings.PasswordMinLength,
+      settings.CustomerSettings?.PasswordMinLength,
       t('validation.password-min', {
-        number: settings.CustomerSettings.PasswordMinLength,
+        number: settings.CustomerSettings?.PasswordMinLength,
       }),
     )
     .matches(lowerCaseRegex, t('validation.password-lowercase'))

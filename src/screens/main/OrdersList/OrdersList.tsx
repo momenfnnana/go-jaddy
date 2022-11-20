@@ -289,7 +289,9 @@ const OrdersList = () => {
                   </View>
                 </View>
                 <Pressable
-                onPress={()=>navigate("OrdersDetails",{Id:item?.OrderNumber})}
+                  onPress={() =>
+                    navigate('OrdersDetails', {Id: item?.OrderNumber})
+                  }
                   style={{
                     width: 30,
                     height: 30,

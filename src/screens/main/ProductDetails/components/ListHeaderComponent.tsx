@@ -1,4 +1,5 @@
 import React, {
+  ReactNode,
   useCallback,
   useContext,
   useEffect,
@@ -16,6 +17,7 @@ import {
   StyleSheet,
   Platform,
   ScrollView,
+  Share,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {DiscountIcon, ShareIcon} from 'assets/icons';
@@ -44,7 +46,15 @@ import {CART} from 'types';
 import Snackbar from 'react-native-snackbar';
 import {useTranslation} from 'react-i18next';
 import {UserContext} from 'context/UserContext';
+import {FormikTouched, useFormik} from 'formik';
+import {object, string} from 'yup';
 
+type AttributesTypes =
+  | 'Boxes'
+  | 'DropdownList'
+  | 'RadioList'
+  | 'Checkboxes'
+  | 'TextBox';
 interface IListHeaderComponent {
   Product: any;
   ProductId: number;
@@ -56,12 +66,7 @@ interface IListHeaderComponent {
   reviewsList: any[];
 }
 interface IAttributes {
-  AttributeControlType:
-    | 'Boxes'
-    | 'DropdownList'
-    | 'RadioList'
-    | 'Checkboxes'
-    | 'TextBox';
+  AttributeControlType: AttributesTypes;
   AttributeId: number;
   DisplayOrder: number;
   IsMultipleChoice: boolean;
@@ -88,15 +93,37 @@ enum productCounter {
   increase,
   descrease,
 }
-const checkIncludedItem = ({item, array}: ICheckIncludedItem) => {
-  const foundedItem = array.filter(element => {
-    return (
-      element.attribute === item.attribute &&
-      element.attributeValue?.includes(item.attributeValue)
-    );
-  });
-  return foundedItem.length > 0;
-};
+
+const AttributeContainer = ({
+  children,
+  error,
+  type,
+  touched,
+}: {
+  children: ReactNode;
+  error: string | undefined;
+  type: AttributesTypes;
+  touched: boolean | FormikTouched<any> | FormikTouched<any>[] | undefined;
+}) => (
+  <View>
+    {type === 'TextBox' ? (
+      <View>{children}</View>
+    ) : (
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{marginHorizontal: -spacing.normal}}
+        contentContainerStyle={{paddingHorizontal: spacing.normal}}>
+        {children}
+      </ScrollView>
+    )}
+    <View>
+      {touched && error && (
+        <Text text={error} variant="error" top="small" color="red" />
+      )}
+    </View>
+  </View>
+);
 
 const ListHeaderComponent = ({
   Product,
@@ -114,6 +141,104 @@ const ListHeaderComponent = ({
   const {isLogged} = useLogged();
   const {navigate, goBack, canGoBack} =
     useNavigation<CategoryNavigationsType>();
+  let initialValues: any = {};
+  Product?.Attributes.forEach((f: any) => {
+    if (f.IsRequired === true) {
+      initialValues[f?.Name] = '';
+    }
+  });
+  const onSubmit = async () => {
+    if (isLogged) {
+      const attributesToSend = selectedAttributes.map(item => {
+        return {
+          AttributeId: item.AttributeId,
+          VariantAttributeId: item.VariantAttributeId,
+          AttributeValueId: item.values[0].Id,
+        };
+      });
+      mutateAddToCart({
+        ProductId,
+        QuantityToAdd: productsNumber,
+        SelectedAttributes: attributesToSend,
+      });
+    } else {
+      const cartItems = await AsyncStorage.getItem(CART);
+      const cartArray =
+        JSON.parse(cartItems as any) === null
+          ? []
+          : JSON.parse(cartItems as any);
+      if (!!cartArray.length) {
+        const foundedItem = cartArray.find((item: any) => {
+          return item.Id === ProductId;
+        });
+        const filteredArray = cartArray.filter((item: any) => {
+          return item.Id !== ProductId;
+        });
+        if (foundedItem) {
+          filteredArray.push({
+            ...foundedItem,
+            Id: ProductId,
+            AttributesSelection: [],
+            QuantityToAdd: foundedItem.productsNumber
+              ? foundedItem.productsNumber + 1
+              : 1,
+          });
+          AsyncStorage.setItem(CART, JSON.stringify(filteredArray)).then(() => {
+            Snackbar.show({
+              text: t('cart.added-successfull'),
+              duration: Snackbar.LENGTH_SHORT,
+              backgroundColor: colors.success,
+            });
+          });
+        } else {
+          cartArray.push({
+            ...Product,
+            Id: ProductId,
+            AttributesSelection: [],
+            QuantityToAdd: productsNumber,
+          });
+          AsyncStorage.setItem(CART, JSON.stringify(cartArray)).then(() => {
+            Snackbar.show({
+              text: t('cart.added-successfull'),
+              duration: Snackbar.LENGTH_SHORT,
+              backgroundColor: colors.success,
+            });
+          });
+        }
+      } else {
+        AsyncStorage.setItem(
+          CART,
+          JSON.stringify([
+            {
+              ...Product,
+              Id: ProductId,
+              AttributesSelection: [],
+              QuantityToAdd: productsNumber,
+            },
+          ]),
+        ).then(() => {
+          Snackbar.show({
+            text: t('cart.added-successfull'),
+            duration: Snackbar.LENGTH_SHORT,
+            backgroundColor: colors.success,
+          });
+        });
+      }
+      setUpdateProducts(!updateProducts);
+    }
+  };
+  const schemaObj: any = {};
+  Object.keys(initialValues).forEach(f => {
+    schemaObj[f] = string().required('This field is required');
+  });
+  let validationSchema = object(schemaObj);
+
+  const {setFieldValue, errors, handleSubmit, touched} = useFormik({
+    onSubmit,
+    validationSchema,
+    initialValues,
+  });
+
   const [productsNumber, setProductsNumber] = useState<number>(1);
   const {top} = useSafeAreaInsets();
   const {height} = useWindowDimensions();
@@ -204,6 +329,7 @@ const ListHeaderComponent = ({
             VariantAttributeId: foundParent.VariantAttributeId,
             values: remainedValues,
           };
+          setFieldValue(`${foundParent.Name}`, foundParent.Name);
           setSelectedAttributes([...filteredParent, newItem]);
           return;
         }
@@ -214,10 +340,12 @@ const ListHeaderComponent = ({
           VariantAttributeId: foundParent.VariantAttributeId,
           values: [...remainedValues, {...value.selectedItem}],
         };
+        setFieldValue(`${foundParent.Name}`, foundParent.Name);
         setSelectedAttributes([...filteredParent, newItem]);
         return;
       }
       const newParent = {...foundParent, values: [value.selectedItem]};
+      setFieldValue(`${foundParent.Name}`, foundParent.Name);
       setSelectedAttributes([...filteredParent, newParent]);
       return;
     }
@@ -231,12 +359,14 @@ const ListHeaderComponent = ({
         values: [{...value.selectedItem}],
       },
     ];
+    setFieldValue(`${value.parentAttribute.Name}`, value.parentAttribute.Name);
     setSelectedAttributes(newArray);
   };
 
   const selectAttributeHandler = useCallback(
     ({attribute, attributeValue}: ISelectAttributeHandler) => {
       const newItems = attributes.map(element => {
+        setFieldValue(`${attribute.Name}`, attribute.Name);
         if (element.AttributeId === attribute.AttributeId) {
           return {
             ...element,
@@ -276,75 +406,15 @@ const ListHeaderComponent = ({
   );
 
   const doAddToCart = async () => {
-    if (isLogged) {
-      mutateAddToCart({
-        ProductId,
-        QuantityToAdd: productsNumber,
-        SelectedAttributes: [],
-      });
-    } else {
-      const cartItems = await AsyncStorage.getItem(CART);
-      const cartArray = JSON.parse(cartItems as any) as any[];
-      if (!!cartArray.length) {
-        const foundedItem = cartArray.find(item => {
-          return item.Id === ProductId;
-        });
-        const filteredArray = cartArray.filter(item => {
-          return item.Id !== ProductId;
-        });
-        if (foundedItem) {
-          filteredArray.push({
-            ...foundedItem,
-            Id: ProductId,
-            AttributesSelection: [],
-            QuantityToAdd: foundedItem.productsNumber
-              ? foundedItem.productsNumber + 1
-              : 1,
-          });
-          AsyncStorage.setItem(CART, JSON.stringify(filteredArray)).then(() => {
-            Snackbar.show({
-              text: t('cart.added-successfull'),
-              duration: Snackbar.LENGTH_SHORT,
-              backgroundColor: colors.success,
-            });
-          });
-        } else {
-          cartArray.push({
-            ...Product,
-            Id: ProductId,
-            AttributesSelection: [],
-            QuantityToAdd: productsNumber,
-          });
-        }
-        AsyncStorage.setItem(CART, JSON.stringify(cartArray)).then(() => {
-          Snackbar.show({
-            text: t('cart.added-successfull'),
-            duration: Snackbar.LENGTH_SHORT,
-            backgroundColor: colors.success,
-          });
-        });
-      } else {
-        AsyncStorage.setItem(
-          CART,
-          JSON.stringify([
-            {
-              ...Product,
-              Id: ProductId,
-              AttributesSelection: [],
-              QuantityToAdd: productsNumber,
-            },
-          ]),
-        ).then(() => {
-          Snackbar.show({
-            text: t('cart.added-successfull'),
-            duration: Snackbar.LENGTH_SHORT,
-            backgroundColor: colors.success,
-          });
-        });
-      }
-      setUpdateProducts(!updateProducts);
-    }
+    handleSubmit();
   };
+
+  const onPressShare = async () => {
+    await Share.share({
+      url: Product.ShareLink,
+    });
+  };
+
   useEffect(() => {
     if (Product?.Attributes) {
       const newItems = Product?.Attributes.map((element: IAttributes) => {
@@ -409,7 +479,9 @@ const ListHeaderComponent = ({
                 {/* <Pressable style={styles.singleRightIcon}>
                   <CartIcon stroke={colors.white} />
                 </Pressable> */}
-                <Pressable style={styles.singleRightIcon}>
+                <Pressable
+                  style={styles.singleRightIcon}
+                  onPress={onPressShare}>
                   <ShareIcon color={colors.white} />
                 </Pressable>
               </View>
@@ -515,56 +587,82 @@ const ListHeaderComponent = ({
                   color={colors.tabsColor}
                   variant="mediumBold"
                 />
-                <ScrollView
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  style={{marginHorizontal: -spacing.normal}}
-                  contentContainerStyle={{paddingHorizontal: spacing.normal}}>
-                  {item.AttributeControlType === 'Boxes' ? (
-                    item.Values?.map(attributeValue => {
+                {item.AttributeControlType === 'Boxes' ? (
+                  <AttributeContainer
+                    type={item.AttributeControlType}
+                    error={errors[item.Name]?.toString()}
+                    touched={touched[item.Name]}>
+                    {item.Values?.map(attributeValue => {
                       return (
                         <Boxes
-                          {...{attributeValue, item, selectAttributeHandler}}
+                          {...{
+                            attributeValue,
+                            item,
+                            selectAttributeHandler,
+                          }}
                           key={attributeValue.Id}
                           onSelect={value =>
                             onSelect(value, selectedAttributes)
                           }
                         />
                       );
-                    })
-                  ) : item.AttributeControlType === 'RadioList' ? (
-                    item.Values?.map(attributeValue => {
+                    })}
+                  </AttributeContainer>
+                ) : item.AttributeControlType === 'RadioList' ? (
+                  <AttributeContainer
+                    type={item.AttributeControlType}
+                    error={errors[item.Name]?.toString()}
+                    touched={touched[item.Name]}>
+                    {item.Values?.map(attributeValue => {
                       return (
                         <RadioList
-                          {...{selectAttributeHandler, item, attributeValue}}
+                          {...{
+                            selectAttributeHandler,
+                            item,
+                            attributeValue,
+                          }}
                           key={attributeValue.Id}
                           onSelect={value =>
                             onSelect(value, selectedAttributes)
                           }
                         />
                       );
-                    })
-                  ) : item.AttributeControlType === 'DropdownList' ? (
+                    })}
+                  </AttributeContainer>
+                ) : item.AttributeControlType === 'DropdownList' ? (
+                  <AttributeContainer
+                    type={item.AttributeControlType}
+                    error={errors[item.Name]?.toString()}
+                    touched={touched[item.Name]}>
                     <DropdownList
                       {...{item}}
                       onSelect={value => onSelect(value, selectedAttributes)}
                     />
-                  ) : (
-                    item.AttributeControlType === 'Checkboxes' && (
+                  </AttributeContainer>
+                ) : (
+                  item.AttributeControlType === 'Checkboxes' && (
+                    <AttributeContainer
+                      type={item.AttributeControlType}
+                      error={errors[item.Name]?.toString()}
+                      touched={touched[item.Name]}>
                       <CheckboxList
                         {...{item}}
                         onSelect={value => onSelect(value, selectedAttributes)}
                       />
-                    )
-                  )}
-                </ScrollView>
+                    </AttributeContainer>
+                  )
+                )}
                 {item.AttributeControlType === 'TextBox' && (
-                  <InputField
-                    style={{}}
-                    placeholder={'product-details.custom-text'}
-                    value={customTextValue}
-                    onChangeText={setCustomTextValue}
-                  />
+                  <AttributeContainer
+                    error={errors[item.Name]?.toString()}
+                    type={`${item.AttributeControlType}`}
+                    touched={touched[item.Name]}>
+                    <InputField
+                      placeholder={'product-details.custom-text'}
+                      value={customTextValue}
+                      onChangeText={setCustomTextValue}
+                    />
+                  </AttributeContainer>
                 )}
               </View>
             );

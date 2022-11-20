@@ -37,3 +37,4 @@ export {default as PaymentMethods} from './svg/payment-methods.svg';
 export {default as PaymentShippingAddress} from './svg/payment-shipping-address.svg';
 export {default as PaymentConfirmation} from './svg/payment-confirmation.svg';
 export {default as OrderIcon} from './svg/order-icon.svg';
+export {default as VisaIcon} from './svg/visa-icon.svg';

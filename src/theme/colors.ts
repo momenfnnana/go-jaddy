@@ -1,5 +1,6 @@
 const white = '#FFFFFF';
 const simiWhite = '#F3FBFF';
+const simiWhite2 = '#F8F8F8';
 const black = '#000000';
 const tabsColor = '#121212';
 const reloadColor = '#DEDEDE';
@@ -91,6 +92,7 @@ export type ColorStatus = keyof typeof statusPalette;
 export const colors = {
   white,
   simiWhite,
+  simiWhite2,
   transparentWhite: 'rgba(255, 255, 255, 0.2)',
   transparent: 'rgba(0, 0, 0, 0)',
   backdrop: 'rgba(0, 0, 0, 0.4)',

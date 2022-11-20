@@ -34,12 +34,12 @@ const Button: React.FC<buttomProps> = ({
       onPress={onPress}
       style={StyleSheet.flatten([
         styles.pressable,
-        style,
         {
           backgroundColor: variant !== 'Secondary' ? colors.blue : colors.white,
           borderColor: variant !== 'Secondary' ? colors.blue : colors.secondary,
           borderWidth: 1,
         },
+        style,
       ])}
       disabled={isLoading || disabled}>
       {icon && icon}
@@ -52,7 +52,14 @@ const Button: React.FC<buttomProps> = ({
         }
         style={[!icon && styles.textStyle, textStyle]}
       />
-      {isLoading && <Loader size="small" color={colors.white} />}
+      {isLoading && (
+        <Loader
+          size="small"
+          color={
+            color || (variant == 'Secondary' ? colors.secondary : colors.white)
+          }
+        />
+      )}
     </Pressable>
   );
 };

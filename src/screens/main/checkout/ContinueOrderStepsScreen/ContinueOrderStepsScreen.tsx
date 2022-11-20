@@ -2,11 +2,11 @@ import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {colors} from 'theme';
 import {
-  CheckoutFirstStep,
+  CheckoutStepOne,
   CheckoutHeader,
-  CheckoutSecondStep,
-  CheckoutThirdStep,
-  CheckoutFourthStep,
+  CheckoutStepTwo,
+  CheckoutStepThree,
+  CheckoutStepFour,
 } from '../components';
 
 const ContinueOrderStepsScreen = () => {
@@ -15,16 +15,16 @@ const ContinueOrderStepsScreen = () => {
   const renderSection = (activeStep: number) => {
     switch (activeStep) {
       case 1:
-        return <CheckoutFirstStep setActiveStep={setActiveStep} />;
+        return <CheckoutStepOne setActiveStep={setActiveStep} />;
         break;
       case 2:
-        return <CheckoutSecondStep setActiveStep={setActiveStep} />;
+        return <CheckoutStepTwo setActiveStep={setActiveStep} />;
         break;
       case 3:
-        return <CheckoutThirdStep setActiveStep={setActiveStep} />;
+        return <CheckoutStepThree setActiveStep={setActiveStep} />;
         break;
       case 4:
-        return <CheckoutFourthStep setActiveStep={setActiveStep} />;
+        return <CheckoutStepFour setActiveStep={setActiveStep} />;
         break;
       default:
       // code block

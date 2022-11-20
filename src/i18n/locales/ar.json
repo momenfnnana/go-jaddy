@@ -275,8 +275,27 @@
   },
   "checkout": {
     "payment-address": "عنوان الدفع",
+    "shipping-address": "عنوان الشحن/ التوصيل",
     "checkout-method-title": "اختر طريقة الشحن",
-    "address-to-recieve-invoice": "العنوان الذي ستصل عليه الفاتورة"
+    "address-to-recieve-invoice": "العنوان الذي ستصل عليه الفاتورة",
+    "payment-options": {
+      "cash": "الدفع نقدا عند الاستلام",
+      "in-store": "الدفع بالمتجر",
+      "visa-master-card": "بطاقة فيزا/ماستر كارد"
+    },
+    "card-picker-name": "اسم حامل البطاقة",
+    "card-expire-date": "YY/MM",
+    "card-ccv": "CVV",
+    "payment-method": "طريقة الدفع",
+    "choose-payment-method-cost": "حدد طريقة دفع تكلفة الطلب",
+    "shipping-method": "طريقة الشحن",
+    "choose-gift": "اختر هذا المنتج كهدية",
+    "confirm-order-hint-1": "يرجى التحقق من إجمالي الطلب والتفاصيل المتعلقة بعنوان الفواتير وعنوان الشحن ، إذا لزم الأمر. يمكنك إجراء تصحيحات على إدخالك في أي وقت بالنقر على للخلف إذا كان كل شيء كما هو مطلوب، فعليك توصيل طلبك إلينا بالنقر على ",
+    "confirm-payment": "تأكيد الدفع",
+    "confirm-order-hint-2": "أوافق على بنود الخدمة وألتزم بها دون قيد أو شرط. لقد قرأت  ",
+    "privacy-terms": "شروط الخصوصية",
+    "confirm-order-hint-2-2": "وأوافق على أنه يمكن تخزين بياناتي التي قدمتها إلكترونياً",
+    "want-tell-us": "هل تريد أن تخبرنا شيئًا بخصوص هذا الطلب؟"
   },
   "myOrders": {
     "titleHeader": "طلباتي",

@@ -138,142 +138,136 @@ const Search = () => {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={DismissKeyboard}>
-      <View style={styles.container}>
-        <SearchHeader
-          value={searchText}
-          setValue={setSearchText}
-          onSubmitEditing={SearchHandler}
-          autoFocus={true}
-        />
-        {!!productsList?.length && (
-          <View style={[styles.row, styles.resultsHeader]}>
-            <View style={styles.row}>
-              <Text
-                tx={
-                  (params as any)?.title?.length > 0
-                    ? 'search.categoryTitle'
-                    : 'search.search-result-for'
-                }
-                variant="smallRegular"
-              />
-              <Text
-                text={` ${
-                  (params as any)?.title?.length > 0
-                    ? (params as any)?.title
-                    : searchText
-                }`}
-                variant="smallBold"
-              />
-            </View>
-            <View style={[styles.row, styles.viewFilters]}>
-              <Pressable
-                style={[
-                  styles.viewIconContainer,
-                  {
-                    backgroundColor:
-                      viewType === 'list' ? colors.secondary : undefined,
-                    marginRight: 10,
-                  },
-                ]}
-                onPress={() => showListHandler('list')}>
-                <Feather
-                  name="list"
-                  size={18}
-                  color={viewType === 'list' ? colors.white : colors.grayMain}
-                />
-              </Pressable>
-              <Pressable
-                style={[
-                  styles.viewIconContainer,
-                  {
-                    backgroundColor:
-                      viewType === 'grid' ? colors.secondary : undefined,
-                  },
-                ]}
-                onPress={() => showListHandler('grid')}>
-                <Ionicons
-                  name="grid-outline"
-                  size={18}
-                  color={viewType === 'grid' ? colors.white : colors.grayMain}
-                />
-              </Pressable>
-            </View>
-          </View>
-        )}
-        {!!productsList?.length ? (
-          viewType === 'grid' ? (
-            <FlatList
-              key={'_'}
-              data={productsList}
-              keyExtractor={item => item?.Id}
-              contentContainerStyle={{
-                paddingTop: spacing.large,
-                paddingHorizontal: spacing.content,
-              }}
-              numColumns={2}
-              renderItem={({item, index}) => {
-                return (
-                  <ProductCard
-                    styleContainer={{
-                      marginRight: index % 2 == 0 ? 10 : 0,
-                    }}
-                    {...item}
-                    WishlistEnabled={
-                      productsModel && productsModel[0].WishlistEnabled
-                    }
-                  />
-                );
-              }}
+    <View style={styles.container}>
+      <SearchHeader
+        value={searchText}
+        setValue={setSearchText}
+        onSubmitEditing={SearchHandler}
+        autoFocus={true}
+      />
+      {!!productsList?.length && (
+        <View style={[styles.row, styles.resultsHeader]}>
+          <View style={styles.row}>
+            <Text
+              tx={
+                (params as any)?.title?.length > 0
+                  ? 'search.categoryTitle'
+                  : 'search.search-result-for'
+              }
+              variant="smallRegular"
             />
-          ) : (
-            <FlatList
-              key={'#'}
-              data={productsList}
-              keyExtractor={item => item?.Id}
-              contentContainerStyle={{
-                paddingHorizontal: spacing.medium - 2,
-              }}
-              numColumns={1}
-              renderItem={({item}) => (
-                <RowProductCard
+            <Text
+              text={` ${
+                (params as any)?.title?.length > 0
+                  ? (params as any)?.title
+                  : searchText
+              }`}
+              variant="smallBold"
+            />
+          </View>
+          <View style={[styles.row, styles.viewFilters]}>
+            <Pressable
+              style={[
+                styles.viewIconContainer,
+                {
+                  backgroundColor:
+                    viewType === 'list' ? colors.secondary : undefined,
+                  marginRight: 10,
+                },
+              ]}
+              onPress={() => showListHandler('list')}>
+              <Feather
+                name="list"
+                size={18}
+                color={viewType === 'list' ? colors.white : colors.grayMain}
+              />
+            </Pressable>
+            <Pressable
+              style={[
+                styles.viewIconContainer,
+                {
+                  backgroundColor:
+                    viewType === 'grid' ? colors.secondary : undefined,
+                },
+              ]}
+              onPress={() => showListHandler('grid')}>
+              <Ionicons
+                name="grid-outline"
+                size={18}
+                color={viewType === 'grid' ? colors.white : colors.grayMain}
+              />
+            </Pressable>
+          </View>
+        </View>
+      )}
+      {!!productsList?.length ? (
+        viewType === 'grid' ? (
+          <FlatList
+            key={'_'}
+            data={productsList}
+            keyExtractor={item => item?.Id}
+            contentContainerStyle={{
+              paddingTop: spacing.large,
+              paddingHorizontal: spacing.content,
+            }}
+            numColumns={2}
+            renderItem={({item, index}) => {
+              return (
+                <ProductCard
+                  styleContainer={{
+                    marginRight: index % 2 == 0 ? 10 : 0,
+                  }}
                   {...item}
-                  currency={currency}
                   WishlistEnabled={
                     productsModel && productsModel[0].WishlistEnabled
                   }
-                  SupportMultiWishlists={
-                    settings?.ShoppingCartSettings?.SupportMultiWishlists
-                  }
                 />
-              )}
-            />
-          )
+              );
+            }}
+          />
         ) : (
-          <View style={styles.emptySearchResultsContainer}>
-            {isSubmitted ? (
-              <>
-                <Octicons
-                  name="no-entry"
-                  color={colors.primary + 70}
-                  size={70}
-                />
-                <Text tx="search.no-search-results" />
-              </>
-            ) : (
-              <>
-                <Image source={LogoSplash} style={styles.emptyResultsLogo} />
-                <Text
-                  tx="search.start-searching"
-                  variant="largeBold"
-                  color={colors.black + 99}
-                />
-              </>
+          <FlatList
+            key={'#'}
+            data={productsList}
+            keyExtractor={item => item?.Id}
+            contentContainerStyle={{
+              paddingHorizontal: spacing.medium - 2,
+            }}
+            numColumns={1}
+            renderItem={({item}) => (
+              <RowProductCard
+                {...item}
+                currency={currency}
+                WishlistEnabled={
+                  productsModel && productsModel[0].WishlistEnabled
+                }
+                SupportMultiWishlists={
+                  settings?.ShoppingCartSettings?.SupportMultiWishlists
+                }
+              />
             )}
-          </View>
-        )}
-      </View>
-    </TouchableWithoutFeedback>
+          />
+        )
+      ) : (
+        <View style={styles.emptySearchResultsContainer}>
+          {isSubmitted ? (
+            <>
+              <Octicons name="no-entry" color={colors.primary + 70} size={70} />
+              <Text tx="search.no-search-results" />
+            </>
+          ) : (
+            <>
+              <Image source={LogoSplash} style={styles.emptyResultsLogo} />
+              <Text
+                tx="search.start-searching"
+                variant="largeBold"
+                color={colors.black + 99}
+              />
+            </>
+          )}
+        </View>
+      )}
+    </View>
   );
 };
 
