@@ -16,7 +16,8 @@ const StoresStack = () => {
         headerTitleStyle: {fontFamily: font.regular, color: colors.white},
         headerTitle: t('screens-tabs.stores'),
         headerTitleAlign: 'center',
-      }}>
+      }}
+      initialRouteName="Stores">
       <Stack.Screen component={StoresScreen} name="Stores" />
       <Stack.Screen
         options={{headerShown: false}}
