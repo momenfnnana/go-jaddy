@@ -84,7 +84,7 @@
     "cancel": "Cancel",
     "select-country": "Select country",
     "Palestine": "Palestine",
-    "Israel": "Israel"
+    "occupied-palestinian-lands": "Occupied Palestinian lands"
   },
   "carasoule": {
     "name": "clothes title goes here"
@@ -188,6 +188,7 @@
     "discountCode": "do you have discount code?",
     "useDiscountCode": "use discount code",
     "submitBtn": "request done",
+    "continue-request": "Continue request",
     "total": "Total ({{currency}})",
     "discountPlaceholder": "discount code",
     "added-successfull": "Added successfully"

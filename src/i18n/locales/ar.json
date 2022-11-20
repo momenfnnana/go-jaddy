@@ -159,6 +159,7 @@
     "discountCode": "هل لديك كود خصم؟",
     "useDiscountCode": "استخدم كود خصم",
     "submitBtn": "اتمام الطلب",
+    "continue-request": "اتمام الطلب",
     "total": "الاجمالي ({{currency}})",
     "discountPlaceholder": "كود الخصم",
     "added-successfull": "تم إضافة المنتج بنجاح"
@@ -186,7 +187,7 @@
     "cancel": "تراجع",
     "select-country": "اختر الدولة",
     "Palestine": "فلسطين",
-    "Israel": "اسرائيل",
+    "occupied-palestinian-lands": "الاراضي الفلسطينية المحتلة",
     "oldPassword": "كلمة السر القديمة",
     "see-more": "عرض المزيد",
     "firstName": "الاسم الأول",
