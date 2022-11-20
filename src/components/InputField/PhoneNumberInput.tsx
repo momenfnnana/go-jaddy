@@ -17,7 +17,7 @@ import CountryPicker from 'components/CountryPicker';
 export interface IFlag {
   imageUrl: ImageSourcePropType;
   introructionNumber: string;
-  countryName: 'Palestine' | 'Israel';
+  countryName: 'Palestine' | 'occupied-palestinian-lands';
 }
 interface IPhoneNumberInput extends IInputField {
   value: string;
@@ -37,7 +37,7 @@ const flags: IFlag[] = [
   {
     imageUrl: PalestineFlag,
     introructionNumber: '972',
-    countryName: 'Israel',
+    countryName: 'occupied-palestinian-lands',
   },
 ];
 
@@ -85,7 +85,7 @@ const PhoneNumberInput = ({
             <Image
               source={selectedFlag.imageUrl}
               style={[styles.flag, styles.introNumber]}
-              resizeMode="center"
+              resizeMode="contain"
             />
           </Pressable>
         }

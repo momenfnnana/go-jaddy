@@ -2,7 +2,8 @@ import React from 'react';
 import {View, Pressable, Image, StyleSheet} from 'react-native';
 import {Modal, Text} from 'components';
 import {colors, spacing} from 'theme';
-import {ICON_WIDTH, IFlag} from 'screens/Onboading/Login/Login';
+import {ICON_WIDTH} from 'screens/Onboading/Login/Login';
+import {IFlag} from 'components/InputField/PhoneNumberInput';
 
 const SIZE = 18;
 interface ICountryPicker {
@@ -48,7 +49,7 @@ const CountryPicker = ({
             <Image
               source={item.imageUrl}
               style={[styles.flag, styles.introNumber]}
-              resizeMode="center"
+              resizeMode="contain"
             />
           </View>
         </Pressable>
