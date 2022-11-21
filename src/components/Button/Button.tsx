@@ -29,14 +29,18 @@ const Button: React.FC<buttomProps> = ({
   textVariant = 'largeBold',
   textStyle,
 }) => {
+  const primaryColor = disabled ? colors.blue + 80 : colors.blue;
+
   return (
     <Pressable
       onPress={onPress}
       style={StyleSheet.flatten([
         styles.pressable,
         {
-          backgroundColor: variant !== 'Secondary' ? colors.blue : colors.white,
-          borderColor: variant !== 'Secondary' ? colors.blue : colors.secondary,
+          backgroundColor:
+            variant !== 'Secondary' ? primaryColor : colors.white,
+          borderColor:
+            variant !== 'Secondary' ? primaryColor : colors.secondary,
           borderWidth: 1,
         },
         style,

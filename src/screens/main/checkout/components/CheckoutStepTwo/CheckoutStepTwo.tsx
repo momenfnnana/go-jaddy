@@ -24,15 +24,11 @@ import {IAddress} from 'types';
 
 interface ICheckoutStepTwo extends ICheckoutStep {
   selectedAddress: IAddress;
-  setShippingMethod: (value: any) => void;
-  setShippingAddress: (address: IAddress) => void;
 }
 
 const CheckoutStepTwo = ({
   setActiveStep,
   selectedAddress,
-  setShippingMethod,
-  setShippingAddress,
 }: ICheckoutStepTwo) => {
   const [selectedMethod, setselectedMethod] = useState<any>({});
   const [isSameAddress, setSameAddress] = useState<boolean>(true);
@@ -46,7 +42,6 @@ const CheckoutStepTwo = ({
   const {mutate: mutateSelectAddress, isLoading: isLoadingSelectAddress} =
     useMutation(selectBillingAddress, {
       onSuccess: data => {
-        setShippingMethod(selectedMethod);
         setActiveStep(3);
         return data;
       },
@@ -57,7 +52,6 @@ const CheckoutStepTwo = ({
   } = useMutation(selectShippingMethod, {
     onSuccess: data => {
       if (isSameAddress && selectedAddress.Id) {
-        setShippingAddress(selectedAddress);
         mutateSelectAddress({
           addressId: selectedAddress.Id,
           isBillingAddress: false,
@@ -69,9 +63,6 @@ const CheckoutStepTwo = ({
     },
   });
   const handleSubmit = (address: IAddress) => {
-    if (address) {
-      setShippingAddress(address);
-    }
     mutateSelectShippingMethod({
       Name: selectedMethod.Name,
       ShippingRateComputationMethodSystemName:

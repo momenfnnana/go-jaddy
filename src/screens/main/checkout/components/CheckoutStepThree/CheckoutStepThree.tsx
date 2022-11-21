@@ -14,13 +14,7 @@ import {ICheckoutStep} from '..';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {getPaymentMethods, selectPaymentMethod} from 'services/Checkout';
 
-interface ICheckoutStepThree extends ICheckoutStep {
-  setPaymentMethod: (data: any) => void;
-}
-const CheckoutStepThree = ({
-  setActiveStep,
-  setPaymentMethod,
-}: ICheckoutStepThree) => {
+const CheckoutStepThree = ({setActiveStep}: ICheckoutStep) => {
   const [selectedOption, setSelectedOption] = useState<any>({});
   const {data, isLoading} = useQuery(['getPaymentMethods'], getPaymentMethods, {
     onSuccess: data => {
@@ -32,7 +26,6 @@ const CheckoutStepThree = ({
     selectPaymentMethod,
     {
       onSuccess: data => {
-        setPaymentMethod(selectedOption);
         setActiveStep(4);
         return data;
       },

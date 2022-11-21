@@ -1,5 +1,5 @@
-import {StyleSheet, View, ViewStyle} from 'react-native';
 import React, {FC, ReactNode, useMemo} from 'react';
+import {Pressable, StyleSheet, View, ViewStyle} from 'react-native';
 import {
   PaymentMethods,
   PaymentConfirmation,
@@ -10,14 +10,17 @@ import {colors, spacing} from 'theme';
 interface ICheckoutStepsContainer {
   containerStyle?: ViewStyle | ViewStyle[];
   activeStep: number;
+  setActiveStep: (value: number) => void;
 }
 interface IStepContainer {
   children: ReactNode;
   isActive: boolean;
+  onPress: () => void;
 }
 
-const StepContainer = ({children, isActive}: IStepContainer) => (
-  <View
+const StepContainer = ({children, isActive, onPress}: IStepContainer) => (
+  <Pressable
+    onPress={onPress}
     style={[
       styles.stepContainer,
       {
@@ -26,11 +29,12 @@ const StepContainer = ({children, isActive}: IStepContainer) => (
       },
     ]}>
     {children}
-  </View>
+  </Pressable>
 );
 const CheckoutStepsContainer: FC<ICheckoutStepsContainer> = ({
   containerStyle,
   activeStep,
+  setActiveStep,
 }) => {
   const isActive = useMemo(() => {
     return {
@@ -42,22 +46,30 @@ const CheckoutStepsContainer: FC<ICheckoutStepsContainer> = ({
   }, [activeStep]);
   return (
     <View style={[styles.containerStyle, containerStyle]}>
-      <StepContainer isActive={isActive.firstStep}>
+      <StepContainer
+        isActive={isActive.firstStep}
+        onPress={() => setActiveStep(1)}>
         <PaymentAddress
           stroke={isActive.firstStep ? colors.white : colors.black}
         />
       </StepContainer>
-      <StepContainer isActive={isActive.secondStep}>
+      <StepContainer
+        isActive={isActive.secondStep}
+        onPress={() => setActiveStep(2)}>
         <PaymentShippingAddress
           stroke={isActive.secondStep ? colors.white : colors.black}
         />
       </StepContainer>
-      <StepContainer isActive={isActive.thirdStep}>
+      <StepContainer
+        isActive={isActive.thirdStep}
+        onPress={() => setActiveStep(3)}>
         <PaymentMethods
           stroke={isActive.thirdStep ? colors.white : colors.black}
         />
       </StepContainer>
-      <StepContainer isActive={isActive.fourthStep}>
+      <StepContainer
+        isActive={isActive.fourthStep}
+        onPress={() => setActiveStep(4)}>
         <PaymentConfirmation
           stroke={isActive.fourthStep ? colors.white : colors.black}
         />

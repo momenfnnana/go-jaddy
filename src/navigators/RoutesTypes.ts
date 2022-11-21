@@ -9,8 +9,8 @@ export type BottomTabsRoutes = {
   HomeStack: HomeRoutes;
   CategoriesStack: CategotyRoutes;
   CategoryDetails: {title: ''; id: -1};
-  StoresStack: undefined;
-  Cart: undefined;
+  StoresStack: StoresRoutes;
+  Cart: CartRoutes;
   Profile: ProfileRoutes;
 };
 

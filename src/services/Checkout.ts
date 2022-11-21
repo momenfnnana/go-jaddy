@@ -13,6 +13,9 @@ interface ISelectShippingMethod {
 interface ISelectPaymentMethod {
   paymentMethod: string;
 }
+interface ISubmitOrder {
+  customerComments: string;
+}
 
 export const getCheckoutAddresses = () => {
   return axios.get(`${BASE_URL}/api/custom/checkout/GetAddresses`);
@@ -47,5 +50,11 @@ export const getPaymentMethods = () => {
 export const selectPaymentMethod = ({paymentMethod}: ISelectPaymentMethod) => {
   return axios.post(
     `${BASE_URL}/api/custom/checkout/SelectPaymentMethod?paymentMethod=${paymentMethod}`,
+  );
+};
+
+export const submitOrder = ({customerComments}: ISubmitOrder) => {
+  return axios.post(
+    `${BASE_URL}/api/custom/checkout/SubmitOrder?customerComments=${customerComments}`,
   );
 };

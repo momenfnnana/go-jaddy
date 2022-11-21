@@ -95,6 +95,7 @@ type AddAddressNavigationProp = NativeStackNavigationProp<
   'AddAddress'
 >;
 type AddAddressRouteProp = RouteProp<ProfileRoutes, 'AddAddress'>;
+type ContinueStepsRouteProp = RouteProp<CartRoutes, 'ContinueOrderSteps'>;
 
 type OrdersNavigationProp = NativeStackNavigationProp<
   ProfileRoutes,
@@ -145,4 +146,5 @@ export type {
   OrdersDetailsRouteProp,
   OrdersNavigationProp,
   SearchScreenNavigationProp,
+  ContinueStepsRouteProp,
 };

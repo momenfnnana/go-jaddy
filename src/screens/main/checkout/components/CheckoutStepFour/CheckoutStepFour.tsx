@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -6,43 +6,48 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Pressable,
+  FlatList,
+  Image,
 } from 'react-native';
-import {colors, spacing} from 'theme';
-import {Button, InputField, Text} from 'components';
+import {colors, font, spacing} from 'theme';
+import {Button, InputField, Loader, Text} from 'components';
 import {Switch} from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {ICheckoutStep} from '..';
-import {IAddress} from 'types';
-import {UserContext} from 'context/UserContext';
-
-interface ICheckoutStepFour extends ICheckoutStep {
-  shippingMethod: any;
-  paymentMethod: any;
-  paymentAddress: IAddress;
-  shippingAddress: IAddress;
-}
+import {useMutation, useQuery} from '@tanstack/react-query';
+import {getCartProducts, getCartSummary} from 'services/Cart';
+import {useCurrency} from 'hook/useCurrency';
+import {LogoSplash} from 'assets/images';
+import {BASE_URL} from 'utils/Axios';
+import {submitOrder} from 'services/Checkout';
+import {CommonActions} from '@react-navigation/native';
 
 const borderColor = colors.reloadColor;
 
 const Line = () => <View style={styles.line} />;
 
-const CheckoutStepFour = ({
-  shippingMethod,
-  paymentMethod,
-  paymentAddress,
-  shippingAddress,
-}: ICheckoutStepFour) => {
-  const {userData} = useContext(UserContext);
+const CheckoutStepFour = () => {
+  const {currency} = useCurrency();
+  const {data: CartData, isLoading: isLoadingCart} = useQuery(
+    ['cartProducts'],
+    getCartProducts,
+  );
+  const {data: summaryData, isLoading: isLoadingSummary} = useQuery(
+    ['applyCartSummary'],
+    getCartSummary,
+  );
+  const {mutate, isLoading: isLoadingSubmitOrder} = useMutation(submitOrder, {
+    onSuccess: () => {
+      // navigate to home or orders
+      CommonActions.reset({
+        index: 1,
+        routes: [{name: 'HomeStack', params: {screen: 'Home'}}],
+      });
+    },
+  });
 
   const [isDefualt, setDefualt] = useState<boolean>(false);
   const [tellUs, setTellUs] = useState<string>('');
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
-  console.log({
-    // shippingMethod
-    // paymentMethod
-    // , paymentMethod, paymentAddress, shippingAddress
-    paymentAddress,
-  });
 
   const onConfirmPayment = () => {
     console.log('onConfirmPayment');
@@ -53,6 +58,19 @@ const CheckoutStepFour = ({
   const onPressConfirm = () => {
     setIsConfirmed(currentValue => !currentValue);
   };
+  const oSubmit = () => {
+    mutate({customerComments: tellUs});
+  };
+  if (isLoadingCart || isLoadingSummary) {
+    return <Loader />;
+  }
+
+  const BillingAddress = CartData?.data?.OrderReviewData?.BillingAddress;
+  const ShippingAddress = CartData?.data?.OrderReviewData?.ShippingAddress;
+  const ShippingMethod = CartData?.data?.OrderReviewData?.ShippingMethod;
+  const PaymentMethod = CartData?.data?.OrderReviewData?.PaymentMethod;
+  const CartSummary = summaryData?.data;
+
   return (
     <ScrollView style={{zIndex: -1}}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -68,7 +86,7 @@ const CheckoutStepFour = ({
                 color={colors.tabsColor + 50}
               />
               <Text
-                text={shippingMethod.Name}
+                text={ShippingMethod}
                 color={colors.primary}
                 variant="mediumBold"
               />
@@ -83,7 +101,7 @@ const CheckoutStepFour = ({
                 color={colors.tabsColor + 50}
               />
               <Text
-                text={paymentMethod.Name}
+                text={PaymentMethod}
                 color={colors.primary}
                 variant="mediumBold"
               />
@@ -95,35 +113,246 @@ const CheckoutStepFour = ({
               color={colors.tabsColor + 60}
               style={{marginVertical: spacing.medium}}
             />
-            <Text text={`${userData.FirstName} ${userData.LastName}`} />
-            <Text text="دولة فلسطين,رام الله, البيرة" />
-            <Text text="0590000000" />
-            <Text text="test@test.email" />
+            <Text
+              text={`${BillingAddress.FirstName} ${BillingAddress.LastName}`}
+            />
+            <Text
+              text={`${BillingAddress.CountryName} ${BillingAddress.City}`}
+            />
+            <Text text={BillingAddress.PhoneNumber} />
+            <Text text={BillingAddress.Email} />
             <Text
               tx="checkout.shipping-address"
               color={colors.tabsColor + 60}
               style={{marginVertical: spacing.medium}}
             />
-            <Text text={`${userData.FirstName} ${userData.LastName}`} />
-            <Text text="دولة فلسطين,رام الله, البيرة" />
-            <Text text="0590000000" />
-            <Text text="test@test.email" />
-          </View>
-          <View style={styles.selectGiftContainer}>
-            <View style={styles.defualtContainer}>
-              <Switch
-                value={isDefualt}
-                onValueChange={() => setDefualt(!isDefualt)}
-                color={colors.primary}
-                style={{transform: [{scale: 0.7}]}}
-              />
+            <Text
+              text={`${ShippingAddress.FirstName} ${ShippingAddress.LastName}`}
+            />
+            <Text
+              text={`${ShippingAddress.CountryName} ${ShippingAddress.City}`}
+            />
+            <Text text={ShippingAddress.PhoneNumber} />
+            <Text text={ShippingAddress.Email} />
+            <Text
+              tx="modal.BillTitle"
+              variant="smallRegular"
+              color="#12121260"
+              style={{marginVertical: spacing.medium}}
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                paddingBottom: 10,
+                borderBottomWidth: 0.5,
+                borderBottomColor: colors.border,
+              }}>
+              <Text variant="mediumRegular" tx="modal.price" />
               <Text
-                tx="checkout.choose-gift"
-                variant="xSmallBold"
-                style={{marginHorizontal: 10}}
+                variant="mediumRegular"
+                text={`${CartSummary?.OrderTotal || 0} ${currency?.Symbol}`}
               />
             </View>
+            {CartSummary.DisplayTax && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  paddingBottom: 10,
+                  borderBottomWidth: 0.5,
+                  borderBottomColor: colors.border,
+                  marginTop: 10,
+                }}>
+                <Text variant="mediumRegular" tx="modal.tax" />
+                <Text
+                  variant="mediumRegular"
+                  text={CartSummary?.Tax?.toString()}
+                />
+              </View>
+            )}
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                paddingBottom: 10,
+                borderBottomWidth: 0.5,
+                borderBottomColor: colors.border,
+                marginTop: 20,
+              }}>
+              <Text variant="mediumRegular" tx="orderDetails.shipping-fee" />
+              <Text
+                variant="mediumRegular"
+                text={CartSummary?.Shipping.toString()}
+              />
+            </View>
+            {CartSummary?.IsDiscountApplied && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  paddingBottom: 10,
+                  borderBottomWidth: 0.5,
+                  borderBottomColor: colors.border,
+                  marginTop: 10,
+                }}>
+                <Text variant="mediumRegular" tx="modal.DiscoundCode" />
+                <Text
+                  variant="mediumRegular"
+                  text={CartSummary?.Shipping.toString()}
+                />
+              </View>
+            )}
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                paddingBottom: 20,
+                marginTop: 10,
+              }}>
+              <Text
+                variant="mediumBold"
+                color={colors.secondary}
+                tx="modal.total"
+                txOptions={{currencySymbol: currency?.Symbol}}
+              />
+              <Text
+                variant="mediumBold"
+                color={colors.secondary}
+                text={`${CartSummary.OrderTotal?.toString()} ${
+                  currency?.Symbol
+                }`}
+              />
+            </View>
+
+            <Text
+              tx="orderDetails.products-list"
+              variant="smallRegular"
+              color="#12121260"
+              style={{marginBottom: spacing.small}}
+            />
+            <FlatList
+              data={CartData?.data?.Items}
+              keyExtractor={(i, _) => _.toString()}
+              renderItem={({item}) => (
+                <View
+                  style={{
+                    marginBottom: spacing.small,
+                    backgroundColor: colors.white,
+                    padding: spacing.medium,
+                    borderRadius: spacing.small,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    source={
+                      item?.Image?.Id === 0
+                        ? LogoSplash
+                        : {uri: `${BASE_URL}${item?.Image?.Url}`}
+                    }
+                    style={{
+                      opacity: item?.Image?.Id === 0 ? 0.5 : 1,
+                      borderRadius: spacing.small,
+                      backgroundColor: colors.white,
+                      height: 75,
+                      width: 90,
+                      marginRight: spacing.small,
+                    }}
+                    resizeMode="contain"
+                  />
+                  <View style={{flex: 1}}>
+                    <Text
+                      text={item?.ProductName}
+                      variant="mediumBold"
+                      style={{marginBottom: spacing.tiny}}
+                    />
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Text
+                          text={item?.SubTotal + ' ' + currency?.Symbol}
+                          color={colors.secondary}
+                          variant="mediumExtraBold"
+                          style={{marginRight: spacing.tiny}}
+                        />
+                        <Text
+                          text={'×' + ' ' + item?.EnteredQuantity}
+                          color={colors.primary}
+                          variant="mediumExtraBold"
+                        />
+                      </View>
+                      {!!item?.AttributesSelection?.length &&
+                        item?.AttributesSelection.map(
+                          (_: any, index: number) => (
+                            <View
+                              style={{
+                                width: 70,
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundColor: 'transparent',
+                              }}
+                              key={index.toString()}>
+                              <Text
+                                text={_?.AttributeType}
+                                variant="xSmallBold"
+                                style={{
+                                  borderRadius: spacing.medium + 2,
+                                  borderWidth: 1,
+                                  borderColor: colors.reloadColor,
+                                  flex: 1,
+                                  paddingVertical: spacing.tiny,
+                                  backgroundColor: colors.white,
+                                }}
+                                center
+                              />
+                              <View
+                                style={{
+                                  backgroundColor: '#000' || _?.AttributeValue,
+                                  width: 27,
+                                  height: 27,
+                                  borderRadius: 27 * 0.5,
+                                  left: -10,
+                                  zIndex: -1,
+                                }}
+                              />
+                            </View>
+                          ),
+                        )}
+                    </View>
+                    {item?.AllowPackageAsGift && (
+                      <View style={styles.selectGiftContainer}>
+                        <View style={styles.defualtContainer}>
+                          <Switch
+                            value={isDefualt}
+                            onValueChange={() => setDefualt(!isDefualt)}
+                            color={colors.primary}
+                            style={{transform: [{scale: 0.7}]}}
+                          />
+                          <Text
+                            tx="checkout.choose-gift"
+                            variant="xSmallBold"
+                            style={{marginHorizontal: 10}}
+                          />
+                        </View>
+                      </View>
+                    )}
+                  </View>
+                </View>
+              )}
+            />
           </View>
+
           <View style={styles.confirmOrderHints}>
             <Text style={styles.confirmHintText}>
               <Text
@@ -175,11 +404,14 @@ const CheckoutStepFour = ({
               placeholder="checkout.want-tell-us"
               value={tellUs}
               onChangeText={setTellUs}
+              style={{fontSize: font.size.small, marginBottom: spacing.large}}
             />
             <Button
-              onPress={() => {}}
+              onPress={oSubmit}
               style={{marginBottom: 10}}
               title="checkout.confirm-payment"
+              disabled={!isConfirmed}
+              isLoading={isLoadingSubmitOrder}
             />
           </View>
         </View>
