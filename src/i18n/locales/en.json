@@ -302,7 +302,8 @@
     "DiscoundCode": "Discound Code",
     "total": "Total({{currencySymbol}})",
     "tax": "Tax",
-    "submitTotalModal": "Done Requset"
+    "submitTotalModal": "Done Requset",
+    "price": "Price"
   },
   "EmptyPage": {
     "product-description": "go to home to discover products",
