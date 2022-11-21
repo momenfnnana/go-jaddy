@@ -16,6 +16,7 @@ import CategoriesStack from './CategoryStack';
 import StoresStack from './StoresStack';
 import ProfileStack from './ProfileStack';
 import CartStack from './CartStack';
+import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 
 interface IUser {
   id: string;
@@ -33,12 +34,19 @@ const BottomTabs = () => {
 
   return (
     <Tab.Navigator
-      screenOptions={() => ({
+      screenOptions={({route}) => ({
         tabBarActiveTintColor: colors.danger,
         tabBarInactiveTintColor: colors.gray[800],
         tabBarHideOnKeyboard: true,
         tabBarLabelStyle: {fontFamily: font.regular},
         headerShown: false,
+        tabBarStyle: (route => {
+          const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+          if (routeName === 'FiltersScreen') {
+            return {display: 'none'};
+          }
+          return;
+        })(route),
       })}>
       <Tab.Screen
         name="HomeStack"

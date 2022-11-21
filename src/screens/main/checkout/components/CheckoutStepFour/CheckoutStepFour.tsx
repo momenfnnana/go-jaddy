@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -11,14 +11,39 @@ import {colors, spacing} from 'theme';
 import {Button, InputField, Text} from 'components';
 import {Switch} from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {ICheckoutStep} from '..';
+import {IAddress} from 'types';
+import {UserContext} from 'context/UserContext';
+
+interface ICheckoutStepFour extends ICheckoutStep {
+  shippingMethod: any;
+  paymentMethod: any;
+  paymentAddress: IAddress;
+  shippingAddress: IAddress;
+}
 
 const borderColor = colors.reloadColor;
 
 const Line = () => <View style={styles.line} />;
-const CheckoutStepFour = () => {
+
+const CheckoutStepFour = ({
+  shippingMethod,
+  paymentMethod,
+  paymentAddress,
+  shippingAddress,
+}: ICheckoutStepFour) => {
+  const {userData} = useContext(UserContext);
+
   const [isDefualt, setDefualt] = useState<boolean>(false);
   const [tellUs, setTellUs] = useState<string>('');
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
+  console.log({
+    // shippingMethod
+    // paymentMethod
+    // , paymentMethod, paymentAddress, shippingAddress
+    paymentAddress,
+  });
+
   const onConfirmPayment = () => {
     console.log('onConfirmPayment');
   };
@@ -43,7 +68,7 @@ const CheckoutStepFour = () => {
                 color={colors.tabsColor + 50}
               />
               <Text
-                text="استلام من المتجر"
+                text={shippingMethod.Name}
                 color={colors.primary}
                 variant="mediumBold"
               />
@@ -58,7 +83,7 @@ const CheckoutStepFour = () => {
                 color={colors.tabsColor + 50}
               />
               <Text
-                text="الدفع بالنقاط"
+                text={paymentMethod.Name}
                 color={colors.primary}
                 variant="mediumBold"
               />
@@ -70,7 +95,7 @@ const CheckoutStepFour = () => {
               color={colors.tabsColor + 60}
               style={{marginVertical: spacing.medium}}
             />
-            <Text text="أحمد بسام" />
+            <Text text={`${userData.FirstName} ${userData.LastName}`} />
             <Text text="دولة فلسطين,رام الله, البيرة" />
             <Text text="0590000000" />
             <Text text="test@test.email" />
@@ -79,7 +104,7 @@ const CheckoutStepFour = () => {
               color={colors.tabsColor + 60}
               style={{marginVertical: spacing.medium}}
             />
-            <Text text="أحمد بسام" />
+            <Text text={`${userData.FirstName} ${userData.LastName}`} />
             <Text text="دولة فلسطين,رام الله, البيرة" />
             <Text text="0590000000" />
             <Text text="test@test.email" />

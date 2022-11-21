@@ -113,7 +113,13 @@ const Cart = () => {
     setUsedPoints(!isUsedPoints);
   };
   const onSubmit = () => {
-    navigate('ContinueOrderSteps');
+    navigate('ContinueOrderSteps', {
+      skip: {
+        SkipAddressesStep: data.SkipAddressesStep,
+        SkipPaymentStep: data.SkipPaymentStep,
+        SkipShippingStep: data.SkipShippingStep,
+      },
+    });
   };
 
   useEffect(() => {
@@ -165,8 +171,6 @@ const Cart = () => {
       return data?.Items;
     }
   };
-
-  console.log({first: data?.RewardPoints});
 
   return (
     <View style={{flex: 1}}>

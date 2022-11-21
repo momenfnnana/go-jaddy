@@ -18,6 +18,7 @@ export {
   ContinueOrderStepsScreen,
   OrdersListScreen,
   OrdersDetailsScreen,
+  FiltersScreen,
 } from './main';
 export {
   OnboardingScreen,

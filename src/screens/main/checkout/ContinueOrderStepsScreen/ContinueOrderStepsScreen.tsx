@@ -1,3 +1,4 @@
+import {useRoute} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {colors} from 'theme';
@@ -11,10 +12,12 @@ import {
 } from '../components';
 
 const ContinueOrderStepsScreen = () => {
-  const [activeStep, setActiveStep] = useState<number>(2);
+  // const {} = useRoute();
+  const [activeStep, setActiveStep] = useState<number>(1);
   const [paymentAddress, setPaymentAddress] = useState<IAddress>({});
   const [shippingAddress, setShippingAddress] = useState<IAddress>({});
-  const [shippingMethod, setShippingMethod] = useState<IAddress>({});
+  const [shippingMethod, setShippingMethod] = useState<any>({});
+  const [paymentMethod, setPaymentMethod] = useState<any>({});
 
   const renderSection = (activeStep: number) => {
     switch (activeStep) {
@@ -37,10 +40,22 @@ const ContinueOrderStepsScreen = () => {
         );
         break;
       case 3:
-        return <CheckoutStepThree setActiveStep={setActiveStep} />;
+        return (
+          <CheckoutStepThree
+            setActiveStep={setActiveStep}
+            setPaymentMethod={setPaymentMethod}
+          />
+        );
         break;
       case 4:
-        return <CheckoutStepFour />;
+        return (
+          <CheckoutStepFour
+            shippingMethod={shippingMethod}
+            paymentMethod={paymentMethod}
+            paymentAddress={paymentAddress}
+            shippingAddress={shippingAddress}
+          />
+        );
         break;
       default:
       // code block

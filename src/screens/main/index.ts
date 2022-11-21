@@ -17,3 +17,4 @@ export {default as WishlistDetails} from './WishlistDetails';
 export {ContinueOrderStepsScreen} from './checkout';
 export {default as OrdersListScreen} from './OrdersList';
 export {default as OrdersDetailsScreen} from './OrderDetails';
+export {default as FiltersScreen} from './Filters';
