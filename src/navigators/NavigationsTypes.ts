@@ -75,6 +75,11 @@ type ProfileScreenNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<ProfileRoutes, 'Profile'>
 >;
 
+type SearchScreenNavigationProp = NativeStackNavigationProp<
+  HomeRoutes,
+  'SearchScreen'
+>;
+
 type WishlistScreenNavigationProp = NativeStackNavigationProp<
   ProfileRoutes,
   'WishList'
@@ -139,4 +144,5 @@ export type {
   OrdersRouteProp,
   OrdersDetailsRouteProp,
   OrdersNavigationProp,
+  SearchScreenNavigationProp,
 };

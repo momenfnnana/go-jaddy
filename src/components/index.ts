@@ -22,3 +22,5 @@ export {default as ProgressiveImage} from './ProgressiveImage';
 export {default as CountryPicker} from './CountryPicker';
 export {default as AddressItem} from './AddressItem';
 export {default as AddAddressComponent} from './AddAddressComponent';
+export {default as CloseButton} from './CloseButton';
+export {default as CartButton} from './CartButton';

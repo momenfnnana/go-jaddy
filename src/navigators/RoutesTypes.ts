@@ -18,7 +18,16 @@ export type HomeRoutes = {
   Home: undefined;
   ProductDetails: IProductInterface;
   SearchScreen: ISearchInterface;
+  FiltersScreen: undefined;
 };
+
+export interface IContinueOrderSteps {
+  skip: {
+    SkipAddressesStep: boolean;
+    SkipPaymentStep: boolean;
+    SkipShippingStep: boolean;
+  };
+}
 
 interface CategoryParams {
   title: string;
@@ -35,7 +44,7 @@ export type CategotyRoutes = {
 
 export type CartRoutes = {
   Cart: undefined;
-  ContinueOrderSteps: undefined;
+  ContinueOrderSteps: IContinueOrderSteps;
 };
 
 export type StoresRoutes = {

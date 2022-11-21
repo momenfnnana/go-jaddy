@@ -6,6 +6,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {FilterIcon} from 'assets/icons';
 import {SearchInput} from './components';
 import BackButton from 'components/BackButton';
+import {useNavigation} from '@react-navigation/native';
+import { SearchScreenNavigationProp } from 'navigators/NavigationsTypes';
 
 const GO_BACK_SIZE = 36;
 const ICON_SIZE = 20;
@@ -32,9 +34,13 @@ const SearchHeader = ({
   placeholder = 'search.search-input',
 }: ISearchHeader) => {
   const {top} = useSafeAreaInsets();
-  const topSpace = useMemo(()=>{
-    return top
-  },[])
+  const {navigate} = useNavigation<SearchScreenNavigationProp>();
+  const topSpace = useMemo(() => {
+    return top;
+  }, []);
+  const onPressFilter = () => {
+    navigate('FiltersScreen');
+  };
   return (
     <View
       style={{
@@ -58,7 +64,7 @@ const SearchHeader = ({
           search
           rightIcon={
             filterIcon && (
-              <Pressable style={styles.filterContainer}>
+              <Pressable onPress={onPressFilter} style={styles.filterContainer}>
                 <FilterIcon />
               </Pressable>
             )
