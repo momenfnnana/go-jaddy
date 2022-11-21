@@ -41,7 +41,7 @@ const Cart = () => {
   const {navigate} = useNavigation<CartScreenNavigationProp>();
   const {updateProducts} = useContext(UserContext);
   const {isLogged} = useLogged();
-  const {isLoading, isFetching, isRefetching, isError} = useQuery(
+  const {isLoading, isFetching, isRefetching, isError, refetch} = useQuery(
     ['cartProducts'],
     getCartProducts,
     {
@@ -125,6 +125,8 @@ const Cart = () => {
           setLocalData(cartArray);
         }
       })();
+    } else {
+      refetch();
     }
   }, [isLogged, updateProducts]);
 
