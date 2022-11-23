@@ -8,6 +8,8 @@ import {
   SupporMessangerIcon,
 } from 'assets/icons';
 import {UserContext} from 'context/UserContext';
+import {useNavigation} from '@react-navigation/native';
+import {ProfileScreenNavigationProp} from 'navigators/NavigationsTypes';
 enum linkHandlerTypes {
   phone,
   support,
@@ -15,6 +17,7 @@ enum linkHandlerTypes {
 }
 const WantTalkSection = () => {
   const {settings} = useContext(UserContext);
+  const {navigate} = useNavigation<ProfileScreenNavigationProp>();
   const onPress = (value: linkHandlerTypes) => {
     if (value === linkHandlerTypes.phone) {
       return Linking.openURL(`tel:${settings?.GlobalSettings?.PhoneNumber}`);
@@ -25,6 +28,9 @@ const WantTalkSection = () => {
         `mailto:${settings?.GlobalSettings?.EmailAddress}`,
       );
     }
+  };
+  const onPressSupport = () => {
+    navigate('ContactUsScreen');
   };
   return (
     <View style={styles.container}>
@@ -44,9 +50,7 @@ const WantTalkSection = () => {
             style={styles.supportText}
           />
         </Pressable>
-        <Pressable
-          onPress={() => onPress(linkHandlerTypes.support)}
-          style={styles.supportItemContainer}>
+        <Pressable onPress={onPressSupport} style={styles.supportItemContainer}>
           <SupporMessangerIcon />
           <Text
             tx="profile.support"
