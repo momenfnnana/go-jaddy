@@ -19,14 +19,18 @@ import {useCurrency} from 'hook/useCurrency';
 import {LogoSplash} from 'assets/images';
 import {BASE_URL} from 'utils/Axios';
 import {submitOrder} from 'services/Checkout';
-import {CommonActions} from '@react-navigation/native';
+import {CommonActions, useNavigation} from '@react-navigation/native';
 
 const borderColor = colors.reloadColor;
 
 const Line = () => <View style={styles.line} />;
 
 const CheckoutStepFour = () => {
+  const {dispatch} = useNavigation();
   const {currency} = useCurrency();
+  const [selectedGifts, setSelectedGifts] = useState<any[]>([]);
+  const [tellUs, setTellUs] = useState<string>('');
+  const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
   const {data: CartData, isLoading: isLoadingCart} = useQuery(
     ['cartProducts'],
     getCartProducts,
@@ -37,17 +41,14 @@ const CheckoutStepFour = () => {
   );
   const {mutate, isLoading: isLoadingSubmitOrder} = useMutation(submitOrder, {
     onSuccess: () => {
-      // navigate to home or orders
-      CommonActions.reset({
-        index: 1,
-        routes: [{name: 'HomeStack', params: {screen: 'Home'}}],
-      });
+      dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{name: 'HomeStack', params: {screen: 'Home'}}],
+        }),
+      );
     },
   });
-
-  const [isDefualt, setDefualt] = useState<boolean>(false);
-  const [tellUs, setTellUs] = useState<string>('');
-  const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
 
   const onConfirmPayment = () => {
     console.log('onConfirmPayment');
@@ -58,8 +59,21 @@ const CheckoutStepFour = () => {
   const onPressConfirm = () => {
     setIsConfirmed(currentValue => !currentValue);
   };
-  const oSubmit = () => {
-    mutate({customerComments: tellUs});
+
+  const onSubmit = () => {
+    const itemsIds = selectedGifts.map(item => {
+      return item.Id;
+    });
+    mutate({customerComments: tellUs, packageAsGift: itemsIds.join()});
+  };
+  const selectGiftHandler = (item: any) => {
+    const foundedItem = selectedGifts.includes(item);
+    if (foundedItem) {
+      const filteredData = selectedGifts.filter(element => element !== item);
+      setSelectedGifts(filteredData);
+    } else {
+      setSelectedGifts([...selectedGifts, item]);
+    }
   };
   if (isLoadingCart || isLoadingSummary) {
     return <Loader />;
@@ -313,6 +327,7 @@ const CheckoutStepFour = () => {
                                   flex: 1,
                                   paddingVertical: spacing.tiny,
                                   backgroundColor: colors.white,
+                                  overflow: 'hidden',
                                 }}
                                 center
                               />
@@ -334,8 +349,8 @@ const CheckoutStepFour = () => {
                       <View style={styles.selectGiftContainer}>
                         <View style={styles.defualtContainer}>
                           <Switch
-                            value={isDefualt}
-                            onValueChange={() => setDefualt(!isDefualt)}
+                            value={selectedGifts.includes(item)}
+                            onValueChange={() => selectGiftHandler(item)}
                             color={colors.primary}
                             style={{transform: [{scale: 0.7}]}}
                           />
@@ -407,7 +422,7 @@ const CheckoutStepFour = () => {
               style={{fontSize: font.size.small, marginBottom: spacing.large}}
             />
             <Button
-              onPress={oSubmit}
+              onPress={onSubmit}
               style={{marginBottom: 10}}
               title="checkout.confirm-payment"
               disabled={!isConfirmed}
