@@ -15,6 +15,7 @@ interface ISelectPaymentMethod {
 }
 interface ISubmitOrder {
   customerComments: string;
+  packageAsGift: string;
 }
 
 export const getCheckoutAddresses = () => {
@@ -53,8 +54,11 @@ export const selectPaymentMethod = ({paymentMethod}: ISelectPaymentMethod) => {
   );
 };
 
-export const submitOrder = ({customerComments}: ISubmitOrder) => {
+export const submitOrder = ({
+  customerComments,
+  packageAsGift,
+}: ISubmitOrder) => {
   return axios.post(
-    `${BASE_URL}/api/custom/checkout/SubmitOrder?customerComments=${customerComments}`,
+    `${BASE_URL}/api/custom/checkout/SubmitOrder?customerComments=${customerComments}&packageAsGift=${packageAsGift}`,
   );
 };
