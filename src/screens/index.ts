@@ -19,6 +19,7 @@ export {
   OrdersListScreen,
   OrdersDetailsScreen,
   FiltersScreen,
+  ContactUsScreen,
 } from './main';
 export {
   OnboardingScreen,
