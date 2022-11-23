@@ -46,6 +46,13 @@ export const useSchema = () => {
       .required(t('validation.phoneNumber')),
   });
 
+  const contactUs = Yup.object().shape({
+    fullName: Yup.string(),
+    phoneNumber: Yup.string(),
+    email: Yup.string().email('validation.email-template'),
+    message: Yup.string(),
+  });
+
   const addressRSchema = Yup.object().shape({
     address1: Yup.string().required(t('validation.address', {number: 1})),
     city: Yup.string().required(t('validation.city')),
@@ -77,5 +84,6 @@ export const useSchema = () => {
     loginSchema,
     updatePasswordSchema,
     defualtSchema,
+    contactUs,
   };
 };
