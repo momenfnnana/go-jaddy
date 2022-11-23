@@ -12,6 +12,7 @@ import {
   WishlistDetails,
   OrdersListScreen,
   OrdersDetailsScreen,
+  ContactUsScreen,
 } from 'screens';
 import {colors, font} from 'theme';
 import {ProfileRoutes} from './RoutesTypes';
@@ -84,6 +85,11 @@ const ProfileStack = () => {
         <Stack.Screen component={WishlistDetails} name="WishlistDetails" />
         <Stack.Screen component={OrdersListScreen} name="OrdersList" />
         <Stack.Screen component={OrdersDetailsScreen} name="OrdersDetails" />
+        <Stack.Screen
+          options={{headerShown: false}}
+          component={ContactUsScreen}
+          name="ContactUsScreen"
+        />
       </Stack.Navigator>
     </DropDownProvider>
   );
