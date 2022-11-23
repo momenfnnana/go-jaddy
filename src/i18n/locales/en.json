@@ -165,7 +165,10 @@
     "return-products": "Return products",
     "score-balance": "Score balance",
     "products-list": "Product List",
-    "purchases-list": "Purchases List"
+    "purchases-list": "Purchases List",
+    "contact-us": "Contact us",
+    "full-name": "Full name",
+    "your-message": "Your message"
   },
   "wishlist": {
     "title": "Wishlist",
