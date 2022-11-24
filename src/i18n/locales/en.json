@@ -243,6 +243,9 @@
     "password": "Password",
     "submitBtn": "Save Changes"
   },
+  "filter": {
+    "submitBtn": "Search"
+  },
   "checkout": {
     "payment-address": "Payment address",
     "shipping-address": "Shipping/delivery address",
