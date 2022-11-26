@@ -82,6 +82,7 @@
 		AF990EFD28DA2578005630CC /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
 		AF990EFE28DA2578005630CC /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		AF990EFF28DA2578005630CC /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
+		AFA0BC8A2932432200BAB801 /* gojaddy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = gojaddy.entitlements; path = gojaddy/gojaddy.entitlements; sourceTree = "<group>"; };
 		E293E80E2916E0C100DE3BD7 /* splash_screen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash_screen.png; sourceTree = "<group>"; };
 		E2C3262F28F423690026C805 /* Almarai-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Almarai-Bold.ttf"; path = "../src/assets/fonts/Almarai-Bold.ttf"; sourceTree = "<group>"; };
 		E2C3263028F423690026C805 /* Almarai-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Almarai-Light.ttf"; path = "../src/assets/fonts/Almarai-Light.ttf"; sourceTree = "<group>"; };
@@ -130,6 +131,7 @@
 		13B07FAE1A68108700A75B9A /* gojaddy */ = {
 			isa = PBXGroup;
 			children = (
+				AFA0BC8A2932432200BAB801 /* gojaddy.entitlements */,
 				E293E80E2916E0C100DE3BD7 /* splash_screen.png */,
 				AF990EEF28DA2578005630CC /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -604,6 +606,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = gojaddy/gojaddy.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = BLYT9499A2;
 				ENABLE_BITCODE = NO;
@@ -637,6 +640,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = gojaddy/gojaddy.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = BLYT9499A2;
 				INFOPLIST_FILE = gojaddy/Info.plist;

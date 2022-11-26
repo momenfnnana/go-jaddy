@@ -21,6 +21,23 @@ import {ScreenProvider} from 'context/ScreenContext';
 import {WishlistProvider} from 'context/WishlistContext';
 import queryClient from 'queryClient';
 import RNBootSplash from 'react-native-bootsplash';
+import messaging from '@react-native-firebase/messaging';
+
+async function requestUserPermission() {
+  const authStatus = await messaging().requestPermission();
+  const enabled =
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+  if (enabled) {
+    messaging()
+      .getToken()
+      .then(res => {
+        console.log({res});
+      });
+    console.log('Authorization status:', authStatus);
+  }
+}
 
 const resources = {
   en: {
@@ -35,6 +52,7 @@ export default function App() {
   const {isConnected} = useNetInfo();
   const [isAr, setIsAr] = useState<boolean>(false);
   useEffect(() => {
+    requestUserPermission();
     RNBootSplash.hide();
     readAccessToken().then(accessToken => {
       if (accessToken) {
