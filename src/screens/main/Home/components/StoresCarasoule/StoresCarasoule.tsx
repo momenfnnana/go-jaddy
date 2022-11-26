@@ -12,7 +12,7 @@ import {colors, spacing} from 'theme';
 import {ICategories} from '../../types';
 import {BASE_URL} from 'utils/Axios';
 import {useNavigation} from '@react-navigation/native';
-import {IStores} from 'navigators/NavigationsTypes';
+import {IStoresNavigation} from 'navigators/NavigationsTypes';
 
 interface IStoresCarasoule {
   items: ICategories[];
@@ -66,7 +66,7 @@ const StoreItem = ({
   ITEM_HEIGHT,
   SIZE,
 }: IStoreItem) => {
-  const {navigate} = useNavigation<IStores>();
+  const {navigate} = useNavigation<IStoresNavigation>();
   const navigateToStore = (id: number) => {
     navigate('StoresStack', {
       screen: 'StoresDetails',
