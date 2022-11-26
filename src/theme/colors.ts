@@ -13,6 +13,7 @@ const inactiveStar = '#C7C7CC';
 const languagesSwitchText = '#1313137F';
 const modalDescriptionColor = '#262626';
 const storesImageBorder = '#7474743D';
+const aboutTheAppBorder = '#E1E5EB';
 
 const primaryPalette = {
   primary: '#0232EB', // Main
@@ -84,6 +85,7 @@ const gray = {
 const statusPalette = {
   danger: redPalette.red,
   success: greenPalette.green,
+  success2: '#2CDCCA',
   warning: yellowPalette.yellow,
   info: bluePalette.blue,
 };
@@ -127,6 +129,7 @@ export const colors = {
   languagesSwitchText,
   modalDescriptionColor,
   storesImageBorder,
+  aboutTheAppBorder,
 };
 
 export type ColorsTypes = keyof typeof colors;
