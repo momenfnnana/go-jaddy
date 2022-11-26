@@ -19,6 +19,14 @@ interface IGetWishlistDetails {
   pageParam: number;
   Id: number;
 }
+interface IPostContactUs {
+  FirstName: string;
+  LastName: string;
+  PhoneNumber: string;
+  Email: string;
+  Message: string;
+  countryCode: string | undefined;
+}
 export const getUserData = () =>
   axios.get(`${BASE_URL}/api/custom/customer/PersonalInfo`);
 
@@ -73,6 +81,9 @@ export const deleteWishlistItem = (itemId: number) => {
     `${BASE_URL}/api/custom/wishlist/DeleteWishlistLine?itemId=${itemId}`,
   );
 };
+
+export const postContactUs = (data: IPostContactUs) =>
+  axios.post(`${BASE_URL}/api/custom/ContactUs/Send`, data);
 
 export const getTopics = () => {
   return axios(`${BASE_URL}/api/custom/topic/Topics`);
