@@ -1,4 +1,4 @@
-import {useNavigation, useRoute, CommonActions} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {
   Loader,
   ProductCard,
@@ -8,7 +8,10 @@ import {
   RateModal,
 } from 'components';
 
-import {IStores} from 'navigators/NavigationsTypes';
+import {
+  IStoresProps,
+  StoresDetailsNavigationProp,
+} from 'navigators/NavigationsTypes';
 import React, {useEffect, useRef, useState} from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {View, Pressable, FlatList, Image, Animated} from 'react-native';
@@ -50,8 +53,8 @@ const tabs: string[] = [
   'storeDetails.tabs.categoriesTab',
 ];
 const StoreDetails = () => {
-  const {params} = useRoute<IStores>();
-  const {navigate, dispatch} = useNavigation();
+  const {params} = useRoute<IStoresProps>();
+  const {navigate, dispatch} = useNavigation<StoresDetailsNavigationProp>();
   const {isLogged} = useLogged(true);
   const {protectedFunction} = useProtectedFunction();
   const [isRateModalShown, setIsRateModalShown] = useState<boolean>(false);
