@@ -13,11 +13,12 @@ import {
   OrdersListScreen,
   OrdersDetailsScreen,
   ContactUsScreen,
+  AboutTheAppScreen,
+  AboutTheAppDetails,
 } from 'screens';
 import {colors, font} from 'theme';
 import {ProfileRoutes} from './RoutesTypes';
 import {DropDownProvider} from 'context/dropdownContext';
-import {BackButton} from 'components';
 
 const Stack = createNativeStackNavigator<ProfileRoutes>();
 
@@ -89,6 +90,16 @@ const ProfileStack = () => {
           options={{headerShown: false}}
           component={ContactUsScreen}
           name="ContactUsScreen"
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          component={AboutTheAppScreen}
+          name="AboutTheAppScreen"
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          component={AboutTheAppDetails}
+          name="AboutTheAppDetails"
         />
       </Stack.Navigator>
     </DropDownProvider>
