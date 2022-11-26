@@ -27,7 +27,14 @@ const Tab = ({
   const {navigate} = useNavigation<ProfileScreenNavigationProp>();
   const onPressTab = () => {
     if (goTo) {
-      protectedFunction({func: () => navigate(goTo, params)});
+      switch (title) {
+        case 'profile.about-app':
+          navigate(goTo, params);
+          break;
+        default:
+          protectedFunction({func: () => navigate(goTo, params)});
+          break;
+      }
     }
   };
   return (
