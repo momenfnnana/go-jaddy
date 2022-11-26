@@ -19,7 +19,8 @@ export interface ITab {
     | 'ReturnProducts'
     | 'CustomerPoints'
     | 'ProfileDetails'
-    | 'OrdersList';
+    | 'OrdersList'
+    | 'AboutTheAppScreen';
   params?: any | any[];
 }
 
@@ -39,6 +40,7 @@ export const data: ITab[] = [
     id: 3,
     title: 'profile.about-app',
     icon: <ProfileIconTab />,
+    goTo: 'AboutTheAppScreen',
   },
   {
     id: 4,
