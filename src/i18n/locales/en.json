@@ -168,7 +168,8 @@
     "purchases-list": "Purchases List",
     "contact-us": "Contact us",
     "full-name": "Full name",
-    "your-message": "Your message"
+    "your-message": "Your message",
+    "about-the-app": "About the app"
   },
   "wishlist": {
     "title": "Wishlist",
@@ -306,7 +307,10 @@
     "total": "Total({{currencySymbol}})",
     "tax": "Tax",
     "submitTotalModal": "Done Requset",
-    "price": "Price"
+    "price": "Price",
+    "order-confirmed": "your order submitted, Thank you!",
+    "order-confirmed-description": "Thank you for shopping at goJaddy Store, we hope you had a great experience. The request has been submitted successfully. You will be contacted soon",
+    "orders-list": "Orders list"
   },
   "EmptyPage": {
     "product-description": "go to home to discover products",

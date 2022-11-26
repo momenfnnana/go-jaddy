@@ -138,7 +138,8 @@
     "purchases-list": "طلبـــات الشـــراء",
     "contact-us": "تواصل معنا",
     "full-name": "الاسم كامل",
-    "your-message": "رسالتك هنا"
+    "your-message": "رسالتك هنا",
+    "about-the-app": "عن التطبيق"
   },
 
   "wishlist": {
@@ -320,6 +321,9 @@
     "total": "الاجمالي",
     "submitTotalModal": "إتمام الطلب",
     "tax": "الضريبة",
-    "price": "السعر"
+    "price": "السعر",
+    "order-confirmed": "!تم ارسال طلبك، شكرا لك",
+    "order-confirmed-description": "شكرا لتسوقك في متجر جو جادي، نتمنى أنها كانت تجربة رائعة. تم تقديم الطلب بنجاح. سيتم التواصل معك قريبا",
+    "orders-list": "قائمة الطلبات"
   }
 }
