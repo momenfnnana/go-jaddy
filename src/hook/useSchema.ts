@@ -47,10 +47,14 @@ export const useSchema = () => {
   });
 
   const contactUs = Yup.object().shape({
-    fullName: Yup.string(),
-    phoneNumber: Yup.string(),
-    email: Yup.string().email('validation.email-template'),
-    message: Yup.string(),
+    FirstName: Yup.string(),
+    LastName: Yup.string(),
+    PhoneNumber: Yup.string()
+      .length(12, t('validation.phoneNumber-length', {length: 12}))
+      .matches(phoneRegExp, t('validation.phoneNumber-template')),
+    Email: Yup.string().email('validation.email-template'),
+    Message: Yup.string(),
+    countryCode: Yup.string(),
   });
 
   const addressRSchema = Yup.object().shape({
