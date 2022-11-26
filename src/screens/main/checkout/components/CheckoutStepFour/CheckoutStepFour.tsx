@@ -10,7 +10,7 @@ import {
   Image,
 } from 'react-native';
 import {colors, font, spacing} from 'theme';
-import {Button, InputField, Loader, Text} from 'components';
+import {Button, InputField, Loader, Modal, Text} from 'components';
 import {Switch} from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useMutation, useQuery} from '@tanstack/react-query';
@@ -19,18 +19,20 @@ import {useCurrency} from 'hook/useCurrency';
 import {LogoSplash} from 'assets/images';
 import {BASE_URL} from 'utils/Axios';
 import {submitOrder} from 'services/Checkout';
-import {CommonActions, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {checkoutNavigationProp} from 'navigators/NavigationsTypes';
 
 const borderColor = colors.reloadColor;
 
 const Line = () => <View style={styles.line} />;
 
 const CheckoutStepFour = () => {
-  const {dispatch} = useNavigation();
+  const {navigate} = useNavigation<checkoutNavigationProp>();
   const {currency} = useCurrency();
   const [selectedGifts, setSelectedGifts] = useState<any[]>([]);
   const [tellUs, setTellUs] = useState<string>('');
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(true);
   const {data: CartData, isLoading: isLoadingCart} = useQuery(
     ['cartProducts'],
     getCartProducts,
@@ -40,13 +42,9 @@ const CheckoutStepFour = () => {
     getCartSummary,
   );
   const {mutate, isLoading: isLoadingSubmitOrder} = useMutation(submitOrder, {
-    onSuccess: () => {
-      dispatch(
-        CommonActions.reset({
-          index: 1,
-          routes: [{name: 'HomeStack', params: {screen: 'Home'}}],
-        }),
-      );
+    onSuccess: data => {
+      setIsSuccess(true);
+      return data;
     },
   });
 
@@ -74,6 +72,18 @@ const CheckoutStepFour = () => {
     } else {
       setSelectedGifts([...selectedGifts, item]);
     }
+  };
+  const goOrdersListHandler = () => {
+    closeSuccessModal();
+    navigate('HomeFlow', {
+      screen: 'Profile',
+      params: {
+        screen: 'OrdersList',
+      },
+    } as any);
+  };
+  const closeSuccessModal = () => {
+    setIsSuccess(false);
   };
   if (isLoadingCart || isLoadingSummary) {
     return <Loader />;
@@ -324,8 +334,7 @@ const CheckoutStepFour = () => {
                                   borderRadius: spacing.medium + 2,
                                   borderWidth: 1,
                                   borderColor: colors.reloadColor,
-                                  flex: 1,
-                                  paddingVertical: spacing.tiny,
+                                  padding: spacing.tiny,
                                   backgroundColor: colors.white,
                                   overflow: 'hidden',
                                 }}
@@ -431,6 +440,30 @@ const CheckoutStepFour = () => {
           </View>
         </View>
       </TouchableWithoutFeedback>
+      <Modal isVisible={isSuccess} onBackdropPress={closeSuccessModal}>
+        <View style={styles.modalContainer}>
+          <Image source={LogoSplash} />
+          <Text
+            tx="modal.order-confirmed"
+            variant="mediumBold"
+            color={colors.success2}
+            top="xLarge"
+            bottom="normal"
+          />
+          <Text
+            tx="modal.order-confirmed-description"
+            variant="smallRegular"
+            color={colors.modalDescriptionColor + 70}
+            bottom="xxLarge"
+            center
+          />
+          <Button
+            title="modal.orders-list"
+            style={{marginBottom: spacing.normal}}
+            onPress={goOrdersListHandler}
+          />
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -480,5 +513,11 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'baseline',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: spacing.medium,
   },
 });
