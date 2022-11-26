@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {Loader, Text} from 'components';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
   View,
   Pressable,
@@ -12,17 +12,15 @@ import {
 import {FadeLoading} from 'react-native-fade-loading';
 import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
-import {IStores} from 'navigators/NavigationsTypes';
 import {ActivityIndicator} from 'react-native-paper';
 import {getAllStores} from 'services/Stores';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import EmptyPage from 'components/EmptyPage/EmptyPage';
-import {readAccessToken} from 'constants';
 import {useLogged} from 'hook/useLogged';
 
 const Stores = () => {
   const {width} = useWindowDimensions();
-  const {navigate} = useNavigation<any>();
+  const {navigate, setOptions} = useNavigation<any>();
   const {isLogged} = useLogged(true);
   const [typeStores, setTypeStores] = useState('all');
   const {
@@ -53,7 +51,11 @@ const Stores = () => {
       fetchNextPage();
     }
   };
-
+  useLayoutEffect(() => {
+    setOptions({
+      headerLeft: () => <></>,
+    });
+  }, []);
   useEffect(() => {
     refetch();
   }, [typeStores]);
