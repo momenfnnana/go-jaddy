@@ -28,11 +28,11 @@ export const data = ({userType}: {userType?: string}): ITab[] => {
         goTo: 'OrdersList',
         params: {isOrederRequest: true},
       },
-      {
-        id: 4,
-        title: 'profile.payment-information',
-        icon: <ProfileIconTab />,
-      },
+      // {
+      //   id: 4,
+      //   title: 'profile.payment-information',
+      //   icon: <ProfileIconTab />,
+      // },
       {
         id: 5,
         title: 'profile.previous-titles',
@@ -66,11 +66,11 @@ export const data = ({userType}: {userType?: string}): ITab[] => {
         icon: <ProfileIconTab />,
         goTo: 'OrdersList',
       },
-      {
-        id: 3,
-        title: 'profile.payment-information',
-        icon: <ProfileIconTab />,
-      },
+      // {
+      //   id: 3,
+      //   title: 'profile.payment-information',
+      //   icon: <ProfileIconTab />,
+      // },
       {
         id: 4,
         title: 'profile.previous-titles',
