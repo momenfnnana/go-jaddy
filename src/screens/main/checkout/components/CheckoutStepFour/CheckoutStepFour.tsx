@@ -400,6 +400,7 @@ const CheckoutStepFour = () => {
                   }
                   size={20}
                   color={colors.primary}
+                  style={{marginRight: spacing.tiny}}
                 />
                 <Text>
                   <Text
@@ -512,7 +513,6 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    alignItems: 'baseline',
   },
   modalContainer: {
     flex: 1,

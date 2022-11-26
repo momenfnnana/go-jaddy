@@ -54,7 +54,7 @@ const OrderDetails = () => {
   }
 
   const item = data?.data?.OrderDetails;
-  console.log({first: item?.Tax});
+
   return (
     <View style={{flex: 1}}>
       <ScrollView>
