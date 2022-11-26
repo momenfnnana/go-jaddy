@@ -19,3 +19,5 @@ export {default as OrdersListScreen} from './OrdersList';
 export {default as OrdersDetailsScreen} from './OrderDetails';
 export {default as FiltersScreen} from './Filters';
 export {default as ContactUsScreen} from './ContactUs';
+export {default as AboutTheAppScreen} from './AboutTheApp';
+export {default as AboutTheAppDetails} from './AboutTheAppDetails';

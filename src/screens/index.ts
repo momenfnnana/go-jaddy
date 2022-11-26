@@ -20,6 +20,8 @@ export {
   OrdersDetailsScreen,
   FiltersScreen,
   ContactUsScreen,
+  AboutTheAppScreen,
+  AboutTheAppDetails,
 } from './main';
 export {
   OnboardingScreen,

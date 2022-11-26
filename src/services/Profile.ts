@@ -73,3 +73,11 @@ export const deleteWishlistItem = (itemId: number) => {
     `${BASE_URL}/api/custom/wishlist/DeleteWishlistLine?itemId=${itemId}`,
   );
 };
+
+export const getTopics = () => {
+  return axios(`${BASE_URL}/api/custom/topic/Topics`);
+};
+
+export const getTopicDetails = ({id}: {id: number}) => {
+  return axios(`${BASE_URL}/api/custom/topic/TopicDetails?id=${id}`);
+};
