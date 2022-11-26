@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "891150166102",
+    "project_id": "gojaddy-298c1",
+    "storage_bucket": "gojaddy-298c1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:891150166102:android:6779fad9d8068493b673f7",
+        "android_client_info": {
+          "package_name": "com.gojaddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "891150166102-9g7e2l03344d5o9d4esd9g8j76fe97d3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gojaddy",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "891150166102-6a5eh10b4b9i40hco8imbknesocp7k1h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAz2mznFR8SZ30nJXJLzajP-ZiB1DYtKZw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "891150166102-6a5eh10b4b9i40hco8imbknesocp7k1h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
