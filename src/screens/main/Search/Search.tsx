@@ -81,7 +81,7 @@ const Search = () => {
         page: pageParam,
         pageSize: 5,
         term: searchText,
-        Filters: null,
+        Filters: (params as any)?.dataFilter || null,
         CurrencyId: currency?.Id,
       }),
     {
@@ -102,6 +102,16 @@ const Search = () => {
     },
   );
 
+  useEffect(() => {
+    if ((params as any)?.paramsType == 'filter') {
+      if ((params as any)?.dataFilter) {
+        refetchSearchResults();
+        DismissKeyboard();
+        console.log('yes');
+      }
+    }
+  }, [params]);
+
   const SearchHandler = () => {
     if (
       searchText.length >
@@ -114,6 +124,7 @@ const Search = () => {
   const DismissKeyboard = () => {
     Keyboard.dismiss();
   };
+
   const productsList = useMemo(() => {
     if ((params as any)?.title?.length > 0) {
       return ProductsCategoryData?.pages
@@ -122,6 +133,14 @@ const Search = () => {
     }
     return data?.pages.map(page => page.data?.ProductsModel?.Items).flat();
   }, [data, ProductsCategoryData]);
+
+  const facetsList = useMemo(() => {
+    if ((params as any)?.title?.length > 0) {
+      return ProductsCategoryData?.pages.map(page => page.data?.Facets).flat();
+    }
+    return data?.pages.map(page => page.data?.Facets).flat();
+  }, [data, ProductsCategoryData]);
+
   const productsModel = useMemo(() => {
     if ((params as any)?.title?.length > 0) {
       return ProductsCategoryData?.pages.map(page => page.data?.ProductsModel);
@@ -144,6 +163,8 @@ const Search = () => {
         setValue={setSearchText}
         onSubmitEditing={SearchHandler}
         autoFocus={true}
+        facetsList={facetsList}
+        filterIcon={!!productsList?.length}
       />
       {!!productsList?.length && (
         <View style={[styles.row, styles.resultsHeader]}>

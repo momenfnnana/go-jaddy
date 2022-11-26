@@ -408,7 +408,7 @@ const OrderDetails = () => {
               </View>
             )}
           />
-          {item?.OrderStatus !== 'Cancelled' && (
+          {item?.IsCancelOrderAllowed && (
             <Button
               isLoading={isLoadingCancelOrder}
               onPress={() => mutate({orderId: item?.Id})}

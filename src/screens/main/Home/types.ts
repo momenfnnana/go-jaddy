@@ -38,6 +38,7 @@ export interface ISearchInterface {
   categoryId?: number;
   title?: string;
   paramsType?: string;
+  filterParams?: any;
 }
 
 export interface ISearchInterface {

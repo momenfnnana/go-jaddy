@@ -7,7 +7,7 @@ import {FilterIcon} from 'assets/icons';
 import {SearchInput} from './components';
 import BackButton from 'components/BackButton';
 import {useNavigation} from '@react-navigation/native';
-import { SearchScreenNavigationProp } from 'navigators/NavigationsTypes';
+import {SearchScreenNavigationProp} from 'navigators/NavigationsTypes';
 
 const GO_BACK_SIZE = 36;
 const ICON_SIZE = 20;
@@ -21,6 +21,7 @@ interface ISearchHeader {
   Footer?: ReactNode;
   RightIcon?: any;
   placeholder?: string;
+  facetsList?: any;
 }
 
 const SearchHeader = ({
@@ -32,6 +33,7 @@ const SearchHeader = ({
   filterIcon = true,
   RightIcon,
   placeholder = 'search.search-input',
+  facetsList,
 }: ISearchHeader) => {
   const {top} = useSafeAreaInsets();
   const {navigate} = useNavigation<SearchScreenNavigationProp>();
@@ -39,7 +41,7 @@ const SearchHeader = ({
     return top;
   }, []);
   const onPressFilter = () => {
-    navigate('FiltersScreen');
+    navigate('FiltersScreen', {facetsList: facetsList});
   };
   return (
     <View

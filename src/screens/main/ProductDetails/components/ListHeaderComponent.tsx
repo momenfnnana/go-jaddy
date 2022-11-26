@@ -253,8 +253,14 @@ const ListHeaderComponent = ({
   const [selectedAttributes, setSelectedAttributes] = useState<any[]>([]);
   const [customTextValue, setCustomTextValue] = useState<string>('');
 
-  const {mutate: mutateAddToCart, isLoading: isLoadingAddToCart} =
-    useMutation(addCartProducts);
+  const {mutate: mutateAddToCart, isLoading: isLoadingAddToCart} = useMutation(
+    addCartProducts,
+    {
+      onSuccess: () => {
+        setUpdateProducts(!updateProducts);
+      },
+    },
+  );
 
   const onLoadBackgroundEnd = () => {
     setIsLoadingImageBackground(false);

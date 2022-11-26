@@ -18,7 +18,7 @@ export type HomeRoutes = {
   Home: undefined;
   ProductDetails: IProductInterface;
   SearchScreen: ISearchInterface;
-  FiltersScreen: undefined;
+  FiltersScreen: {facetsList: any};
 };
 
 export interface IContinueOrderSteps {
