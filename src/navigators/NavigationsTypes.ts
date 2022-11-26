@@ -46,15 +46,13 @@ type ICategories = NativeStackScreenProps<BottomTabsRoutes, 'CategoriesStack'>;
 type ICart = NativeStackScreenProps<BottomTabsRoutes, 'Cart'>;
 
 type CartScreenNavigationProp = NativeStackNavigationProp<CartRoutes, 'Cart'>;
-// interface IStores
-//   extends NativeStackScreenProps<BottomTabsRoutes, 'StoresStack'>,
-//     RouteProp<StoresRoutes>,
-//     NativeStackNavigationProp<StoresRoutes> {}
 
-type IStores = CompositeNavigationProp<
+type IStoresNavigation = CompositeNavigationProp<
   NativeStackNavigationProp<MainNavigator, 'HomeFlow'>,
   NativeStackNavigationProp<BottomTabsRoutes, 'StoresStack'>
 >;
+
+type IStoresProps = RouteProp<StoresRoutes, 'StoresDetails'>;
 
 type ICategoryDetails = BottomTabNavigationProp<
   BottomTabsRoutes,
@@ -74,6 +72,10 @@ type ProfileScreenNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<MainNavigator, 'HomeFlow'>,
   NativeStackNavigationProp<ProfileRoutes, 'Profile'>
 >;
+type checkoutNavigationProp = CompositeNavigationProp<
+  NativeStackNavigationProp<MainNavigator, 'HomeFlow'>,
+  NativeStackNavigationProp<CartRoutes, 'ContinueOrderSteps'>
+>;
 
 type SearchScreenNavigationProp = NativeStackNavigationProp<
   HomeRoutes,
@@ -90,11 +92,22 @@ type PreviousAddressNavigationProp = NativeStackNavigationProp<
   'PreviousTitles'
 >;
 
+type AboutTheAppNavigationProp = NativeStackNavigationProp<
+  ProfileRoutes,
+  'AboutTheAppScreen'
+>;
+
+type StoresDetailsNavigationProp = NativeStackNavigationProp<
+  StoresRoutes,
+  'StoresDetails'
+>;
+
 type AddAddressNavigationProp = NativeStackNavigationProp<
   ProfileRoutes,
   'AddAddress'
 >;
 type AddAddressRouteProp = RouteProp<ProfileRoutes, 'AddAddress'>;
+type AboutTheAppRouteProp = RouteProp<ProfileRoutes, 'AboutTheAppDetails'>;
 type ContinueStepsRouteProp = RouteProp<CartRoutes, 'ContinueOrderSteps'>;
 
 type OrdersNavigationProp = NativeStackNavigationProp<
@@ -129,7 +142,8 @@ export type {
   IHome,
   ICategories,
   ICart,
-  IStores,
+  IStoresNavigation,
+  IStoresProps,
   ICategoryDetails,
   LoginScreenNavigationProp,
   RegisterScreenNavigationProp,
@@ -147,4 +161,8 @@ export type {
   OrdersNavigationProp,
   SearchScreenNavigationProp,
   ContinueStepsRouteProp,
+  StoresDetailsNavigationProp,
+  checkoutNavigationProp,
+  AboutTheAppNavigationProp,
+  AboutTheAppRouteProp,
 };
