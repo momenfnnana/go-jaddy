@@ -248,7 +248,8 @@
     "submitBtn": "Save Changes"
   },
   "filter": {
-    "submitBtn": "Search"
+    "submitBtn": "Search",
+    "select-dropdown": "Select"
   },
   "checkout": {
     "payment-address": "Payment address",
