@@ -502,8 +502,7 @@ const Cart = () => {
                 />
               </Pressable>
               <Text
-                txOptions={{currency: currency?.Symbol}}
-                text={data?.Total}
+                text={data?.Total + ' ' + currency?.Symbol}
                 color={colors.primary}
                 variant="xLargeBold"
               />
