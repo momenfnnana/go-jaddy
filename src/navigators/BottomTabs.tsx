@@ -22,7 +22,7 @@ const initialStacks = {
   CategoriesStack: 'Categories',
   StoresStack: 'Stores',
   Cart: 'Cart',
-  Profile: 'Profile',
+  ProfileStack: 'ProfileStack',
 };
 
 const Tab = createBottomTabNavigator<BottomTabsRoutes>();
@@ -95,7 +95,7 @@ const BottomTabs = () => {
       />
       <Tab.Screen
         component={ProfileStack}
-        name="Profile"
+        name="ProfileStack"
         options={{
           tabBarIcon: ({focused}) => <ProfileIcon stroke={getColor(focused)} />,
           title: t('screens-tabs.profile'),
