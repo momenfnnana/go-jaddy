@@ -70,7 +70,8 @@
     "search-input": "ابحث في المتاجر",
     "search-result-for": "نتيجة البحث عن:",
     "start-searching": "ابدأ البحث",
-    "no-search-results": "لا يوجد نتائج بحث "
+    "no-search-results": "لا يوجد نتائج بحث ",
+    "clear-filters": "ازالةالفلاتر"
   },
   "product-details": {
     "select-color": "اختر اللون",

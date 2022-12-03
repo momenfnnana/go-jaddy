@@ -100,7 +100,8 @@
     "search-result-for": "Search result for:",
     "categoryTitle": "Products for: ",
     "start-searching": "Start searching",
-    "no-search-results": "No search results"
+    "no-search-results": "No search results",
+    "clear-filters": "Clear Filters"
   },
   "product-details": {
     "select-color": "Select color",

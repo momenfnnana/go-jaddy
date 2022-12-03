@@ -23,19 +23,31 @@ const Header = () => {
   const {protectedFunction} = useProtectedFunction();
   const {navigate, dispatch} = useNavigation<ProfileScreenNavigationProp>();
   const logoutHandler = async () => {
-    AsyncStorage.removeItem('accessToken');
-    setAxiosAccessToken('');
-    setUserData({});
-    setAccessToken('');
-    await GoogleSignin.signOut();
-    await LoginManager.logOut();
-    await firebase.auth().signOut();
-    dispatch(
-      CommonActions.reset({
-        index: 1,
-        routes: [{name: 'AuthFlow', params: {screen: 'Login'}}],
-      }),
-    );
+    try {
+      AsyncStorage.removeItem('accessToken');
+      setAxiosAccessToken('');
+      setUserData({});
+      setAccessToken('');
+      if (isLogged) {
+        await GoogleSignin.signOut();
+        await LoginManager.logOut();
+        await firebase.auth().signOut();
+      }
+      dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{name: 'AuthFlow', params: {screen: 'Login'}}],
+        }),
+      );
+    } catch (error) {
+      console.log('error in logout external: ', {error});
+      dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{name: 'AuthFlow', params: {screen: 'Login'}}],
+        }),
+      );
+    }
   };
   return (
     <View style={styles.container}>

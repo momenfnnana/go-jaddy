@@ -13,7 +13,6 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		99FFE724F5B3D3CE426A65CF /* Pods_gojaddy_gojaddyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A70CB65ECC9CDAAB052289D4 /* Pods_gojaddy_gojaddyTests.framework */; };
-		AF5A07FE293205FE00429942 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AF5A07FD293205FE00429942 /* GoogleService-Info.plist */; };
 		AF990F0028DA2578005630CC /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF990EF028DA2578005630CC /* Fontisto.ttf */; };
 		AF990F0128DA2578005630CC /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF990EF128DA2578005630CC /* Octicons.ttf */; };
 		AF990F0228DA2578005630CC /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF990EF228DA2578005630CC /* Feather.ttf */; };
@@ -37,6 +36,7 @@
 		E2C3263528F423690026C805 /* Almarai-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2C3263128F423690026C805 /* Almarai-ExtraBold.ttf */; };
 		E2C3263628F423690026C805 /* Almarai-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2C3263228F423690026C805 /* Almarai-Regular.ttf */; };
 		E2C4AA7D293640DB00619562 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C4AA7C293640DB00619562 /* File.swift */; };
+		E2CC8516293B6EE400EDB671 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E2CC8515293B6EE400EDB671 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,7 +66,6 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = gojaddy/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-gojaddy-gojaddyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-gojaddy-gojaddyTests.release.xcconfig"; path = "Target Support Files/Pods-gojaddy-gojaddyTests/Pods-gojaddy-gojaddyTests.release.xcconfig"; sourceTree = "<group>"; };
 		A70CB65ECC9CDAAB052289D4 /* Pods_gojaddy_gojaddyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_gojaddy_gojaddyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		AF5A07FD293205FE00429942 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AF990EF028DA2578005630CC /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
 		AF990EF128DA2578005630CC /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
 		AF990EF228DA2578005630CC /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Feather.ttf; sourceTree = "<group>"; };
@@ -91,6 +90,7 @@
 		E2C4AA7A29363A2600619562 /* gojaddy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = gojaddy.entitlements; path = gojaddy/gojaddy.entitlements; sourceTree = "<group>"; };
 		E2C4AA7B293640DA00619562 /* gojaddy-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gojaddy-Bridging-Header.h"; sourceTree = "<group>"; };
 		E2C4AA7C293640DB00619562 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		E2CC8515293B6EE400EDB671 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -178,8 +178,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				E2CC8515293B6EE400EDB671 /* GoogleService-Info.plist */,
 				E2C4AA7C293640DB00619562 /* File.swift */,
-				AF5A07FD293205FE00429942 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* gojaddy */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* gojaddyTests */,
@@ -350,7 +350,7 @@
 				AF990F0828DA2578005630CC /* Ionicons.ttf in Resources */,
 				AF990F0328DA2578005630CC /* Entypo.ttf in Resources */,
 				AF990F0428DA2578005630CC /* FontAwesome5_Brands.ttf in Resources */,
-				AF5A07FE293205FE00429942 /* GoogleService-Info.plist in Resources */,
+				E2CC8516293B6EE400EDB671 /* GoogleService-Info.plist in Resources */,
 				AF990F0928DA2578005630CC /* FontAwesome5_Solid.ttf in Resources */,
 				AF990F0D28DA2578005630CC /* EvilIcons.ttf in Resources */,
 				AF990F0028DA2578005630CC /* Fontisto.ttf in Resources */,

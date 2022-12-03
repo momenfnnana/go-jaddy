@@ -36,6 +36,7 @@ const Search = () => {
   const {params} = useRoute<HomeNavigationsType>();
   const [viewType, setViewType] = useState<IshowListHandler>('grid');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [filterOptions, setFilterOptions] = useState(null);
   const {currency} = useCurrency();
   const showListHandler = (value: IshowListHandler) => {
     setViewType(value);
@@ -81,7 +82,7 @@ const Search = () => {
         page: pageParam,
         pageSize: 5,
         term: searchText,
-        Filters: (params as any)?.dataFilter || null,
+        Filters: filterOptions,
         CurrencyId: currency?.Id,
       }),
     {
@@ -105,9 +106,11 @@ const Search = () => {
   useEffect(() => {
     if ((params as any)?.paramsType == 'filter') {
       if ((params as any)?.dataFilter) {
-        refetchSearchResults();
+        setFilterOptions((params as any)?.dataFilter);
+        setTimeout(() => {
+          refetchSearchResults();
+        }, 200);
         DismissKeyboard();
-        console.log('yes');
       }
     }
   }, [params]);
@@ -165,6 +168,29 @@ const Search = () => {
         autoFocus={true}
         facetsList={facetsList}
         filterIcon={(facetsList as any)?.length > 0}
+        Footer={
+          filterOptions && (
+            <Pressable
+              onPress={() => {
+                setFilterOptions(null);
+                setTimeout(() => {
+                  refetchSearchResults();
+                }, 100);
+              }}
+              style={{
+                padding: spacing.smaller,
+                backgroundColor: colors.red,
+                borderRadius: spacing.small,
+                alignSelf: 'flex-end',
+              }}>
+              <Text
+                tx={"search.clear-filters"}
+                color={colors.white}
+                variant="smallRegular"
+              />
+            </Pressable>
+          )
+        }
       />
       {!!productsList?.length && (
         <View style={[styles.row, styles.resultsHeader]}>
