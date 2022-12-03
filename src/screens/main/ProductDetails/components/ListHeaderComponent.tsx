@@ -144,7 +144,10 @@ const ListHeaderComponent = ({
   let initialValues: any = {};
   Product?.Attributes.forEach((f: any) => {
     if (f.IsRequired === true) {
-      initialValues[f?.Name] = '';
+      const foundItem = f?.Values.find((element: any) => {
+        return element.IsPreSelected === true;
+      });
+      initialValues[f?.Name] = foundItem.Name || '';
     }
   });
   const onSubmit = async () => {
