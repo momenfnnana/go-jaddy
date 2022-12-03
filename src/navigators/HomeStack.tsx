@@ -1,8 +1,9 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AdidasIcon} from 'assets/images';
-import {BackButton, CartButton, CloseButton} from 'components';
+import {CartButton, CloseButton} from 'components';
 import {CartProvider} from 'context/CartContext';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 import {
   FiltersScreen,
   HomeScreen,
@@ -15,6 +16,7 @@ import {HomeRoutes} from './RoutesTypes';
 const Stack = createNativeStackNavigator<HomeRoutes>();
 
 const HomeStack = () => {
+  const {t} = useTranslation();
   return (
     <CartProvider>
       <Stack.Navigator
