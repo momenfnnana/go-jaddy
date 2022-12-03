@@ -49,6 +49,7 @@
     "react-native-snackbar": "^2.4.0",
     "react-native-svg": "^13.2.0",
     "react-native-svg-transformer": "^1.0.0",
+    "react-native-toast-notifications": "^3.3.1",
     "react-native-vector-icons": "^9.2.0",
     "react-native-webview": "^11.25.0",
     "react-timer-hook": "^3.0.5",
