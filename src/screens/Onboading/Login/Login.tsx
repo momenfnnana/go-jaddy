@@ -45,13 +45,13 @@ import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import {LoginManager} from 'react-native-fbsdk-next';
+import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
 import {firebase} from '@react-native-firebase/auth';
 import {
   appleAuth,
   AppleButton,
-  
 } from '@invertase/react-native-apple-authentication';
+import auth from '@react-native-firebase/auth';
 
 interface IinitialValues {
   phoneNumber: string;
@@ -187,32 +187,39 @@ const Login = () => {
   }, [updateProducts]);
 
   const signInwithFacebook = async () => {
-    LoginManager.logInWithPermissions(['email']).then(
-      function (result) {
-        if (result.isCancelled) {
-          console.log('Login cancelled');
-        } else {
-          console.log({result});
-          console.log(
-            'Login success with permissions: ' +
-              result?.grantedPermissions?.toString(),
-          );
-        }
-      },
-      function (error) {
-        console.log('Login fail with error: ' + error);
-      },
-    );
+    try {
+      const result = await LoginManager.logInWithPermissions([
+        'public_profile',
+        'email',
+      ]);
+      if (result.isCancelled) {
+        console.log('User cancelled the login process');
+      }
+      const data = await AccessToken.getCurrentAccessToken();
+      if (!data) {
+        console.log('Something went wrong obtaining access token', {data});
+      }
+      const facebookCredential = auth.FacebookAuthProvider.credential(
+        (data as any).accessToken,
+      );
+      const respones = await auth().signInWithCredential(facebookCredential);
+      console.log({respones: respones.user});
+    } catch (error) {
+      console.log('error in facebook auth: ', {error});
+    }
   };
 
   const signInWithGoogle = async () => {
     try {
-      console.log('first');
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
+      await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+      const {idToken} = await GoogleSignin.signIn();
       const token = await GoogleSignin.getTokens();
-      console.log({userInfo});
-      console.log({token});
+      const googleCredential = auth.GoogleAuthProvider.credential(
+        token.idToken,
+      );
+      const response = await auth().signInWithCredential(googleCredential);
+      console.log({idToken});
+      console.log({response});
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         console.log('SIGN_IN_CANCELLED');
@@ -420,7 +427,7 @@ const Login = () => {
                       borderWidth: 1,
                       borderColor: colors.black,
                       borderRadius: 24,
-                      marginBottom:-12
+                      marginBottom: -12,
                     }}
                     buttonStyle={AppleButton.Style.WHITE}
                     buttonType={AppleButton.Type.SIGN_IN}

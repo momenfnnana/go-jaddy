@@ -15,7 +15,7 @@ import {AvatarPerson} from 'assets/images';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {LoginManager} from 'react-native-fbsdk-next';
 import appleAuth from '@invertase/react-native-apple-authentication';
-import {firebase} from '@react-native-firebase/auth';
+import auth from '@react-native-firebase/auth';
 
 const Header = () => {
   const {setUserData, setAccessToken, userData} = useContext(UserContext);
@@ -29,9 +29,7 @@ const Header = () => {
       setUserData({});
       setAccessToken('');
       if (isLogged) {
-        await GoogleSignin.signOut();
-        await LoginManager.logOut();
-        await firebase.auth().signOut();
+        await auth().signOut();
       }
       dispatch(
         CommonActions.reset({

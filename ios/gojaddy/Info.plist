@@ -27,12 +27,26 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>fb535934555056398</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
 				<string>com.googleusercontent.apps.891150166102-u9pt0r880ng3g5gjuceu64s30tdngpn8</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>FacebookAppID</key>
+	<string>535934555056398</string>
+	<key>FacebookClientToken</key>
+	<string>6b30e614b2eafbb2b84fd7651c828526</string>
+	<key>FacebookDisplayName</key>
+	<string>Go Jaddy</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -98,20 +112,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>CFBundleURLTypes</key>
-	<array>
-	<dict>
-	<key>CFBundleURLSchemes</key>
-	<array>
-		<string>fb535934555056398</string>
-	</array>
-	</dict>
-	</array>
-	<key>FacebookAppID</key>
-	<string>535934555056398</string>
-	<key>FacebookClientToken</key>
-	<string>6b30e614b2eafbb2b84fd7651c828526</string>
-	<key>FacebookDisplayName</key>
-	<string>Go Jaddy</string>
 </dict>
 </plist>
