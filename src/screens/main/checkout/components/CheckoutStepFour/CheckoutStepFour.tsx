@@ -76,7 +76,7 @@ const CheckoutStepFour = () => {
   const goOrdersListHandler = () => {
     closeSuccessModal();
     navigate('HomeFlow', {
-      screen: 'Profile',
+      screen: 'ProfileStack',
       params: {
         screen: 'OrdersList',
       },
