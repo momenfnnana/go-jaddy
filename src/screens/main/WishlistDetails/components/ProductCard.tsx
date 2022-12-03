@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {useMutation} from '@tanstack/react-query';
 import {AddCartIcon, TrashIcon} from 'assets/icons';
 import {Loader, Text} from 'components';
@@ -16,6 +16,8 @@ import {ImageData} from 'types';
 import {BASE_URL} from 'utils/Axios';
 import {useNavigation} from '@react-navigation/native';
 import {WishlistDetailsScreenNavigationProp} from 'navigators/NavigationsTypes';
+import {addCartProducts} from 'services/Cart';
+import {UserContext} from 'context/UserContext';
 interface Price {
   RegularPrice: number;
   Price: number;
@@ -45,25 +47,38 @@ const ProductCard = ({
   const {navigate} = useNavigation<WishlistDetailsScreenNavigationProp>();
   const {height} = useWindowDimensions();
   const {currency} = useCurrency();
-  const {mutate, isLoading, isSuccess} = useMutation(deleteWishlistItem);
+  const {setUpdateProducts, updateProducts} = useContext(UserContext);
+  const {mutate, isLoading} = useMutation(deleteWishlistItem, {
+    onSuccess: data => {
+      if (filterItems) {
+        filterItems(Id);
+      }
+      return data;
+    },
+  });
   const deleteItem = () => {
     mutate(Id);
   };
   const navigateToProductDetails = () => {
     navigate('ProductDetails', {Id: ProductId} as any);
   };
-
+  const {mutate: mutateAddToCart, isLoading: isLoadingAddToCart} = useMutation(
+    addCartProducts,
+    {
+      onSuccess: () => {
+        setUpdateProducts(!updateProducts);
+      },
+      onError: () => {
+        navigate('ProductDetails', {Id: ProductId} as any);
+      },
+    },
+  );
   const addtoCartHandler = () => {
-    console.log('addtoCartHandler');
+    mutateAddToCart({
+      ProductId,
+      QuantityToAdd: 1,
+    });
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      if (filterItems) {
-        filterItems(Id);
-      }
-    }
-  }, [isSuccess]);
 
   return (
     <View style={[styles.container, {height: height * 0.155}]}>
@@ -86,7 +101,7 @@ const ProductCard = ({
           style={styles.categoryName}
         />
         <Pressable onPress={addtoCartHandler} style={styles.row}>
-          <AddCartIcon />
+          {isLoadingAddToCart ? <Loader size={'small'} /> : <AddCartIcon />}
           <Text
             tx="product-details.add-to-cart"
             variant="smallRegular"
