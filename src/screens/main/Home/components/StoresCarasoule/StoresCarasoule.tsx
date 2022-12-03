@@ -183,7 +183,6 @@ const styles = StyleSheet.create({
   BoxContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
   },
   storeImage: {
     borderWidth: 1,
