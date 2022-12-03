@@ -12,17 +12,24 @@ import {setAxiosAccessToken} from 'axiosConfig';
 import {useProtectedFunction} from 'hook/useProdectedFunction';
 import {useLogged} from 'hook/useLogged';
 import {AvatarPerson} from 'assets/images';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {LoginManager} from 'react-native-fbsdk-next';
+import appleAuth from '@invertase/react-native-apple-authentication';
+import {firebase} from '@react-native-firebase/auth';
 
 const Header = () => {
   const {setUserData, setAccessToken, userData} = useContext(UserContext);
   const {isLogged} = useLogged();
   const {protectedFunction} = useProtectedFunction();
   const {navigate, dispatch} = useNavigation<ProfileScreenNavigationProp>();
-  const logoutHandler = () => {
+  const logoutHandler = async () => {
     AsyncStorage.removeItem('accessToken');
     setAxiosAccessToken('');
     setUserData({});
     setAccessToken('');
+    await GoogleSignin.signOut();
+    await LoginManager.logOut();
+    await firebase.auth().signOut();
     dispatch(
       CommonActions.reset({
         index: 1,

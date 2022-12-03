@@ -148,7 +148,7 @@ const CartItem = ({item, setData}: ICartItem) => {
 
           <Text
             text={
-              item?.SubTotal ||
+              item?.SubTotal + ' ' + currency?.Symbol ||
               item?.ProductPrice?.Price + ' ' + currency?.Symbol
             }
             color={colors.primary}

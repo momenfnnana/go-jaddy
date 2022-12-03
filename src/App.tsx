@@ -18,6 +18,8 @@ import {setAxiosCurrencyId} from 'axiosConfig';
 import {navigationRef} from 'navigators/RootNavigation';
 import RootStack from 'navigators/RootStack';
 import {ToastProvider} from 'react-native-toast-notifications';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {Settings} from 'react-native-fbsdk-next';
 
 const App = () => {
   const {setSettings, setCurrencies} = useContext(UserContext);
@@ -45,6 +47,12 @@ const App = () => {
   useEffect(() => {
     isSuccess && setSettings(data.data);
   }, [isSuccess]);
+
+  useEffect(() => {
+    GoogleSignin.configure();
+    Settings.setAppID('535934555056398');
+    Settings.initializeSDK();
+  }, []);
 
   if (isLoadingCurrencies || isLoadingSettings) {
     return (

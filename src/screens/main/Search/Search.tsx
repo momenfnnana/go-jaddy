@@ -164,7 +164,7 @@ const Search = () => {
         onSubmitEditing={SearchHandler}
         autoFocus={true}
         facetsList={facetsList}
-        filterIcon={!!productsList?.length}
+        filterIcon={(facetsList as any)?.length > 0}
       />
       {!!productsList?.length && (
         <View style={[styles.row, styles.resultsHeader]}>

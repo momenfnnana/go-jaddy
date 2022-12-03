@@ -36,6 +36,7 @@
 		E2C3263428F423690026C805 /* Almarai-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2C3263028F423690026C805 /* Almarai-Light.ttf */; };
 		E2C3263528F423690026C805 /* Almarai-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2C3263128F423690026C805 /* Almarai-ExtraBold.ttf */; };
 		E2C3263628F423690026C805 /* Almarai-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2C3263228F423690026C805 /* Almarai-Regular.ttf */; };
+		E2C4AA7D293640DB00619562 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C4AA7C293640DB00619562 /* File.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,12 +83,14 @@
 		AF990EFD28DA2578005630CC /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
 		AF990EFE28DA2578005630CC /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		AF990EFF28DA2578005630CC /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
-		AFA0BC8A2932432200BAB801 /* gojaddy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = gojaddy.entitlements; path = gojaddy/gojaddy.entitlements; sourceTree = "<group>"; };
 		E293E80E2916E0C100DE3BD7 /* splash_screen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash_screen.png; sourceTree = "<group>"; };
 		E2C3262F28F423690026C805 /* Almarai-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Almarai-Bold.ttf"; path = "../src/assets/fonts/Almarai-Bold.ttf"; sourceTree = "<group>"; };
 		E2C3263028F423690026C805 /* Almarai-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Almarai-Light.ttf"; path = "../src/assets/fonts/Almarai-Light.ttf"; sourceTree = "<group>"; };
 		E2C3263128F423690026C805 /* Almarai-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Almarai-ExtraBold.ttf"; path = "../src/assets/fonts/Almarai-ExtraBold.ttf"; sourceTree = "<group>"; };
 		E2C3263228F423690026C805 /* Almarai-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Almarai-Regular.ttf"; path = "../src/assets/fonts/Almarai-Regular.ttf"; sourceTree = "<group>"; };
+		E2C4AA7A29363A2600619562 /* gojaddy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = gojaddy.entitlements; path = gojaddy/gojaddy.entitlements; sourceTree = "<group>"; };
+		E2C4AA7B293640DA00619562 /* gojaddy-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gojaddy-Bridging-Header.h"; sourceTree = "<group>"; };
+		E2C4AA7C293640DB00619562 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -131,7 +134,7 @@
 		13B07FAE1A68108700A75B9A /* gojaddy */ = {
 			isa = PBXGroup;
 			children = (
-				AFA0BC8A2932432200BAB801 /* gojaddy.entitlements */,
+				E2C4AA7A29363A2600619562 /* gojaddy.entitlements */,
 				E293E80E2916E0C100DE3BD7 /* splash_screen.png */,
 				AF990EEF28DA2578005630CC /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -175,6 +178,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				E2C4AA7C293640DB00619562 /* File.swift */,
 				AF5A07FD293205FE00429942 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* gojaddy */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -183,6 +187,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
 				3C11503C094B46F0AABDA38F /* Resources */,
+				E2C4AA7B293640DA00619562 /* gojaddy-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -293,7 +298,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1410;
 					};
 				};
 			};
@@ -534,6 +539,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
+				E2C4AA7D293640DB00619562 /* File.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -553,6 +559,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-gojaddy-gojaddyTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -580,6 +587,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-gojaddy-gojaddyTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = gojaddyTests/Info.plist;
@@ -607,7 +615,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = gojaddy/gojaddy.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = BLYT9499A2;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = gojaddy/Info.plist;
@@ -627,6 +635,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "gojaddy-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -641,7 +650,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = gojaddy/gojaddy.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = BLYT9499A2;
 				INFOPLIST_FILE = gojaddy/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -660,6 +669,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "gojaddy-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";

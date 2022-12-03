@@ -10,6 +10,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import RnRangeSlider from 'rn-range-slider';
 import {useCurrency} from 'hook/useCurrency';
 import {SearchScreenNavigationProp} from 'navigators/NavigationsTypes';
+import {debounce} from 'lodash';
 
 const FiltersScreen = () => {
   const {params} = useRoute();
@@ -25,6 +26,7 @@ const FiltersScreen = () => {
   const [max, setMax] = useState(100);
   const [floatingLabel, setFloatingLabel] = useState(false);
   const THUMB_RADIUS_LOW = 12;
+
   const renderThumb = useCallback(
     (name: 'high' | 'low') => (
       <View
@@ -40,6 +42,7 @@ const FiltersScreen = () => {
     ),
     [],
   );
+
   const renderRail = useCallback(
     () => (
       <View
@@ -66,6 +69,7 @@ const FiltersScreen = () => {
     ),
     [],
   );
+
   const renderLabel = useCallback(
     (value: any) => (
       <View
@@ -80,6 +84,7 @@ const FiltersScreen = () => {
     ),
     [currency?.Symbol],
   );
+
   const renderNotch = useCallback(
     () => (
       <View
@@ -100,16 +105,6 @@ const FiltersScreen = () => {
 
   const updateFilterHandler = useCallback(
     ({key, value}: any) => {
-      // const indexKey = filterSelected?.findIndex((i: any) => i[key]);
-      // if (indexKey === -1) {
-      //   const selectedObj: any = {};
-      //   selectedObj[key] = value;
-      //   setFilterSelected([...filterSelected, selectedObj]);
-      // } else {
-      //   const updateFilterArr = filterSelected;
-      //   updateFilterArr[indexKey][key] = value;
-      //   setFilterSelected([...updateFilterArr]);
-      // }
       const updateFilterArr = filterSelected;
       updateFilterArr[key] = value?.toString();
       setFilterSelected(updateFilterArr);
@@ -117,156 +112,164 @@ const FiltersScreen = () => {
     [filterSelected],
   );
 
-  const handleValueChange = ({low, high}: any) => {
-    setLow(low);
-    setHigh(high);
-  };
-  useEffect(() => {
-    if (low == 0 && high == 100) {
-    } else {
-      updateFilterHandler({key: 'price', value: `${low}-${high}`});
-    }
-  }, [low, high]);
-
-  console.log('{filterSelected}--------');
+  const handleValueChange = useCallback(
+    debounce(
+      ({low, high}: any) =>
+        updateFilterHandler({key: 'price', value: `${low}-${high}`}),
+      1000,
+    ),
+    [],
+  );
 
   return (
-    <ScrollView style={{flex: 1, paddingHorizontal: spacing.content}}>
-      {Facets.map((filter: any, index: number) => {
-        const key = filter?.Key;
-        if (key == 'rating') {
-          return (
-            <View style={{marginTop: 10, marginBottom: 15}}>
-              <Text
-                text={key}
-                variant={'smallBold'}
-                style={{marginBottom: spacing.small}}
-              />
+    <ScrollView style={{flex: 1}}>
+      <View style={{paddingHorizontal: spacing.content}}>
+        {Facets.map((filter: any, index: number) => {
+          const key = filter?.Key;
+          if (key == 'rating') {
+            return (
               <View
                 key={index.toString()}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                {[...new Array(5)].map((i, _) => (
-                  <AntDesign
-                    style={{marginHorizontal: spacing.tiny}}
-                    onPress={() => {
-                      setStarRate(_);
-                      updateFilterHandler({key, value: _ + 1});
-                    }}
-                    key={_.toString()}
-                    name="star"
-                    color={starRate >= _ ? colors.yellow : colors.reloadColor}
-                    size={35}
-                  />
-                ))}
+                style={{marginTop: 10, marginBottom: 15}}>
+                <Text
+                  text={key}
+                  variant={'smallBold'}
+                  style={{marginBottom: spacing.small}}
+                />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  {[...new Array(5)].map((i, _) => (
+                    <AntDesign
+                      style={{marginHorizontal: spacing.tiny}}
+                      onPress={() => {
+                        setStarRate(_);
+                        updateFilterHandler({key, value: _ + 1});
+                      }}
+                      key={_.toString()}
+                      name="star"
+                      color={starRate >= _ ? colors.yellow : colors.reloadColor}
+                      size={35}
+                    />
+                  ))}
+                </View>
               </View>
-            </View>
-          );
-        }
+            );
+          }
 
-        if (filter.Key == 'price') {
+          if (filter.Key == 'price') {
+            return (
+              <View
+                key={index.toString()}
+                style={{marginTop: 10, marginBottom: 15}}>
+                <Text
+                  text={key}
+                  variant={'smallBold'}
+                  style={{marginBottom: spacing.small}}
+                />
+                <RnRangeSlider
+                  onResponderEnd={e => console.log({e})}
+                  style={{width: '100%'}}
+                  min={0}
+                  max={100}
+                  step={1}
+                  floatingLabel
+                  renderThumb={renderThumb}
+                  renderRail={renderRail}
+                  renderRailSelected={renderRailSelected}
+                  renderLabel={renderLabel}
+                  renderNotch={renderNotch}
+                  onValueChanged={(low, high) =>
+                    handleValueChange({low, high, key})
+                  }
+                />
+              </View>
+            );
+          }
+
           return (
-            <View style={{marginTop: 10, marginBottom: 15}}>
+            <View
+              key={index.toString()}
+              style={{marginTop: 10, marginBottom: 15}}>
               <Text
                 text={key}
                 variant={'smallBold'}
                 style={{marginBottom: spacing.small}}
               />
-              <RnRangeSlider
-                onResponderEnd={e => console.log({e})}
-                style={{width: '100%'}}
-                min={0}
-                max={100}
-                step={1}
-                floatingLabel
-                renderThumb={renderThumb}
-                renderRail={renderRail}
-                renderRailSelected={renderRailSelected}
-                renderLabel={renderLabel}
-                renderNotch={renderNotch}
-                onValueChanged={(low, high) =>
-                  handleValueChange({low, high, key})
+              <SelectDropdown
+                onSelect={selectedItem =>
+                  updateFilterHandler({key, value: selectedItem?.Value})
                 }
+                search
+                searchInputStyle={{backgroundColor: colors.white}}
+                defaultButtonText={t('filter.select-dropdown')}
+                renderDropdownIcon={() => (
+                  <MaterialIcons
+                    name={`keyboard-arrow-down`}
+                    size={18}
+                    color={colors.black}
+                  />
+                )}
+                // disabled={isLoadingStates || !stateSelected.isExistData}
+                renderCustomizedButtonChild={selectedItem => (
+                  <Text
+                    center
+                    text={selectedItem?.Label || t('filter.select-dropdown')}
+                    color={
+                      selectedItem?.Label?.length
+                        ? colors.black
+                        : colors.gray[400]
+                    }
+                  />
+                )}
+                data={filter.Values}
+                buttonStyle={{
+                  width: '100%',
+                  paddingVertical: spacing.small,
+                  borderWidth: 1,
+                  borderColor: colors.gray[400],
+                  borderRadius: spacing.small,
+                  backgroundColor: colors.white,
+                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                  paddingHorizontal: spacing.smaller,
+                }}
+                buttonTextStyle={{fontFamily: font.regular}}
+                renderCustomizedRowChild={item => (
+                  <View
+                    style={{
+                      height: '100%',
+                      justifyContent: 'center',
+                      paddingHorizontal: spacing.smaller,
+                    }}>
+                    <Text variant="mediumBold" text={item.Label} />
+                  </View>
+                )}
+                // onSelect={item => {
+                //   setStateSelected({...stateSelected, item: item});
+                // }}
+                buttonTextAfterSelection={selectedItem => {
+                  return selectedItem;
+                }}
+                rowTextForSelection={(item: any) => item}
               />
             </View>
           );
-        }
-
-        return (
-          <View style={{marginTop: 10, marginBottom: 15}}>
-            <Text
-              text={key}
-              variant={'smallBold'}
-              style={{marginBottom: spacing.small}}
-            />
-            <SelectDropdown
-              onSelect={selectedItem =>
-                updateFilterHandler({key, value: selectedItem?.Value})
-              }
-              search
-              searchInputStyle={{backgroundColor: colors.white}}
-              defaultButtonText={t('addAddress.states-def')}
-              renderDropdownIcon={() => (
-                <MaterialIcons
-                  name={`keyboard-arrow-down`}
-                  size={18}
-                  color={colors.black}
-                />
-              )}
-              // disabled={isLoadingStates || !stateSelected.isExistData}
-              renderCustomizedButtonChild={selectedItem => (
-                <Text
-                  center
-                  text={selectedItem?.Label || t('addAddress.states-def')}
-                />
-              )}
-              data={filter.Values}
-              buttonStyle={{
-                width: '100%',
-                paddingVertical: spacing.small,
-                borderWidth: 1,
-                borderColor: colors.gray[400],
-                borderRadius: spacing.small,
-                backgroundColor: colors.white,
-                justifyContent: 'space-between',
-                flexDirection: 'row',
-                paddingHorizontal: spacing.smaller,
-              }}
-              buttonTextStyle={{fontFamily: font.regular}}
-              renderCustomizedRowChild={item => (
-                <View
-                  style={{
-                    height: '100%',
-                    justifyContent: 'center',
-                    paddingHorizontal: spacing.smaller,
-                  }}>
-                  <Text variant="mediumBold" text={item.Label} />
-                </View>
-              )}
-              // onSelect={item => {
-              //   setStateSelected({...stateSelected, item: item});
-              // }}
-              buttonTextAfterSelection={selectedItem => {
-                return selectedItem;
-              }}
-              rowTextForSelection={(item: any) => item}
-            />
-          </View>
-        );
-      })}
-      <Button
-        title={t('filter.submitBtn')}
-        style={{marginTop: 20}}
-        onPress={() => {
-          navigate('SearchScreen', {
-            dataFilter: filterSelected,
-            paramsType: 'filter',
-          } as any);
-        }}
-      />
+        })}
+        <Button
+          title={t('filter.submitBtn')}
+          style={{marginTop: 20}}
+          onPress={() => {
+            navigate('SearchScreen', {
+              dataFilter: filterSelected,
+              paramsType: 'filter',
+            } as any);
+          }}
+        />
+      </View>
     </ScrollView>
   );
 };

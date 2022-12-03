@@ -278,6 +278,10 @@
     "password": "كلمة المرور",
     "submitBtn": "حفظ التغييرات"
   },
+  "filter": {
+    "submitBtn": "ابحث",
+    "select-dropdown": "اختر"
+  },
   "checkout": {
     "payment-address": "عنوان الدفع",
     "shipping-address": "عنوان الشحن/ التوصيل",

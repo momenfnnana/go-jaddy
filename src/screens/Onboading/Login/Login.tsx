@@ -41,6 +41,17 @@ import {useAccessToken} from 'hook/useAccessToken';
 import {addCartProducts} from 'services/Cart';
 import {CART} from 'types';
 import {useSchema} from 'hook/useSchema';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import {LoginManager} from 'react-native-fbsdk-next';
+import {firebase} from '@react-native-firebase/auth';
+import {
+  appleAuth,
+  AppleButton,
+  
+} from '@invertase/react-native-apple-authentication';
 
 interface IinitialValues {
   phoneNumber: string;
@@ -175,6 +186,90 @@ const Login = () => {
     })();
   }, [updateProducts]);
 
+  const signInwithFacebook = async () => {
+    LoginManager.logInWithPermissions(['email']).then(
+      function (result) {
+        if (result.isCancelled) {
+          console.log('Login cancelled');
+        } else {
+          console.log({result});
+          console.log(
+            'Login success with permissions: ' +
+              result?.grantedPermissions?.toString(),
+          );
+        }
+      },
+      function (error) {
+        console.log('Login fail with error: ' + error);
+      },
+    );
+  };
+
+  const signInWithGoogle = async () => {
+    try {
+      console.log('first');
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      const token = await GoogleSignin.getTokens();
+      console.log({userInfo});
+      console.log({token});
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log('SIGN_IN_CANCELLED');
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.log('IN_PROGRESS');
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.log('PLAY_SERVICES_NOT_AVAILABLE');
+        // play services not available or outdated
+      } else {
+        console.log('some other error happened', {error});
+        // some other error happened
+      }
+    }
+  };
+
+  async function onAppleButtonPress() {
+    try {
+      // 1). start a apple sign-in request
+      const appleAuthRequestResponse = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.LOGIN,
+        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+      });
+
+      // 2). if the request was successful, extract the token and nonce
+      const {identityToken, nonce} = appleAuthRequestResponse;
+
+      // can be null in some scenarios
+      if (identityToken) {
+        // 3). create a Firebase `AppleAuthProvider` credential
+        const appleCredential = firebase.auth.AppleAuthProvider.credential(
+          identityToken,
+          nonce,
+        );
+
+        // 4). use the created `AppleAuthProvider` credential to start a Firebase auth request,
+        //     in this example `signInWithCredential` is used, but you could also call `linkWithCredential`
+        //     to link the account to an existing user
+        const userCredential = await firebase
+          .auth()
+          .signInWithCredential(appleCredential);
+
+        // user is now signed in, any Firebase `onAuthStateChanged` listeners you have will trigger
+        console.warn(
+          `Firebase authenticated via Apple, UID: ${userCredential.user.uid}`,
+        );
+      } else {
+        // handle this - retry?
+        console.log({appleAuthRequestResponse});
+        console.log('no token');
+      }
+    } catch (error) {
+      console.log('error in apple auth:', {error});
+    }
+  }
+
   return (
     <View style={styles.cont}>
       <View style={{flex: 1}}>
@@ -291,12 +386,16 @@ const Login = () => {
                     isLoading={isLoading}
                   />
                   <View style={styles.row}>
-                    <View style={styles.socailButtonContainer}>
+                    <Pressable
+                      onPress={signInwithFacebook}
+                      style={styles.socailButtonContainer}>
                       <FacebookIcon />
-                    </View>
-                    <View style={styles.socailButtonContainer}>
+                    </Pressable>
+                    <Pressable
+                      onPress={signInWithGoogle}
+                      style={styles.socailButtonContainer}>
                       <GoogleIcon />
-                    </View>
+                    </Pressable>
                   </View>
                 </View>
                 {isError && (
@@ -309,6 +408,23 @@ const Login = () => {
                       marginTop: 20,
                     }}
                     tx={`${error?.response?.data?.Message}`}
+                  />
+                )}
+                {appleAuth.isSupported && (
+                  <AppleButton
+                    cornerRadius={5}
+                    style={{
+                      marginTop: spacing.small,
+                      width: '100%',
+                      height: 50,
+                      borderWidth: 1,
+                      borderColor: colors.black,
+                      borderRadius: 24,
+                      marginBottom:-12
+                    }}
+                    buttonStyle={AppleButton.Style.WHITE}
+                    buttonType={AppleButton.Type.SIGN_IN}
+                    onPress={() => onAppleButtonPress()}
                   />
                 )}
                 <Button
@@ -353,7 +469,7 @@ const styles = StyleSheet.create({
   },
   linearGradient: {
     backgroundColor: '#D9DFFF',
-    flex: 1,
+    flex: 0.8,
   },
   row: {
     flexDirection: 'row',
