@@ -27,5 +27,7 @@ interface IAddress {
   StateId?: string;
   IsDefault?: boolean;
 }
+
+type IScreensNames = {[key: string]: string};
 export const CART = 'CART';
-export type {ICurrency, ImageData, IAddress};
+export type {ICurrency, ImageData, IAddress, IScreensNames};
