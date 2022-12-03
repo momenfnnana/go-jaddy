@@ -1,5 +1,4 @@
 import React, {useCallback} from 'react';
-import {CartScreen} from 'screens';
 import {BottomTabsRoutes} from './RoutesTypes';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
@@ -18,15 +17,17 @@ import ProfileStack from './ProfileStack';
 import CartStack from './CartStack';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 
-interface IUser {
-  id: string;
-}
+const initialStacks = {
+  HomeStack: 'Home',
+  CategoriesStack: 'Categories',
+  StoresStack: 'Stores',
+  Cart: 'Cart',
+  Profile: 'Profile',
+};
+
 const Tab = createBottomTabNavigator<BottomTabsRoutes>();
 const BottomTabs = () => {
   const {t} = useTranslation();
-  const user: IUser = {
-    id: '1',
-  };
 
   const getColor = useCallback((focused: boolean) => {
     return focused ? colors.danger : colors.tabsColor;
@@ -34,6 +35,14 @@ const BottomTabs = () => {
 
   return (
     <Tab.Navigator
+      screenListeners={({navigation, route}) => ({
+        tabPress: e => {
+          e.preventDefault();
+          navigation.navigate(route.name, {
+            screen: (initialStacks as any)[route.name],
+          });
+        },
+      })}
       screenOptions={({route}) => ({
         tabBarActiveTintColor: colors.danger,
         tabBarInactiveTintColor: colors.gray[800],

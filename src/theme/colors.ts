@@ -51,10 +51,12 @@ const orangePalette = {
 
 const greenPalette = {
   green: '#087F23', // Main
+  green2: '#00C851',
   greenLight: '#E7F3E7',
   greenSimiLight: '#B5B5B5',
   greenDark: '#005005',
   greenSecondary: '#B6B7B7',
+  greenSecondary2: '#a3a3a3',
 };
 const brouwnPalette = {
   brouwn: '#9F9F9F', // Main
