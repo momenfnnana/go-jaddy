@@ -178,13 +178,14 @@ const Search = () => {
                 }, 100);
               }}
               style={{
+                marginTop: spacing.small,
                 padding: spacing.smaller,
                 backgroundColor: colors.red,
                 borderRadius: spacing.small,
                 alignSelf: 'flex-end',
               }}>
               <Text
-                tx={"search.clear-filters"}
+                tx={'search.clear-filters'}
                 color={colors.white}
                 variant="smallRegular"
               />
