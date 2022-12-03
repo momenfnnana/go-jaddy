@@ -20,7 +20,8 @@ export interface ITab {
     | 'CustomerPoints'
     | 'ProfileDetails'
     | 'OrdersList'
-    | 'AboutTheAppScreen';
+    | 'AboutTheAppScreen'
+    | 'NotificationsScreen';
   params?: any | any[];
 }
 
@@ -29,6 +30,7 @@ export const data: ITab[] = [
     id: 1,
     title: 'profile.notifications',
     icon: <ProfileIconTab />,
+    goTo: 'NotificationsScreen',
   },
   {
     id: 2,

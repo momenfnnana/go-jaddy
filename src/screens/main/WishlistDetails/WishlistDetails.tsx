@@ -1,12 +1,11 @@
-import {View, Text, FlatList, RefreshControl, ViewStyle} from 'react-native';
+import {View, FlatList, RefreshControl, ViewStyle} from 'react-native';
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {useTranslation} from 'react-i18next';
 import {
   WishlistDetailsScreenNavigationProp,
   ProfileStackProps,
 } from 'navigators/NavigationsTypes';
-import {BackButton, Loader, RowProductCard} from 'components';
+import {BackButton, Loader} from 'components';
 import {getWishlistDetails} from 'services/Profile';
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {colors} from 'theme';
@@ -42,7 +41,6 @@ const WishlistDetails = () => {
       },
     },
   );
-  const {t} = useTranslation();
   const onRefresh = React.useCallback(() => {
     refetch();
   }, []);

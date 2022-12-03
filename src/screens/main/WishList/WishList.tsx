@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useMemo, useState} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {AddHeaderBtn, BackButton, Loader} from 'components';
@@ -51,6 +51,22 @@ const WishList = () => {
       setWishlistData(data?.data?.Wishlists);
     }
   }, [data?.data?.Wishlists]);
+  const WishListItemsToRender = useMemo(() => {
+    if (wishlistData.length === 1) {
+      return [
+        ...wishlistData,
+        {
+          Name: '',
+          Id: -1,
+          WishlistLinesCount: -1,
+          refreshItems: () => {},
+          removeEmptyItem: () => {},
+        },
+      ];
+    } else {
+      return wishlistData.filter((element: IWishListItem) => element.Id !== -1);
+    }
+  }, [wishlistData]);
 
   if (isFetching) {
     return <Loader size={'large'} containerStyle={styles.loader} />;
@@ -58,22 +74,19 @@ const WishList = () => {
 
   return (
     <View style={styles.container}>
-      {wishlistData?.length > 0 ? (
-        <FlatList
-          data={wishlistData}
-          keyExtractor={item => item.Id.toString()}
-          numColumns={2}
-          renderItem={({item}) => (
-            <WishlistItem
-              {...item}
-              refreshItems={refreshItems}
-              removeEmptyItem={removeEmptyItem}
-            />
-          )}
-        />
-      ) : (
-        <FreeWishlist />
-      )}
+      <FlatList
+        data={WishListItemsToRender}
+        keyExtractor={item => item.Id.toString()}
+        numColumns={2}
+        ListEmptyComponent={<FreeWishlist />}
+        renderItem={({item}) => (
+          <WishlistItem
+            {...item}
+            refreshItems={refreshItems}
+            removeEmptyItem={removeEmptyItem}
+          />
+        )}
+      />
     </View>
   );
 };

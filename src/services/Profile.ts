@@ -92,3 +92,7 @@ export const getTopics = () => {
 export const getTopicDetails = ({id}: {id: number}) => {
   return axios(`${BASE_URL}/api/custom/topic/TopicDetails?id=${id}`);
 };
+
+export const getNotifications = () => {
+  return axios(`${BASE_URL}/api/custom/customer/Notifications`);
+};

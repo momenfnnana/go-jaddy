@@ -53,6 +53,10 @@ const ProductCard = ({
     navigate('ProductDetails', {Id: ProductId} as any);
   };
 
+  const addtoCartHandler = () => {
+    console.log('addtoCartHandler');
+  };
+
   useEffect(() => {
     if (isSuccess) {
       if (filterItems) {
@@ -81,7 +85,7 @@ const ProductCard = ({
           variant="xSmallRegular"
           style={styles.categoryName}
         />
-        <View style={styles.row}>
+        <Pressable onPress={addtoCartHandler} style={styles.row}>
           <AddCartIcon />
           <Text
             tx="product-details.add-to-cart"
@@ -89,7 +93,7 @@ const ProductCard = ({
             color={colors.primary}
             style={styles.addToCartText}
           />
-        </View>
+        </Pressable>
       </View>
       <View style={styles.pricesContainer}>
         <View>
