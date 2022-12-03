@@ -21,3 +21,4 @@ export {default as FiltersScreen} from './Filters';
 export {default as ContactUsScreen} from './ContactUs';
 export {default as AboutTheAppScreen} from './AboutTheApp';
 export {default as AboutTheAppDetails} from './AboutTheAppDetails';
+export {default as NotificationsScreen} from './Notifications';

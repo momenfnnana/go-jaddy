@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Pressable} from 'react-native';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider as LanguageProvider} from 'context/reducer';
@@ -10,7 +10,11 @@ import i18n from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import en from 'i18n/locales/en.json';
 import ar from 'i18n/locales/ar.json';
-import {readLanguage, readAccessToken, readLocalCurrencies} from 'constants';
+import {
+  readLanguage,
+  readAccessToken,
+  readLocalCurrencies,
+} from './src/constants';
 import {UserProvider} from 'context/UserContext';
 import {
   setAxiosAccessToken,
@@ -51,6 +55,7 @@ const resources = {
 export default function App() {
   const {isConnected} = useNetInfo();
   const [isAr, setIsAr] = useState<boolean>(false);
+
   useEffect(() => {
     requestUserPermission();
     RNBootSplash.hide();
@@ -83,7 +88,6 @@ export default function App() {
     });
   }, []);
 
-  console.log({isConnected});
   if (!isConnected) {
     return (
       <QueryClientProvider client={queryClient}>
@@ -96,19 +100,21 @@ export default function App() {
 
   return (
     <View style={[styles.container, {direction: isAr ? 'rtl' : 'ltr'}]}>
-      <ScreenProvider>
-        {/* remove user provider */}
-        <UserProvider>
-          <WishlistProvider>
-            {/* check language provider  */}
-            <LanguageProvider>
-              <QueryClientProvider client={queryClient}>
-                <AppIndex />
-              </QueryClientProvider>
-            </LanguageProvider>
-          </WishlistProvider>
-        </UserProvider>
-      </ScreenProvider>
+      <SafeAreaProvider>
+        <ScreenProvider>
+          {/* remove user provider */}
+          <UserProvider>
+            <WishlistProvider>
+              {/* check language provider  */}
+              <LanguageProvider>
+                <QueryClientProvider client={queryClient}>
+                  <AppIndex />
+                </QueryClientProvider>
+              </LanguageProvider>
+            </WishlistProvider>
+          </UserProvider>
+        </ScreenProvider>
+      </SafeAreaProvider>
     </View>
   );
 }

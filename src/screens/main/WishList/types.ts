@@ -14,10 +14,10 @@ interface ITop4Products {
 }
 interface IWishListItem {
   Name: string;
-  CreatedOn: Date;
+  CreatedOn?: Date;
   Id: number;
-  ModifiedOn: Date;
-  Top4Products: ITop4Products[];
+  ModifiedOn?: Date;
+  Top4Products?: ITop4Products[];
   WishlistLinesCount: number;
   refreshItems: () => void;
   removeEmptyItem?: () => void;

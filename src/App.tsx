@@ -1,8 +1,5 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {NavigationContainer, useTheme} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {AuthStack, HomeStack} from 'navigators';
-import {MainNavigator} from 'navigators/RoutesTypes';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -12,21 +9,20 @@ import {
   TouchableWithoutFeedback,
   useWindowDimensions,
 } from 'react-native';
-import {Loader} from 'components';
+import {Loader, ToastMessage} from 'components';
 import {UserContext} from 'context/UserContext';
 import {useQuery} from '@tanstack/react-query';
 import {getCurrencies, getSettings} from 'services/Auth';
-import {changeLocalCurrencies, readAccessToken} from 'constants';
+import {changeLocalCurrencies} from './constants';
 import {setAxiosCurrencyId} from 'axiosConfig';
 import {navigationRef} from 'navigators/RootNavigation';
+import RootStack from 'navigators/RootStack';
+import {ToastProvider} from 'react-native-toast-notifications';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {Settings} from 'react-native-fbsdk-next';
 
-const Stack = createNativeStackNavigator<MainNavigator>();
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
-  const {accessToken, setSettings, setCurrencies} = useContext(UserContext);
+  const {setSettings, setCurrencies} = useContext(UserContext);
   const {height, width} = useWindowDimensions();
   const {colors, dark} = useTheme();
   const {
@@ -39,12 +35,6 @@ const App = () => {
     isLoading: isLoadingCurrencies,
     isSuccess: isSuccessLoadingCurrencies,
   } = useQuery(['currencies'], getCurrencies);
-  useEffect(() => {
-    readAccessToken().then(res => {
-      res ? setIsLoggedIn(true) : setIsLoggedIn(false);
-      setLoading(false);
-    });
-  }, [accessToken]);
 
   useEffect(() => {
     if (isSuccessLoadingCurrencies === true) {
@@ -64,7 +54,7 @@ const App = () => {
     Settings.initializeSDK();
   }, []);
 
-  if (loading || isLoadingCurrencies || isLoadingSettings) {
+  if (isLoadingCurrencies || isLoadingSettings) {
     return (
       <Loader
         size={'large'}
@@ -80,17 +70,16 @@ const App = () => {
       <NavigationContainer
         theme={{colors: {...colors, background: '#F5F5F5'}, dark}}
         ref={navigationRef}>
-        <StatusBar barStyle="light-content" />
-        <KeyboardAvoidingView
-          style={{flex: 1}}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-          <Stack.Navigator
-            initialRouteName="HomeFlow"
-            screenOptions={{headerShown: false}}>
-            <Stack.Screen component={HomeStack} name="HomeFlow" />
-            <Stack.Screen component={AuthStack} name="AuthFlow" />
-          </Stack.Navigator>
-        </KeyboardAvoidingView>
+        <ToastProvider
+          placement="top"
+          renderToast={toast => <ToastMessage {...toast} />}>
+          <StatusBar barStyle="light-content" />
+          <KeyboardAvoidingView
+            style={{flex: 1}}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            <RootStack />
+          </KeyboardAvoidingView>
+        </ToastProvider>
       </NavigationContainer>
     </TouchableWithoutFeedback>
   );

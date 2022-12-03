@@ -136,12 +136,14 @@ const WishlistItem = ({
         {isLoadingRemoveWishListName && (
           <Loader containerStyle={styles.collectionLoader} />
         )}
-        <Pressable
-          onPress={showDeleteWishlistModal}
-          style={styles.closeBtnContainer}
-          disabled={isLoadingRemoveWishListName}>
-          <CloseIcon style={styles.closeBtn} />
-        </Pressable>
+        {Id !== -1 && (
+          <Pressable
+            onPress={showDeleteWishlistModal}
+            style={styles.closeBtnContainer}
+            disabled={isLoadingRemoveWishListName}>
+            <CloseIcon style={styles.closeBtn} />
+          </Pressable>
+        )}
         <FlatList
           data={products}
           keyExtractor={item => item.Id.toString()}
@@ -165,36 +167,37 @@ const WishlistItem = ({
           )}
         />
       </View>
-      {isEdititingCollectionName ? (
-        <CollectionNameInput
-          placeholder="wishlist.collection-name"
-          value={collectionName}
-          onChangeText={setCollectionName}
-          containerStyle={styles.collectionNameInput}
-          rightIcon={
-            <Pressable
-              onPress={editCollectionNameHandler}
-              style={styles.checkboxContainer}
-              disabled={isLoadingEditWishlistName || isLoadingCreateWishList}>
-              {isLoadingEditWishlistName || isLoadingCreateWishList ? (
-                <Loader size={'small'} />
-              ) : (
-                <AntDesign name={'check'} size={15} color={colors.white} />
-              )}
-            </Pressable>
-          }
-        />
-      ) : (
-        <Pressable
-          onPress={onPressEditCollectionName}
-          style={styles.collectionNameContainer}
-          disabled={isLoadingRemoveWishListName}>
-          <Text text={collectionName} />
-          <View style={styles.editIconContainer}>
-            <EditIcon />
-          </View>
-        </Pressable>
-      )}
+      {Id !== -1 &&
+        (isEdititingCollectionName ? (
+          <CollectionNameInput
+            placeholder="wishlist.collection-name"
+            value={collectionName}
+            onChangeText={setCollectionName}
+            containerStyle={styles.collectionNameInput}
+            rightIcon={
+              <Pressable
+                onPress={editCollectionNameHandler}
+                style={styles.checkboxContainer}
+                disabled={isLoadingEditWishlistName || isLoadingCreateWishList}>
+                {isLoadingEditWishlistName || isLoadingCreateWishList ? (
+                  <Loader size={'small'} />
+                ) : (
+                  <AntDesign name={'check'} size={15} color={colors.white} />
+                )}
+              </Pressable>
+            }
+          />
+        ) : (
+          <Pressable
+            onPress={onPressEditCollectionName}
+            style={styles.collectionNameContainer}
+            disabled={isLoadingRemoveWishListName}>
+            <Text text={collectionName} />
+            <View style={styles.editIconContainer}>
+              <EditIcon />
+            </View>
+          </Pressable>
+        ))}
       <Modal
         isVisible={isDeleteWishListComponentVisibel}
         onBackdropPress={hideDeleteWishlistModal}

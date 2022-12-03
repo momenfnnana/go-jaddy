@@ -20,7 +20,6 @@ import {ActivityIndicator} from 'react-native-paper';
 const CategoriesDetails = () => {
   const {width} = useWindowDimensions();
   const {params} = useRoute<CategoryNavigationsType>();
-  console.log({id: params?.id, title: params?.title});
 
   const {push, pop, goBack, canGoBack, replace, navigate, setOptions} =
     useNavigation<CategoryNavigationsType>();
