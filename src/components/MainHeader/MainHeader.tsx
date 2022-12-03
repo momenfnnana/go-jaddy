@@ -1,17 +1,20 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleSheet, View, useWindowDimensions, Pressable} from 'react-native';
 import {HeaderIcon, NotificationIcon} from 'assets/icons';
 import {colors, spacing} from 'theme';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {UserContext} from 'context/UserContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
+import {HomeNavigationsType} from 'navigators/NavigationsTypes';
 
 const MainHeader = () => {
-  const {top} = useSafeAreaInsets();
+  const {navigate} = useNavigation<HomeNavigationsType>();
   const {width, height} = useWindowDimensions();
   const SIZE: number = width * 0.1;
   const HEADER_HEIGHT = height * 0.177;
-  const {setUserData} = useContext(UserContext);
+  const goToNotifications = () => {
+    navigate('ProfileStack', {
+      screen: 'NotificationsScreen',
+    } as any);
+  };
 
   return (
     <View
@@ -24,13 +27,9 @@ const MainHeader = () => {
       <View style={{width: SIZE}} />
       <HeaderIcon />
       <Pressable
-        onPress={async () => {
-          await AsyncStorage.removeItem('accessToken');
-          setUserData({});
-        }}>
-        <View style={styles.notificationIconContainer}>
-          <NotificationIcon width={SIZE} />
-        </View>
+        onPress={goToNotifications}
+        style={styles.notificationIconContainer}>
+        <NotificationIcon width={SIZE} />
       </Pressable>
     </View>
   );
