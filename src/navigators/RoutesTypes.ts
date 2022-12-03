@@ -11,7 +11,7 @@ export type BottomTabsRoutes = {
   CategoryDetails: {title: ''; id: -1};
   StoresStack: StoresRoutes;
   Cart: CartRoutes;
-  Profile: ProfileRoutes;
+  ProfileStack: ProfileRoutes;
 };
 
 export type HomeRoutes = {
@@ -66,6 +66,7 @@ export type ProfileRoutes = {
   ContactUsScreen: undefined;
   AboutTheAppScreen: undefined;
   AboutTheAppDetails: {Id: number};
+  NotificationsScreen: undefined;
 };
 
 export type AuthRoutes = {

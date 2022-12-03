@@ -22,6 +22,7 @@ export {
   ContactUsScreen,
   AboutTheAppScreen,
   AboutTheAppDetails,
+  NotificationsScreen,
 } from './main';
 export {
   OnboardingScreen,

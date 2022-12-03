@@ -15,6 +15,7 @@ import {
   ContactUsScreen,
   AboutTheAppScreen,
   AboutTheAppDetails,
+  NotificationsScreen,
 } from 'screens';
 import {colors, font} from 'theme';
 import {ProfileRoutes} from './RoutesTypes';
@@ -100,6 +101,18 @@ const ProfileStack = () => {
           options={{headerShown: false}}
           component={AboutTheAppDetails}
           name="AboutTheAppDetails"
+        />
+        <Stack.Screen
+          component={NotificationsScreen}
+          name="NotificationsScreen"
+          options={{
+            headerStyle: {backgroundColor: colors.primary},
+            headerTitleStyle: {fontFamily: font.regular, color: colors.white},
+            headerBackTitleVisible: false,
+            headerTitleAlign: 'center',
+            headerShown: true,
+            headerTitle: t('profile.notifications'),
+          }}
         />
       </Stack.Navigator>
     </DropDownProvider>
