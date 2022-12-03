@@ -89,7 +89,7 @@ const Carasoule = ({containerStyle, data}: ICarasoule) => {
 
   return (
     <View style={containerStyle}>
-      {!!data!.length && (
+      {!!data.length && (
         <FlatList
           data={data}
           keyExtractor={(_, index) => index.toString()}
