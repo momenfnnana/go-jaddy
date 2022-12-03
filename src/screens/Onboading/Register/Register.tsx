@@ -39,6 +39,7 @@ import axios from 'axios';
 import {RegisterScreenNavigationProp} from 'navigators/NavigationsTypes';
 import {addCartProducts} from 'services/Cart';
 import {CART} from 'types';
+import messaging from '@react-native-firebase/messaging';
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -79,6 +80,7 @@ const Register = () => {
     type: '',
     uri: '',
   });
+  const [notificationToken, setNotificationToken] = useState<string>();
   const [email, setEmail] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const {top, bottom} = useSafeAreaInsets();
@@ -97,6 +99,7 @@ const Register = () => {
     data.append('ConfirmPassword', values.confirmPassword);
     if (isSeller) {
       data.append('CustomerStoreName', values.storeName);
+      data.append('NotificationToken', notificationToken);
       data.append('StoreImage', {
         uri: image.uri,
         type: image.type,
@@ -202,6 +205,11 @@ const Register = () => {
     });
   };
   useEffect(() => {
+    messaging()
+      .getToken()
+      .then(token => {
+        setNotificationToken(token);
+      });
     (async () => {
       const cartItems = await AsyncStorage.getItem(CART);
       const cartArray = JSON.parse(cartItems as any) as any[];

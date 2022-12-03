@@ -6,9 +6,6 @@ import {
   useWindowDimensions,
   ImageStyle,
   Pressable,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
   Keyboard,
 } from 'react-native';
 import {LoginMain} from 'assets/images';
@@ -26,7 +23,6 @@ import {FacebookIcon, GojaddyLoginIcon, GoogleIcon} from 'assets/icons';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import {Formik} from 'formik';
-import * as Yub from 'yup';
 import {useTranslation} from 'react-i18next';
 import {doLogin_service} from 'services/Auth';
 import {useMutation} from '@tanstack/react-query';
@@ -52,6 +48,7 @@ import {
   AppleButton,
 } from '@invertase/react-native-apple-authentication';
 import auth from '@react-native-firebase/auth';
+import messaging from '@react-native-firebase/messaging';
 
 interface IinitialValues {
   phoneNumber: string;
@@ -78,6 +75,7 @@ const Login = () => {
     useNavigation<LoginScreenNavigationProp>();
   const {t} = useTranslation();
   const {setAccessToken, updateProducts} = useContext(UserContext);
+  const [notificationToken, setNotificationToken] = useState<string>();
   const [isPasswordShow, setIsPasswordShown] = useState<boolean>(false);
   const [isAnonymousModalOpened, setIsAnonymousModalOpened] =
     useState<boolean>(false);
@@ -146,6 +144,7 @@ const Login = () => {
     const data = {
       PhoneNumber: countryCode + values.phoneNumber,
       Password: values.password,
+      NotificationToken: notificationToken,
       // PhoneNumber: '00970595800504',
       // Password: '/9875410Bara',
     };
@@ -177,6 +176,11 @@ const Login = () => {
   };
 
   useEffect(() => {
+    messaging()
+      .getToken()
+      .then(token => {
+        setNotificationToken(token);
+      });
     (async () => {
       const cartItems = await AsyncStorage.getItem(CART);
       const cartArray = JSON.parse(cartItems as any) as any[];
