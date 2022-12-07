@@ -1,6 +1,7 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AdidasIcon} from 'assets/images';
-import {CartButton, CloseButton} from 'components';
+import CartButton from 'components/CartButton';
+import CloseButton from 'components/CloseButton';
 import {CartProvider} from 'context/CartContext';
 import React from 'react';
 import {useTranslation} from 'react-i18next';

@@ -6,6 +6,7 @@ import {
   Text,
   ReviewList,
   RateModal,
+  ArrowIcon,
 } from 'components';
 
 import {
@@ -35,7 +36,6 @@ import {RatingFiltters} from 'components/RatingFilters';
 import CategoryItem from './components/categoryItem';
 import {getCategoryProducts} from 'services/Category';
 import MainTab from './components/MainTab';
-import ArrowIcon from 'components/Arrow';
 import EmptyPage from 'components/EmptyPage/EmptyPage';
 import {LogoSplash} from 'assets/images';
 import {useLogged} from 'hook/useLogged';
