@@ -567,10 +567,7 @@ const ListHeaderComponent = ({
           />
           <View style={[styles.priceContainer, styles.storeWidth]}>
             <Text
-              text={(
-                (Product?.ProductPrice?.Price + totalPrice) *
-                productsNumber
-              ).toString()}
+              text={ProductPrice?.Price}
               color={colors.orange}
               variant="xLargeBold"
               numberOfLines={1}
