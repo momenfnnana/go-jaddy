@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {colors, spacing} from 'theme';
 
-import {Text} from 'components';
+import Text from 'components/Text';
 import RNModal from 'react-native-modal';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import AntDesign from 'react-native-vector-icons/AntDesign';

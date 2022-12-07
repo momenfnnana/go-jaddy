@@ -1,5 +1,5 @@
-import {View, Text, Pressable} from 'react-native';
 import React from 'react';
+import {Pressable} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {colors, spacing} from 'theme';
 

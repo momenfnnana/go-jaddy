@@ -1,22 +1,22 @@
 import {View, Pressable, Image, StyleSheet} from 'react-native';
 import React, {useContext, useState} from 'react';
-import Modal from 'components/Modal';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {colors, spacing} from 'theme';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import InputField from 'components/InputField';
 import {useTranslation} from 'react-i18next';
 import {UploadImageIcon} from 'assets/icons';
-import Button from 'components/Button';
 import {launchImageLibrary} from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 import {UserContext} from 'context/UserContext';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {getIpAddress, postAddReview} from 'services/Home';
 import {Switch} from 'react-native-paper';
-import Text from 'components/Text';
 import {postAddStoreReview} from 'services/Stores';
+import Modal from 'components/Modal';
+import InputField from 'components/InputField';
+import Button from 'components/Button';
+import Text from 'components/Text';
 
 interface ICameraImage {
   uri?: string;

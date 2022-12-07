@@ -1,9 +1,10 @@
 import React from 'react';
 import {View, Pressable, Image, StyleSheet} from 'react-native';
-import {Modal, Text} from 'components';
+import Modal from 'components/Modal';
+import Text from 'components/Text';
+import {IFlag} from 'components/InputField/PhoneNumberInput';
 import {colors, spacing} from 'theme';
 import {ICON_WIDTH} from 'screens/Onboading/Login/Login';
-import {IFlag} from 'components/InputField/PhoneNumberInput';
 
 const SIZE = 18;
 interface ICountryPicker {

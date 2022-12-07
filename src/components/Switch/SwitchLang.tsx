@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, StyleSheet, Pressable, I18nManager} from 'react-native';
 import {useQuery} from '@tanstack/react-query';
 import {getLanguages} from 'services/Auth';
-import {Text} from 'components';
+import Text from 'components/Text';
 import {colors, spacing} from 'theme';
 import {useLanguage} from 'hook/useLanguage';
 import i18n from 'i18next';

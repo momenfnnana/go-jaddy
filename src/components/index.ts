@@ -25,3 +25,5 @@ export {default as AddAddressComponent} from './AddAddressComponent';
 export {default as CloseButton} from './CloseButton';
 export {default as CartButton} from './CartButton';
 export {default as ToastMessage} from './ToastMessage';
+export {default as SelectedAttribute} from './SelectedAttribute';
+export {default as ArrowIcon} from './Arrow';

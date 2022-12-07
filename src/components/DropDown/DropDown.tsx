@@ -1,14 +1,8 @@
 import React, {useContext, useState} from 'react';
-import {
-  Pressable,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  useWindowDimensions,
-} from 'react-native';
+import {Pressable, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {colors, font, spacing} from 'theme';
-import {Text, Divider} from 'components';
+import Text from 'components/Text';
+import Divider from 'components/Divider';
 import {UserContext} from 'context/UserContext';
 import {useCurrency} from 'hook/useCurrency';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -53,39 +47,43 @@ const DropDown = ({text, items}: IDropDown) => {
       </Pressable>
       {isDropDownShown && currenciesData?.data?.Currencies.length && (
         <View style={styles.listContainer}>
-          {currenciesData?.data?.Currencies.map((item: ICurrency, index: number) => {
-            return (
-              <>
-                <TouchableOpacity
-                  onPress={() => changeCurrencyHandler(item)}
-                  style={styles.row}>
-                  <View key={item?.Id} style={styles.dropDownItem}>
-                    <Text
-                      variant={
-                        currency?.Id === item?.Id
-                          ? 'xSmallBold'
-                          : 'xSmallRegular'
-                      }
-                      text={`${item?.Name} (${item?.Symbol})`}
-                      color={
-                        currency?.Id === item?.Id
-                          ? colors.primary
-                          : colors.arrowColor
-                      }
-                    />
-                  </View>
-                  {currency?.Id === item?.Id && (
-                    <AntDesign
-                      name={'check'}
-                      size={15}
-                      color={colors.primary}
-                    />
+          {currenciesData?.data?.Currencies.map(
+            (item: ICurrency, index: number) => {
+              return (
+                <>
+                  <TouchableOpacity
+                    onPress={() => changeCurrencyHandler(item)}
+                    style={styles.row}>
+                    <View key={item?.Id} style={styles.dropDownItem}>
+                      <Text
+                        variant={
+                          currency?.Id === item?.Id
+                            ? 'xSmallBold'
+                            : 'xSmallRegular'
+                        }
+                        text={`${item?.Name} (${item?.Symbol})`}
+                        color={
+                          currency?.Id === item?.Id
+                            ? colors.primary
+                            : colors.arrowColor
+                        }
+                      />
+                    </View>
+                    {currency?.Id === item?.Id && (
+                      <AntDesign
+                        name={'check'}
+                        size={15}
+                        color={colors.primary}
+                      />
+                    )}
+                  </TouchableOpacity>
+                  {currenciesData?.data?.Currencies.length !== index + 1 && (
+                    <Divider />
                   )}
-                </TouchableOpacity>
-                {currenciesData?.data?.Currencies.length !== index + 1 && <Divider />}
-              </>
-            );
-          })}
+                </>
+              );
+            },
+          )}
         </View>
       )}
     </View>

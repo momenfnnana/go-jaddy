@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 import {useNavigation, useNavigationState} from '@react-navigation/native';
 import {DiscountIcon, ProductFavoriteIcon, StarFilledIcon} from 'assets/icons';
-import {Text, AddToFav} from 'components';
+import Text from 'components/Text';
+import AddToFav from 'components/Modal/AddToFav';
 import {useCurrency} from 'hook/useCurrency';
 import {HomeNavigationsType} from 'navigators/NavigationsTypes';
 import {IProductInterface} from 'screens/main/Home/types';

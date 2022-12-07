@@ -1,6 +1,7 @@
 import {FlatList, StyleSheet, useWindowDimensions, View} from 'react-native';
 import React from 'react';
-import {ProductCard, Text} from 'components';
+import {ProductCard} from 'components/ProductCard';
+import Text from 'components/Text';
 import {colors, spacing} from 'theme';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 

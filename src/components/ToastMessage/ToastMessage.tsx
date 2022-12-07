@@ -1,14 +1,13 @@
 import React from 'react';
 import {Pressable, StyleSheet} from 'react-native';
-import {Text} from 'components';
+import Text from 'components/Text';
 import {navigateToDirectory} from 'navigators/RootStack';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ToastProps} from 'react-native-toast-notifications/lib/typescript/toast';
 import {colors, font, spacing} from 'theme';
 
-const ToastMessage = ({data, message}: ToastProps) => {
+const ToastMessage = ({data}: ToastProps) => {
   const {top} = useSafeAreaInsets();
-  console.log({data, message});
   
   return (
     <Pressable

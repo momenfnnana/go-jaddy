@@ -1,10 +1,10 @@
 import {View, Pressable, StyleSheet, ViewStyle} from 'react-native';
 import React from 'react';
 import {colors, spacing} from 'theme';
-import Text from 'components/Text';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {StarFilledIcon} from 'assets/icons';
 import {Ifiltter} from 'screens/main/StoreDetails/StoreDetails';
+import Text from 'components/Text';
 import Button from 'components/Button';
 
 interface IRatingFiltters {

@@ -2,7 +2,7 @@ import React, {ReactNode} from 'react';
 import {StyleSheet, TextInputProps, View, ViewStyle} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {colors, font, spacing} from 'theme';
-import {Text} from 'components';
+import Text from 'components/Text';
 import {TextInput} from 'react-native-paper';
 import {FormikErrors, FormikTouched} from 'formik';
 import {useLanguage} from 'hook/useLanguage';

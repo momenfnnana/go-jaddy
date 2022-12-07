@@ -1,7 +1,8 @@
 import {Pressable, View, ViewStyle} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {colors} from 'theme';
-import {Loader, Text} from 'components';
+import Loader from 'components/Loader';
+import Text from 'components/Text';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {deleteAddress, setDefulatAddress} from 'services/Addresses';
 import {useNavigation} from '@react-navigation/native';
