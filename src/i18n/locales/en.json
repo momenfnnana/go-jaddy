@@ -120,7 +120,8 @@
     "rate-field": "Documents (optional)",
     "attach-image": "Attach image (optional)",
     "select": "Select {{optionName}}",
-    "custom-text": "Custom text.."
+    "custom-text": "Custom text..",
+    "load-more": "load more reviews"
   },
   "category": {
     "title": "Category"
