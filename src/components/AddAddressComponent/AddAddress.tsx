@@ -10,11 +10,13 @@ import {
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {useTranslation} from 'react-i18next';
 import {useSchema} from 'hook/useSchema';
-import InputField, {PhoneNumberInput} from 'components/InputField';
 import {colors, font, spacing} from 'theme';
 import SelectDropdown from 'react-native-select-dropdown';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {Loader, Text, Button} from 'components';
+import InputField, {PhoneNumberInput} from 'components/InputField';
+import Loader from 'components/Loader';
+import Text from 'components/Text';
+import Button from 'components/Button';
 import {Switch} from 'react-native-paper';
 import {IAddress} from 'types';
 

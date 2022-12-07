@@ -1,7 +1,7 @@
 import {Image, Pressable, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {colors} from 'theme';
-import {Loader, Text} from 'components';
+import {colors, spacing} from 'theme';
+import {Loader, SelectedAttribute, Text} from 'components';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useCurrency} from 'hook/useCurrency';
 import {BASE_URL} from 'utils/Axios';
@@ -69,6 +69,7 @@ const CartItem = ({item, setData}: ICartItem) => {
   const imageUrl = item?.Image?.Url
     ? BASE_URL + item?.Image?.Url
     : BASE_URL + item?.Images[0]?.Url;
+
   return (
     <View
       style={{
@@ -145,7 +146,6 @@ const CartItem = ({item, setData}: ICartItem) => {
               <MaterialIcons size={18} name="remove" color={colors.secondary} />
             )}
           </Pressable>
-
           <Text
             text={
               item?.SubTotal + ' ' + currency?.Symbol ||
@@ -154,6 +154,9 @@ const CartItem = ({item, setData}: ICartItem) => {
             color={colors.primary}
             variant="smallExtraBold"
           />
+        </View>
+        <View style={{marginTop: spacing.medium, marginBottom: spacing.normal}}>
+          <SelectedAttribute items={item?.AttributesSelection} />
         </View>
       </View>
       <View

@@ -27,15 +27,15 @@ const ProgressiveImage = ({
   let imageAnimated = new Animated.Value(0);
 
   const handleThumbnailLoad = () => {
-    console.log('handleThumbnailLoad');
     Animated.timing(thumbnailAnimated, {
       toValue: 1,
+      useNativeDriver: true,
     } as any).start();
   };
   const onImageLoad = () => {
-    console.log('onImageLoad');
     Animated.timing(imageAnimated, {
       toValue: 1,
+      useNativeDriver: true,
     } as any).start();
   };
 

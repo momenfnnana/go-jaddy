@@ -7,7 +7,9 @@ import {
   postAddToWishlist,
   postCreateWishlist,
 } from 'services/Home';
-import {Loader, Text, InputField} from 'components';
+import Loader from 'components/Loader';
+import InputField from 'components/InputField';
+import Text from 'components/Text';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import AntDesign from 'react-native-vector-icons/AntDesign';

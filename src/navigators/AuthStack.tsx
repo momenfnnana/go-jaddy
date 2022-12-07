@@ -9,7 +9,7 @@ import {
 import {AuthRoutes} from './RoutesTypes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {navigate} from './RootNavigation';
-import {Loader} from 'components';
+import Loader from 'components/Loader';
 
 
 const Stack = createNativeStackNavigator<AuthRoutes>();

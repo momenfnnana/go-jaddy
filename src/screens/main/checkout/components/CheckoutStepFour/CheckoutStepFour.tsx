@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
-  ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
   Pressable,
@@ -32,7 +31,7 @@ const CheckoutStepFour = () => {
   const [selectedGifts, setSelectedGifts] = useState<any[]>([]);
   const [tellUs, setTellUs] = useState<string>('');
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
-  const [isSuccess, setIsSuccess] = useState<boolean>(true);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const {data: CartData, isLoading: isLoadingCart} = useQuery(
     ['cartProducts'],
     getCartProducts,
@@ -96,42 +95,45 @@ const CheckoutStepFour = () => {
   const CartSummary = summaryData?.data;
 
   return (
-    <ScrollView style={{zIndex: -1}}>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <View style={styles.container}>
-          <View style={styles.selectedOptions}>
-            <View
-              style={[
-                styles.optionContainer,
-                {borderRightWidth: 0.5, borderRightColor: borderColor},
-              ]}>
-              <Text
-                tx="checkout.shipping-method"
-                color={colors.tabsColor + 50}
-              />
-              <Text
-                text={ShippingMethod}
-                color={colors.primary}
-                variant="mediumBold"
-              />
+    <>
+      <FlatList
+        data={CartData?.data?.Items}
+        contentContainerStyle={{paddingHorizontal: spacing.normal}}
+        keyExtractor={(i, _) => _.toString()}
+        ListHeaderComponent={
+          <>
+            <View style={styles.selectedOptions}>
+              <View
+                style={[
+                  styles.optionContainer,
+                  {borderRightWidth: 0.5, borderRightColor: borderColor},
+                ]}>
+                <Text
+                  tx="checkout.shipping-method"
+                  color={colors.tabsColor + 50}
+                />
+                <Text
+                  text={ShippingMethod}
+                  color={colors.primary}
+                  variant="mediumBold"
+                />
+              </View>
+              <View
+                style={[
+                  styles.optionContainer,
+                  {borderLeftWidth: 0.5, borderLeftColor: borderColor},
+                ]}>
+                <Text
+                  tx="checkout.payment-method"
+                  color={colors.tabsColor + 50}
+                />
+                <Text
+                  text={PaymentMethod}
+                  color={colors.primary}
+                  variant="mediumBold"
+                />
+              </View>
             </View>
-            <View
-              style={[
-                styles.optionContainer,
-                {borderLeftWidth: 0.5, borderLeftColor: borderColor},
-              ]}>
-              <Text
-                tx="checkout.payment-method"
-                color={colors.tabsColor + 50}
-              />
-              <Text
-                text={PaymentMethod}
-                color={colors.primary}
-                variant="mediumBold"
-              />
-            </View>
-          </View>
-          <View style={{flex: 1, paddingHorizontal: spacing.normal}}>
             <Text
               tx="checkout.payment-address"
               color={colors.tabsColor + 60}
@@ -260,187 +262,188 @@ const CheckoutStepFour = () => {
               color="#12121260"
               style={{marginBottom: spacing.small}}
             />
-            <FlatList
-              data={CartData?.data?.Items}
-              keyExtractor={(i, _) => _.toString()}
-              renderItem={({item}) => (
-                <View
-                  style={{
-                    marginBottom: spacing.small,
-                    backgroundColor: colors.white,
-                    padding: spacing.medium,
-                    borderRadius: spacing.small,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    source={
-                      item?.Image?.Id === 0
-                        ? LogoSplash
-                        : {uri: `${BASE_URL}${item?.Image?.Url}`}
-                    }
-                    style={{
-                      opacity: item?.Image?.Id === 0 ? 0.5 : 1,
-                      borderRadius: spacing.small,
-                      backgroundColor: colors.white,
-                      height: 75,
-                      width: 90,
-                      marginRight: spacing.small,
-                    }}
-                    resizeMode="contain"
+          </>
+        }
+        renderItem={({item}) => (
+          <View
+            style={{
+              marginBottom: spacing.small,
+              backgroundColor: colors.white,
+              padding: spacing.medium,
+              borderRadius: spacing.small,
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <Image
+              source={
+                item?.Image?.Id === 0
+                  ? LogoSplash
+                  : {uri: `${BASE_URL}${item?.Image?.Url}`}
+              }
+              style={{
+                opacity: item?.Image?.Id === 0 ? 0.5 : 1,
+                borderRadius: spacing.small,
+                backgroundColor: colors.white,
+                height: 75,
+                width: 90,
+                marginRight: spacing.small,
+              }}
+              resizeMode="contain"
+            />
+            <View style={{flex: 1}}>
+              <Text
+                text={item?.ProductName}
+                variant="mediumBold"
+                style={{marginBottom: spacing.tiny}}
+              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text
+                    text={item?.SubTotal + ' ' + currency?.Symbol}
+                    color={colors.secondary}
+                    variant="mediumExtraBold"
+                    style={{marginRight: spacing.tiny}}
                   />
-                  <View style={{flex: 1}}>
-                    <Text
-                      text={item?.ProductName}
-                      variant="mediumBold"
-                      style={{marginBottom: spacing.tiny}}
-                    />
+                  <Text
+                    text={'×' + ' ' + item?.EnteredQuantity}
+                    color={colors.primary}
+                    variant="mediumExtraBold"
+                  />
+                </View>
+                {!!item?.AttributesSelection?.length &&
+                  item?.AttributesSelection.map((_: any, index: number) => (
                     <View
                       style={{
+                        width: 70,
                         flexDirection: 'row',
-                        justifyContent: 'space-between',
+                        justifyContent: 'center',
                         alignItems: 'center',
-                      }}>
+                        backgroundColor: 'transparent',
+                      }}
+                      key={index.toString()}>
+                      <Text
+                        text={_?.AttributeType}
+                        variant="xSmallBold"
+                        style={{
+                          borderRadius: spacing.medium + 2,
+                          borderWidth: 1,
+                          borderColor: colors.reloadColor,
+                          padding: spacing.tiny,
+                          backgroundColor: colors.white,
+                          overflow: 'hidden',
+                        }}
+                        center
+                      />
                       <View
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <Text
-                          text={item?.SubTotal + ' ' + currency?.Symbol}
-                          color={colors.secondary}
-                          variant="mediumExtraBold"
-                          style={{marginRight: spacing.tiny}}
-                        />
-                        <Text
-                          text={'×' + ' ' + item?.EnteredQuantity}
-                          color={colors.primary}
-                          variant="mediumExtraBold"
-                        />
-                      </View>
-                      {!!item?.AttributesSelection?.length &&
-                        item?.AttributesSelection.map(
-                          (_: any, index: number) => (
-                            <View
-                              style={{
-                                width: 70,
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                backgroundColor: 'transparent',
-                              }}
-                              key={index.toString()}>
-                              <Text
-                                text={_?.AttributeType}
-                                variant="xSmallBold"
-                                style={{
-                                  borderRadius: spacing.medium + 2,
-                                  borderWidth: 1,
-                                  borderColor: colors.reloadColor,
-                                  padding: spacing.tiny,
-                                  backgroundColor: colors.white,
-                                  overflow: 'hidden',
-                                }}
-                                center
-                              />
-                              <View
-                                style={{
-                                  backgroundColor: '#000' || _?.AttributeValue,
-                                  width: 27,
-                                  height: 27,
-                                  borderRadius: 27 * 0.5,
-                                  left: -10,
-                                  zIndex: -1,
-                                }}
-                              />
-                            </View>
-                          ),
-                        )}
+                        style={{
+                          backgroundColor: '#000' || _?.AttributeValue,
+                          width: 27,
+                          height: 27,
+                          borderRadius: 27 * 0.5,
+                          left: -10,
+                          zIndex: -1,
+                        }}
+                      />
                     </View>
-                    {item?.AllowPackageAsGift && (
-                      <View style={styles.selectGiftContainer}>
-                        <View style={styles.defualtContainer}>
-                          <Switch
-                            value={selectedGifts.includes(item)}
-                            onValueChange={() => selectGiftHandler(item)}
-                            color={colors.primary}
-                            style={{transform: [{scale: 0.7}]}}
-                          />
-                          <Text
-                            tx="checkout.choose-gift"
-                            variant="xSmallBold"
-                            style={{marginHorizontal: 10}}
-                          />
-                        </View>
-                      </View>
-                    )}
+                  ))}
+              </View>
+              {item?.AllowPackageAsGift && (
+                <View style={styles.selectGiftContainer}>
+                  <View style={styles.defualtContainer}>
+                    <Switch
+                      value={selectedGifts.includes(item)}
+                      onValueChange={() => selectGiftHandler(item)}
+                      color={colors.primary}
+                      style={{transform: [{scale: 0.7}]}}
+                    />
+                    <Text
+                      tx="checkout.choose-gift"
+                      variant="xSmallBold"
+                      style={{marginHorizontal: 10}}
+                    />
                   </View>
                 </View>
               )}
-            />
-          </View>
-
-          <View style={styles.confirmOrderHints}>
-            <Text style={styles.confirmHintText}>
-              <Text
-                tx="checkout.confirm-order-hint-1"
-                variant="xSmallRegular"
-                color={colors.modalDescriptionColor}
-              />{' '}
-              <Text
-                tx="checkout.confirm-payment"
-                variant="xSmallBold"
-                color={colors.secondary}
-                onPress={onConfirmPayment}
-              />
-            </Text>
-            <Line />
-            <View style={styles.confirmHintText}>
-              <Pressable style={styles.row} onPress={onPressConfirm}>
-                <MaterialCommunityIcons
-                  name={
-                    isConfirmed ? 'checkbox-marked' : 'checkbox-blank-outline'
-                  }
-                  size={20}
-                  color={colors.primary}
-                  style={{marginRight: spacing.tiny}}
-                />
-                <Text>
-                  <Text
-                    tx="checkout.confirm-order-hint-2"
-                    variant="xSmallRegular"
-                    color={colors.modalDescriptionColor}
-                  />
-                  <Text
-                    tx="checkout.privacy-terms"
-                    variant="xSmallRegular"
-                    color={colors.primary}
-                    underline
-                    onPress={onPressPrivacyTerms}
-                  />{' '}
-                  <Text
-                    tx="checkout.confirm-order-hint-2-2"
-                    variant="xSmallRegular"
-                    color={colors.modalDescriptionColor}
-                  />
-                </Text>
-              </Pressable>
             </View>
           </View>
-          <View style={{paddingHorizontal: spacing.normal}}>
-            <InputField
-              placeholder="checkout.want-tell-us"
-              value={tellUs}
-              onChangeText={setTellUs}
-              style={{fontSize: font.size.small, marginBottom: spacing.large}}
-            />
-            <Button
-              onPress={onSubmit}
-              style={{marginBottom: 10}}
-              title="checkout.confirm-payment"
-              disabled={!isConfirmed}
-              isLoading={isLoadingSubmitOrder}
-            />
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
+        )}
+        ListFooterComponent={
+          <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <View style={{flex: 1}}>
+              <View style={styles.confirmOrderHints}>
+                <Text style={styles.confirmHintText}>
+                  <Text
+                    tx="checkout.confirm-order-hint-1"
+                    variant="xSmallRegular"
+                    color={colors.modalDescriptionColor}
+                  />{' '}
+                  <Text
+                    tx="checkout.confirm-payment"
+                    variant="xSmallBold"
+                    color={colors.secondary}
+                    onPress={onConfirmPayment}
+                  />
+                </Text>
+                <Line />
+                <View style={styles.confirmHintText}>
+                  <Pressable style={styles.row} onPress={onPressConfirm}>
+                    <MaterialCommunityIcons
+                      name={
+                        isConfirmed
+                          ? 'checkbox-marked'
+                          : 'checkbox-blank-outline'
+                      }
+                      size={20}
+                      color={colors.primary}
+                      style={{marginRight: spacing.tiny}}
+                    />
+                    <Text>
+                      <Text
+                        tx="checkout.confirm-order-hint-2"
+                        variant="xSmallRegular"
+                        color={colors.modalDescriptionColor}
+                      />
+                      <Text
+                        tx="checkout.privacy-terms"
+                        variant="xSmallRegular"
+                        color={colors.primary}
+                        underline
+                        onPress={onPressPrivacyTerms}
+                      />{' '}
+                      <Text
+                        tx="checkout.confirm-order-hint-2-2"
+                        variant="xSmallRegular"
+                        color={colors.modalDescriptionColor}
+                      />
+                    </Text>
+                  </Pressable>
+                </View>
+              </View>
+              <InputField
+                placeholder="checkout.want-tell-us"
+                value={tellUs}
+                onChangeText={setTellUs}
+                style={{
+                  fontSize: font.size.small,
+                  marginBottom: spacing.large,
+                }}
+              />
+              <Button
+                onPress={onSubmit}
+                style={{marginBottom: 10}}
+                title="checkout.confirm-payment"
+                disabled={!isConfirmed}
+                isLoading={isLoadingSubmitOrder}
+              />
+            </View>
+          </TouchableWithoutFeedback>
+        }
+      />
       <Modal isVisible={isSuccess} onBackdropPress={closeSuccessModal}>
         <View style={styles.modalContainer}>
           <Image source={LogoSplash} />
@@ -465,7 +468,7 @@ const CheckoutStepFour = () => {
           />
         </View>
       </Modal>
-    </ScrollView>
+    </>
   );
 };
 

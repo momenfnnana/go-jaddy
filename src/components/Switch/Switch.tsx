@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Pressable, StyleSheet, ViewStyle} from 'react-native';
-import {Text} from 'components';
+import Text from 'components/Text';
 import {colors, spacing} from 'theme';
 
 interface ISwitch {

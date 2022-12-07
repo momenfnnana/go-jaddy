@@ -90,7 +90,8 @@
     "rate-field": "ملاحظات (اختياري)",
     "attach-image": "ارفاق صورة (اختياري)",
     "select": "اختر {{optionName}}",
-    "custom-text": "تخصيص.."
+    "custom-text": "تخصيص..",
+    "load-more": "تحميل المزيد من التقييمات"
   },
   "category": {
     "title": "التصنيفات"

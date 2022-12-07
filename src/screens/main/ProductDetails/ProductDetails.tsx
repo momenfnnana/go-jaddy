@@ -3,11 +3,11 @@ import {StyleSheet, ScrollView} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
-import {Loader, ReviewList} from 'components';
+import {Button, Loader, ReviewList} from 'components';
 import {HomeRoutes} from 'navigators/RoutesTypes';
 import NetworkErrorScreen from 'screens/NetworkErrorScreen';
 import {getProductDetails, getReviews} from 'services/Home';
-import {colors} from 'theme';
+import {colors, spacing} from 'theme';
 import {ListFooterComponent, ListHeaderComponent} from './components';
 import {IProductNavigation} from 'navigators/NavigationsTypes';
 import {Ifiltter} from '../StoreDetails/StoreDetails';
@@ -39,6 +39,7 @@ const ProductDetails = ({}: IProductDetails) => {
     refetch: refetchReviews,
     isFetchingNextPage,
     isRefetching: isRefetchingReviews,
+    isFetchedAfterMount,
   } = useInfiniteQuery(
     [`getReviews${Id}`],
     ({pageParam}) =>
@@ -103,9 +104,20 @@ const ProductDetails = ({}: IProductDetails) => {
         isRefetchingReviews={isLoadingReviews || isRefetchingReviews}
         reviewsList={reviewsList as any[]}
       />
-      {reviewsList?.map(item => (
-        <ReviewList key={item?.Id} item={item} />
+      {reviewsList?.map((item, index) => (
+        <ReviewList key={index.toString()} item={item} />
       ))}
+      {hasNextPageReviews && (
+        <Button
+          disabled={isFetchedAfterMount}
+          isLoading={isLoadingReviews}
+          title="product-details.load-more"
+          variant="Primary"
+          textVariant="smallRegular"
+          onPress={loadMore}
+          style={styles.buttonContainer}
+        />
+      )}
       {isFetchingNextPage ||
         (isLoadingReviews && <Loader size={'small'} color={colors.primary} />)}
       <ListFooterComponent
@@ -131,5 +143,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  buttonContainer: {
+    justifyContent: 'center',
+    marginHorizontal: spacing.huge * 2,
+    paddingHorizontal: spacing.medium,
+    paddingVertical: spacing.tiny + 2,
+    marginTop: spacing.medium,
   },
 });

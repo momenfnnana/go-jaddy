@@ -1,6 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {FreeWishlistIcon} from 'assets/images';
-import {Button, Text} from 'components';
+import Button from 'components/Button';
+import Text from 'components/Text';
 import {WishlistScreenNavigationProp} from 'navigators/NavigationsTypes';
 import React from 'react';
 import {Image, StyleSheet, useWindowDimensions, View} from 'react-native';

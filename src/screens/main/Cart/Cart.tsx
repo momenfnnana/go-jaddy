@@ -61,6 +61,11 @@ const Cart = () => {
   const [localData, setLocalData] = useState<any[]>([]);
   const {currency} = useCurrency();
 
+  const closeModals = () => {
+    setShowSummaryModel(false);
+    setShowPointsModel(false);
+  };
+
   const {
     isLoading: isLoadingApplyDis,
     isRefetching: isRefetchingApplyDis,
@@ -113,6 +118,7 @@ const Cart = () => {
     setUsedPoints(!isUsedPoints);
   };
   const onSubmit = () => {
+    closeModals();
     navigate('ContinueOrderSteps', {
       skip: {
         SkipAddressesStep: data.SkipAddressesStep,
@@ -176,9 +182,7 @@ const Cart = () => {
     <View style={{flex: 1}}>
       <Modal
         isVisible={isShowPointsModel}
-        onBackdropPress={() => {
-          setShowPointsModel(false);
-        }}
+        onBackdropPress={closeModals}
         title=""
         showCloseBtn={false}>
         <View style={styles.modalContent}>
@@ -205,7 +209,7 @@ const Cart = () => {
               style={styles.confirmButton}
               onPress={() => {
                 refetchApplyPoints();
-                setShowPointsModel(false);
+                closeModals();
               }}
             />
             <Button
@@ -213,9 +217,7 @@ const Cart = () => {
               style={styles.confirmButton}
               variant="Secondary"
               color={colors.secondary}
-              onPress={() => {
-                setShowPointsModel(false);
-              }}
+              onPress={closeModals}
             />
           </View>
         </View>
@@ -333,11 +335,7 @@ const Cart = () => {
               marginTop: spacing.xxxLarge + 2,
               marginBottom: spacing.xxLarge + 2,
             }}
-            onPress={() => {
-              // refetchApplyPoints();
-              onSubmit();
-              setShowPointsModel(false);
-            }}
+            onPress={onSubmit}
           />
         </View>
       </Modal>

@@ -1,11 +1,9 @@
 import {FlatList, Pressable, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {colors} from 'theme';
-import {Loader, Text} from 'components';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {Loader, Text, ArrowIcon} from 'components';
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {getSubCategories} from 'services/Category';
-import ArrowIcon from 'components/Arrow';
 import {readLanguage} from 'constants';
 interface ICategoryItem {
   setCatProductId: (() => void) | any;

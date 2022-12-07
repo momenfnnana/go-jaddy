@@ -4,7 +4,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, spacing} from 'theme';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {FilterIcon} from 'assets/icons';
-import {SearchInput} from './components';
+import SearchInput from './components/SearchInput';
 import BackButton from 'components/BackButton';
 import {useNavigation} from '@react-navigation/native';
 import {SearchScreenNavigationProp} from 'navigators/NavigationsTypes';
