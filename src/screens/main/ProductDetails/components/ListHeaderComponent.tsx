@@ -21,8 +21,7 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {DiscountIcon, ShareIcon} from 'assets/icons';
-import {AddToFav, InputField, Loader, Text} from 'components';
-import ArrowIcon from 'components/Arrow';
+import {AddToFav, InputField, Loader, Text, ArrowIcon} from 'components';
 import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
 import ProductImagesList from './ProductImagesList';
@@ -147,7 +146,9 @@ const ListHeaderComponent = ({
       const foundItem = f?.Values.find((element: any) => {
         return element.IsPreSelected === true;
       });
-      initialValues[f?.Name] = foundItem.Name || '';
+      if (foundItem) {
+        initialValues[f?.Name] = foundItem.Name || '';
+      }
     }
   });
   const onSubmit = async () => {
