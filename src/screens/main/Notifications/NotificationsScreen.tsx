@@ -1,5 +1,5 @@
-import React, {useLayoutEffect} from 'react';
-import {View, StyleSheet, FlatList} from 'react-native';
+import React, {useEffect, useLayoutEffect} from 'react';
+import {View, StyleSheet, FlatList, Pressable} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {PreviousAddressNavigationProp} from 'navigators/NavigationsTypes';
 import {BackButton, Loader, Text} from 'components';
@@ -7,6 +7,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {colors, spacing} from 'theme';
 import {getNotifications} from 'services/Profile';
 import {useQuery} from '@tanstack/react-query';
+import {IScreensNames} from 'types';
+import * as RootNavigation from 'navigators/RootNavigation';
 
 interface INotificationItem {
   Id: number;
@@ -14,53 +16,64 @@ interface INotificationItem {
   EntityId: number;
   Subject: string;
   Message: string;
-  date: Date;
+  NotificationDate: Date;
 }
-enum NotificationType {
-  Store = 10,
-  Category = 20,
-  Product = 30,
-  General = 40,
-}
-const data: INotificationItem[] = [
-  {
-    Id: 1,
-    Type: 10,
-    EntityId: 6,
-    Subject: 'New Store | Testing',
-    Message: 'descriptiondescriptiondescriptiondescription',
-    date: new Date(),
-  },
-  {
-    Id: 2,
-    Type: 10,
-    EntityId: 6,
-    Subject: 'New Store | Testing',
-    Message: 'descriptiondescriptiondescriptiondescription',
-    date: new Date(),
-  },
-  {
-    Id: 3,
-    Type: 10,
-    EntityId: 6,
-    Subject: 'New Store | Testing',
-    Message: 'descriptiondescriptiondescriptiondescription',
-    date: new Date(),
-  },
-  {
-    Id: 4,
-    Type: 10,
-    EntityId: 6,
-    Subject: 'New Store | Testing',
-    Message: 'descriptiondescriptiondescriptiondescription',
-    date: new Date(),
-  },
-];
-console.log({NotificationType:NotificationType.Category});
 
-const NotificationItem = ({Subject, Message, Id, date}: INotificationItem) => {
+let screenName: IScreensNames = {};
+
+const NotificationItem = ({
+  Subject,
+  Message,
+  Id,
+  NotificationDate,
+  Type,
+  EntityId,
+}: INotificationItem) => {
+  useEffect(() => {
+    screenName[10] = 'StoresDetails';
+    screenName[20] = 'CategoryDetails';
+    screenName[30] = 'ProductDetails';
+    screenName[40] = 'NotificationsScreen';
+  }, []);
+  const navigateToDirectory = () => {
+    switch (screenName[Type]) {
+      case 'StoresDetails':
+        RootNavigation.navigate('StoresStack', {
+          screen: screenName[Type],
+          params: {
+            storeId: EntityId,
+          },
+        });
+        break;
+      case 'CategoryDetails':
+        RootNavigation.navigate('CategoriesStack', {
+          screen: screenName[Type],
+          params: {
+            id: EntityId,
+          },
+        });
+        break;
+      case 'ProductDetails':
+        RootNavigation.navigate('HomeStack', {
+          screen: screenName[Type],
+          params: {
+            Id: EntityId,
+          },
+        });
+        break;
+      case 'NotificationsScreen':
+        RootNavigation.navigate('ProfileStack', {
+          screen: screenName[Type],
+        });
+        break;
+      default:
+        break;
+    }
+  };
   return (
-    <View style={styles.notificationContainer}>
+    <Pressable
+      onPress={navigateToDirectory}
+      style={styles.notificationContainer}>
       <View style={styles.notificationIconContainer}>
         <Ionicons
           name="notifications-outline"
@@ -84,27 +97,28 @@ const NotificationItem = ({Subject, Message, Id, date}: INotificationItem) => {
           />
         </View>
         <Text
-          text={date.toString()}
+          text={NotificationDate.toString()}
           variant="xSmallLight"
           style={styles.date}
           numberOfLines={1}
           color={colors.brouwnLight}
         />
       </View>
-    </View>
+    </Pressable>
   );
 };
 
 const NotificationsScreen = () => {
   const {setOptions} = useNavigation<PreviousAddressNavigationProp>();
-  // const {data: notificationsData, isLoading} = useQuery(
-  //   ['getNotifications'],
-  //   getNotifications,
-  // );
+  const {data: notificationsData, isLoading} = useQuery(
+    ['getNotifications'],
+    getNotifications,
+  );
 
-  // if (isLoading) {
-  //   return <Loader isPageLoading />;
-  // }
+  if (isLoading) {
+    return <Loader isPageLoading />;
+  }
+
   useLayoutEffect(() => {
     setOptions({
       headerLeft: () => <BackButton />,
@@ -113,7 +127,7 @@ const NotificationsScreen = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={data}
+        data={notificationsData?.data?.Notifications}
         keyExtractor={item => item.Id.toString()}
         renderItem={({item}) => <NotificationItem {...item} />}
       />

@@ -34,11 +34,6 @@ async function requestUserPermission() {
     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
   if (enabled) {
-    messaging()
-      .getToken()
-      .then(res => {
-        console.log({res});
-      });
     console.log('Authorization status:', authStatus);
   }
 }

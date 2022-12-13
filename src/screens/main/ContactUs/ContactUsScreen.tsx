@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Keyboard,
+  ScrollView,
 } from 'react-native';
 import {colors, spacing} from 'theme';
 import {ContactUsHeader} from './components';
@@ -32,7 +33,15 @@ const initialValues: IinitialValues = {
 };
 const ContactUsScreen = () => {
   const {contactUs} = useSchema();
-  const {mutate, isLoading} = useMutation(postContactUs);
+  const {mutate, isLoading} = useMutation(postContactUs, {
+    onSuccess: data => {
+      console.log({data});
+      return data;
+    },
+    onError: error => {
+      return error;
+    },
+  });
   const {
     errors,
     handleSubmit,
@@ -58,7 +67,7 @@ const ContactUsScreen = () => {
   };
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <ContactUsHeader />
         <View style={styles.contentContainer}>
           <InputField
@@ -121,7 +130,7 @@ const ContactUsScreen = () => {
             isLoading={isLoading}
           />
         </View>
-      </View>
+      </ScrollView>
     </TouchableWithoutFeedback>
   );
 };
@@ -129,7 +138,7 @@ const ContactUsScreen = () => {
 export default ContactUsScreen;
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: colors.white,
   },
   contentContainer: {

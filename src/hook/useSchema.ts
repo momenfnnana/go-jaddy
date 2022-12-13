@@ -47,13 +47,16 @@ export const useSchema = () => {
   });
 
   const contactUs = Yup.object().shape({
-    FirstName: Yup.string(),
-    LastName: Yup.string(),
+    FirstName: Yup.string().required(t('validation.firstName')),
+    LastName: Yup.string().required(t('validation.lastName')),
     PhoneNumber: Yup.string()
       .length(12, t('validation.phoneNumber-length', {length: 12}))
-      .matches(phoneRegExp, t('validation.phoneNumber-template')),
-    Email: Yup.string().email('validation.email-template'),
-    Message: Yup.string(),
+      .matches(phoneRegExp, t('validation.phoneNumber-template'))
+      .required(t('validation.phoneNumber-length', {length: 12})),
+    Email: Yup.string()
+      .email('validation.email-template')
+      .required(t('validation.email')),
+    Message: Yup.string().required(t('validation.message')),
     countryCode: Yup.string(),
   });
 

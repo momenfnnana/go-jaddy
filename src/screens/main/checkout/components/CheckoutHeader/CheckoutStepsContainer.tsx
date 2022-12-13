@@ -10,6 +10,7 @@ import {colors, spacing} from 'theme';
 interface ICheckoutStepsContainer {
   containerStyle?: ViewStyle | ViewStyle[];
   activeStep: number;
+  maximumVisitedStep: number;
   setActiveStep: (value: number) => void;
 }
 interface IStepContainer {
@@ -35,6 +36,7 @@ const CheckoutStepsContainer: FC<ICheckoutStepsContainer> = ({
   containerStyle,
   activeStep,
   setActiveStep,
+  maximumVisitedStep,
 }) => {
   const isActive = useMemo(() => {
     return {
@@ -44,32 +46,37 @@ const CheckoutStepsContainer: FC<ICheckoutStepsContainer> = ({
       fourthStep: activeStep >= 4,
     };
   }, [activeStep]);
+  const validateCanProceed = (number: number) => {
+    if (number <= maximumVisitedStep) {
+      setActiveStep(number);
+    }
+  };
   return (
     <View style={[styles.containerStyle, containerStyle]}>
       <StepContainer
         isActive={isActive.firstStep}
-        onPress={() => setActiveStep(1)}>
+        onPress={() => validateCanProceed(1)}>
         <PaymentAddress
           stroke={isActive.firstStep ? colors.white : colors.black}
         />
       </StepContainer>
       <StepContainer
         isActive={isActive.secondStep}
-        onPress={() => setActiveStep(2)}>
+        onPress={() => validateCanProceed(2)}>
         <PaymentShippingAddress
           stroke={isActive.secondStep ? colors.white : colors.black}
         />
       </StepContainer>
       <StepContainer
         isActive={isActive.thirdStep}
-        onPress={() => setActiveStep(3)}>
+        onPress={() => validateCanProceed(3)}>
         <PaymentMethods
           stroke={isActive.thirdStep ? colors.white : colors.black}
         />
       </StepContainer>
       <StepContainer
         isActive={isActive.fourthStep}
-        onPress={() => setActiveStep(4)}>
+        onPress={() => validateCanProceed(4)}>
         <PaymentConfirmation
           stroke={isActive.fourthStep ? colors.white : colors.black}
         />

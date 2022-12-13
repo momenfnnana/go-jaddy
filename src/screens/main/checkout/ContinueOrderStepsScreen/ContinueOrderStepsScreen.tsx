@@ -1,6 +1,6 @@
 import {useRoute} from '@react-navigation/native';
 import {ContinueStepsRouteProp} from 'navigators/NavigationsTypes';
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {colors} from 'theme';
 import {IAddress} from 'types';
@@ -31,8 +31,15 @@ const ContinueOrderStepsScreen = () => {
   }, [SkipAddressesStep, SkipPaymentStep, SkipShippingStep]);
 
   const [activeStep, setActiveStep] = useState<number>(initialStepNumber || 1);
+  const [maximumVisitedStep, setMaximumVisitedStep] = useState<number>(
+    initialStepNumber || 1,
+  );
   const [paymentAddress, setPaymentAddress] = useState<IAddress>({});
-
+  useEffect(() => {
+    if (activeStep > maximumVisitedStep) {
+      setMaximumVisitedStep(activeStep);
+    }
+  }, [activeStep]);
   const renderSection = (activeStep: number) => {
     switch (activeStep) {
       case 1:
@@ -64,7 +71,11 @@ const ContinueOrderStepsScreen = () => {
   };
   return (
     <View style={styles.container}>
-      <CheckoutHeader activeStep={activeStep} setActiveStep={setActiveStep} />
+      <CheckoutHeader
+        activeStep={activeStep}
+        setActiveStep={setActiveStep}
+        maximumVisitedStep={maximumVisitedStep}
+      />
       {renderSection(activeStep)}
     </View>
   );

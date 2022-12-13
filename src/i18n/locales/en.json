@@ -346,7 +346,8 @@
     "password-uppercase": "password must contain uppercase",
     "password-special": "password must contain special characters",
     "confirmPassword": "confirm password is required",
-    "confirmPassword-match": "passwords not matched"
+    "confirmPassword-match": "passwords not matched",
+    "message": "message is required"
   },
   "api": {
     "account": {

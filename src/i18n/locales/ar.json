@@ -228,7 +228,8 @@
     "password-uppercase": "كلمة السر يجب أن تحتوي على أحرف كبيرة",
     "password-special": "كلمة السر يجب أن تحتوي على رموز",
     "confirmPassword": "تأكيد كلمة السر مطلوب",
-    "confirmPassword-match": "كلمات السر غير متطابقة"
+    "confirmPassword-match": "كلمات السر غير متطابقة",
+    "message": "يجب ادخال الرسالة"
   },
   "previousTitles": {
     "titleHeader": "العناوين السابقة",

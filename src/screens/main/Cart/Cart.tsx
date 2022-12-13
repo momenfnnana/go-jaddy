@@ -36,11 +36,13 @@ import {CART} from 'types';
 import {UserContext} from 'context/UserContext';
 import {useNavigation} from '@react-navigation/native';
 import {CartScreenNavigationProp} from 'navigators/NavigationsTypes';
+import {useProtectedFunction} from 'hook/useProdectedFunction';
 
 const Cart = () => {
   const {navigate} = useNavigation<CartScreenNavigationProp>();
   const {updateProducts} = useContext(UserContext);
   const {isLogged} = useLogged();
+  const {protectedFunction} = useProtectedFunction();
   const {isLoading, isFetching, isRefetching, isError, refetch} = useQuery(
     ['cartProducts'],
     getCartProducts,
@@ -472,7 +474,10 @@ const Cart = () => {
             marginBottom: 10,
           }}>
           <View style={{flex: 1}}>
-            <Button title="cart.submitBtn" onPress={onSubmit} />
+            <Button
+              title="cart.submitBtn"
+              onPress={() => protectedFunction({func: () => onSubmit()})}
+            />
           </View>
           {isLogged && (
             <View

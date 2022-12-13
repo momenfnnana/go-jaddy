@@ -21,6 +21,7 @@ import {Switch} from 'react-native-paper';
 import {BASE_URL} from 'utils/Axios';
 import {ICheckoutStep} from '..';
 import {IAddress} from 'types';
+import {WebView} from 'react-native-webview';
 
 interface ICheckoutStepTwo extends ICheckoutStep {
   selectedAddress: IAddress;
@@ -127,11 +128,15 @@ const CheckoutStepTwo = ({
                     variant="smallBold"
                     style={{marginBottom: spacing.smaller - 1}}
                   />
-                  <Text
+                  <WebView
+                    originWhitelist={['*']}
+                    source={{html: item?.Description}}
+                  />
+                  {/* <Text
                     text={item?.Description}
                     variant="xSmallRegular"
                     color={isSelected ? colors.black : colors.gray[400]}
-                  />
+                  /> */}
                 </View>
               </View>
               <MaterialIcons

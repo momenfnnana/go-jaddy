@@ -6,10 +6,15 @@ import CheckoutStepsContainer from './CheckoutStepsContainer';
 
 interface ICheckoutHeader {
   activeStep: number;
+  maximumVisitedStep: number;
   setActiveStep: (value: number) => void;
 }
 const EmptyView = () => <View style={{width: spacing.xxxLarge + 2}} />;
-const CheckoutHeader = ({activeStep, setActiveStep}: ICheckoutHeader) => {
+const CheckoutHeader = ({
+  activeStep,
+  setActiveStep,
+  maximumVisitedStep,
+}: ICheckoutHeader) => {
   return (
     <View style={styles.container}>
       <BackButton />
@@ -24,6 +29,7 @@ const CheckoutHeader = ({activeStep, setActiveStep}: ICheckoutHeader) => {
         containerStyle={styles.stepsContainer}
         activeStep={activeStep}
         setActiveStep={setActiveStep}
+        maximumVisitedStep={maximumVisitedStep}
       />
     </View>
   );

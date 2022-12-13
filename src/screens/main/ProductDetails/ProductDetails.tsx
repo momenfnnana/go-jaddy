@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {StyleSheet, ScrollView} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -11,10 +11,11 @@ import {colors, spacing} from 'theme';
 import {ListFooterComponent, ListHeaderComponent} from './components';
 import {IProductNavigation} from 'navigators/NavigationsTypes';
 import {Ifiltter} from '../StoreDetails/StoreDetails';
+import EmptyPage from 'components/EmptyPage/EmptyPage';
 
 interface IProductDetails
   extends NativeStackScreenProps<HomeRoutes, 'ProductDetails'> {}
-
+const initialFilterValues = {ratings: [], withImage: false};
 const ProductDetails = ({}: IProductDetails) => {
   const {params} = useRoute<IProductNavigation>();
   const {Id} = params;
@@ -62,6 +63,16 @@ const ProductDetails = ({}: IProductDetails) => {
       },
     },
   );
+  const isHavingFilters = useMemo(() => {
+    if (
+      !!initialFilterValues.ratings.length ===
+        !!selectedFilter.ratings.length &&
+      initialFilterValues.withImage === selectedFilter.withImage
+    ) {
+      return false;
+    }
+    return true;
+  }, [initialFilterValues, selectedFilter]);
 
   useEffect(() => {
     refetchReviews();
@@ -107,6 +118,13 @@ const ProductDetails = ({}: IProductDetails) => {
       {reviewsList?.map((item, index) => (
         <ReviewList key={index.toString()} item={item} />
       ))}
+      {!!reviewsList?.length && isHavingFilters && (
+        <EmptyPage
+          descritopn="go to home to discover products"
+          title="No products in your cart"
+          displayButton
+        />
+      )}
       {hasNextPageReviews && (
         <Button
           disabled={isFetchedAfterMount}

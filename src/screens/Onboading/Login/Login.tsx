@@ -141,6 +141,7 @@ const Login = () => {
   });
 
   const doLogin = (values: any) => {
+    console.log({PhoneNumber:values.countryCode + values.PhoneNumber});
     const data = {
       PhoneNumber: countryCode + values.phoneNumber,
       Password: values.password,

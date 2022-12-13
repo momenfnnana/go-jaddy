@@ -1,28 +1,33 @@
 import {Image, Pressable, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
 import {colors, spacing} from 'theme';
-import {Loader, SelectedAttribute, Text} from 'components';
+import {SelectedAttribute, Text} from 'components';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useCurrency} from 'hook/useCurrency';
 import {BASE_URL} from 'utils/Axios';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useQuery} from '@tanstack/react-query';
-import {
-  addCartProducts,
-  editCartProducts,
-  removeCartProducts,
-} from 'services/Cart';
-
+import {editCartProducts, removeCartProducts} from 'services/Cart';
+import {useLogged} from 'hook/useLogged';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {CART} from 'types';
+import {UserContext} from 'context/UserContext';
 interface ICartItem {
   item: any;
   setData: (() => void) | any;
 }
 
 const CartItem = ({item, setData}: ICartItem) => {
+  const {setUpdateProducts, updateProducts} = useContext(UserContext);
+  const {isLogged} = useLogged();
   const {currency} = useCurrency();
-  const [quantity, setQuantity] = useState<number>(
-    item?.EnteredQuantity || item?.QuantityToAdd || 0,
-  );
+  const initialQuantity = useMemo(() => {
+    if (item?.EnteredQuantity) {
+      return item?.EnteredQuantity;
+    }
+    return item?.QuantityToAdd;
+  }, [item]);
+  const [quantity, setQuantity] = useState<number>(initialQuantity || 1);
 
   const {
     refetch: refetchEditItem,
@@ -56,6 +61,22 @@ const CartItem = ({item, setData}: ICartItem) => {
       },
     },
   );
+  const removeItem = async () => {
+    if (isLogged) {
+      refetchRemoveItem();
+    } else {
+      const cartItems = await AsyncStorage.getItem(CART);
+      const cartArray =
+        JSON.parse(cartItems as any) === null
+          ? []
+          : JSON.parse(cartItems as any);
+      const filteredProducts = cartArray.filter(
+        (element: any) => element.Id !== item.Id,
+      );
+      AsyncStorage.setItem(CART, JSON.stringify(filteredProducts));
+      setUpdateProducts(!updateProducts);
+    }
+  };
 
   useEffect(() => {
     if (item?.EnteredQuantity !== quantity) {
@@ -64,11 +85,17 @@ const CartItem = ({item, setData}: ICartItem) => {
   }, [quantity]);
 
   useEffect(() => {
-    setQuantity(item?.EnteredQuantity || 0);
-  }, [item?.EnteredQuantity]);
+    setQuantity(initialQuantity || 1);
+  }, [item]);
   const imageUrl = item?.Image?.Url
     ? BASE_URL + item?.Image?.Url
     : BASE_URL + item?.Images[0]?.Url;
+  const productPrice = useMemo(() => {
+    if (item?.SubTotal) {
+      return item?.SubTotal + ' ' + currency?.Symbol;
+    }
+    return item?.ProductPrice?.Price + ' ' + currency?.Symbol;
+  }, [item, currency]);
 
   return (
     <View
@@ -125,7 +152,7 @@ const CartItem = ({item, setData}: ICartItem) => {
             disabled={isFetchingEditItem || isFetchingRemoveItem}
             onPress={() => {
               if (quantity == 1) {
-                refetchRemoveItem();
+                removeItem();
               } else {
                 setQuantity(quantity - 1);
               }
@@ -147,10 +174,7 @@ const CartItem = ({item, setData}: ICartItem) => {
             )}
           </Pressable>
           <Text
-            text={
-              item?.SubTotal + ' ' + currency?.Symbol ||
-              item?.ProductPrice?.Price + ' ' + currency?.Symbol
-            }
+            text={productPrice}
             color={colors.primary}
             variant="smallExtraBold"
           />

@@ -62,6 +62,7 @@ interface IListHeaderComponent {
   ratingFilters: string[];
   setRatingFilters: (value: any) => void;
   isRefetchingReviews: boolean;
+  isLoadingReviews: boolean;
   reviewsList: any[];
 }
 interface IAttributes {
@@ -133,6 +134,7 @@ const ListHeaderComponent = ({
   setRatingFilters,
   isRefetchingReviews,
   reviewsList,
+  isLoadingReviews,
 }: IListHeaderComponent) => {
   const {t} = useTranslation();
   const {setUpdateProducts, updateProducts} = useContext(UserContext);
@@ -183,9 +185,7 @@ const ListHeaderComponent = ({
             ...foundedItem,
             Id: ProductId,
             AttributesSelection: [],
-            QuantityToAdd: foundedItem.productsNumber
-              ? foundedItem.productsNumber + 1
-              : 1,
+            QuantityToAdd: foundedItem.QuantityToAdd + productsNumber,
           });
           AsyncStorage.setItem(CART, JSON.stringify(filteredArray)).then(() => {
             Snackbar.show({
@@ -284,22 +284,6 @@ const ListHeaderComponent = ({
   const DisplayBackInStockSubscription =
     Product?.DisplayBackInStockSubscription;
   const BackInStockAlreadySubscribed = Product?.BackInStockAlreadySubscribed;
-
-  const totalPrice: number = useMemo(() => {
-    if (!!selectedAttributes.length) {
-      let attributesArray: any[] = [];
-      selectedAttributes.map(y => {
-        y.values.map((ele: any) => {
-          attributesArray.push(ele);
-        });
-      });
-      const total = attributesArray.reduce(function (prev: number, cur) {
-        return prev + cur.PriceAdjustmentValue;
-      }, 0);
-      return total;
-    }
-    return 0;
-  }, [StockAvailability, selectedAttributes]);
 
   const productCounterHandler = (type: productCounter) => {
     if (type === productCounter.increase) {
@@ -451,6 +435,30 @@ const ListHeaderComponent = ({
   const source = Product?.Images[activeImageIndex]?.Url
     ? {uri: `${BASE_URL}${Product?.Images[activeImageIndex]?.Url}`}
     : LogoSplash;
+  const isHavingFilters = useMemo(() => {
+    if (
+      initialFilterValues.ratings.length === selectedFilter.ratings.length &&
+      initialFilterValues.withImage === selectedFilter.withImage
+    ) {
+      return false;
+    }
+    return true;
+  }, [initialFilterValues, selectedFilter]);
+  const displayFilters = useMemo(() => {
+    return (
+      (!!reviewsList.length ||
+        isHavingFilters ||
+        isRefetchingReviews ||
+        isLoadingReviews) &&
+      DisplayProductReviews
+    );
+  }, [
+    reviewsList,
+    isHavingFilters,
+    isRefetchingReviews,
+    isLoadingReviews,
+    DisplayProductReviews,
+  ]);
 
   return (
     <View>
@@ -742,7 +750,7 @@ const ListHeaderComponent = ({
             <AntDesign name="heart" color={colors.red} size={20} />
           </Pressable>
         </View>
-        {(!!reviewsList.length || initialFilterValues !== selectedFilter) && (
+        {displayFilters && (
           <RatingFiltters
             style={{paddingHorizontal: spacing.content}}
             setSelectedFilter={setSelectedFilter}

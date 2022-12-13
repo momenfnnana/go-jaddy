@@ -29,6 +29,12 @@
 		AF990F0D28DA2578005630CC /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF990EFD28DA2578005630CC /* EvilIcons.ttf */; };
 		AF990F0E28DA2578005630CC /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF990EFE28DA2578005630CC /* SimpleLineIcons.ttf */; };
 		AF990F0F28DA2578005630CC /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF990EFF28DA2578005630CC /* MaterialIcons.ttf */; };
+		AFDD3331293D18AD00653A70 /* FBSDKCoreKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFDD3330293D18AD00653A70 /* FBSDKCoreKit.xcframework */; };
+		AFDD3332293D18AD00653A70 /* FBSDKCoreKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AFDD3330293D18AD00653A70 /* FBSDKCoreKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AFDD3335293D196C00653A70 /* FBSDKCoreKit_Basics.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFDD3334293D196C00653A70 /* FBSDKCoreKit_Basics.xcframework */; };
+		AFDD3336293D196C00653A70 /* FBSDKCoreKit_Basics.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AFDD3334293D196C00653A70 /* FBSDKCoreKit_Basics.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AFDD3338293D197800653A70 /* FBSDKGamingServicesKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFDD3337293D197800653A70 /* FBSDKGamingServicesKit.xcframework */; };
+		AFDD3339293D197800653A70 /* FBSDKGamingServicesKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AFDD3337293D197800653A70 /* FBSDKGamingServicesKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B01722BAE6777D27D51AAD03 /* Pods_gojaddy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A6B3E9975FA6F5E460C36E6 /* Pods_gojaddy.framework */; };
 		E293E80F2916E0C100DE3BD7 /* splash_screen.png in Resources */ = {isa = PBXBuildFile; fileRef = E293E80E2916E0C100DE3BD7 /* splash_screen.png */; };
 		E2C3263328F423690026C805 /* Almarai-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2C3262F28F423690026C805 /* Almarai-Bold.ttf */; };
@@ -48,6 +54,22 @@
 			remoteInfo = gojaddy;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AFDD3333293D18AD00653A70 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				AFDD3332293D18AD00653A70 /* FBSDKCoreKit.xcframework in Embed Frameworks */,
+				AFDD3339293D197800653A70 /* FBSDKGamingServicesKit.xcframework in Embed Frameworks */,
+				AFDD3336293D196C00653A70 /* FBSDKCoreKit_Basics.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		00E356EE1AD99517003FC87E /* gojaddyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = gojaddyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,6 +104,9 @@
 		AF990EFD28DA2578005630CC /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
 		AF990EFE28DA2578005630CC /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		AF990EFF28DA2578005630CC /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
+		AFDD3330293D18AD00653A70 /* FBSDKCoreKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSDKCoreKit.xcframework; path = Pods/FBSDKCoreKit/XCFrameworks/FBSDKCoreKit.xcframework; sourceTree = "<group>"; };
+		AFDD3334293D196C00653A70 /* FBSDKCoreKit_Basics.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSDKCoreKit_Basics.xcframework; path = Pods/FBSDKCoreKit_Basics/XCFrameworks/FBSDKCoreKit_Basics.xcframework; sourceTree = "<group>"; };
+		AFDD3337293D197800653A70 /* FBSDKGamingServicesKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSDKGamingServicesKit.xcframework; path = Pods/FBSDKGamingServicesKit/XCFrameworks/FBSDKGamingServicesKit.xcframework; sourceTree = "<group>"; };
 		E293E80E2916E0C100DE3BD7 /* splash_screen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash_screen.png; sourceTree = "<group>"; };
 		E2C3262F28F423690026C805 /* Almarai-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Almarai-Bold.ttf"; path = "../src/assets/fonts/Almarai-Bold.ttf"; sourceTree = "<group>"; };
 		E2C3263028F423690026C805 /* Almarai-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Almarai-Light.ttf"; path = "../src/assets/fonts/Almarai-Light.ttf"; sourceTree = "<group>"; };
@@ -107,6 +132,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AFDD3331293D18AD00653A70 /* FBSDKCoreKit.xcframework in Frameworks */,
+				AFDD3335293D196C00653A70 /* FBSDKCoreKit_Basics.xcframework in Frameworks */,
+				AFDD3338293D197800653A70 /* FBSDKGamingServicesKit.xcframework in Frameworks */,
 				B01722BAE6777D27D51AAD03 /* Pods_gojaddy.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -150,6 +178,9 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AFDD3337293D197800653A70 /* FBSDKGamingServicesKit.xcframework */,
+				AFDD3334293D196C00653A70 /* FBSDKCoreKit_Basics.xcframework */,
+				AFDD3330293D18AD00653A70 /* FBSDKCoreKit.xcframework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				3A6B3E9975FA6F5E460C36E6 /* Pods_gojaddy.framework */,
 				A70CB65ECC9CDAAB052289D4 /* Pods_gojaddy_gojaddyTests.framework */,
@@ -275,6 +306,7 @@
 				00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */,
 				CEBCCD3C097C07284783192B /* [CP-User] [RNFB] Core Configuration */,
 				CCB15133264EC21EFE57368C /* [CP] Copy Pods Resources */,
+				AFDD3333293D18AD00653A70 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

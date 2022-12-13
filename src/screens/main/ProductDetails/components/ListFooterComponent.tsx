@@ -66,6 +66,7 @@ const ListFooterComponent = ({
     error,
     isLoading: isLoadingSettings,
   } = useQuery(['settings'], getIpAddress);
+  
   const ReviewOverview = productData?.data?.Product?.ReviewOverview;
   const showRatePopup = () => {
     setIsRateModalShown(true);
