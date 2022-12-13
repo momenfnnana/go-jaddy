@@ -7,16 +7,26 @@ import {useNavigation} from '@react-navigation/native';
 interface IBackButton extends PressableProps {
   color?: string;
   size?: number;
+  route?: string;
 }
 
-const BackButton = ({color, size = spacing.large, ...rest}: IBackButton) => {
-  const {goBack} = useNavigation();
+const BackButton = ({
+  color,
+  size = spacing.large,
+  route = '',
+  ...rest
+}: IBackButton) => {
+  const {goBack, navigate} = useNavigation<any>();
   return (
     <Pressable
       onPress={() => {
         Keyboard.dismiss();
         setTimeout(() => {
-          goBack();
+          if (route.length > 0) {
+            navigate(route);
+          } else {
+            goBack();
+          }
         }, 50);
       }}
       style={styles.container}

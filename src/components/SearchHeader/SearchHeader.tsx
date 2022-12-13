@@ -22,6 +22,7 @@ interface ISearchHeader {
   RightIcon?: any;
   placeholder?: string;
   facetsList?: any;
+  route?: string;
 }
 
 const SearchHeader = ({
@@ -34,6 +35,7 @@ const SearchHeader = ({
   RightIcon,
   placeholder = 'search.search-input',
   facetsList,
+  route,
 }: ISearchHeader) => {
   const {top} = useSafeAreaInsets();
   const {navigate} = useNavigation<SearchScreenNavigationProp>();
@@ -53,7 +55,7 @@ const SearchHeader = ({
       }}>
       <StatusBar barStyle="light-content" />
       <View style={styles.container}>
-        <BackButton />
+        <BackButton route={route} />
         <SearchInput
           autoFocus={autoFocus}
           containerStyle={styles.inputField}

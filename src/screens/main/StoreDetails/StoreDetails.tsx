@@ -627,21 +627,17 @@ const StoreDetails = () => {
           )}
           keyExtractor={(i, _) => _.toString()}
           ListHeaderComponent={
-            !!storeReviewsData?.pages
-              .map(page => page.data.StoreReviews.Items)
-              .flat().length ? (
-              <RatingFiltters
-                DisplayStoreReviews={storeDetailsData.data.DisplayStoreReviews}
-                style={{paddingHorizontal: spacing.content}}
-                setSelectedFilter={setSelectedFilter}
-                selectedFilter={selectedFilter}
-                RatingSum={storeDetailsData.data.ReviewOverview.RatingSum}
-                TotalReviews={storeDetailsData.data.ReviewOverview.TotalReviews}
-                onPressRate={() => {
-                  protectedFunction({func: () => setIsRateModalShown(true)});
-                }}
-              />
-            ) : undefined
+            <RatingFiltters
+              DisplayStoreReviews={storeDetailsData.data.DisplayStoreReviews}
+              style={{paddingHorizontal: spacing.content}}
+              setSelectedFilter={setSelectedFilter}
+              selectedFilter={selectedFilter}
+              RatingSum={storeDetailsData.data.ReviewOverview.RatingSum}
+              TotalReviews={storeDetailsData.data.ReviewOverview.TotalReviews}
+              onPressRate={() => {
+                protectedFunction({func: () => setIsRateModalShown(true)});
+              }}
+            />
           }
           ListEmptyComponent={<EmptyPage title="EmptyPage.no-reviews-title" />}
           renderItem={ReviewList}

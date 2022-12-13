@@ -23,7 +23,7 @@ const AboutTheAppDetails = () => {
       <AboutTheAppHeader title={data?.data?.Topic?.Title?.Value} />
       <WebView
         originWhitelist={['*']}
-        source={{html: data?.data?.Topic?.Body?.Value}}
+        source={{html:`<html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body>${data?.data?.Topic?.Body?.Value}</body></html>`}}
       />
     </View>
   );

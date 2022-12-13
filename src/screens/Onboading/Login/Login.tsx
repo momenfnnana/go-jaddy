@@ -83,7 +83,7 @@ const Login = () => {
     useState<boolean>(false);
   const [isSetPassModalOpened, setSetPassModalOpened] =
     useState<boolean>(false);
-  const [countryCode, setCountryCode] = useState<string>('970');
+  const [countryCode, setCountryCode] = useState<string>('00970');
   const [localData, setLocalData] = useState<any[]>([]);
   const mainImageStyle: ImageStyle = {
     width: width * 0.9,
@@ -142,11 +142,11 @@ const Login = () => {
 
   const doLogin = (values: any) => {
     const data = {
-      PhoneNumber: countryCode + values.phoneNumber,
-      Password: values.password,
+      // PhoneNumber: countryCode + values.phoneNumber,
+      // Password: values.password,
       NotificationToken: notificationToken,
-      // PhoneNumber: '00970595800504',
-      // Password: '/9875410Bara',
+      PhoneNumber: '00970595800504',
+      Password: '/9875410Bara',
     };
     mutate(data);
   };
