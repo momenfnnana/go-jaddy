@@ -162,6 +162,7 @@ const Search = () => {
   return (
     <View style={styles.container}>
       <SearchHeader
+        route={(params as any)?.paramsType == 'category' ? 'Categories' : ''}
         value={searchText}
         setValue={setSearchText}
         onSubmitEditing={SearchHandler}

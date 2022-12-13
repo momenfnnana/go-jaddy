@@ -261,6 +261,11 @@ const ListHeaderComponent = ({
     addCartProducts,
     {
       onSuccess: () => {
+        Snackbar.show({
+          text: t('cart.added-successfull'),
+          duration: Snackbar.LENGTH_SHORT,
+          backgroundColor: colors.success,
+        });
         setUpdateProducts(!updateProducts);
       },
     },
@@ -291,7 +296,7 @@ const ListHeaderComponent = ({
         setProductsNumber((currentValue: number) => currentValue + 1);
       }
     } else if (type === productCounter.descrease) {
-      if (productsNumber > 0) {
+      if (productsNumber > 1) {
         setProductsNumber((currentValue: number) => currentValue - 1);
       }
     }

@@ -150,7 +150,7 @@ const OrderDetails = () => {
             <Text
               text={item?.OrderStatus}
               variant="smallRegular"
-              color="#121212"
+              color={item?.OrderStatusColor}
             />
           </View>
           <View

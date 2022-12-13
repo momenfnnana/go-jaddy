@@ -84,7 +84,7 @@ const Register = () => {
   const [email, setEmail] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const {top, bottom} = useSafeAreaInsets();
-  const [countryCode, setCountryCode] = useState<string>();
+  const [countryCode, setCountryCode] = useState<string>("00970");
   const [localData, setLocalData] = useState<any[]>([]);
   const onRegisterHandle = (values: any) => {
     const data = new FormData();
