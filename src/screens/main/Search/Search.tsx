@@ -27,9 +27,10 @@ import {HomeNavigationsType} from 'navigators/NavigationsTypes';
 import {getCategoryProducts} from 'services/Category';
 import {LogoSplash} from 'assets/images';
 import Octicons from 'react-native-vector-icons/Octicons';
+import ViewShow from 'components/ViewShow/ViewShow';
 
 const FILTER_ICON_SIZE = 26;
-type IshowListHandler = 'list' | 'grid';
+export type IshowListHandler = 'list' | 'grid';
 const Search = () => {
   const {settings} = useContext(UserContext);
   const [searchText, setSearchText] = useState<string>('');
@@ -214,39 +215,7 @@ const Search = () => {
               variant="smallBold"
             />
           </View>
-          <View style={[styles.row, styles.viewFilters]}>
-            <Pressable
-              style={[
-                styles.viewIconContainer,
-                {
-                  backgroundColor:
-                    viewType === 'list' ? colors.secondary : undefined,
-                  marginRight: 10,
-                },
-              ]}
-              onPress={() => showListHandler('list')}>
-              <Feather
-                name="list"
-                size={18}
-                color={viewType === 'list' ? colors.white : colors.grayMain}
-              />
-            </Pressable>
-            <Pressable
-              style={[
-                styles.viewIconContainer,
-                {
-                  backgroundColor:
-                    viewType === 'grid' ? colors.secondary : undefined,
-                },
-              ]}
-              onPress={() => showListHandler('grid')}>
-              <Ionicons
-                name="grid-outline"
-                size={18}
-                color={viewType === 'grid' ? colors.white : colors.grayMain}
-              />
-            </Pressable>
-          </View>
+          <ViewShow showListHandler={showListHandler} viewType={viewType} />
         </View>
       )}
       {!!productsList?.length ? (

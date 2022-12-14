@@ -12,14 +12,18 @@ import {
   editCartProducts,
   removeCartProducts,
 } from 'services/Cart';
+import {useNavigation} from '@react-navigation/native';
+import {IProductNavigation} from 'navigators/NavigationsTypes';
 
 interface ICartItem {
   item: any;
   setData: (() => void) | any;
+  onPress?: (() => void) | any;
 }
 
-const CartItem = ({item, setData}: ICartItem) => {
+const CartItem = ({item, setData, onPress}: ICartItem) => {
   const {currency} = useCurrency();
+  const {navigate} = useNavigation<IProductNavigation>();
   const [quantity, setQuantity] = useState<number>(
     item?.EnteredQuantity || item?.QuantityToAdd || 0,
   );
@@ -71,7 +75,10 @@ const CartItem = ({item, setData}: ICartItem) => {
     : BASE_URL + item?.Images[0]?.Url;
 
   return (
-    <View
+    <Pressable
+      onPress={() => {
+        navigate('ProductDetails', {Id: item?.ProductId} as any);
+      }}
       style={{
         padding: 7,
         borderRadius: 7,
@@ -174,7 +181,7 @@ const CartItem = ({item, setData}: ICartItem) => {
           }}
         />
       </View>
-    </View>
+    </Pressable>
   );
 };
 
