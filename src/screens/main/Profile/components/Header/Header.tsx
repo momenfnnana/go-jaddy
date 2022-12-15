@@ -29,6 +29,7 @@ const Header = () => {
       setUserData({});
       setAccessToken('');
       if (isLogged) {
+        await GoogleSignin.signOut();
         await auth().signOut();
       }
       dispatch(

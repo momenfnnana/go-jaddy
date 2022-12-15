@@ -75,6 +75,7 @@ const Cart = () => {
   } = useQuery(['applyDiscountCart'], () => applyDiscountCart(discountCode), {
     enabled: false,
     onSuccess(data) {
+      console.log('ssersfrs', data.data);
       setData(data.data);
     },
   });

@@ -7,13 +7,14 @@ import {
   ReviewList,
   RateModal,
   ArrowIcon,
+  RowProductCard,
 } from 'components';
 
 import {
   IStoresProps,
   StoresDetailsNavigationProp,
 } from 'navigators/NavigationsTypes';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {View, Pressable, FlatList, Image, Animated} from 'react-native';
 import {colors, spacing} from 'theme';
@@ -40,6 +41,9 @@ import EmptyPage from 'components/EmptyPage/EmptyPage';
 import {LogoSplash} from 'assets/images';
 import {useLogged} from 'hook/useLogged';
 import {useProtectedFunction} from 'hook/useProdectedFunction';
+import ViewShow from 'components/ViewShow/ViewShow';
+import {useCurrency} from 'hook/useCurrency';
+import {UserContext} from 'context/UserContext';
 
 export interface Ifiltter {
   withImage: boolean;
@@ -52,14 +56,23 @@ const tabs: string[] = [
   'storeDetails.tabs.offerTab',
   'storeDetails.tabs.categoriesTab',
 ];
+
+const tabsName: string[] = [
+  'main',
+  'new',
+  'offers',
+  'categories',
+  'review',
+  'search',
+  'products',
+];
 const StoreDetails = () => {
   const {params} = useRoute<IStoresProps>();
-  const {navigate, dispatch} = useNavigation<StoresDetailsNavigationProp>();
-  const {isLogged} = useLogged(true);
   const {protectedFunction} = useProtectedFunction();
   const [isRateModalShown, setIsRateModalShown] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>('');
-  const [tab, setTab] = useState<number>(0);
+  const [viewType, setViewType] = useState<string>('grid');
+  const [tab, setTab] = useState<string>(tabsName[0]);
   const [isFollowed, setFollowed] = useState<boolean>(false);
   const [subCatId, setSubCatId] = useState<number>(-1);
   const [catProductId, setCatProductId] = useState<number>(-1);
@@ -67,6 +80,8 @@ const StoreDetails = () => {
     ratings: [],
     withImage: false,
   });
+  const {currency} = useCurrency();
+  const {settings} = useContext(UserContext);
   const {t} = useTranslation();
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
   const Max_Header_Height = 100;
@@ -77,6 +92,11 @@ const StoreDetails = () => {
     outputRange: [Max_Header_Height, Min_Header_Height],
     extrapolate: 'clamp',
   });
+
+  const showListHandler = (value: string) => {
+    setViewType(value);
+  };
+
   const {
     data: storeReviewsData,
     isLoading: isLoadingStoreReviews,
@@ -105,7 +125,7 @@ const StoreDetails = () => {
   );
 
   const {
-    isLoading: isLoadingStoreDetails,
+    isFetching: isLoadingStoreDetails,
     data: storeDetailsData,
     isError: isErrorStoreDetails,
   } = useQuery(
@@ -133,7 +153,11 @@ const StoreDetails = () => {
     },
   );
 
-  const {data: StoreMainData, isLoading: isLoadingStoreMain} = useInfiniteQuery(
+  const {
+    data: StoreMainData,
+    isFetching: isLoadingStoreMain,
+    refetch: refetchStoreMain,
+  } = useInfiniteQuery(
     [`getStoreMainTab${params?.storeId}`],
     ({pageParam}) => getStoreCategories({storeId: params?.storeId, pageParam}),
     {
@@ -151,11 +175,13 @@ const StoreDetails = () => {
     hasNextPage: hasNextPageNew,
     isFetchingNextPage: isFetchingNextPageNew,
     fetchNextPage: fetchNextPageNew,
-    isLoading: isLoadingStoreNews,
+    isFetching: isLoadingStoreNews,
+    refetch: refetchStoreNews,
   } = useInfiniteQuery(
     [`getStoreNewTab${params?.storeId}`],
     ({pageParam}) => getStoreNewProducts({pageParam, storeId: params?.storeId}),
     {
+      enabled: false,
       getNextPageParam: lastPage => {
         if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
           const next = lastPage?.data?.Page + 1;
@@ -167,15 +193,17 @@ const StoreDetails = () => {
   );
   const {
     data: StoreOfferData,
+    refetch: refetchOfferData,
     hasNextPage: hasNextPageOffer,
     isFetchingNextPage: isFetchingNextPageOffer,
     fetchNextPage: fetchNextPageOffer,
-    isLoading: isLoadingStoreOfferes,
+    isFetching: isLoadingStoreOfferes,
   } = useInfiniteQuery(
     [`getStoreOfferTab${params?.storeId}`],
     ({pageParam}) =>
       getStoreOfferProducts({pageParam, storeId: params?.storeId}),
     {
+      enabled: false,
       getNextPageParam: lastPage => {
         if (lastPage?.data?.Page < lastPage?.data?.TotalPages) {
           const next = lastPage?.data?.Page + 1;
@@ -186,13 +214,12 @@ const StoreDetails = () => {
     },
   );
   const {
-    isLoading: isLoadingStoreSearch,
+    isFetching: isLoadingStoreSearch,
     data: StoreSearchData,
     refetch: refetchStoreSearch,
     hasNextPage: hasNextPageSearch,
     isFetchingNextPage: isFetchingNextPageSearch,
     fetchNextPage: fetchNextPageSearch,
-    isSuccess: isSuccessSearch,
   } = useInfiniteQuery(
     [`getStoreSearchTab${params?.storeId}${searchText}`],
     ({pageParam}) =>
@@ -211,14 +238,14 @@ const StoreDetails = () => {
         return null;
       },
       onSuccess() {
-        setTab(5);
+        setTab(tabsName[5]);
       },
     },
   );
 
   const {
     data: ProductsData,
-    isRefetching: isRefetchingProductsCategory,
+    isFetching: isFetchingProductsCategory,
     refetch: refetchProductsCategory,
     isLoading: isLoadingProductsCategory,
     remove,
@@ -244,9 +271,13 @@ const StoreDetails = () => {
     },
   );
 
+  const productsModel = useMemo(() => {
+    return ProductsData?.pages.map(page => page.data?.ProductsModel);
+  }, [ProductsData]);
+
   useEffect(() => {
     if (subCatId == -2) {
-      setTab(6);
+      setTab(tabsName[6]);
       refetchProductsCategory();
     }
   }, [subCatId]);
@@ -256,16 +287,11 @@ const StoreDetails = () => {
   }, [selectedFilter]);
 
   const SearchHandler = () => {
-    setTab(5);
+    setTab(tabsName[5]);
     refetchStoreSearch();
   };
 
-  if (
-    isLoadingStoreDetails ||
-    isLoadingStoreMain ||
-    isLoadingStoreNews ||
-    isLoadingStoreOfferes
-  ) {
+  if (isLoadingStoreDetails || isLoadingStoreMain) {
     return <Loader isPageLoading />;
   }
 
@@ -290,6 +316,7 @@ const StoreDetails = () => {
       fetchNextPageSearch();
     }
   };
+
   const isExistCoverImage = storeDetailsData.data?.StoreInfo?.CoverImage;
   const sourceCover = !isExistCoverImage
     ? LogoSplash
@@ -386,7 +413,7 @@ const StoreDetails = () => {
                     ))}
                   </View>
                   <Pressable
-                    onPress={() => setTab(4)}
+                    onPress={() => setTab(tabsName[4])}
                     style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text
                       style={{lineHeight: 0}}
@@ -439,7 +466,6 @@ const StoreDetails = () => {
           </View>
         }
       />
-
       <Animated.Image
         resizeMode="cover"
         style={{
@@ -449,7 +475,6 @@ const StoreDetails = () => {
         }}
         source={sourceCover}
       />
-
       <View
         style={{
           flexDirection: 'row',
@@ -464,7 +489,12 @@ const StoreDetails = () => {
               if (index === 0 || index === 3) {
                 setSubCatId(-1);
               }
-              setTab(index);
+              if (index === 1) {
+                refetchStoreNews();
+              } else if (index === 2) {
+                refetchOfferData();
+              }
+              setTab(tabsName[index]);
             }}
             key={index.toString()}
             style={{
@@ -475,11 +505,11 @@ const StoreDetails = () => {
             }}>
             <Text
               tx={item}
-              color={tab == index ? colors.secondary : colors.black}
-              variant={tab == index ? 'smallBold' : 'smallRegular'}
+              color={tab == tabsName[index] ? colors.secondary : colors.black}
+              variant={tab == tabsName[index] ? 'smallBold' : 'smallRegular'}
               style={{marginBottom: 12}}
             />
-            {tab == index && (
+            {tab == tabsName[index] && (
               <View
                 style={{
                   backgroundColor: colors.secondary,
@@ -494,7 +524,7 @@ const StoreDetails = () => {
           </Pressable>
         ))}
       </View>
-      {tab == 0 && (
+      {tab == tabsName[0] && (
         <MainTab
           onScroll={Animated.event(
             [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
@@ -506,8 +536,9 @@ const StoreDetails = () => {
           subCatId={subCatId}
         />
       )}
-      {tab == 1 && (
+      {tab == tabsName[1] && (
         <FlatList
+          ListHeaderComponent={isLoadingStoreNews ? <Loader /> : null}
           onScroll={Animated.event(
             [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
             {useNativeDriver: false},
@@ -548,8 +579,9 @@ const StoreDetails = () => {
           }
         />
       )}
-      {tab == 2 && (
+      {tab == tabsName[2] && (
         <FlatList
+          ListHeaderComponent={isLoadingStoreOfferes ? <Loader /> : null}
           onScroll={Animated.event(
             [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
             {useNativeDriver: false},
@@ -590,8 +622,9 @@ const StoreDetails = () => {
           }
         />
       )}
-      {tab == 3 && (
+      {tab == tabsName[3] && (
         <FlatList
+          ListHeaderComponent={isLoadingStoreMain ? <Loader /> : null}
           onScroll={Animated.event(
             [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
             {useNativeDriver: false},
@@ -619,7 +652,7 @@ const StoreDetails = () => {
           )}
         />
       )}
-      {tab == 4 && (
+      {tab == tabsName[4] && (
         <FlatList
           onScroll={Animated.event(
             [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
@@ -651,48 +684,52 @@ const StoreDetails = () => {
           }
         />
       )}
-      {tab == 5 &&
-        (isSuccessSearch && !isLoadingStoreSearch ? (
-          <FlatList
-            onScroll={Animated.event(
-              [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
-              {useNativeDriver: false},
-            )}
-            data={StoreSearchData?.pages
-              .map(page => page.data.ProductSummary.Items)
-              .flat()}
-            keyExtractor={(i, _) => _.toString()}
-            key={'#Search'}
-            onEndReached={loadMoreSearch}
-            onEndReachedThreshold={0.7}
-            contentContainerStyle={{
-              paddingHorizontal: spacing.content,
-              paddingTop: 20,
-            }}
-            numColumns={2}
-            renderItem={({item, index}) => (
-              <ProductCard
-                styleContainer={{
-                  marginRight: index % 2 == 0 ? 10 : 0,
-                }}
-                {...item}
-                WishlistEnabled={
-                  StoreSearchData?.pages
-                    .map(page => page.data.ProductSummary)
-                    .flat()[0].WishlistEnabled
-                }
-              />
-            )}
-            ListFooterComponent={
-              isFetchingNextPageSearch || isLoadingStoreSearch ? (
-                <Loader size={'small'} />
-              ) : null
-            }
-          />
-        ) : (
-          <Loader size={'small'} />
-        ))}
-      {tab == 6 &&
+      {tab == tabsName[5] && (
+        <FlatList
+          ListEmptyComponent={
+            <EmptyPage
+              descritopn="EmptyPage.product-description"
+              title="EmptyPage.product-title"
+              displayButton
+            />
+          }
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
+            {useNativeDriver: false},
+          )}
+          data={StoreSearchData?.pages
+            .map(page => page.data.ProductSummary.Items)
+            .flat()}
+          keyExtractor={(i, _) => _.toString()}
+          key={'#Search'}
+          onEndReached={loadMoreSearch}
+          onEndReachedThreshold={0.7}
+          contentContainerStyle={{
+            paddingHorizontal: spacing.content,
+            paddingTop: 20,
+          }}
+          numColumns={2}
+          renderItem={({item, index}) => (
+            <ProductCard
+              styleContainer={{
+                marginRight: index % 2 == 0 ? 10 : 0,
+              }}
+              {...item}
+              WishlistEnabled={
+                StoreSearchData?.pages
+                  .map(page => page.data.ProductSummary)
+                  .flat()[0].WishlistEnabled
+              }
+            />
+          )}
+          ListFooterComponent={
+            isFetchingNextPageSearch || isLoadingStoreSearch ? (
+              <Loader size={'small'} />
+            ) : null
+          }
+        />
+      )}
+      {tab == tabsName[6] &&
         (isLoadingProductsCategory ? (
           <View
             style={{
@@ -704,44 +741,97 @@ const StoreDetails = () => {
             <Loader size={'large'} />
           </View>
         ) : (
-          <FlatList
-            onScroll={Animated.event(
-              [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
-              {useNativeDriver: false},
-            )}
-            key={'#Product_categories'}
-            onEndReached={() => {
-              if (hasNextPage) {
-                fetchNextPage();
-              }
-            }}
-            onEndReachedThreshold={0.7}
-            contentContainerStyle={{
-              paddingHorizontal: spacing.content,
-              paddingTop: 20,
-            }}
-            numColumns={2}
-            data={ProductsData?.pages
-              .map(page => page.data.ProductsModel.Items)
-              .flat()}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({item, index}) => (
-              <ProductCard
-                styleContainer={{
-                  marginRight: index % 2 == 0 ? 10 : 0,
+          <>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                paddingHorizontal: spacing.content,
+                marginTop: spacing.large,
+              }}>
+              <Text tx="storeDetails.display-methods" variant="xSmallRegular" />
+              <ViewShow showListHandler={showListHandler} viewType={viewType} />
+            </View>
+            {viewType == 'grid' ? (
+              <FlatList
+                onScroll={Animated.event(
+                  [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
+                  {useNativeDriver: false},
+                )}
+                key={'#Product_categories_grid'}
+                onEndReached={() => {
+                  if (hasNextPage) {
+                    fetchNextPage();
+                  }
                 }}
-                WishlistEnabled={
-                  ProductsData?.pages
-                    .map(page => page.data.ProductsModel)
-                    .flat()[0].WishlistEnabled
+                onEndReachedThreshold={0.7}
+                contentContainerStyle={{
+                  paddingHorizontal: spacing.content,
+                  paddingTop: 20,
+                }}
+                numColumns={2}
+                data={ProductsData?.pages
+                  .map(page => page.data.ProductsModel.Items)
+                  .flat()}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({item, index}) => (
+                  <ProductCard
+                    styleContainer={{
+                      marginRight: index % 2 == 0 ? 10 : 0,
+                    }}
+                    WishlistEnabled={
+                      ProductsData?.pages
+                        .map(page => page.data.ProductsModel)
+                        .flat()[0].WishlistEnabled
+                    }
+                    {...item}
+                  />
+                )}
+                ListFooterComponent={
+                  isFetchingNextPage ? () => <Loader size={'small'} /> : null
                 }
-                {...item}
+              />
+            ) : (
+              <FlatList
+                onScroll={Animated.event(
+                  [{nativeEvent: {contentOffset: {y: scrollOffsetY}}}],
+                  {useNativeDriver: false},
+                )}
+                key={'#Product_categories_list'}
+                onEndReached={() => {
+                  if (hasNextPage) {
+                    fetchNextPage();
+                  }
+                }}
+                onEndReachedThreshold={0.7}
+                contentContainerStyle={{
+                  paddingHorizontal: spacing.content,
+                  paddingTop: 20,
+                }}
+                numColumns={1}
+                data={ProductsData?.pages
+                  .map(page => page.data.ProductsModel.Items)
+                  .flat()}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({item, index}) => (
+                  <RowProductCard
+                    {...item}
+                    currency={currency}
+                    WishlistEnabled={
+                      productsModel && productsModel[0].WishlistEnabled
+                    }
+                    SupportMultiWishlists={
+                      settings?.ShoppingCartSettings?.SupportMultiWishlists
+                    }
+                  />
+                )}
+                ListFooterComponent={
+                  isFetchingNextPage ? () => <Loader size={'small'} /> : null
+                }
               />
             )}
-            ListFooterComponent={
-              isFetchingNextPage ? () => <Loader size={'small'} /> : null
-            }
-          />
+          </>
         ))}
       <RateModal
         isRateModalShown={isRateModalShown}

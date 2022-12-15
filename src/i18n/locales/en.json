@@ -137,6 +137,7 @@
     "rating": "Ratings",
     "follow": "Follow",
     "followed": "Followed",
+    "display-methods": "Display Methods",
     "tabs": {
       "mainTab": "Main",
       "newTab": "New",

@@ -12,15 +12,20 @@ import {useLogged} from 'hook/useLogged';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CART} from 'types';
 import {UserContext} from 'context/UserContext';
+import {useNavigation} from '@react-navigation/native';
+import {IProductNavigation} from 'navigators/NavigationsTypes';
+
 interface ICartItem {
   item: any;
   setData: (() => void) | any;
+  onPress?: (() => void) | any;
 }
 
 const CartItem = ({item, setData}: ICartItem) => {
   const {setUpdateProducts, updateProducts} = useContext(UserContext);
   const {isLogged} = useLogged();
   const {currency} = useCurrency();
+  const {navigate} = useNavigation<IProductNavigation>();
   const initialQuantity = useMemo(() => {
     if (item?.EnteredQuantity) {
       return item?.EnteredQuantity;
@@ -98,7 +103,10 @@ const CartItem = ({item, setData}: ICartItem) => {
   }, [item, currency]);
 
   return (
-    <View
+    <Pressable
+      onPress={() => {
+        navigate('ProductDetails', {Id: item?.ProductId} as any);
+      }}
       style={{
         padding: 7,
         borderRadius: 7,
@@ -198,7 +206,7 @@ const CartItem = ({item, setData}: ICartItem) => {
           }}
         />
       </View>
-    </View>
+    </Pressable>
   );
 };
 
