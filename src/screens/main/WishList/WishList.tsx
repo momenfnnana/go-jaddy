@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useMemo, useState} from 'react';
+import React, {useLayoutEffect, useMemo, useState} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {AddHeaderBtn, BackButton, Loader} from 'components';
@@ -11,7 +11,11 @@ import {IWishListItem} from './types';
 const WishList = () => {
   const {setOptions} = useNavigation();
   const [wishlistData, setWishlistData] = useState<IWishListItem[]>([]);
-  const {data, isFetching, refetch} = useQuery(['getWishlist'], getWishlist);
+  const {data, isFetching, refetch} = useQuery(['getWishlist'], getWishlist, {
+    onSuccess: data => {
+      setWishlistData(data?.data?.Wishlists);
+    },
+  });
   const onPress = () => {
     const newArray: IWishListItem[] = [
       ...data?.data?.Wishlists,
@@ -46,11 +50,6 @@ const WishList = () => {
     });
   }, [isFetching]);
 
-  useEffect(() => {
-    if (data?.data?.Wishlists) {
-      setWishlistData(data?.data?.Wishlists);
-    }
-  }, [data?.data?.Wishlists]);
   const WishListItemsToRender = useMemo(() => {
     if (wishlistData.length === 1) {
       return [

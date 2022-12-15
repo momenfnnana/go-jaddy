@@ -49,7 +49,10 @@ const App = () => {
   }, [isSuccess]);
 
   useEffect(() => {
-    GoogleSignin.configure();
+    GoogleSignin.configure({
+      webClientId:
+        '891150166102-6a5eh10b4b9i40hco8imbknesocp7k1h.apps.googleusercontent.com',
+    });
     Settings.setAppID('535934555056398');
     Settings.initializeSDK();
   }, []);

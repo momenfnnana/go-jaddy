@@ -12,6 +12,7 @@ import {getCheckoutAddresses, selectBillingAddress} from 'services/Checkout';
 import {colors, spacing} from 'theme';
 import {IAddress} from 'types';
 import {ICheckoutStep} from '..';
+import {useAccessToken} from 'hook/useAccessToken';
 interface ICheckoutAddress {
   item: IAddress;
   index: number;

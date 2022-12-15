@@ -41,7 +41,7 @@ export const useSchema = () => {
       .email('validation.email-template')
       .required(t('validation.email')),
     phoneNumber: Yup.string()
-      .length(10, t('validation.phoneNumber-length', {length: 10}))
+      .length(9, t('validation.phoneNumber-length', {length: 9}))
       .matches(phoneRegExp, t('validation.phoneNumber-template'))
       .required(t('validation.phoneNumber')),
   });
@@ -50,9 +50,9 @@ export const useSchema = () => {
     FirstName: Yup.string().required(t('validation.firstName')),
     LastName: Yup.string().required(t('validation.lastName')),
     PhoneNumber: Yup.string()
-      .length(12, t('validation.phoneNumber-length', {length: 12}))
+      .length(9, t('validation.phoneNumber-length', {length: 9}))
       .matches(phoneRegExp, t('validation.phoneNumber-template'))
-      .required(t('validation.phoneNumber-length', {length: 12})),
+      .required(t('validation.phoneNumber-template')),
     Email: Yup.string()
       .email('validation.email-template')
       .required(t('validation.email')),
@@ -71,7 +71,9 @@ export const useSchema = () => {
   });
 
   const loginSchema = Yup.object().shape({
-    phoneNumber: Yup.number().required(t('validation.phoneNumber')),
+    phoneNumber: Yup.string()
+      .required(t('validation.phoneNumber'))
+      .length(9, t('validation.phoneNumber-length', {length: 9})),
     password: Yup.string().required(t('validation.password')),
   });
 

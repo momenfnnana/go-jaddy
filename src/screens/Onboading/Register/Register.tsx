@@ -40,25 +40,10 @@ import {RegisterScreenNavigationProp} from 'navigators/NavigationsTypes';
 import {addCartProducts} from 'services/Cart';
 import {CART} from 'types';
 import messaging from '@react-native-firebase/messaging';
+import {useTranslation} from 'react-i18next';
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-
-const loginSchema = Yup.object().shape({
-  firstName: Yup.string().required('first name is required'),
-  lastName: Yup.string().required('last name is required'),
-  email: Yup.string().email().required('email is required'),
-  phoneNumber: Yup.string()
-    .matches(phoneRegExp, 'phone number is not valid')
-    .required('phone number is required'),
-  password: Yup.string()
-    .required('password is required')
-    .min(8, 'password must being at least 8 characters'),
-  confirmPassword: Yup.string()
-    .required('confirm password is required')
-    .oneOf([Yup.ref('password'), null], 'Passwords must match'),
-});
-
 interface camiraImage {
   uri: string;
   type: string;
@@ -66,6 +51,7 @@ interface camiraImage {
 }
 
 const Register = () => {
+  const {t} = useTranslation();
   const {settings, setUserData, setAccessToken, updateProducts} =
     useContext(UserContext);
   const {width, height} = useWindowDimensions();
@@ -84,8 +70,25 @@ const Register = () => {
   const [email, setEmail] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const {top, bottom} = useSafeAreaInsets();
-  const [countryCode, setCountryCode] = useState<string>("00970");
+  const [countryCode, setCountryCode] = useState<string>('00970');
   const [localData, setLocalData] = useState<any[]>([]);
+
+  const loginSchema = Yup.object().shape({
+    firstName: Yup.string().required('first name is required'),
+    lastName: Yup.string().required('last name is required'),
+    email: Yup.string().email().required('email is required'),
+    phoneNumber: Yup.string()
+      .matches(phoneRegExp, 'phone number is not valid')
+      .required('phone number is required')
+      .length(9, t('validation.phoneNumber-length', {length: 9})),
+    password: Yup.string()
+      .required('password is required')
+      .min(8, 'password must being at least 8 characters'),
+    confirmPassword: Yup.string()
+      .required('confirm password is required')
+      .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+  });
+
   const onRegisterHandle = (values: any) => {
     const data = new FormData();
     setEmail(values.email);
@@ -106,7 +109,6 @@ const Register = () => {
         name: image.name,
       });
     }
-
     mutate(data);
   };
 

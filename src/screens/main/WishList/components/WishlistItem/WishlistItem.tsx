@@ -34,6 +34,7 @@ const WishlistItem = ({
   const {isRefetch, setIsRefetch} = useContext(WishlistContext);
   const {navigate} = useNavigation<WishlistScreenNavigationProp>();
   const [collectionName, setCollectionName] = useState<string>(Name || '');
+
   const [isEdititingCollectionName, setIsEdititingCollectionName] =
     useState<boolean>(false);
   const [
@@ -43,9 +44,9 @@ const WishlistItem = ({
   const {mutate: mutateEditWishlistName, isLoading: isLoadingEditWishlistName} =
     useMutation(editWishListName, {
       onSuccess: data => {
-        refreshItems();
         setIsRefetch(!isRefetch);
         onPressEditCollectionName();
+        refreshItems();
         return data;
       },
     });

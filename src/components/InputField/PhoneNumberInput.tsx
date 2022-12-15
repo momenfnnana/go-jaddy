@@ -31,12 +31,12 @@ const SIZE = 18;
 const flags: IFlag[] = [
   {
     imageUrl: PalestineFlag,
-    introructionNumber: '970',
+    introructionNumber: '00970',
     countryName: 'Palestine',
   },
   {
     imageUrl: PalestineFlag,
-    introructionNumber: '972',
+    introructionNumber: '00972',
     countryName: 'occupied-palestinian-lands',
   },
 ];

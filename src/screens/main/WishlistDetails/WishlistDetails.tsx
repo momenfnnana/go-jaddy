@@ -10,6 +10,7 @@ import {getWishlistDetails} from 'services/Profile';
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {colors} from 'theme';
 import ProductCard from './components/ProductCard';
+import {FreeWishlist} from '../WishList/components';
 const fullPageStyle = {
   flex: 1,
 } as ViewStyle;
@@ -94,6 +95,7 @@ const WishlistDetails = () => {
         renderItem={({item}) => (
           <ProductCard {...item} filterItems={filterItems} />
         )}
+        ListEmptyComponent={<FreeWishlist />}
         ListFooterComponent={
           isFetchingNextPage || isLoading ? (
             <Loader size={'small'} color={colors.primary} />

@@ -32,12 +32,7 @@ const initialValues: IinitialValues = {
   phoneNumber: '',
   userName: '',
 };
-const loginSchema = Yub.object().shape({
-  phoneNumber: Yub.number()
-    .required('phone number must be string')
-    .min(10, 'phone number must be at least 10 characters'),
-  userName: Yub.string().required('user name is required'),
-});
+
 const AnonymousModal: React.FC<IAnonymousModalProps> = ({
   visibleAnonymousModal,
   setvisibleAnonymousModal,
@@ -47,6 +42,12 @@ const AnonymousModal: React.FC<IAnonymousModalProps> = ({
 
   const onSubmitLogin = values => {};
   const onChangeCountry = () => {};
+  const loginSchema = Yub.object().shape({
+    phoneNumber: Yub.string()
+      .required('phone number must be string')
+      .length(9, t('validation.phoneNumber-length', {length: 9})),
+    userName: Yub.string().required('user name is required'),
+  });
   return (
     <>
       {visibleAnonymousModal && (

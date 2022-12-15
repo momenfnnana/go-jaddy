@@ -141,7 +141,7 @@ const Login = () => {
   });
 
   const doLogin = (values: any) => {
-    console.log({PhoneNumber:values.countryCode + values.PhoneNumber});
+    console.log({PhoneNumber: values.countryCode + values.PhoneNumber});
     const data = {
       // PhoneNumber: countryCode + values.phoneNumber,
       // Password: values.password,
@@ -216,9 +216,15 @@ const Login = () => {
 
   const signInWithGoogle = async () => {
     try {
+      // console.log({idToken,token,...rest});
+
       await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
-      const {idToken} = await GoogleSignin.signIn();
+      const currentUser = await GoogleSignin.getCurrentUser();
+      const {idToken, ...rest} = await GoogleSignin.signIn();
       const token = await GoogleSignin.getTokens();
+      console.log({token, rest});
+      console.log({currentUser});
+
       const googleCredential = auth.GoogleAuthProvider.credential(
         token.idToken,
       );

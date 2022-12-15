@@ -1,9 +1,8 @@
-import React, {useContext, useState} from 'react';
+import React, {FC, useMemo, useState} from 'react';
 import {Pressable, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {colors, font, spacing} from 'theme';
 import Text from 'components/Text';
 import Divider from 'components/Divider';
-import {UserContext} from 'context/UserContext';
 import {useCurrency} from 'hook/useCurrency';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {ICurrency} from 'types';
@@ -19,30 +18,35 @@ interface IDropDown {
 }
 
 let dropdownWidth: number = 145;
-const DropDown = ({text, items}: IDropDown) => {
-  const {currencies} = useContext(UserContext);
+const DropDown: FC<IDropDown> = () => {
   const {isDropDownShown, setIsDropDownShown} = useDropDownContext();
   const [refreshCurrency, setRefreshCurrency] = useState<boolean>();
   const {currency} = useCurrency(refreshCurrency);
-  const {
-    data: currenciesData,
-    isLoading: isLoadingCurrencies,
-    isSuccess: isSuccessLoadingCurrencies,
-  } = useQuery(['currencies'], getCurrencies);
+  const {data: currenciesData, isLoading: isLoadingCurrencies} = useQuery(
+    ['currencies'],
+    getCurrencies,
+  );
   const showDropDownHandler = () => {
     setIsDropDownShown((currentValue: boolean) => !currentValue);
   };
+  const selectedCurrency = useMemo(() => {
+    return currenciesData?.data?.Currencies.find((element: ICurrency) => {
+      return element.Id === currency?.Id;
+    });
+  }, [currenciesData, currency]);
   const changeCurrencyHandler = (value: ICurrency) => {
     changeLocalCurrencies(value);
     setRefreshCurrency(currentState => !currentState);
   };
-
+  if (isLoadingCurrencies) {
+    return null;
+  }
   return (
     <View style={styles.container}>
       <Pressable onPress={showDropDownHandler} style={styles.currencyContainer}>
         <Text
           variant="smallBold"
-          text={`${currency?.Name} (${currency?.Symbol})`}
+          text={`${selectedCurrency?.Name} (${selectedCurrency?.Symbol})`}
         />
       </Pressable>
       {isDropDownShown && currenciesData?.data?.Currencies.length && (

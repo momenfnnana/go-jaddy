@@ -128,15 +128,11 @@ const CheckoutStepTwo = ({
                     variant="smallBold"
                     style={{marginBottom: spacing.smaller - 1}}
                   />
-                  <WebView
-                    originWhitelist={['*']}
-                    source={{html: item?.Description}}
-                  />
-                  {/* <Text
+                  <Text
                     text={item?.Description}
                     variant="xSmallRegular"
                     color={isSelected ? colors.black : colors.gray[400]}
-                  /> */}
+                  />
                 </View>
               </View>
               <MaterialIcons
