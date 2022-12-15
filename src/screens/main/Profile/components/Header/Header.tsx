@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useMemo} from 'react';
 import {View, Image, StyleSheet, Pressable} from 'react-native';
 import {UserContext} from 'context/UserContext';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -22,6 +22,13 @@ const Header = () => {
   const {isLogged} = useLogged();
   const {protectedFunction} = useProtectedFunction();
   const {navigate, dispatch} = useNavigation<ProfileScreenNavigationProp>();
+  const fullName = useMemo(() => {
+    if (userData?.LastName) {
+      return userData?.FirstName + ' ' + userData?.LastName;
+    } else {
+      return userData?.FirstName;
+    }
+  }, [userData]);
   const logoutHandler = async () => {
     try {
       AsyncStorage.removeItem('accessToken');
@@ -69,11 +76,7 @@ const Header = () => {
           <Text tx="profile.welcome" />
           <Text
             tx={isLogged ? undefined : 'profile.welcome'}
-            text={
-              isLogged
-                ? userData?.FirstName + ' ' + userData?.LastName
-                : undefined
-            }
+            text={isLogged ? fullName : undefined}
             variant="mediumBold"
           />
         </View>
