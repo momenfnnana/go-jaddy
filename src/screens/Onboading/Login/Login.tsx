@@ -17,6 +17,7 @@ import {
   Spacer,
   Text,
   PhoneNumberInput,
+  Loader,
 } from 'components';
 import {colors, spacing} from 'theme';
 import {FacebookIcon, GojaddyLoginIcon, GoogleIcon} from 'assets/icons';
@@ -24,7 +25,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import {Formik} from 'formik';
 import {useTranslation} from 'react-i18next';
-import {doLogin_service} from 'services/Auth';
+import {doLogin_service, ExtenalLogin} from 'services/Auth';
 import {useMutation} from '@tanstack/react-query';
 import {UserContext} from 'context/UserContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -100,41 +101,55 @@ const Login = () => {
     },
   });
 
-  const {mutate, isLoading, isError, error} = useMutation(doLogin_service, {
-    onSuccess: data => {
-      const {AccessToken, RememberMe} = data.data;
-      setAccessToken(AccessToken);
-      dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{name: 'HomeFlow', params: {screen: 'HomeStack'}}],
-        }),
-      );
-      // navigate('HomeFlow', {screen: 'HomeStack'} as any);
-      if (!RememberMe) {
-        axios.defaults.headers.common['AccessToken'] = `${AccessToken}`;
-        AsyncStorage.setItem('accessToken', AccessToken);
-      }
-      reload(data.data?.AccessToken);
-      if (localData && !!localData.length) {
-        localData?.map(item => {
-          console.log({Attributes: item?.Attributes});
-          const attributesToSend = item?.Attributes.map((element: any) => {
-            return {
-              AttributeId: element.AttributeId,
-              VariantAttributeId: element.VariantAttributeId,
-              AttributeValueId: element.values[0].Id,
-            };
-          });
-          mutateAddToCart({
-            ProductId: item?.Id,
-            QuantityToAdd: item?.QuantityToAdd || 1,
-            SelectedAttributes: attributesToSend,
-          });
+  const successLogin = (data: any) => {
+    const {AccessToken, RememberMe} = data.data;
+    setAccessToken(AccessToken);
+    dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: 'HomeFlow', params: {screen: 'HomeStack'}}],
+      }),
+    );
+    // navigate('HomeFlow', {screen: 'HomeStack'} as any);
+    if (!RememberMe) {
+      axios.defaults.headers.common['AccessToken'] = `${AccessToken}`;
+      AsyncStorage.setItem('accessToken', AccessToken);
+    }
+    reload(data.data?.AccessToken);
+    if (localData && !!localData.length) {
+      localData?.map(item => {
+        console.log({Attributes: item?.Attributes});
+        const attributesToSend = item?.Attributes.map((element: any) => {
+          return {
+            AttributeId: element.AttributeId,
+            VariantAttributeId: element.VariantAttributeId,
+            AttributeValueId: element.values[0].Id,
+          };
         });
-      }
-      return data;
+        mutateAddToCart({
+          ProductId: item?.Id,
+          QuantityToAdd: item?.QuantityToAdd || 1,
+          SelectedAttributes: attributesToSend,
+        });
+      });
+    }
+    return data;
+  };
+
+  const {mutate, isLoading, isError, error} = useMutation(doLogin_service, {
+    onSuccess: successLogin,
+    onError: error => {
+      return error;
     },
+  });
+
+  const {
+    mutate: mutateExtenalLogin,
+    isLoading: isLoadingExtenalLogin,
+    isError: isErrorExtenalLogin,
+    error: errorExtenalLogin,
+  } = useMutation(ExtenalLogin, {
+    onSuccess: successLogin,
     onError: error => {
       return error;
     },
@@ -149,6 +164,14 @@ const Login = () => {
       Password: '/9875410Bara',
     };
     mutate(data);
+  };
+
+  const doExtenalLogin = (UID: string) => {
+    const data = {
+      NotificationToken: notificationToken,
+      UID,
+    };
+    mutateExtenalLogin(data);
   };
 
   const showPassword = () => {
@@ -207,7 +230,7 @@ const Login = () => {
         (data as any).accessToken,
       );
       const respones = await auth().signInWithCredential(facebookCredential);
-      console.log({respones: respones.user});
+      doExtenalLogin(respones?.user?.uid);
     } catch (error) {
       console.log('error in facebook auth: ', {error});
     }
@@ -222,8 +245,7 @@ const Login = () => {
         token.idToken,
       );
       const response = await auth().signInWithCredential(googleCredential);
-      console.log({idToken});
-      console.log({response});
+      doExtenalLogin(response.user.uid);
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         console.log('SIGN_IN_CANCELLED');
@@ -268,9 +290,7 @@ const Login = () => {
           .signInWithCredential(appleCredential);
 
         // user is now signed in, any Firebase `onAuthStateChanged` listeners you have will trigger
-        console.warn(
-          `Firebase authenticated via Apple, UID: ${userCredential.user.uid}`,
-        );
+        doExtenalLogin(userCredential.user.uid);
       } else {
         // handle this - retry?
         console.log({appleAuthRequestResponse});
@@ -279,6 +299,10 @@ const Login = () => {
     } catch (error) {
       console.log('error in apple auth:', {error});
     }
+  }
+
+  if (isLoadingExtenalLogin) {
+    return <Loader isPageLoading />;
   }
 
   return (
@@ -422,21 +446,27 @@ const Login = () => {
                   />
                 )}
                 {appleAuth.isSupported && (
-                  <AppleButton
-                    cornerRadius={5}
+                  <View
                     style={{
-                      marginTop: spacing.small,
-                      width: '100%',
-                      height: 50,
                       borderWidth: 1,
                       borderColor: colors.black,
-                      borderRadius: 24,
+                      marginTop: spacing.small,
                       marginBottom: -12,
-                    }}
-                    buttonStyle={AppleButton.Style.WHITE}
-                    buttonType={AppleButton.Type.SIGN_IN}
-                    onPress={() => onAppleButtonPress()}
-                  />
+                      borderRadius: 24,
+                      overflow: 'hidden',
+                      width: '100%',
+                    }}>
+                    <AppleButton
+                      cornerRadius={5}
+                      style={{
+                        height: 40,
+                        borderRadius: 24,
+                      }}
+                      buttonStyle={AppleButton.Style.WHITE}
+                      buttonType={AppleButton.Type.SIGN_IN}
+                      onPress={() => onAppleButtonPress()}
+                    />
+                  </View>
                 )}
                 <Button
                   variant="Secondary"

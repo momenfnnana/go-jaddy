@@ -13,6 +13,10 @@ export const doLogin_service = (data: any) => {
   return axios.post(`${BASE_URL}/api/custom/account/login`, data);
 };
 
+export const ExtenalLogin = (data: any) => {
+  return axios.post(`${BASE_URL}/api/custom/account/ExternalLogin`, data);
+};
+
 export const reset_password = (data: any) => {
   return axios.post(`${BASE_URL}/api/custom/account/ResetPassword`, data);
 };
