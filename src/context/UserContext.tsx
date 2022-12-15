@@ -6,6 +6,7 @@ interface IUserData {
   FirstName?: string;
   LastName?: string;
   PhoneNumber?: string | number;
+  UserType: string;
 }
 interface IUserContext {
   userData: IUserData;
@@ -34,6 +35,7 @@ const UserContext = createContext<IUserContext>({
     FirstName: '',
     LastName: '',
     PhoneNumber: '',
+    UserType: '',
   },
   settings: {},
   setUserData: ({}) => {},
