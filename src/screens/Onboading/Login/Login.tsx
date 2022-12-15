@@ -7,6 +7,7 @@ import {
   ImageStyle,
   Pressable,
   Keyboard,
+  Alert,
 } from 'react-native';
 import {LoginMain} from 'assets/images';
 import LinearGradient from 'react-native-linear-gradient';
@@ -225,83 +226,51 @@ const Login = () => {
       }
       const data = await AccessToken.getCurrentAccessToken();
       if (!data) {
-        console.log('Something went wrong obtaining access token', {data});
+        Alert.alert(
+          'Something went wrong obtaining access token',
+          JSON.stringify(data),
+        );
       }
       const facebookCredential = auth.FacebookAuthProvider.credential(
         (data as any).accessToken,
       );
       const respones = await auth().signInWithCredential(facebookCredential);
       doExtenalLogin(respones?.user?.uid);
-    } catch (error) {
-      console.log('error in facebook auth: ', {error});
-    }
+    } catch (error) {}
   };
 
   const signInWithGoogle = async () => {
     try {
-      // console.log({idToken,token,...rest});
-
       await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
       const currentUser = await GoogleSignin.getCurrentUser();
       const {idToken, ...rest} = await GoogleSignin.signIn();
       const token = await GoogleSignin.getTokens();
-      console.log({token, rest});
-      console.log({currentUser});
 
       const googleCredential = auth.GoogleAuthProvider.credential(
         token.idToken,
       );
       const response = await auth().signInWithCredential(googleCredential);
       doExtenalLogin(response.user.uid);
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        console.log('SIGN_IN_CANCELLED');
-        // user cancelled the login flow
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        console.log('IN_PROGRESS');
-        // operation (e.g. sign in) is in progress already
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        console.log('PLAY_SERVICES_NOT_AVAILABLE');
-        // play services not available or outdated
-      } else {
-        console.log('some other error happened', {error});
-        // some other error happened
-      }
-    }
+    } catch (error: any) {}
   };
 
   async function onAppleButtonPress() {
     try {
-      // 1). start a apple sign-in request
       const appleAuthRequestResponse = await appleAuth.performRequest({
         requestedOperation: appleAuth.Operation.LOGIN,
         requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
       });
-
-      // 2). if the request was successful, extract the token and nonce
       const {identityToken, nonce} = appleAuthRequestResponse;
-
-      // can be null in some scenarios
       if (identityToken) {
-        // 3). create a Firebase `AppleAuthProvider` credential
         const appleCredential = firebase.auth.AppleAuthProvider.credential(
           identityToken,
           nonce,
         );
-
-        // 4). use the created `AppleAuthProvider` credential to start a Firebase auth request,
-        //     in this example `signInWithCredential` is used, but you could also call `linkWithCredential`
-        //     to link the account to an existing user
         const userCredential = await firebase
           .auth()
           .signInWithCredential(appleCredential);
-
-        // user is now signed in, any Firebase `onAuthStateChanged` listeners you have will trigger
         doExtenalLogin(userCredential.user.uid);
       } else {
-        // handle this - retry?
-        console.log({appleAuthRequestResponse});
-        console.log('no token');
       }
     } catch (error) {
       console.log('error in apple auth:', {error});
