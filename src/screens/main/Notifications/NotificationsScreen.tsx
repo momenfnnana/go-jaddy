@@ -115,15 +115,14 @@ const NotificationsScreen = () => {
     getNotifications,
   );
 
-  if (isLoading) {
-    return <Loader isPageLoading />;
-  }
-
   useLayoutEffect(() => {
     setOptions({
       headerLeft: () => <BackButton />,
     });
   }, []);
+  if (isLoading) {
+    return <Loader isPageLoading />;
+  }
   return (
     <View style={styles.container}>
       <FlatList

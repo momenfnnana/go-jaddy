@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: spacing.small,
+    zIndex: 10,
   },
   stepsContainer: {
     position: 'absolute',

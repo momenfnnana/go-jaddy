@@ -76,8 +76,13 @@ const CartItem = ({item, setData}: ICartItem) => {
           ? []
           : JSON.parse(cartItems as any);
       const filteredProducts = cartArray.filter(
-        (element: any) => element.Id !== item.Id,
+        (element: any) => element?.Id !== item?.Id,
       );
+      if (filteredProducts.length == 0) {
+        AsyncStorage.removeItem(CART);
+        setUpdateProducts(!updateProducts);
+        return;
+      }
       AsyncStorage.setItem(CART, JSON.stringify(filteredProducts));
       setUpdateProducts(!updateProducts);
     }

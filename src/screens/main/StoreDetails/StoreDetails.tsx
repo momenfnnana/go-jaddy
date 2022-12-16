@@ -16,7 +16,7 @@ import {
 } from 'navigators/NavigationsTypes';
 import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {View, Pressable, FlatList, Image, Animated} from 'react-native';
+import {View, Pressable, FlatList, Image, Animated, Share} from 'react-native';
 import {colors, spacing} from 'theme';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
@@ -323,7 +323,11 @@ const StoreDetails = () => {
     : {
         uri: BASE_URL + isExistCoverImage?.Url,
       };
-
+  const onPressShare = async () => {
+    await Share.share({
+      url: 'https://www.google.com/',
+    });
+  };
   return (
     <View style={{flex: 1, backgroundColor: colors.white}}>
       <SearchHeader
@@ -331,6 +335,7 @@ const StoreDetails = () => {
         setValue={setSearchText}
         onSubmitEditing={SearchHandler}
         filterIcon={false}
+        onPressRightIcon={onPressShare}
         RightIcon={
           <MaterialCommunityIcons
             name="share-variant"

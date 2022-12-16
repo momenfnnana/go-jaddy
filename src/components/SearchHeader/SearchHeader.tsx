@@ -23,6 +23,7 @@ interface ISearchHeader {
   placeholder?: string;
   facetsList?: any;
   route?: string;
+  onPressRightIcon?: () => void;
 }
 
 const SearchHeader = ({
@@ -33,6 +34,7 @@ const SearchHeader = ({
   Footer,
   filterIcon = true,
   RightIcon,
+  onPressRightIcon,
   placeholder = 'search.search-input',
   facetsList,
   route,
@@ -79,6 +81,9 @@ const SearchHeader = ({
             </Pressable>
           }
         />
+        <Pressable onPress={onPressRightIcon} style={styles.RightIconContainer}>
+          {RightIcon}
+        </Pressable>
         {/* <Pressable style={styles.goBackContainer}>
           {RightIcon ? RightIcon : <CartIcon stroke={colors.white} />}
         </Pressable> */}
@@ -123,5 +128,10 @@ const styles = StyleSheet.create({
     height: Platform.OS === 'android' ? 36 : undefined,
     paddingHorizontal: spacing.tiny,
     alignSelf: 'flex-end',
+  },
+  RightIconContainer: {
+    backgroundColor: colors.white + 18,
+    padding: spacing.small,
+    borderRadius: spacing.small + 2,
   },
 });

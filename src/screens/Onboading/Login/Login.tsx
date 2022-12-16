@@ -102,7 +102,6 @@ const Login = () => {
       return data;
     },
   });
-  console.log({localData});
 
   const successLogin = (data: any) => {
     const {AccessToken, RememberMe} = data.data;
@@ -114,22 +113,13 @@ const Login = () => {
     reload(data.data?.AccessToken);
     if (localData && localData.length) {
       for (let index = 0; index < localData.length; index++) {
-        const count = index;
-        const element = localData[count];
-        console.log({element});
-
+        const element = localData[index];
         mutateAddToCart({
           ProductId: element?.ProductId,
           QuantityToAdd: element?.QuantityToAdd || 1,
-          SelectedAttributes: element?.attributesToSend,
+          SelectedAttributes: element?.SelectedAttributes,
         });
       }
-      // dispatch(
-      //   CommonActions.reset({
-      //     index: 0,
-      //     routes: [{name: 'HomeFlow', params: {screen: 'HomeStack'}}],
-      //   }),
-      // );
     }
     dispatch(
       CommonActions.reset({
@@ -212,38 +202,53 @@ const Login = () => {
       const cartItems = await AsyncStorage.getItem(CART);
       const cartArray = JSON.parse(cartItems as any) as any[];
       if (cartItems && cartArray) {
-        cartArray.map(item => {
-          const attributes = item?.Attributes?.map((element: any) => {
-            let attributeObject = {
-              AttributeId: element.AttributeId,
-              VariantAttributeId: element.VariantAttributeId,
-            };
-            element.Values?.map((ele:any)=>{})
-          });
-        });
-        for (let ix = 0; ix < cartArray.length; ix++) {
-          const item = cartArray[ix];
-          for (let index = 0; index < item?.Attributes.length; index++) {
-            const element = item?.Attributes[index];
-            let attributeObject = {};
-            for (let idx = 0; idx < element?.Values?.length; idx++) {
-              const ele = element.Values[idx];
-              attributeObject = {
-                AttributeId: element.AttributeId,
-                VariantAttributeId: element.VariantAttributeId,
-                AttributeValue: ele.Id,
-              };
-              // setLocalData([
-              //   ...localData,
-              //   {
-              //     ProductId: item?.Id,
-              //     QuantityToAdd: item?.QuantityToAdd || 1,
-              //     SelectedAttributes: attributeObject,
-              //   },
-              // ]);
+        let readyItems: any[] = [];
+        for (let index = 0; index < cartArray.length; index++) {
+          const productItem = cartArray[index];
+          if (productItem?.Attributes?.length > 0) {
+            for (let idx = 0; idx < productItem?.Attributes?.length; idx++) {
+              const attributeItem = productItem?.Attributes[idx];
+              if (attributeItem?.Values.length > 0) {
+                for (let ix = 0; ix < attributeItem?.Values.length; ix++) {
+                  const attributeValues = attributeItem?.Values[ix];
+                  let attributeObject = [
+                    {
+                      AttributeId: attributeItem.AttributeId,
+                      VariantAttributeId: attributeItem.VariantAttributeId,
+                      AttributeValue: attributeValues.Id,
+                    },
+                  ];
+                  readyItems = [
+                    ...readyItems,
+                    {
+                      ProductId: productItem?.Id,
+                      QuantityToAdd: productItem?.QuantityToAdd || 1,
+                      SelectedAttributes: attributeObject,
+                    },
+                  ];
+                }
+              }
+              readyItems = [
+                ...readyItems,
+                {
+                  ProductId: productItem?.Id,
+                  QuantityToAdd: productItem?.QuantityToAdd || 1,
+                  SelectedAttributes: [],
+                },
+              ];
             }
+          } else {
+            readyItems = [
+              ...readyItems,
+              {
+                ProductId: productItem?.Id,
+                QuantityToAdd: productItem?.QuantityToAdd || 1,
+                SelectedAttributes: [],
+              },
+            ];
           }
         }
+        setLocalData(readyItems);
       }
     })();
   }, [updateProducts]);
