@@ -34,6 +34,9 @@ export type IshowListHandler = 'list' | 'grid';
 const Search = () => {
   const {settings} = useContext(UserContext);
   const [searchText, setSearchText] = useState<string>('');
+  const [isCategory, setIsCategory] = useState<boolean>(false);
+  const [categoryId, setCategoryId] = useState<number>(0);
+  const [categoryName, setCategoryName] = useState<string>('');
   const {params} = useRoute<HomeNavigationsType>();
   const [viewType, setViewType] = useState<IshowListHandler>('grid');
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -52,7 +55,11 @@ const Search = () => {
   } = useInfiniteQuery(
     [`productsCategory${(params as any)?.categoryId}`],
     ({pageParam}) =>
-      getCategoryProducts({pageParam, categoryId: (params as any)?.categoryId}),
+      getCategoryProducts({
+        pageParam,
+        categoryId: categoryId,
+        Filters: filterOptions,
+      }),
     {
       enabled: false,
       getNextPageParam: lastPage => {
@@ -66,11 +73,18 @@ const Search = () => {
 
   useEffect(() => {
     if ((params as any)?.paramsType == 'category') {
-      refetchProductsCategory();
+      setIsCategory(true);
+      if ((params as any)?.categoryId) {
+        setCategoryId((params as any)?.categoryId);
+        setCategoryName((params as any)?.title);
+      }
+      setTimeout(() => {
+        refetchProductsCategory();
+      }, 100);
       DismissKeyboard();
     }
     return () => remove();
-  }, [params]);
+  }, [params, (params as any)?.categoryId]);
 
   const {
     data,
@@ -108,9 +122,16 @@ const Search = () => {
     if ((params as any)?.paramsType == 'filter') {
       if ((params as any)?.dataFilter) {
         setFilterOptions((params as any)?.dataFilter);
-        setTimeout(() => {
-          refetchSearchResults();
-        }, 200);
+        if (isCategory) {
+          console.log('here');
+          setTimeout(() => {
+            refetchProductsCategory();
+          }, 200);
+        } else {
+          setTimeout(() => {
+            refetchSearchResults();
+          }, 200);
+        }
         DismissKeyboard();
       }
     }
@@ -121,6 +142,7 @@ const Search = () => {
       searchText.length >
       parseInt(settings?.SearchSettings?.InstantSearchTermMinLength)
     ) {
+      setIsCategory(false);
       refetchSearchResults();
     }
   };
@@ -130,7 +152,7 @@ const Search = () => {
   };
 
   const productsList = useMemo(() => {
-    if ((params as any)?.title?.length > 0) {
+    if (isCategory) {
       return ProductsCategoryData?.pages
         .map(page => page.data?.ProductsModel?.Items)
         .flat();
@@ -139,14 +161,14 @@ const Search = () => {
   }, [data, ProductsCategoryData]);
 
   const facetsList = useMemo(() => {
-    if ((params as any)?.title?.length > 0) {
+    if (isCategory) {
       return ProductsCategoryData?.pages.map(page => page.data?.Facets).flat();
     }
     return data?.pages.map(page => page.data?.Facets).flat();
   }, [data, ProductsCategoryData]);
 
   const productsModel = useMemo(() => {
-    if ((params as any)?.title?.length > 0) {
+    if (isCategory) {
       return ProductsCategoryData?.pages.map(page => page.data?.ProductsModel);
     }
     return data?.pages.map(page => page.data?.ProductsModel);
@@ -176,7 +198,11 @@ const Search = () => {
               onPress={() => {
                 setFilterOptions(null);
                 setTimeout(() => {
-                  refetchSearchResults();
+                  if (isCategory) {
+                    refetchProductsCategory();
+                  } else {
+                    refetchSearchResults();
+                  }
                 }, 100);
               }}
               style={{
@@ -200,18 +226,12 @@ const Search = () => {
           <View style={styles.row}>
             <Text
               tx={
-                (params as any)?.title?.length > 0
-                  ? 'search.categoryTitle'
-                  : 'search.search-result-for'
+                isCategory ? 'search.categoryTitle' : 'search.search-result-for'
               }
               variant="smallRegular"
             />
             <Text
-              text={` ${
-                (params as any)?.title?.length > 0
-                  ? (params as any)?.title
-                  : searchText
-              }`}
+              text={` ${isCategory ? (params as any)?.title : searchText}`}
               variant="smallBold"
             />
           </View>

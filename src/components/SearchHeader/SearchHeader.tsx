@@ -43,7 +43,7 @@ const SearchHeader = ({
     return top;
   }, []);
   const onPressFilter = () => {
-    navigate('FiltersScreen', {facetsList: facetsList});
+    navigate('FiltersScreen', {facetsList: facetsList, route});
   };
   return (
     <View
