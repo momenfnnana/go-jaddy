@@ -1,7 +1,7 @@
 import {Image, Pressable, View} from 'react-native';
 import React, {useContext, useEffect, useMemo, useState} from 'react';
 import {colors, spacing} from 'theme';
-import {SelectedAttribute, Text} from 'components';
+import {Loader, SelectedAttribute, Text} from 'components';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useCurrency} from 'hook/useCurrency';
 import {BASE_URL} from 'utils/Axios';
@@ -83,18 +83,42 @@ const CartItem = ({item, setData}: ICartItem) => {
     }
   };
 
+  const changeLocalItems = async () => {
+    const cartItems = await AsyncStorage.getItem(CART);
+    const cartArray =
+      JSON.parse(cartItems as any) === null ? [] : JSON.parse(cartItems as any);
+    const filteredItems = cartArray.filter(
+      (element: any) => element.Id !== item.Id,
+    );
+    const foundedItems = cartArray.find(
+      (element: any) => element.Id === item.Id,
+    );
+    const newArray = [
+      ...filteredItems,
+      {...foundedItems, QuantityToAdd: foundedItems?.QuantityToAdd + 1},
+    ];
+    AsyncStorage.setItem(CART, JSON.stringify(newArray));
+  };
+
   useEffect(() => {
-    if (item?.EnteredQuantity !== quantity) {
-      refetchEditItem();
+    if (isLogged) {
+      if (item?.EnteredQuantity !== quantity) {
+        refetchEditItem();
+      }
+    } else {
+      changeLocalItems();
     }
   }, [quantity]);
 
   useEffect(() => {
     setQuantity(initialQuantity || 1);
   }, [item]);
-  const imageUrl = item?.Image?.Url
-    ? BASE_URL + item?.Image?.Url
-    : BASE_URL + item?.Images[0]?.Url;
+
+  const imageUrl = useMemo(() => {
+    return item?.Image?.Url
+      ? BASE_URL + item?.Image?.Url
+      : BASE_URL + item?.Images[0]?.Url;
+  }, [item, BASE_URL]);
   const productPrice = useMemo(() => {
     if (item?.SubTotal) {
       return item?.SubTotal + ' ' + currency?.Symbol;
