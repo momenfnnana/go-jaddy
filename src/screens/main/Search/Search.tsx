@@ -120,6 +120,7 @@ const Search = () => {
 
   useEffect(() => {
     if ((params as any)?.paramsType == 'filter') {
+      DismissKeyboard();
       if ((params as any)?.dataFilter) {
         setFilterOptions((params as any)?.dataFilter);
         if (isCategory) {
@@ -189,7 +190,12 @@ const Search = () => {
         value={searchText}
         setValue={setSearchText}
         onSubmitEditing={SearchHandler}
-        autoFocus={true}
+        autoFocus={
+          (params as any)?.paramsType == 'category' ||
+          (params as any)?.paramsType == 'filter'
+            ? false
+            : true
+        }
         facetsList={facetsList}
         filterIcon={(facetsList as any)?.length > 0}
         Footer={
@@ -231,7 +237,7 @@ const Search = () => {
               variant="smallRegular"
             />
             <Text
-              text={` ${isCategory ? (params as any)?.title : searchText}`}
+              text={` ${isCategory ? categoryName : searchText}`}
               variant="smallBold"
             />
           </View>
