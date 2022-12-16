@@ -1,15 +1,6 @@
-import {
-  View,
-  FlatList,
-  Image,
-  Pressable,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-} from 'react-native';
+import {View, FlatList, Pressable, TextInput, StyleSheet} from 'react-native';
 import React, {useState, useEffect, useContext} from 'react';
-import {useQueries, useQuery} from '@tanstack/react-query';
+import {useQuery} from '@tanstack/react-query';
 import {
   applyDiscountCart,
   getCartProducts,
@@ -18,8 +9,7 @@ import {
   togglePointsCart,
 } from 'services/Cart';
 import {colors, font, spacing} from 'theme';
-import {BASE_URL} from 'utils/Axios';
-import {Button, InputField, Loader, Modal, Text} from 'components';
+import {Button, Loader, Modal, Text} from 'components';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Switch} from 'react-native-paper';
@@ -136,7 +126,7 @@ const Cart = () => {
       (async () => {
         const cartItems = await AsyncStorage.getItem(CART);
         const cartArray = JSON.parse(cartItems as any) as any[];
-        if (cartArray) {
+        if (cartArray?.length > 0) {
           setLocalData(cartArray);
         }
       })();
