@@ -37,13 +37,14 @@ const SearchHeader = ({
   facetsList,
   route,
 }: ISearchHeader) => {
+  console.log({route});
   const {top} = useSafeAreaInsets();
   const {navigate} = useNavigation<SearchScreenNavigationProp>();
   const topSpace = useMemo(() => {
     return top;
   }, []);
   const onPressFilter = () => {
-    navigate('FiltersScreen', {facetsList: facetsList});
+    navigate('FiltersScreen', {facetsList: facetsList, route});
   };
   return (
     <View

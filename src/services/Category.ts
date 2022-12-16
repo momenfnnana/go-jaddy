@@ -5,6 +5,7 @@ interface CategoriesParams {
   pageParam?: any;
   categoryId?: number;
   StoreId?: number;
+  Filters?: any;
 }
 
 export const getPerantCategories = ({pageParam = 1}) => {
@@ -25,6 +26,7 @@ export const getCategoryProducts = ({
   pageParam = 1,
   categoryId,
   StoreId,
+  Filters,
 }: CategoriesParams) =>
   axios(`${BASE_URL}/api/custom/category/CategoryProducts`, {
     method: 'post',
@@ -34,5 +36,6 @@ export const getCategoryProducts = ({
       Page: pageParam,
       PageSize: 5,
       StoreId,
+      Filters,
     },
   });
