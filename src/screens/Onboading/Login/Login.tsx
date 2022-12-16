@@ -8,6 +8,7 @@ import {
   Pressable,
   Keyboard,
   Alert,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {LoginMain} from 'assets/images';
 import LinearGradient from 'react-native-linear-gradient';
@@ -64,7 +65,7 @@ const GredientFrom = '#AFB2B500';
 const GredientTo = '#231D2590';
 
 const initialValues: IinitialValues = {
-  phoneNumber: '05957025222',
+  phoneNumber: '595702522',
   password: 'Password$1',
 };
 
@@ -101,39 +102,41 @@ const Login = () => {
       return data;
     },
   });
+  console.log({localData});
 
   const successLogin = (data: any) => {
     const {AccessToken, RememberMe} = data.data;
     setAccessToken(AccessToken);
+    if (!RememberMe) {
+      axios.defaults.headers.common['AccessToken'] = `${AccessToken}`;
+      AsyncStorage.setItem('accessToken', AccessToken);
+    }
+    reload(data.data?.AccessToken);
+    if (localData && localData.length) {
+      for (let index = 0; index < localData.length; index++) {
+        const count = index;
+        const element = localData[count];
+        console.log({element});
+
+        mutateAddToCart({
+          ProductId: element?.ProductId,
+          QuantityToAdd: element?.QuantityToAdd || 1,
+          SelectedAttributes: element?.attributesToSend,
+        });
+      }
+      // dispatch(
+      //   CommonActions.reset({
+      //     index: 0,
+      //     routes: [{name: 'HomeFlow', params: {screen: 'HomeStack'}}],
+      //   }),
+      // );
+    }
     dispatch(
       CommonActions.reset({
         index: 0,
         routes: [{name: 'HomeFlow', params: {screen: 'HomeStack'}}],
       }),
     );
-    // navigate('HomeFlow', {screen: 'HomeStack'} as any);
-    if (!RememberMe) {
-      axios.defaults.headers.common['AccessToken'] = `${AccessToken}`;
-      AsyncStorage.setItem('accessToken', AccessToken);
-    }
-    reload(data.data?.AccessToken);
-    if (localData && !!localData.length) {
-      localData?.map(item => {
-        console.log({Attributes: item?.Attributes});
-        const attributesToSend = item?.Attributes.map((element: any) => {
-          return {
-            AttributeId: element.AttributeId,
-            VariantAttributeId: element.VariantAttributeId,
-            AttributeValueId: element.values[0].Id,
-          };
-        });
-        mutateAddToCart({
-          ProductId: item?.Id,
-          QuantityToAdd: item?.QuantityToAdd || 1,
-          SelectedAttributes: attributesToSend,
-        });
-      });
-    }
     return data;
   };
 
@@ -157,7 +160,6 @@ const Login = () => {
   });
 
   const doLogin = (values: any) => {
-    console.log({PhoneNumber: values.countryCode + values.PhoneNumber});
     const data = {
       // PhoneNumber: countryCode + values.phoneNumber,
       // Password: values.password,
@@ -209,8 +211,39 @@ const Login = () => {
     (async () => {
       const cartItems = await AsyncStorage.getItem(CART);
       const cartArray = JSON.parse(cartItems as any) as any[];
-      if (cartArray) {
-        setLocalData(cartArray);
+      if (cartItems && cartArray) {
+        cartArray.map(item => {
+          const attributes = item?.Attributes?.map((element: any) => {
+            let attributeObject = {
+              AttributeId: element.AttributeId,
+              VariantAttributeId: element.VariantAttributeId,
+            };
+            element.Values?.map((ele:any)=>{})
+          });
+        });
+        for (let ix = 0; ix < cartArray.length; ix++) {
+          const item = cartArray[ix];
+          for (let index = 0; index < item?.Attributes.length; index++) {
+            const element = item?.Attributes[index];
+            let attributeObject = {};
+            for (let idx = 0; idx < element?.Values?.length; idx++) {
+              const ele = element.Values[idx];
+              attributeObject = {
+                AttributeId: element.AttributeId,
+                VariantAttributeId: element.VariantAttributeId,
+                AttributeValue: ele.Id,
+              };
+              // setLocalData([
+              //   ...localData,
+              //   {
+              //     ProductId: item?.Id,
+              //     QuantityToAdd: item?.QuantityToAdd || 1,
+              //     SelectedAttributes: attributeObject,
+              //   },
+              // ]);
+            }
+          }
+        }
       }
     })();
   }, [updateProducts]);
@@ -282,7 +315,7 @@ const Login = () => {
   }
 
   return (
-    <View style={styles.cont}>
+    <TouchableWithoutFeedback onPress={closeKeyboard} style={styles.cont}>
       <View style={{flex: 1}}>
         <LinearGradient
           colors={[GredientFrom, GredientTo]}
@@ -466,7 +499,7 @@ const Login = () => {
           success={onCodeSent}
         />
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
