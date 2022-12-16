@@ -80,7 +80,7 @@ const StoreItem = ({
       {item?.map(subItem => (
         <Pressable
           onPress={() => navigateToStore(subItem.Id)}
-          style={[styles.item, {width: ITEM_WIDTH, height: ITEM_HEIGHT}]}
+          style={[styles.item, {width: ITEM_WIDTH}]}
           key={subItem.Id}>
           <View style={styles.subItem}>
             <Image
