@@ -7,7 +7,14 @@ import {
 } from 'react-native';
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {BackButton, Button, InputField, Loader, Text} from 'components';
+import {
+  BackButton,
+  Button,
+  InputField,
+  Loader,
+  PhoneNumberInput,
+  Text,
+} from 'components';
 import {colors, font, spacing} from 'theme';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
@@ -42,6 +49,9 @@ const AddAddress = () => {
   const {addressSchema} = useSchema();
   const [isDefualt, setDefualt] = useState<boolean>(
     params?.item?.IsDefault || false,
+  );
+  const [introductionNumber, setIntroductionNumber] = useState<number | string>(
+    params?.item?.PhoneNumber || '00970',
   );
   const [countrySelected, setCountrySelected] = useState<any>({});
   const {t} = useTranslation();
@@ -118,6 +128,9 @@ const AddAddress = () => {
   };
 
   const onRegisterHandle = () => {};
+  const onChangePhoneIntroduction = (value: string) => {
+    setIntroductionNumber(value);
+  };
 
   return (
     <View>
@@ -138,7 +151,7 @@ const AddAddress = () => {
                 FaxNumber: values.fax,
                 FirstName: values.firstName,
                 LastName: values.lastName,
-                PhoneNumber: values.phoneNumber,
+                PhoneNumber: introductionNumber + values.phoneNumber,
                 PostalCode: 'PostalCode',
                 StateId: stateSelected.item?.Value,
                 IsDefault: isDefualt,
@@ -375,12 +388,15 @@ const AddAddress = () => {
                     value: errors.email,
                   }}
                 />
-                <InputField
+                <PhoneNumberInput
                   value={values.phoneNumber}
+                  style={{}}
+                  introductionNumber={introductionNumber?.toString()}
                   keyboardType="numeric"
                   onChangeText={handleChange('phoneNumber')}
                   onBlur={handleBlur('phoneNumber')}
                   placeholder={'addAddress.phone'}
+                  onChangeCountry={onChangePhoneIntroduction}
                   error={{
                     touched: touched.phoneNumber,
                     value: errors.phoneNumber,

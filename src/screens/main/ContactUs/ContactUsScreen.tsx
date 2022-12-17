@@ -29,7 +29,7 @@ const initialValues: IinitialValues = {
   PhoneNumber: '',
   Email: '',
   Message: '',
-  countryCode: '970',
+  countryCode: '00970',
 };
 const ContactUsScreen = () => {
   const {contactUs} = useSchema();
@@ -92,6 +92,7 @@ const ContactUsScreen = () => {
           />
           <PhoneNumberInput
             style={{}}
+            containerStyle={{}}
             value={values.PhoneNumber}
             onChangeText={handleChange('PhoneNumber')}
             onBlur={handleBlur('PhoneNumber')}

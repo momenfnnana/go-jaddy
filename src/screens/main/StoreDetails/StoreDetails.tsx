@@ -421,7 +421,6 @@ const StoreDetails = () => {
                     onPress={() => setTab(tabsName[4])}
                     style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text
-                      style={{lineHeight: 0}}
                       color={colors.white}
                       variant="xSmallLight"
                       tx={` ${
@@ -756,7 +755,14 @@ const StoreDetails = () => {
                 marginTop: spacing.large,
               }}>
               <Text tx="storeDetails.display-methods" variant="xSmallRegular" />
-              <ViewShow showListHandler={showListHandler} viewType={viewType} />
+              {!!ProductsData?.pages
+                .map(page => page.data.ProductsModel.Items)
+                .flat().length && (
+                <ViewShow
+                  showListHandler={showListHandler}
+                  viewType={viewType}
+                />
+              )}
             </View>
             {viewType == 'grid' ? (
               <FlatList
@@ -775,6 +781,12 @@ const StoreDetails = () => {
                   paddingHorizontal: spacing.content,
                   paddingTop: 20,
                 }}
+                ListEmptyComponent={
+                  <EmptyPage
+                    descritopn="EmptyPage.product-description"
+                    title="EmptyPage.product-title"
+                  />
+                }
                 numColumns={2}
                 data={ProductsData?.pages
                   .map(page => page.data.ProductsModel.Items)
