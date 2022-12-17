@@ -421,7 +421,7 @@ const StoreDetails = () => {
                     onPress={() => setTab(tabsName[4])}
                     style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text
-                      style={{lineHeight: 0}}
+                      // style={{lineHeight: 0}}
                       color={colors.white}
                       variant="xSmallLight"
                       tx={` ${
@@ -434,7 +434,7 @@ const StoreDetails = () => {
                       name="keyboard-arrow-right"
                       color={colors.white}
                       size={13}
-                      style={{lineHeight: 0}}
+          
                     />
                   </Pressable>
                 </View>
