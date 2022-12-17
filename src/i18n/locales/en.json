@@ -121,7 +121,9 @@
     "attach-image": "Attach image (optional)",
     "select": "Select {{optionName}}",
     "custom-text": "Custom text..",
-    "load-more": "load more reviews"
+    "load-more": "load more reviews",
+    "no-rates-added-title": "No Rates added before",
+    "no-rates-added-description": "pick this product and rate it"
   },
   "category": {
     "title": "Category"

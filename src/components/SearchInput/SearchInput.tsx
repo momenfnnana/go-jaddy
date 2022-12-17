@@ -38,10 +38,8 @@ const SearchInput = ({containerStyle}: ISearchInput) => {
         onChangeText={setSearchInput}
         editable={false}
         onPressIn={onPressIn}
-        style={[
-          styles.input,
-          {textAlign: language === '2' ? 'right' : 'left'},
-        ]}
+        placeholderTextColor={colors.grayMain}
+        style={[styles.input, {textAlign: language === '2' ? 'right' : 'left'}]}
       />
     </Pressable>
   );

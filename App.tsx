@@ -68,9 +68,9 @@ export default function App() {
       setAxiosLanguage(res || '2');
       setIsAr(res === '2' ? true : false);
       i18n.use(initReactI18next).init({
-        lng: res === '2' ? 'ar' : 'en',
+        lng: res === '1' ? 'en' : 'ar',
         resources,
-        fallbackLng: 'en', // use en if detected lng is not available
+        fallbackLng: 'ar', // use en if detected lng is not available
         interpolation: {
           escapeValue: false, // react already safes from xss
         },

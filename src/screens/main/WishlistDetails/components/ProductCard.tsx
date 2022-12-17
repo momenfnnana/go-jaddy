@@ -141,7 +141,6 @@ export default ProductCard;
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: spacing.normal,
-    flex: 1,
     flexDirection: 'row',
     paddingVertical: spacing.normal,
     marginVertical: spacing.smaller,

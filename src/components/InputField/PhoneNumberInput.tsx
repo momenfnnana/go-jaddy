@@ -6,6 +6,7 @@ import {
   ImageSourcePropType,
   NativeSyntheticEvent,
   TextInputFocusEventData,
+  View,
 } from 'react-native';
 import InputField, {IInputField} from './InputField';
 import Text from '../Text';
@@ -26,6 +27,7 @@ interface IPhoneNumberInput extends IInputField {
   errorValue?: string;
   errorTouched?: boolean;
   onChangeCountry: (value: string) => void;
+  introductionNumber?: string;
 }
 const SIZE = 18;
 const flags: IFlag[] = [
@@ -48,6 +50,7 @@ const PhoneNumberInput = ({
   errorValue,
   errorTouched,
   onChangeCountry,
+  introductionNumber,
   ...rest
 }: IPhoneNumberInput) => {
   const [selectedFlag, setSelectedFlag] = useState<IFlag>(flags[0]);
@@ -77,7 +80,7 @@ const PhoneNumberInput = ({
         rightIcon={
           <Pressable onPress={showCountries} style={styles.row}>
             <Text
-              text={selectedFlag.introructionNumber}
+              text={introductionNumber || selectedFlag.introructionNumber}
               variant="smallRegular"
               color={colors.brouwnLight}
               size={11}

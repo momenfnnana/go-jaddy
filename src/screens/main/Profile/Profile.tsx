@@ -36,10 +36,12 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    refetch();
-  }, [accessToken]);
+    if (isLogged) {
+      refetch();
+    }
+  }, [isLogged]);
 
-  if (isLoadingUserData || isRefetching) {
+  if (isRefetching) {
     return <Loader size={'large'} containerStyle={styles.loader} />;
   }
 

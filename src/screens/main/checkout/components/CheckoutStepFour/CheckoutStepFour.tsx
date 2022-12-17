@@ -9,7 +9,14 @@ import {
   Image,
 } from 'react-native';
 import {colors, font, spacing} from 'theme';
-import {Button, InputField, Loader, Modal, Text} from 'components';
+import {
+  Button,
+  InputField,
+  Loader,
+  Modal,
+  SelectedAttribute,
+  Text,
+} from 'components';
 import {Switch} from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useMutation, useQuery} from '@tanstack/react-query';
@@ -315,42 +322,7 @@ const CheckoutStepFour = () => {
                     variant="mediumExtraBold"
                   />
                 </View>
-                {!!item?.AttributesSelection?.length &&
-                  item?.AttributesSelection.map((_: any, index: number) => (
-                    <View
-                      style={{
-                        width: 70,
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: 'transparent',
-                      }}
-                      key={index.toString()}>
-                      <Text
-                        text={_?.AttributeType}
-                        variant="xSmallBold"
-                        style={{
-                          borderRadius: spacing.medium + 2,
-                          borderWidth: 1,
-                          borderColor: colors.reloadColor,
-                          padding: spacing.tiny,
-                          backgroundColor: colors.white,
-                          overflow: 'hidden',
-                        }}
-                        center
-                      />
-                      <View
-                        style={{
-                          backgroundColor: '#000' || _?.AttributeValue,
-                          width: 27,
-                          height: 27,
-                          borderRadius: 27 * 0.5,
-                          left: -10,
-                          zIndex: -1,
-                        }}
-                      />
-                    </View>
-                  ))}
+                <SelectedAttribute items={item?.AttributesSelection} />
               </View>
               {item?.AllowPackageAsGift && (
                 <View style={styles.selectGiftContainer}>
@@ -444,7 +416,7 @@ const CheckoutStepFour = () => {
           </TouchableWithoutFeedback>
         }
       />
-      <Modal isVisible={isSuccess} onBackdropPress={closeSuccessModal}>
+      <Modal isVisible={isSuccess} onBackdropPress={goOrdersListHandler}>
         <View style={styles.modalContainer}>
           <Image source={LogoSplash} />
           <Text

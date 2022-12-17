@@ -191,7 +191,7 @@ const Login = () => {
   const onChangeCountry = (value: string) => {
     setCountryCode(value);
   };
-
+  console.log({localData});
   useEffect(() => {
     messaging()
       .getToken()
@@ -205,38 +205,30 @@ const Login = () => {
         let readyItems: any[] = [];
         for (let index = 0; index < cartArray.length; index++) {
           const productItem = cartArray[index];
-          if (productItem?.Attributes?.length > 0) {
-            for (let idx = 0; idx < productItem?.Attributes?.length; idx++) {
-              const attributeItem = productItem?.Attributes[idx];
-              if (attributeItem?.Values.length > 0) {
-                for (let ix = 0; ix < attributeItem?.Values.length; ix++) {
-                  const attributeValues = attributeItem?.Values[ix];
-                  let attributeObject = [
-                    {
-                      AttributeId: attributeItem.AttributeId,
-                      VariantAttributeId: attributeItem.VariantAttributeId,
-                      AttributeValue: attributeValues.Id,
-                    },
-                  ];
-                  readyItems = [
-                    ...readyItems,
-                    {
-                      ProductId: productItem?.Id,
-                      QuantityToAdd: productItem?.QuantityToAdd || 1,
-                      SelectedAttributes: attributeObject,
-                    },
-                  ];
-                }
+          const attributes = productItem?.AttributesSelection;
+          let SelectedAttributes: any[] = [];
+          if (attributes?.length > 0) {
+            for (let idx = 0; idx < attributes.length; idx++) {
+              const attributeItem = attributes[idx];
+              const values: any[] = attributeItem?.values;
+              for (let ix = 0; ix < values.length; ix++) {
+                const attributeValue = values[ix];
+                let attributeObject = {
+                  AttributeId: attributeItem.AttributeId,
+                  VariantAttributeId: attributeItem.VariantAttributeId,
+                  AttributeValue: attributeValue.Id,
+                };
+                SelectedAttributes = [...SelectedAttributes, attributeObject];
               }
-              readyItems = [
-                ...readyItems,
-                {
-                  ProductId: productItem?.Id,
-                  QuantityToAdd: productItem?.QuantityToAdd || 1,
-                  SelectedAttributes: [],
-                },
-              ];
             }
+            readyItems = [
+              ...readyItems,
+              {
+                ProductId: productItem?.Id,
+                QuantityToAdd: productItem?.QuantityToAdd || 1,
+                SelectedAttributes,
+              },
+            ];
           } else {
             readyItems = [
               ...readyItems,

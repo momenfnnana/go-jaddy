@@ -91,7 +91,9 @@
     "attach-image": "ارفاق صورة (اختياري)",
     "select": "اختر {{optionName}}",
     "custom-text": "تخصيص..",
-    "load-more": "تحميل المزيد من التقييمات"
+    "load-more": "تحميل المزيد من التقييمات",
+    "no-rates-added-title": "لم يتم اضافة تقييمات",
+    "no-rates-added-description": "اشتري المنتج واضف تقييمك"
   },
   "category": {
     "title": "التصنيفات"
@@ -316,6 +318,20 @@
     "placeholderSearch": "ابحث برقم الطلب",
     "total": "الاجمالي ({{currency}} - {{itemNumber}} عنصر)",
     "chargeTime": "تاريخ الطلب {{time}}"
+  },
+  "orderDetails": {
+    "shipping-method": "طريقة الشحن",
+    "payment-method": "طريقة الدفع",
+    "order-date": "تاريخ الطلب",
+    "shipping-date": "تاريخ التوصيل",
+    "order-status": "حالة الطلب",
+    "shipping-status": "حالة التوصيل",
+    "payment-address": "عنوان الدفع",
+    "shipping-address": "عنوان التوصيل",
+    "order-invoice": "فاتورة الطلب",
+    "shipping-fee": "رسوم الشحن",
+    "products-list": "قائمة المنتجات",
+    "cancelBtn": "الغاء الطلب"
   },
   "modal": {
     "successTitle": "هل أنت متأكد من هذه العملية؟",

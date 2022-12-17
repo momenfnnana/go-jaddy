@@ -34,6 +34,7 @@ const OrderDetails = () => {
   const {width} = useWindowDimensions();
   const {currency} = useCurrency();
   const {navigate} = useNavigation<IProductNavigation>();
+
   useLayoutEffect(() => {
     setOptions({
       tabBarVisible: false,
@@ -68,7 +69,7 @@ const OrderDetails = () => {
   const {isLoading, data, refetch} = useQuery(['getOrderDetails'], () =>
     getOrdersDetails({orderId: params?.Id}),
   );
-
+  const item = useMemo(() => data?.data?.OrderDetails, [data]);
   if (isLoading) {
     return (
       <Loader
@@ -81,8 +82,6 @@ const OrderDetails = () => {
       />
     );
   }
-
-  const item = useMemo(() => data?.data?.OrderDetails, [data]);
 
   return (
     <View style={{flex: 1}}>

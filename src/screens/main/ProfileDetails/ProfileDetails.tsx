@@ -1,26 +1,16 @@
-import {
-  View,
-  ScrollView,
-  Pressable,
-  Image,
-  ImageSourcePropType,
-  StyleSheet,
-} from 'react-native';
-import React, {useContext, useLayoutEffect, useState} from 'react';
+import {View, ScrollView, ImageSourcePropType, StyleSheet} from 'react-native';
+import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
 import {
   BackButton,
   Button,
   InputField,
   Loader,
   PhoneNumberInput,
-  Text,
 } from 'components';
 import {useNavigation} from '@react-navigation/native';
 import {colors, spacing} from 'theme';
 import HeaderAccount from './components/HeaderAccount';
 import {Formik} from 'formik';
-import * as Yup from 'yup';
-import {PalestineFlag} from 'assets/images';
 import {UserContext} from 'context/UserContext';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {changePassword, changeUserInfo, getUserData} from 'services/Profile';
@@ -41,10 +31,7 @@ const ProfileDetails = () => {
   const [isOldPasswordShow, setIsOldPasswordShown] = useState<boolean>(false);
   const [isPasswordShow, setIsPasswordShown] = useState<boolean>(false);
   const [isCPasswordShow, setIsCPasswordShown] = useState<boolean>(false);
-  const [selectedFlag, setSelectedFlag] = useState<IFlag>({
-    imageUrl: PalestineFlag,
-    introructionNumber: '970',
-  });
+  const [introductionCounter, setIntroductionCounter] = useState<string>('');
   const {setOptions} = useNavigation();
 
   useLayoutEffect(() => {
@@ -86,14 +73,14 @@ const ProfileDetails = () => {
         Email: values?.email,
         FirstName: values?.firstName,
         LastName: values?.lastName,
-        PhoneNumber: values?.phoneNumber,
+        PhoneNumber: introductionCounter + values?.phoneNumber,
       });
     } else {
       mutateUpdateUserInfo({
         Email: values?.email,
         FirstName: values?.firstName,
         LastName: values?.lastName,
-        PhoneNumber: values?.phoneNumber,
+        PhoneNumber: introductionCounter + values?.phoneNumber,
       });
     }
   };
@@ -119,13 +106,19 @@ const ProfileDetails = () => {
   };
 
   const onChangeCountry = (value: string) => {
-    console.log({value});
+    setIntroductionCounter(value);
   };
 
   const enableUpload =
     settings.CustomerSettings.AllowCustomersToUploadAvatars == 'True';
   const enableChangeData =
     settings.CustomerSettings.AllowUsersToChangeUsernames == 'True';
+
+  useEffect(() => {
+    if (data?.data.PhoneNumber) {
+      setIntroductionCounter(data?.data.PhoneNumber?.substring(0, 5));
+    }
+  }, [data?.data.PhoneNumber]);
 
   if (isLoadingUserData || isFetching) {
     return (
@@ -158,7 +151,7 @@ const ProfileDetails = () => {
               initialValues={{
                 firstName: data?.data.FirstName,
                 lastName: data?.data.LastName,
-                phoneNumber: data?.data.PhoneNumber,
+                phoneNumber: data?.data.PhoneNumber?.substring(5),
                 email: data?.data.Email,
               }}
               onSubmit={onUpdateProfileHandle}
@@ -204,39 +197,8 @@ const ProfileDetails = () => {
                         value: errors.phoneNumber,
                       }}
                       onChangeCountry={onChangeCountry}
+                      introductionNumber={introductionCounter}
                     />
-                    {/* <InputField
-                      disabled={!enableChangeData}
-                      value={values.phoneNumber}
-                      keyboardType="phone-pad"
-                      onChangeText={handleChange('phoneNumber')}
-                      onBlur={handleBlur('phoneNumber')}
-                      error={{
-                        touched: touched.phoneNumber,
-                        value: errors.phoneNumber,
-                      }}
-                      disabledRight
-                      rightIcon={
-                        <Pressable
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            alignSelf: 'center',
-                          }}>
-                          <Text
-                            text={selectedFlag.introructionNumber}
-                            variant="smallRegular"
-                            color={colors.brouwnLight}
-                            style={{fontSize: 11}}
-                          />
-                          <Image
-                            source={selectedFlag.imageUrl}
-                            style={{width: 30, height: 30}}
-                            resizeMode="center"
-                          />
-                        </Pressable>
-                      }
-                    /> */}
                     <InputField
                       disabled={!enableChangeData}
                       value={values.email}
@@ -250,7 +212,7 @@ const ProfileDetails = () => {
                       }}
                     />
                     <Button
-                      // isLoading={isLoadingUpdateUserInfo}
+                      isLoading={isLoadingUpdateUserInfo}
                       onPress={handleSubmit}
                       style={{
                         marginTop: 20,
