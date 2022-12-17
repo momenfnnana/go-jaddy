@@ -227,23 +227,23 @@ const Search = () => {
           )
         }
       />
-      {!!productsList?.length && (
-        <View style={[styles.row, styles.resultsHeader]}>
-          <View style={styles.row}>
-            <Text
-              tx={
-                isCategory ? 'search.categoryTitle' : 'search.search-result-for'
-              }
-              variant="smallRegular"
-            />
-            <Text
-              text={` ${isCategory ? categoryName : searchText}`}
-              variant="smallBold"
-            />
-          </View>
-          <ViewShow showListHandler={showListHandler} viewType={viewType} />
+      <View style={[styles.row, styles.resultsHeader]}>
+        <View style={styles.row}>
+          <Text
+            tx={
+              isCategory ? 'search.categoryTitle' : 'search.search-result-for'
+            }
+            variant="smallRegular"
+          />
+          <Text
+            text={` ${isCategory ? categoryName : searchText}`}
+            variant="smallBold"
+          />
         </View>
-      )}
+        {!!productsList?.length && (
+          <ViewShow showListHandler={showListHandler} viewType={viewType} />
+        )}
+      </View>
       {!!productsList?.length ? (
         viewType === 'grid' ? (
           <FlatList

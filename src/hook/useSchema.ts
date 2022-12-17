@@ -54,7 +54,7 @@ export const useSchema = () => {
       .matches(phoneRegExp, t('validation.phoneNumber-template'))
       .required(t('validation.phoneNumber-template')),
     Email: Yup.string()
-      .email('validation.email-template')
+      .email(t('validation.email-template'))
       .required(t('validation.email')),
     Message: Yup.string().required(t('validation.message')),
     countryCode: Yup.string(),
