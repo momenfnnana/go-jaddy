@@ -115,14 +115,16 @@ const ProductDetails = ({}: IProductDetails) => {
         isRefetchingReviews={isLoadingReviews || isRefetchingReviews}
         reviewsList={reviewsList as any[]}
       />
-      {reviewsList?.map((item, index) => (
-        <ReviewList key={index.toString()} item={item} />
-      ))}
-      {!!reviewsList?.length && isHavingFilters && (
+      {!!reviewsList?.length &&
+        reviewsList?.map((item, index) => (
+          <ReviewList key={index.toString()} item={item} />
+        ))}
+      {reviewsList?.length === 0 && isHavingFilters && (
         <EmptyPage
-          descritopn="go to home to discover products"
-          title="No products in your cart"
-          displayButton
+          descritopn="product-details.no-rates-added-title"
+          title="product-details.no-rates-added-description"
+          displayButton={false}
+          showImage={false}
         />
       )}
       {hasNextPageReviews && (
@@ -145,6 +147,7 @@ const ProductDetails = ({}: IProductDetails) => {
         productData={productData}
         hasNextPageReviews={hasNextPageReviews}
         loadMore={loadMore}
+        refetchReviews={refetchReviews}
       />
     </ScrollView>
   );

@@ -20,6 +20,7 @@ interface IListFooterComponent {
   productData: any;
   loadMore?: () => void;
   hasNextPageReviews?: boolean;
+  refetchReviews: () => void;
 }
 interface ICameraImage {
   uri?: string;
@@ -46,6 +47,7 @@ const ListFooterComponent = ({
   productData,
   loadMore,
   hasNextPageReviews,
+  refetchReviews,
 }: IListFooterComponent) => {
   const {settings} = useContext(UserContext);
   const {t} = useTranslation();
@@ -59,14 +61,9 @@ const ListFooterComponent = ({
     uri: '',
   });
   const [addImagesVisible, setAddImagesVisible] = useState<boolean>(false);
-  const {
-    data: IPAddressData,
-    isSuccess,
-    isError,
-    error,
-    isLoading: isLoadingSettings,
-  } = useQuery(['settings'], getIpAddress);
-  
+  const [isRateProductShown, setIsRateProductShown] = useState<boolean>(true);
+  const {data: IPAddressData} = useQuery(['settings'], getIpAddress);
+
   const ReviewOverview = productData?.data?.Product?.ReviewOverview;
   const showRatePopup = () => {
     setIsRateModalShown(true);
@@ -119,9 +116,10 @@ const ListFooterComponent = ({
     mutate,
     isLoading: isLoadingAddingReview,
     isSuccess: isAddingReviewSuccess,
-    data,
   } = useMutation(postAddReview, {
     onSuccess: data => {
+      setIsRateProductShown(false);
+      refetchReviews();
       return data;
     },
     onError: error => {
@@ -163,7 +161,8 @@ const ListFooterComponent = ({
       )}
       {ReviewOverview?.AllowCustomerReviews &&
         !ReviewOverview?.CustomerAlreadyReviewedProduct &&
-        ReviewOverview?.CustomerAlreadyPurchasedProduct && (
+        ReviewOverview?.CustomerAlreadyPurchasedProduct &&
+        isRateProductShown && (
           <Button
             disabled={isAddingReviewSuccess}
             title="product-details.product-rating"

@@ -19,6 +19,8 @@ interface IUserContext {
   setCurrencies: (value: any) => void;
   updateProducts: boolean;
   setUpdateProducts: (value: any) => void;
+  refreshCurrency: boolean;
+  setRefreshCurrency: (value: any) => void;
 }
 interface IUserProvider {
   children: JSX.Element;
@@ -46,6 +48,8 @@ const UserContext = createContext<IUserContext>({
   setCurrencies: ({}) => {},
   updateProducts: false,
   setUpdateProducts: ({}) => {},
+  refreshCurrency: false,
+  setRefreshCurrency: ({}) => {},
 });
 
 const UserProvider = ({children}: IUserProvider) => {
@@ -54,6 +58,7 @@ const UserProvider = ({children}: IUserProvider) => {
   const [accessToken, setAccessToken] = useState<string>('');
   const [currencies, setCurrencies] = useState<any[]>([]);
   const [updateProducts, setUpdateProducts] = useState<boolean>(false);
+  const [refreshCurrency, setRefreshCurrency] = useState<boolean>(false);
 
   return (
     <UserContext.Provider
@@ -68,6 +73,8 @@ const UserProvider = ({children}: IUserProvider) => {
         setCurrencies,
         updateProducts,
         setUpdateProducts,
+        refreshCurrency,
+        setRefreshCurrency,
       }}>
       {children}
     </UserContext.Provider>

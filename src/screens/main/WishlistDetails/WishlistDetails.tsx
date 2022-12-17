@@ -6,8 +6,8 @@ import {
   ProfileStackProps,
 } from 'navigators/NavigationsTypes';
 import {BackButton, Loader} from 'components';
-import {getWishlistDetails} from 'services/Profile';
-import {useInfiniteQuery} from '@tanstack/react-query';
+import {getWishlist, getWishlistDetails} from 'services/Profile';
+import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
 import {colors} from 'theme';
 import ProductCard from './components/ProductCard';
 import {FreeWishlist} from '../WishList/components';
@@ -42,8 +42,12 @@ const WishlistDetails = () => {
       },
     },
   );
+  const {refetch: refetchWishlist} = useQuery(['getWishlist'], getWishlist, {
+    enabled: false,
+  });
   const onRefresh = React.useCallback(() => {
     refetch();
+    refetchWishlist();
   }, []);
   const loadMore = () => {
     if (hasNextPage) {
@@ -53,6 +57,7 @@ const WishlistDetails = () => {
 
   const filterItems = (Id: number) => {
     setWishListData(wishListData?.filter(item => item?.Id !== Id));
+    onRefresh();
   };
   const loaderStyle = {
     flex: 1,
@@ -101,6 +106,7 @@ const WishlistDetails = () => {
             <Loader size={'small'} color={colors.primary} />
           ) : undefined
         }
+        contentContainerStyle={{flex: 1}}
       />
     </View>
   );

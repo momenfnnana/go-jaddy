@@ -287,7 +287,7 @@ const AddToFav = ({
   );
 };
 
-export default AddToFav;
+export default React.memo(AddToFav);
 
 const styles = StyleSheet.create({
   collectionsLoader: {

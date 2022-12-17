@@ -128,6 +128,8 @@ const Cart = () => {
         const cartArray = JSON.parse(cartItems as any) as any[];
         if (cartArray?.length > 0) {
           setLocalData(cartArray);
+        }else{
+          setLocalData([]);
         }
       })();
     } else {

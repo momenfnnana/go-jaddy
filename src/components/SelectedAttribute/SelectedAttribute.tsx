@@ -9,27 +9,61 @@ interface IAttribute {
 }
 
 export interface ISelectedAttribute {
-  items: IAttribute[];
+  items?: IAttribute[];
 }
 
 const SelectedAttribute = ({items}: ISelectedAttribute) => {
   if (!!items?.length) {
-    return items?.map((_: any, index: number) => (
-      <View style={styles.container} key={index.toString()}>
-        <Text
-          text={_?.AttributeType}
-          variant="xSmallBold"
-          style={styles.attributeType}
-          center
-        />
+    return items?.map((_: any, index: number) => {
+      return (
         <View
           style={[
-            styles.attributeColor,
-            {backgroundColor: _?.AttributeValue || colors.primary},
+            styles.container,
+            {width: _?.values?.length > 0 ? undefined : 70},
           ]}
-        />
-      </View>
-    ));
+          key={index.toString()}>
+          <Text
+            text={_?.AttributeType || _?.Name}
+            variant="xSmallBold"
+            style={styles.attributeType}
+            center
+          />
+          {_?.values?.length > 0 ? (
+            _?.values?.map((ele: any) => (
+              <>
+                {ele?.Color ? (
+                  <View
+                    style={[
+                      styles.attributeColor,
+                      {
+                        width: 27,
+                        left: -10,
+                        backgroundColor: ele?.Color || colors.primary,
+                      },
+                    ]}
+                  />
+                ) : (
+                  <View style={[styles.attributeColor, {marginHorizontal: 5}]}>
+                    <Text>{ele?.Name}</Text>
+                  </View>
+                )}
+              </>
+            ))
+          ) : (
+            <View
+              style={[
+                styles.attributeColor,
+                {
+                  width: 27,
+                  left: -10,
+                  backgroundColor: _?.AttributeValue || colors.primary,
+                },
+              ]}
+            />
+          )}
+        </View>
+      );
+    });
   }
   return null;
 };
@@ -37,11 +71,11 @@ const SelectedAttribute = ({items}: ISelectedAttribute) => {
 export default SelectedAttribute;
 const styles = StyleSheet.create({
   container: {
-    width: 70,
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: 'transparent',
+    marginTop: spacing.tiny,
   },
   attributeType: {
     borderRadius: spacing.medium + 2,
@@ -52,10 +86,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   attributeColor: {
-    width: 27,
     height: 27,
     borderRadius: 27 * 0.5,
-    left: -10,
     zIndex: -1,
   },
 });

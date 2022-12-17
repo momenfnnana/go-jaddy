@@ -8,6 +8,8 @@ export const data = ({userType}: {userType?: string}): ITab[] => {
         id: 0,
         title: 'profile.products-list',
         icon: <ProfileIconTab />,
+        goTo: 'OrdersList',
+        params: {isOrederRequest: true},
       },
       {
         id: 1,
@@ -26,7 +28,7 @@ export const data = ({userType}: {userType?: string}): ITab[] => {
         title: 'profile.purchases-list',
         icon: <ProfileIconTab />,
         goTo: 'OrdersList',
-        params: {isOrederRequest: true},
+        params: {isOrederRequest: false},
       },
       // {
       //   id: 4,

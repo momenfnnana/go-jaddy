@@ -58,7 +58,17 @@ export const submitOrder = ({
   customerComments,
   packageAsGift,
 }: ISubmitOrder) => {
-  return axios.post(
-    `${BASE_URL}/api/custom/checkout/SubmitOrder?customerComments=${customerComments}&packageAsGift=${packageAsGift}`,
-  );
+  if (!!customerComments.length && !!packageAsGift.length) {
+    return axios.post(
+      `${BASE_URL}/api/custom/checkout/SubmitOrder?customerComments=${customerComments}&packageAsGift=${packageAsGift}`,
+    );
+  } else if (!!customerComments.length) {
+    return axios.post(
+      `${BASE_URL}/api/custom/checkout/SubmitOrder?customerComments=${customerComments}`,
+    );
+  } else if (packageAsGift) {
+    return axios.post(
+      `${BASE_URL}/api/custom/checkout/SubmitOrder?packageAsGift=${packageAsGift}`,
+    );
+  }
 };

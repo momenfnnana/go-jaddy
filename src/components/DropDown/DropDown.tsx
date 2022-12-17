@@ -1,4 +1,4 @@
-import React, {FC, useMemo, useState} from 'react';
+import React, {FC, useContext, useMemo, useState} from 'react';
 import {Pressable, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {colors, font, spacing} from 'theme';
 import Text from 'components/Text';
@@ -10,6 +10,7 @@ import {changeLocalCurrencies} from 'constants';
 import {useDropDownContext} from 'context/dropdownContext';
 import {getCurrencies} from 'services/Auth';
 import {useQuery} from '@tanstack/react-query';
+import {UserContext} from 'context/UserContext';
 
 interface IDropDown {
   text?: string;
@@ -20,7 +21,7 @@ interface IDropDown {
 let dropdownWidth: number = 145;
 const DropDown: FC<IDropDown> = () => {
   const {isDropDownShown, setIsDropDownShown} = useDropDownContext();
-  const [refreshCurrency, setRefreshCurrency] = useState<boolean>();
+  const {refreshCurrency, setRefreshCurrency} = useContext(UserContext);
   const {currency} = useCurrency(refreshCurrency);
   const {data: currenciesData, isLoading: isLoadingCurrencies} = useQuery(
     ['currencies'],

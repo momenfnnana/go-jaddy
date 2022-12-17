@@ -1,7 +1,13 @@
-import {Image, Pressable, View} from 'react-native';
-import React, {useContext, useEffect, useMemo, useState} from 'react';
+import {Image, Pressable, StyleSheet, View} from 'react-native';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {colors, spacing} from 'theme';
-import {Loader, SelectedAttribute, Text} from 'components';
+import {SelectedAttribute, Text} from 'components';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useCurrency} from 'hook/useCurrency';
 import {BASE_URL} from 'utils/Axios';
@@ -88,7 +94,7 @@ const CartItem = ({item, setData}: ICartItem) => {
     }
   };
 
-  const changeLocalItems = async () => {
+  const changeLocalItems = async (increaseNumber: number) => {
     const cartItems = await AsyncStorage.getItem(CART);
     const cartArray =
       JSON.parse(cartItems as any) === null ? [] : JSON.parse(cartItems as any);
@@ -100,24 +106,10 @@ const CartItem = ({item, setData}: ICartItem) => {
     );
     const newArray = [
       ...filteredItems,
-      {...foundedItems, QuantityToAdd: foundedItems?.QuantityToAdd + 1},
+      {...foundedItems, QuantityToAdd: increaseNumber},
     ];
     AsyncStorage.setItem(CART, JSON.stringify(newArray));
   };
-
-  useEffect(() => {
-    if (isLogged) {
-      if (item?.EnteredQuantity !== quantity) {
-        refetchEditItem();
-      }
-    } else {
-      changeLocalItems();
-    }
-  }, [quantity]);
-
-  useEffect(() => {
-    setQuantity(initialQuantity || 1);
-  }, [item]);
 
   const imageUrl = useMemo(() => {
     return item?.Image?.Url
@@ -131,51 +123,58 @@ const CartItem = ({item, setData}: ICartItem) => {
     return item?.ProductPrice?.Price + ' ' + currency?.Symbol;
   }, [item, currency]);
 
+  const increaseQuantityHandler = useCallback(() => {
+    if (!isLogged) {
+      changeLocalItems(quantity + 1);
+    }
+    setQuantity(quantity + 1);
+  }, [quantity]);
+  const decreaseQuantityHandler = useCallback(() => {
+    if (quantity == 1) {
+      removeItem();
+    } else {
+      setQuantity(quantity - 1);
+      if (!isLogged) {
+        changeLocalItems(quantity - 1);
+      }
+    }
+  }, [quantity]);
+  const navigateToProductDetails = useCallback(() => {
+    if (isLogged) {
+      navigate('ProductDetails', {Id: item?.ProductId} as any);
+    } else {
+      navigate('ProductDetails', {Id: item?.Id} as any);
+    }
+  }, [item?.ProductId, isLogged]);
+
+  useEffect(() => {
+    if (item?.EnteredQuantity !== quantity) {
+      if (isLogged) {
+        refetchEditItem();
+      }
+    }
+  }, [quantity]);
+
   return (
-    <Pressable
-      onPress={() => {
-        navigate('ProductDetails', {Id: item?.ProductId} as any);
-      }}
-      style={{
-        padding: 7,
-        borderRadius: 7,
-        backgroundColor: colors.white,
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
-      }}>
+    <View style={styles.container}>
       <View style={{flex: 1}}>
         <Text
           tx={item.ProductName || item.Name}
           variant="smallBold"
-          style={{fontSize: 12}}
+          size={12}
         />
         <Text
-          tx={'SKU :' + item.Sku}
+          text={'SKU :' + item.Sku}
           variant="smallLight"
           color={'#262626'}
-          style={{fontSize: 11, marginTop: 2}}
+          size={11}
+          style={{marginTop: 2}}
         />
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginTop: 10,
-          }}>
+        <View style={styles.counterButtonsContainer}>
           <Pressable
             disabled={isFetchingEditItem}
-            onPress={() => setQuantity(quantity + 1)}
-            style={{
-              backgroundColor: colors.secondary,
-              width: 28,
-              height: 28,
-              borderRadius: 14,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginRight: 10,
-              borderWidth: 1,
-              borderColor: colors.transparent,
-            }}>
+            onPress={increaseQuantityHandler}
+            style={styles.increaseQuantityBtn}>
             <MaterialIcons size={18} name="add" color={colors.white} />
           </Pressable>
 
@@ -187,23 +186,11 @@ const CartItem = ({item, setData}: ICartItem) => {
 
           <Pressable
             disabled={isFetchingEditItem || isFetchingRemoveItem}
-            onPress={() => {
-              if (quantity == 1) {
-                removeItem();
-              } else {
-                setQuantity(quantity - 1);
-              }
-            }}
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: 14,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginRight: 10,
-              borderWidth: 1,
-              borderColor: quantity == 1 ? colors.red : colors.secondary,
-            }}>
+            onPress={decreaseQuantityHandler}
+            style={[
+              styles.decreaseQuantityBtn,
+              {borderColor: quantity == 1 ? colors.red : colors.secondary},
+            ]}>
             {quantity == 1 ? (
               <FontAwesome name="trash-o" size={18} color={colors.red} />
             ) : (
@@ -220,23 +207,61 @@ const CartItem = ({item, setData}: ICartItem) => {
           <SelectedAttribute items={item?.AttributesSelection} />
         </View>
       </View>
-      <View
-        style={{
-          marginLeft: 10,
-          width: 120,
-          height: 115,
-          borderRadius: 8,
-          overflow: 'hidden',
-        }}>
-        <Image
-          style={{width: '100%', height: '100%', resizeMode: 'contain'}}
-          source={{
-            uri: imageUrl,
-          }}
-        />
-      </View>
-    </Pressable>
+      <Pressable
+        onPress={navigateToProductDetails}
+        style={styles.productImageContainer}>
+        <Image style={styles.productImage} source={{uri: imageUrl}} />
+      </Pressable>
+    </View>
   );
 };
 
 export default CartItem;
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 7,
+    borderRadius: 7,
+    backgroundColor: colors.white,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  counterButtonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  increaseQuantityBtn: {
+    backgroundColor: colors.secondary,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+    borderWidth: 1,
+    borderColor: colors.transparent,
+  },
+  decreaseQuantityBtn: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+    borderWidth: 1,
+  },
+  productImageContainer: {
+    marginLeft: 10,
+    width: 120,
+    height: 115,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  productImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
+  },
+});

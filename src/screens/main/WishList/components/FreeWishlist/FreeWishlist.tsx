@@ -10,7 +10,7 @@ const FreeWishlist = () => {
   const {width} = useWindowDimensions();
   const {navigate} = useNavigation<WishlistScreenNavigationProp>();
   return (
-    <View>
+    <View style={styles.container}>
       <Image source={FreeWishlistIcon} style={styles.image} />
       <Text
         tx="wishlist.free-wishlist"
@@ -37,6 +37,11 @@ const FreeWishlist = () => {
 export default FreeWishlist;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   image: {
     width: 190,
     height: 159,

@@ -12,6 +12,7 @@ interface IEmptyPage {
   descritopn?: string;
   children?: React.ReactNode;
   displayButton?: boolean;
+  showImage?: boolean;
 }
 
 const EmptyPage = ({
@@ -19,12 +20,13 @@ const EmptyPage = ({
   descritopn,
   displayButton,
   children,
+  showImage = true,
 }: IEmptyPage) => {
   const {width} = useWindowDimensions();
   const {navigate} = useNavigation<WishlistScreenNavigationProp>();
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Image source={FreeWishlistIcon} style={styles.image} />
+      {showImage && <Image source={FreeWishlistIcon} style={styles.image} />}
       <Text
         tx={title}
         variant="largeBold"
