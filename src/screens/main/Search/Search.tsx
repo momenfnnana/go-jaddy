@@ -139,7 +139,7 @@ const Search = () => {
 
   const SearchHandler = () => {
     if (
-      searchText.length >
+      searchText.length >=
       parseInt(settings?.SearchSettings?.InstantSearchTermMinLength)
     ) {
       setIsCategory(false);
