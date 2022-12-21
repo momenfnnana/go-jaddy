@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useLayoutEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -25,12 +25,14 @@ import {
 import {BASE_URL} from 'utils/Axios';
 import {ImageData} from 'types';
 import {UserContext} from 'context/UserContext';
+import {useNavigation} from '@react-navigation/native';
 interface IAdvertisements {
   Link: string;
   MobileImage: ImageData;
   Id: number;
 }
 const Home = () => {
+  const {setOptions} = useNavigation();
   const {top} = useSafeAreaInsets();
   const {settings} = useContext(UserContext);
   const {CatalogSettings, StoreSettings} = settings;
@@ -90,7 +92,11 @@ const Home = () => {
   useEffect(() => {
     getAllData();
   }, []);
-
+  useLayoutEffect(() => {
+    setOptions({
+      headerLeft: () => <></>,
+    });
+  }, []);
   if (
     isLoadingStores ||
     isLoadingSlider ||

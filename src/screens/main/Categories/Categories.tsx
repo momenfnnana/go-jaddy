@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {Loader, Text} from 'components';
-import React, {useEffect} from 'react';
+import React, {useEffect, useLayoutEffect} from 'react';
 import {
   View,
   Pressable,
@@ -22,7 +22,7 @@ import {LogoSplash} from 'assets/images';
 
 const Categories = () => {
   const {width} = useWindowDimensions();
-  const {push, navigate} = useNavigation<CategoryNavigationsType>();
+  const {push, navigate, setOptions} = useNavigation<CategoryNavigationsType>();
 
   const {
     data,
@@ -49,6 +49,11 @@ const Categories = () => {
 
   useEffect(() => {
     refetch();
+  }, []);
+  useLayoutEffect(() => {
+    setOptions({
+      headerLeft: () => <></>,
+    });
   }, []);
 
   const onRefresh = React.useCallback(() => {

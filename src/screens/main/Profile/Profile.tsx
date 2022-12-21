@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -14,8 +14,10 @@ import {getUserData} from 'services/Profile';
 import {AuthList, UnAuthList} from './Lists';
 import {useDropDownContext} from 'context/dropdownContext';
 import {useLogged} from 'hook/useLogged';
+import {useNavigation} from '@react-navigation/native';
 
 const Profile = () => {
+  const {setOptions} = useNavigation();
   const {setUserData, accessToken, userData} = useContext(UserContext);
   const {isLogged} = useLogged();
   const {setIsDropDownShown} = useDropDownContext();
@@ -34,7 +36,11 @@ const Profile = () => {
   const closeOpenedModals = () => {
     setIsDropDownShown(false);
   };
-
+  useLayoutEffect(() => {
+    setOptions({
+      headerLeft: () => <></>,
+    });
+  }, []);
   useEffect(() => {
     if (isLogged) {
       refetch();

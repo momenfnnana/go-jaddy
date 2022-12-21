@@ -26,13 +26,9 @@ export const getCartSummary = () =>
     method: 'post',
   });
 
-export const addCartProducts = ({
-  ProductId,
-  QuantityToAdd,
-  SelectedAttributes,
-}: IAddCartItem) => {
+export const addCartProducts = (data: IAddCartItem[]) => {
   const body = {
-    Items: [{ProductId, QuantityToAdd, SelectedAttributes}],
+    Items: data,
   };
   return axios(`${BASE_URL}/api/custom/cart/AddCartItems`, {
     method: 'post',

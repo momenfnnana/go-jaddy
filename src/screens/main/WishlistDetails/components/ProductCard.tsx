@@ -81,7 +81,7 @@ const ProductCard = ({
   };
 
   return (
-    <View style={[styles.container, {height: height * 0.155}]}>
+    <View style={[styles.container, {height: height * 0.156}]}>
       <Pressable
         onPress={navigateToProductDetails}
         style={styles.productImageContainer}>
@@ -119,7 +119,7 @@ const ProductCard = ({
             color={colors.grayMainBolder}
             numberOfLines={1}
           />
-          <Text text={Price.Price.toString()} />
+          <Text text={Price.Price.toString()} numberOfLines={1} />
           <Text text={currency?.Symbol} />
         </View>
         <Pressable

@@ -40,10 +40,7 @@ import {useAccessToken} from 'hook/useAccessToken';
 import {addCartProducts} from 'services/Cart';
 import {CART} from 'types';
 import {useSchema} from 'hook/useSchema';
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
 import {firebase} from '@react-native-firebase/auth';
 import {
@@ -112,14 +109,14 @@ const Login = () => {
     }
     reload(data.data?.AccessToken);
     if (localData && localData.length) {
-      for (let index = 0; index < localData.length; index++) {
-        const element = localData[index];
-        mutateAddToCart({
-          ProductId: element?.ProductId,
-          QuantityToAdd: element?.QuantityToAdd || 1,
-          SelectedAttributes: element?.SelectedAttributes,
-        });
-      }
+      const newData = localData.map(item => {
+        return {
+          ProductId: item?.ProductId,
+          QuantityToAdd: item?.QuantityToAdd || 1,
+          SelectedAttributes: item?.SelectedAttributes,
+        };
+      });
+      mutateAddToCart(newData);
     }
     dispatch(
       CommonActions.reset({
@@ -191,7 +188,7 @@ const Login = () => {
   const onChangeCountry = (value: string) => {
     setCountryCode(value);
   };
-  console.log({localData});
+
   useEffect(() => {
     messaging()
       .getToken()
@@ -211,12 +208,21 @@ const Login = () => {
             for (let idx = 0; idx < attributes.length; idx++) {
               const attributeItem = attributes[idx];
               const values: any[] = attributeItem?.values;
-              for (let ix = 0; ix < values.length; ix++) {
-                const attributeValue = values[ix];
+              if (values) {
+                for (let ix = 0; ix < values.length; ix++) {
+                  const attributeValue = values[ix];
+                  let attributeObject = {
+                    AttributeId: attributeItem.AttributeId,
+                    VariantAttributeId: attributeItem.VariantAttributeId,
+                    AttributeValue: attributeValue.Id,
+                  };
+                  SelectedAttributes = [...SelectedAttributes, attributeObject];
+                }
+              } else {
                 let attributeObject = {
                   AttributeId: attributeItem.AttributeId,
                   VariantAttributeId: attributeItem.VariantAttributeId,
-                  AttributeValue: attributeValue.Id,
+                  AttributeValue: attributeItem?.AttributeValue,
                 };
                 SelectedAttributes = [...SelectedAttributes, attributeObject];
               }

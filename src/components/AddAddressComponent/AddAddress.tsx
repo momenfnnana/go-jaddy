@@ -69,7 +69,7 @@ const AddAddressComponent = ({
     onSuccess(data, variables) {
       onSubmit({
         ...variables,
-        StateId: variables.StateId.toString(),
+        StateId: variables.StateId ? variables.StateId.toString() : undefined,
         CountryName: countrySelected.Text,
         Id: data.data.Properties?.NewAddressId,
       });
@@ -395,6 +395,7 @@ const AddAddressComponent = ({
               errorTouched={touched.phoneNumber}
               errorValue={errors.phoneNumber}
               onChangeCountry={onChangeCountry}
+              style={{}}
             />
             <InputField
               value={values.fax}

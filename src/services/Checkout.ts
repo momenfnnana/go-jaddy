@@ -14,8 +14,8 @@ interface ISelectPaymentMethod {
   paymentMethod: string;
 }
 interface ISubmitOrder {
-  customerComments: string;
-  packageAsGift: string;
+  customerComments?: string;
+  packageAsGift?: string;
 }
 
 export const getCheckoutAddresses = () => {
@@ -58,17 +58,7 @@ export const submitOrder = ({
   customerComments,
   packageAsGift,
 }: ISubmitOrder) => {
-  if (!!customerComments.length && !!packageAsGift.length) {
-    return axios.post(
-      `${BASE_URL}/api/custom/checkout/SubmitOrder?customerComments=${customerComments}&packageAsGift=${packageAsGift}`,
-    );
-  } else if (!!customerComments.length) {
-    return axios.post(
-      `${BASE_URL}/api/custom/checkout/SubmitOrder?customerComments=${customerComments}`,
-    );
-  } else if (packageAsGift) {
-    return axios.post(
-      `${BASE_URL}/api/custom/checkout/SubmitOrder?packageAsGift=${packageAsGift}`,
-    );
-  }
+  return axios.post(
+    `${BASE_URL}/api/custom/checkout/SubmitOrder?customerComments=${customerComments}&packageAsGift=${packageAsGift}`,
+  );
 };
