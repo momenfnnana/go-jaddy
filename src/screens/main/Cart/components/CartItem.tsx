@@ -28,6 +28,8 @@ interface ICartItem {
 }
 
 const CartItem = ({item, setData}: ICartItem) => {
+  console.log({item});
+
   const {setUpdateProducts, updateProducts} = useContext(UserContext);
   const {isLogged} = useLogged();
   const {currency} = useCurrency();

@@ -24,6 +24,13 @@ const initialStacks = {
   Cart: 'Cart',
   ProfileStack: 'ProfileStack',
 };
+const inStacks = {
+  HomeStack: 'Home',
+  CategoriesStack: 'Categories',
+  StoresStack: 'Stores',
+  Cart: 'Cart',
+  ProfileStack: 'Profile',
+};
 
 const Tab = createBottomTabNavigator<BottomTabsRoutes>();
 const BottomTabs = () => {
@@ -39,7 +46,7 @@ const BottomTabs = () => {
         tabPress: e => {
           e.preventDefault();
           navigation.navigate(route.name, {
-            screen: (initialStacks as any)[route.name],
+            screen: inStacks[route.name],
           });
         },
       })}

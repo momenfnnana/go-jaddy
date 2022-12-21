@@ -38,7 +38,7 @@ export const useSchema = () => {
     firstName: Yup.string().required(t('validation.firstName')),
     lastName: Yup.string().required(t('validation.lastName')),
     email: Yup.string()
-      .email('validation.email-template')
+      .email(t('validation.email-template'))
       .required(t('validation.email')),
     phoneNumber: Yup.string()
       .length(9, t('validation.phoneNumber-length', {length: 9}))

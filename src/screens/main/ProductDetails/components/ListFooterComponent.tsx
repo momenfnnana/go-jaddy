@@ -12,6 +12,7 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {getIpAddress, postAddReview} from 'services/Home';
+import {useLogged} from 'hook/useLogged';
 
 interface IListFooterComponent {
   RelatedProductsModel: any;
@@ -49,6 +50,7 @@ const ListFooterComponent = ({
   hasNextPageReviews,
   refetchReviews,
 }: IListFooterComponent) => {
+  const {isLogged} = useLogged();
   const {settings} = useContext(UserContext);
   const {t} = useTranslation();
   const [isRateModalShown, setIsRateModalShown] = useState<boolean>(false);
@@ -162,7 +164,8 @@ const ListFooterComponent = ({
       {ReviewOverview?.AllowCustomerReviews &&
         !ReviewOverview?.CustomerAlreadyReviewedProduct &&
         ReviewOverview?.CustomerAlreadyPurchasedProduct &&
-        isRateProductShown && (
+        isRateProductShown &&
+        isLogged && (
           <Button
             disabled={isAddingReviewSuccess}
             title="product-details.product-rating"

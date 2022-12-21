@@ -36,7 +36,6 @@ import {useMutation} from '@tanstack/react-query';
 import {addCartProducts} from 'services/Cart';
 import {Boxes, CheckboxList, DropdownList, RadioList} from './attributes';
 import {RatingFiltters} from 'components/RatingFilters';
-import {Ifiltter} from 'screens/main/StoreDetails/StoreDetails';
 import {LogoSplash} from 'assets/images';
 import {useProtectedFunction} from 'hook/useProdectedFunction';
 import {useLogged} from 'hook/useLogged';
@@ -47,52 +46,13 @@ import {useTranslation} from 'react-i18next';
 import {UserContext} from 'context/UserContext';
 import {FormikTouched, useFormik} from 'formik';
 import {object, string} from 'yup';
-
-type AttributesTypes =
-  | 'Boxes'
-  | 'DropdownList'
-  | 'RadioList'
-  | 'Checkboxes'
-  | 'TextBox';
-interface IListHeaderComponent {
-  Product: any;
-  ProductId: number;
-  selectedFilter: Ifiltter;
-  setSelectedFilter: (value: any) => void;
-  ratingFilters: string[];
-  setRatingFilters: (value: any) => void;
-  isRefetchingReviews: boolean;
-  isLoadingReviews: boolean;
-  reviewsList: any[];
-}
-interface IAttributes {
-  AttributeControlType: AttributesTypes;
-  AttributeId: number;
-  DisplayOrder: number;
-  IsMultipleChoice: boolean;
-  IsRequired: boolean;
-  isSelected: boolean;
-  Name: string;
-  Values: any[];
-  VariantAttributeId: number;
-}
-interface ISelectAttribute {
-  attributeValue?: any[];
-  attribute?: number;
-}
-interface ISelectAttributeHandler {
-  attribute: IAttributes;
-  attributeValue: any;
-}
-interface ICheckIncludedItem {
-  item: ISelectAttribute;
-  array: ISelectAttribute[];
-}
-
-enum productCounter {
-  increase,
-  descrease,
-}
+import {
+  AttributesTypes,
+  IAttributes,
+  IListHeaderComponent,
+  ISelectAttributeHandler,
+  productCounter,
+} from '../types';
 
 const AttributeContainer = ({
   children,
@@ -140,47 +100,111 @@ const ListHeaderComponent = ({
   const {setUpdateProducts, updateProducts} = useContext(UserContext);
   const {protectedFunction} = useProtectedFunction();
   const {isLogged} = useLogged();
+  const [productsNumber, setProductsNumber] = useState<number>(1);
+  const {top} = useSafeAreaInsets();
+  const {height} = useWindowDimensions();
+  const {currency} = useCurrency();
+  const [isLoadingImageBackground, setIsLoadingImageBackground] =
+    useState<boolean>(true);
+  const [attributes, setAttributes] = useState<IAttributes[]>([]);
+  const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
+  const [subscribed, setSubscribed] = useState<boolean>(false);
+  const [isAddToCollectionShown, setIsAddToCollectionShown] =
+    useState<boolean>(false);
+  const [selectedAttributes, setSelectedAttributes] = useState<any[]>([]);
+  const [customTextValue, setCustomTextValue] = useState<{
+    text: string;
+    attributeData: IAttributes;
+  }>({
+    text: '',
+    attributeData: {},
+  });
+
   const {navigate, goBack, canGoBack} =
     useNavigation<CategoryNavigationsType>();
   let initialValues: any = {};
-  Product?.Attributes.forEach((f: any) => {
+  Product?.Attributes.forEach((f: any, index: number) => {
     if (f.IsRequired === true) {
       const foundItem = f?.Values.find((element: any) => {
         return element.IsPreSelected === true;
       });
-      if (foundItem) {
-        initialValues[f?.Name] = foundItem.Name || '';
-      }
+      initialValues[f?.Name] = foundItem?.Name || '';
     }
   });
+
+  useEffect(() => {
+    let readyData: any[] = [];
+    Product?.Attributes.forEach((f: any, index: number) => {
+      const foundItem = f?.Values.find((element: any) => {
+        return element.IsPreSelected === true;
+      });
+      if (f?.AttributeControlType === 'TextBox') {
+        readyData.push({
+          AttributeId: f?.AttributeId,
+          IsMultipleChoice: f?.IsMultipleChoice,
+          IsRequired: f?.IsRequired,
+          VariantAttributeId: f?.VariantAttributeId,
+          AttributeValue: '',
+          AttributeType: f?.AttributeControlType,
+        });
+      } else {
+        readyData.push({
+          AttributeId: f?.AttributeId,
+          IsMultipleChoice: f?.IsMultipleChoice,
+          IsRequired: f?.IsRequired,
+          VariantAttributeId: f?.VariantAttributeId,
+          AttributeValueId: foundItem?.Id,
+          AttributeType: f?.AttributeControlType,
+        });
+      }
+    });
+    setSelectedAttributes(readyData);
+  }, []);
+  console.log({selectedAttributes});
 
   const onSubmit = async () => {
     if (isLogged) {
       if (!!selectedAttributes.length) {
-        selectedAttributes.map(item => {
-          item?.values?.map((ele: any) => {
-            mutateAddToCart({
-              ProductId,
-              QuantityToAdd: productsNumber,
-              SelectedAttributes: [
-                {
-                  AttributeId: item?.AttributeId,
-                  VariantAttributeId: item?.VariantAttributeId,
-                  AttributeValueId: ele.Id,
-                },
-              ],
-            });
-            return {};
-          });
-        });
+        let attributesList: any[] = [];
+        for (let index = 0; index < selectedAttributes.length; index++) {
+          const attributeItem = selectedAttributes[index];
+          if (attributeItem?.Values) {
+            for (let idx = 0; idx < attributeItem?.Values.length; idx++) {
+              const attributeValue = attributeItem?.Values[idx];
+              const newAttributes = {
+                AttributeId: attributeItem?.AttributeId,
+                VariantAttributeId: attributeItem?.VariantAttributeId,
+                AttributeValueId: attributeValue.Id,
+              };
+              attributesList = [...attributesList, newAttributes];
+            }
+          } else if (attributeItem?.AttributeType === 'TextBox') {
+            const newAttributes = {
+              AttributeId: attributeItem?.AttributeId,
+              VariantAttributeId: attributeItem?.VariantAttributeId,
+              AttributeValue: customTextValue.text,
+            };
+            attributesList = [...attributesList, newAttributes];
+          }
+        }
+        mutateAddToCart([
+          {
+            ProductId,
+            QuantityToAdd: productsNumber,
+            SelectedAttributes: attributesList,
+          },
+        ]);
       } else {
-        mutateAddToCart({
-          ProductId,
-          QuantityToAdd: productsNumber,
-          SelectedAttributes: [],
-        });
+        mutateAddToCart([
+          {
+            ProductId,
+            QuantityToAdd: productsNumber,
+            SelectedAttributes: [],
+          },
+        ]);
       }
     } else {
+      debugger;
       const cartItems = await AsyncStorage.getItem(CART);
       const cartArray =
         JSON.parse(cartItems as any) === null
@@ -194,13 +218,31 @@ const ListHeaderComponent = ({
           return item.Id !== ProductId;
         });
         if (foundedItem) {
-          filteredArray.push({
-            ...foundedItem,
-            Id: ProductId,
-            Attributes: selectedAttributes,
-            AttributesSelection: selectedAttributes,
-            QuantityToAdd: foundedItem.QuantityToAdd + productsNumber,
-          });
+          if (customTextValue.text.length > 0) {
+            filteredArray.push({
+              ...foundedItem,
+              Id: ProductId,
+              Attributes: [
+                ...selectedAttributes,
+                {
+                  AttributeId: customTextValue.attributeData?.AttributeId,
+                  VariantAttributeId:
+                    customTextValue.attributeData?.VariantAttributeId,
+                  AttributeValue: customTextValue.text,
+                },
+              ],
+              AttributesSelection: selectedAttributes,
+              QuantityToAdd: foundedItem.QuantityToAdd + productsNumber,
+            });
+          } else {
+            filteredArray.push({
+              ...foundedItem,
+              Id: ProductId,
+              Attributes: selectedAttributes,
+              AttributesSelection: selectedAttributes,
+              QuantityToAdd: foundedItem.QuantityToAdd + productsNumber,
+            });
+          }
           AsyncStorage.setItem(CART, JSON.stringify(filteredArray)).then(() => {
             Snackbar.show({
               text: t('cart.added-successfull'),
@@ -227,24 +269,67 @@ const ListHeaderComponent = ({
           setUpdateProducts(!updateProducts);
         }
       } else {
-        AsyncStorage.setItem(
-          CART,
-          JSON.stringify([
-            {
-              ...Product,
-              Id: ProductId,
-              Attributes: selectedAttributes,
-              AttributesSelection: selectedAttributes,
-              QuantityToAdd: productsNumber,
-            },
-          ]),
-        ).then(() => {
-          Snackbar.show({
-            text: t('cart.added-successfull'),
-            duration: Snackbar.LENGTH_SHORT,
-            backgroundColor: colors.success,
+        if (customTextValue.attributeData.AttributeId) {
+          AsyncStorage.setItem(
+            CART,
+            JSON.stringify([
+              {
+                ...Product,
+                Id: ProductId,
+                Attributes: [
+                  ...selectedAttributes,
+                  {
+                    AttributeId: customTextValue.attributeData.AttributeId,
+                    VariantAttributeId:
+                      customTextValue.attributeData.VariantAttributeId,
+                    AttributeValue: customTextValue.text,
+                    AttributeType:
+                      customTextValue.attributeData.AttributeControlType,
+                    Name: customTextValue.attributeData.Name,
+                  },
+                ],
+                AttributesSelection: [
+                  ...selectedAttributes,
+                  {
+                    AttributeId: customTextValue.attributeData.AttributeId,
+                    VariantAttributeId:
+                      customTextValue.attributeData.VariantAttributeId,
+                    AttributeValue: customTextValue.text,
+                    AttributeType:
+                      customTextValue.attributeData.AttributeControlType,
+                    Name: customTextValue.attributeData.Name,
+                  },
+                ],
+                QuantityToAdd: productsNumber,
+              },
+            ]),
+          ).then(() => {
+            Snackbar.show({
+              text: t('cart.added-successfull'),
+              duration: Snackbar.LENGTH_SHORT,
+              backgroundColor: colors.success,
+            });
           });
-        });
+        } else {
+          AsyncStorage.setItem(
+            CART,
+            JSON.stringify([
+              {
+                ...Product,
+                Id: ProductId,
+                Attributes: selectedAttributes,
+                AttributesSelection: selectedAttributes,
+                QuantityToAdd: productsNumber,
+              },
+            ]),
+          ).then(() => {
+            Snackbar.show({
+              text: t('cart.added-successfull'),
+              duration: Snackbar.LENGTH_SHORT,
+              backgroundColor: colors.success,
+            });
+          });
+        }
         setUpdateProducts(!updateProducts);
       }
     }
@@ -255,25 +340,12 @@ const ListHeaderComponent = ({
   });
   let validationSchema = object(schemaObj);
 
-  const {setFieldValue, errors, handleSubmit, touched} = useFormik({
+  const {setFieldValue, errors, handleSubmit, touched, values} = useFormik({
     onSubmit,
     validationSchema,
     initialValues,
   });
-
-  const [productsNumber, setProductsNumber] = useState<number>(1);
-  const {top} = useSafeAreaInsets();
-  const {height} = useWindowDimensions();
-  const {currency} = useCurrency();
-  const [isLoadingImageBackground, setIsLoadingImageBackground] =
-    useState<boolean>(true);
-  const [attributes, setAttributes] = useState<IAttributes[]>([]);
-  const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
-  const [subscribed, setSubscribed] = useState<boolean>(false);
-  const [isAddToCollectionShown, setIsAddToCollectionShown] =
-    useState<boolean>(false);
-  const [selectedAttributes, setSelectedAttributes] = useState<any[]>([]);
-  const [customTextValue, setCustomTextValue] = useState<string>('');
+  console.log({errors, values});
 
   const {mutate: mutateAddToCart, isLoading: isLoadingAddToCart} = useMutation(
     addCartProducts,
@@ -324,6 +396,7 @@ const ListHeaderComponent = ({
     protectedFunction({func: () => onOpenAddToCollection()});
   };
   const onSelect = (value: any, attributesList: any[]) => {
+    debugger
     const foundParent = selectedAttributes.find((item: any) => {
       return item?.AttributeId === value?.parentAttribute?.AttributeId;
     });
@@ -332,11 +405,11 @@ const ListHeaderComponent = ({
     });
     if (foundParent) {
       if (foundParent.IsMultipleChoice) {
-        const foundChild = foundParent.values.find((element: any) => {
-          return element.Id === value.selectedItem.Id;
+        const foundChild = foundParent?.Values?.find((element: any) => {
+          return element.Id === value?.selectedItem?.Id;
         });
-        const remainedValues = foundParent.values.filter((element: any) => {
-          return element.Id !== value.selectedItem.Id;
+        const remainedValues = foundParent?.Values?.filter((element: any) => {
+          return element.Id !== value?.selectedItem?.Id;
         });
         if (foundChild) {
           const newItem = {
@@ -344,7 +417,7 @@ const ListHeaderComponent = ({
             IsMultipleChoice: foundParent.IsMultipleChoice,
             IsRequired: foundParent.IsRequired,
             VariantAttributeId: foundParent.VariantAttributeId,
-            values: remainedValues,
+            Values: remainedValues,
             AttributeType: value?.parentAttribute?.Name,
           };
           setFieldValue(`${foundParent.Name}`, foundParent.Name);
@@ -356,7 +429,7 @@ const ListHeaderComponent = ({
           IsMultipleChoice: foundParent.IsMultipleChoice,
           IsRequired: foundParent.IsRequired,
           VariantAttributeId: foundParent.VariantAttributeId,
-          values: [...remainedValues, {...value.selectedItem}],
+          Values: [...remainedValues, {...value.selectedItem}],
           AttributeType: value?.parentAttribute?.Name,
         };
         setFieldValue(`${foundParent.Name}`, foundParent.Name);
@@ -365,26 +438,45 @@ const ListHeaderComponent = ({
       }
       const newParent = {
         ...foundParent,
-        values: [value.selectedItem],
+        Values: [value.selectedItem],
         AttributeType: value?.parentAttribute?.Name,
       };
       setFieldValue(`${foundParent.Name}`, foundParent.Name);
       setSelectedAttributes([...filteredParent, newParent]);
       return;
     }
-    const newArray = [
-      ...attributesList,
-      {
-        AttributeId: value.parentAttribute?.AttributeId,
-        IsMultipleChoice: value.parentAttribute?.IsMultipleChoice,
-        IsRequired: value.parentAttribute?.IsRequired,
-        VariantAttributeId: value.parentAttribute.VariantAttributeId,
-        values: [{...value.selectedItem}],
-        AttributeType: value?.parentAttribute?.Name,
-      },
-    ];
-    setFieldValue(`${value.parentAttribute.Name}`, value.parentAttribute.Name);
-    setSelectedAttributes(newArray);
+    if (filteredParent?.AttributeType === 'TextBox') {
+      const newArray = [
+        ...attributesList,
+        {
+          AttributeId: value?.parentAttribute?.AttributeId,
+          VariantAttributeId: value?.parentAttribute?.VariantAttributeId,
+          AttributeValue: customTextValue.text,
+        },
+      ];
+      setFieldValue(
+        `${value.parentAttribute.Name}`,
+        value.parentAttribute.Name,
+      );
+      setSelectedAttributes(newArray);
+    } else {
+      const newArray = [
+        ...attributesList,
+        {
+          AttributeId: value.parentAttribute?.AttributeId,
+          IsMultipleChoice: value.parentAttribute?.IsMultipleChoice,
+          IsRequired: value.parentAttribute?.IsRequired,
+          VariantAttributeId: value.parentAttribute.VariantAttributeId,
+          Values: [{...value.selectedItem}],
+          AttributeType: value?.parentAttribute?.Name,
+        },
+      ];
+      setFieldValue(
+        `${value.parentAttribute.Name}`,
+        value.parentAttribute.Name,
+      );
+      setSelectedAttributes(newArray);
+    }
   };
 
   const selectAttributeHandler = useCallback(
@@ -439,24 +531,24 @@ const ListHeaderComponent = ({
     });
   };
 
-  useEffect(() => {
-    if (isLogged) {
-      for (let index = 0; index < Product?.Attributes.length; index++) {
-        const attributeItem = Product?.Attributes[index];
-        if (attributeItem.Values?.length) {
-          attributeItem?.Values?.map((element: any) => {});
-        } else {
-          setSelectedAttributes([...selectedAttributes]);
-        }
-      }
-    }
-  }, [Product?.Attributes]);
+  // useEffect(() => {
+  //   // if (isLogged) {
+  //   for (let index = 0; index < Product?.Attributes.length; index++) {
+  //     const attributeItem = Product?.Attributes[index];
+  //     if (attributeItem.Values?.length) {
+  //       attributeItem?.Values?.map((element: any) => {});
+  //     } else {
+  //       setSelectedAttributes([...selectedAttributes]);
+  //     }
+  //   }
+  //   // }
+  // }, [Product?.Attributes]);
   useEffect(() => {
     if (Product?.Attributes) {
       const newItems = Product?.Attributes.map((element: IAttributes) => {
         return {
           ...element,
-          Values: element.Values.map(ele => {
+          Values: element?.Values?.map(ele => {
             return {
               ...ele,
               isSelected: false,
@@ -467,6 +559,7 @@ const ListHeaderComponent = ({
       setAttributes(newItems);
     }
   }, [Product?.Attributes]);
+
   const mainImage = {
     height: height * 0.5,
   } as ViewStyle;
@@ -474,9 +567,11 @@ const ListHeaderComponent = ({
     justifyContent: 'center',
     alignItems: 'center',
   } as ViewStyle;
-  const source = Product?.Images[activeImageIndex]?.Url
-    ? {uri: `${BASE_URL}${Product?.Images[activeImageIndex]?.Url}`}
-    : LogoSplash;
+  const source = useMemo(() => {
+    return Product?.Images[activeImageIndex]?.Url
+      ? {uri: `${BASE_URL}${Product?.Images[activeImageIndex]?.Url}`}
+      : LogoSplash;
+  }, [Product?.Images, LogoSplash]);
   const isHavingFilters = useMemo(() => {
     if (
       initialFilterValues.ratings.length === selectedFilter.ratings.length &&
@@ -716,8 +811,11 @@ const ListHeaderComponent = ({
                     touched={touched[item.Name]}>
                     <InputField
                       placeholder={'product-details.custom-text'}
-                      value={customTextValue}
-                      onChangeText={setCustomTextValue}
+                      value={values[item.Name]}
+                      onChangeText={value => {
+                        setCustomTextValue({text: value, attributeData: item});
+                        setFieldValue(item.Name, value);
+                      }}
                     />
                   </AttributeContainer>
                 )}
@@ -814,7 +912,7 @@ const ListHeaderComponent = ({
   );
 };
 
-export default ListHeaderComponent;
+export default React.memo(ListHeaderComponent);
 
 const styles = StyleSheet.create({
   row: {

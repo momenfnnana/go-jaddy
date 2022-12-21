@@ -1,5 +1,5 @@
 import {View, FlatList, Pressable, TextInput, StyleSheet} from 'react-native';
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import {
   applyDiscountCart,
@@ -29,7 +29,7 @@ import {CartScreenNavigationProp} from 'navigators/NavigationsTypes';
 import {useProtectedFunction} from 'hook/useProdectedFunction';
 
 const Cart = () => {
-  const {navigate} = useNavigation<CartScreenNavigationProp>();
+  const {navigate, setOptions} = useNavigation<CartScreenNavigationProp>();
   const {updateProducts} = useContext(UserContext);
   const {isLogged} = useLogged();
   const {protectedFunction} = useProtectedFunction();
@@ -128,7 +128,7 @@ const Cart = () => {
         const cartArray = JSON.parse(cartItems as any) as any[];
         if (cartArray?.length > 0) {
           setLocalData(cartArray);
-        }else{
+        } else {
           setLocalData([]);
         }
       })();
@@ -136,7 +136,11 @@ const Cart = () => {
       refetch();
     }
   }, [isLogged, updateProducts]);
-
+  useLayoutEffect(() => {
+    setOptions({
+      headerLeft: () => <></>,
+    });
+  }, []);
   if ((isLoading && isLogged) || (isFetching && !isLogged) || isRefetching) {
     return (
       <Loader

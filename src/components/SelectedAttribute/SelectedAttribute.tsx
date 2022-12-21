@@ -23,10 +23,11 @@ const SelectedAttribute = ({items}: ISelectedAttribute) => {
           ]}
           key={index.toString()}>
           <Text
-            text={_?.AttributeType || _?.Name}
+            text={_?.Name || _?.AttributeType}
             variant="xSmallBold"
             style={styles.attributeType}
             center
+            numberOfLines={1}
           />
           {_?.values?.length > 0 ? (
             _?.values?.map((ele: any) => (
@@ -49,6 +50,10 @@ const SelectedAttribute = ({items}: ISelectedAttribute) => {
                 )}
               </>
             ))
+          ) : _?.AttributeType === 'TextBox' ? (
+            <View style={[styles.attributeColor, {marginHorizontal: 5}]}>
+              <Text>{_?.AttributeValue}</Text>
+            </View>
           ) : (
             <View
               style={[

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -27,12 +27,14 @@ import {BASE_URL} from 'utils/Axios';
 import {submitOrder} from 'services/Checkout';
 import {useNavigation} from '@react-navigation/native';
 import {checkoutNavigationProp} from 'navigators/NavigationsTypes';
+import {UserContext} from 'context/UserContext';
 
 const borderColor = colors.reloadColor;
 
 const Line = () => <View style={styles.line} />;
 
 const CheckoutStepFour = () => {
+  const {updateProducts, setUpdateProducts} = useContext(UserContext);
   const {navigate} = useNavigation<checkoutNavigationProp>();
   const {currency} = useCurrency();
   const [selectedGifts, setSelectedGifts] = useState<any[]>([]);
@@ -49,6 +51,7 @@ const CheckoutStepFour = () => {
   );
   const {mutate, isLoading: isLoadingSubmitOrder} = useMutation(submitOrder, {
     onSuccess: data => {
+      setUpdateProducts(!updateProducts);
       setIsSuccess(true);
       return data;
     },
@@ -68,7 +71,10 @@ const CheckoutStepFour = () => {
     const itemsIds = selectedGifts.map(item => {
       return item.Id;
     });
-    mutate({customerComments: tellUs, packageAsGift: itemsIds.join()});
+    mutate({
+      customerComments: tellUs,
+      packageAsGift: itemsIds.join(),
+    });
   };
   const selectGiftHandler = (item: any) => {
     const foundedItem = selectedGifts.includes(item);
@@ -219,7 +225,7 @@ const CheckoutStepFour = () => {
               <Text variant="mediumRegular" tx="orderDetails.shipping-fee" />
               <Text
                 variant="mediumRegular"
-                text={CartSummary?.Shipping.toString()}
+                text={CartSummary?.Shipping?.toString()}
               />
             </View>
             {CartSummary?.IsDiscountApplied && (
@@ -236,7 +242,7 @@ const CheckoutStepFour = () => {
                 <Text variant="mediumRegular" tx="modal.DiscoundCode" />
                 <Text
                   variant="mediumRegular"
-                  text={CartSummary?.Shipping.toString()}
+                  text={CartSummary?.Shipping?.toString()}
                 />
               </View>
             )}
