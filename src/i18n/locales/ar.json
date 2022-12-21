@@ -293,6 +293,9 @@
     "shipping-address": "عنوان الشحن/ التوصيل",
     "checkout-method-title": "اختر طريقة الشحن",
     "address-to-recieve-invoice": "العنوان الذي ستصل عليه الفاتورة",
+    "checkout-delivery-address": "عنوان التوصيل",
+    "checkout-delivery-description": "اين يتصل هذه المنتجات",
+    "checkout-same-address": "استخدم نفس عنوان الدفع",
     "payment-options": {
       "cash": "الدفع نقدا عند الاستلام",
       "in-store": "الدفع بالمتجر",
