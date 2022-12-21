@@ -274,6 +274,7 @@
     "countries-def": "اختر الدولة",
     "states-select-country": "اختر الدولة أولا",
     "states-def": "اختر المقاطعة",
+    "no-state": "لا يوجد مقاطعات",
     "setDefualt": "تعيين كإفتراضي",
     "submitBtn": "تابع"
   },

@@ -30,11 +30,8 @@
 		AF990F0E28DA2578005630CC /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF990EFE28DA2578005630CC /* SimpleLineIcons.ttf */; };
 		AF990F0F28DA2578005630CC /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF990EFF28DA2578005630CC /* MaterialIcons.ttf */; };
 		AFDD3331293D18AD00653A70 /* FBSDKCoreKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFDD3330293D18AD00653A70 /* FBSDKCoreKit.xcframework */; };
-		AFDD3332293D18AD00653A70 /* FBSDKCoreKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AFDD3330293D18AD00653A70 /* FBSDKCoreKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AFDD3335293D196C00653A70 /* FBSDKCoreKit_Basics.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFDD3334293D196C00653A70 /* FBSDKCoreKit_Basics.xcframework */; };
-		AFDD3336293D196C00653A70 /* FBSDKCoreKit_Basics.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AFDD3334293D196C00653A70 /* FBSDKCoreKit_Basics.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AFDD3338293D197800653A70 /* FBSDKGamingServicesKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFDD3337293D197800653A70 /* FBSDKGamingServicesKit.xcframework */; };
-		AFDD3339293D197800653A70 /* FBSDKGamingServicesKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AFDD3337293D197800653A70 /* FBSDKGamingServicesKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B01722BAE6777D27D51AAD03 /* Pods_gojaddy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A6B3E9975FA6F5E460C36E6 /* Pods_gojaddy.framework */; };
 		E293E80F2916E0C100DE3BD7 /* splash_screen.png in Resources */ = {isa = PBXBuildFile; fileRef = E293E80E2916E0C100DE3BD7 /* splash_screen.png */; };
 		E2C3263328F423690026C805 /* Almarai-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2C3262F28F423690026C805 /* Almarai-Bold.ttf */; };
@@ -62,9 +59,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				AFDD3332293D18AD00653A70 /* FBSDKCoreKit.xcframework in Embed Frameworks */,
-				AFDD3339293D197800653A70 /* FBSDKGamingServicesKit.xcframework in Embed Frameworks */,
-				AFDD3336293D196C00653A70 /* FBSDKCoreKit_Basics.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;

@@ -242,6 +242,7 @@
     "countries-def": "Select Country",
     "states-select-country": "Select Country First",
     "states-def": "Select State",
+    "no-state": "No States",
     "setDefualt": "Set Defualt?",
     "submitBtn": "Continue"
   },

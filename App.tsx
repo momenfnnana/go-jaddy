@@ -24,7 +24,6 @@ import {
 import {ScreenProvider} from 'context/ScreenContext';
 import {WishlistProvider} from 'context/WishlistContext';
 import queryClient from 'queryClient';
-import RNBootSplash from 'react-native-bootsplash';
 import messaging from '@react-native-firebase/messaging';
 
 async function requestUserPermission() {
@@ -53,7 +52,6 @@ export default function App() {
 
   useEffect(() => {
     requestUserPermission();
-    RNBootSplash.hide();
     readAccessToken().then(accessToken => {
       if (accessToken) {
         setAxiosAccessToken(accessToken);

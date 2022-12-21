@@ -20,6 +20,7 @@ import RootStack from 'navigators/RootStack';
 import {ToastProvider} from 'react-native-toast-notifications';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {Settings} from 'react-native-fbsdk-next';
+import RNBootSplash from 'react-native-bootsplash';
 
 const App = () => {
   const {setSettings, setCurrencies} = useContext(UserContext);
@@ -72,7 +73,8 @@ const App = () => {
       onPress={() => Keyboard.dismiss()}>
       <NavigationContainer
         theme={{colors: {...colors, background: '#F5F5F5'}, dark}}
-        ref={navigationRef}>
+        ref={navigationRef}
+        onReady={() => RNBootSplash.hide({fade: true})}>
         <ToastProvider
           placement="top"
           renderToast={toast => <ToastMessage {...toast} />}>

@@ -42,11 +42,13 @@ const initialValues: IInitialValues = {
   email: '',
   fax: '',
 };
+
 interface ISelectedState {
   item: any;
   isExistData: boolean;
   defualtText: string;
 }
+
 interface IAddAddressComponent {
   onSubmit: (address: IAddress) => void;
   isBillingAddress?: boolean;
@@ -89,14 +91,19 @@ const AddAddressComponent = ({
       return error;
     },
     onSuccess: data => {
+      console.log({data: data.data});
       setStateSelected({
         ...stateSelected,
         isExistData: true,
-        defualtText: t('addAddress.states-def'),
+        defualtText:
+          data.data.length > 0
+            ? t('addAddress.states-def')
+            : t('addAddress.no-state'),
       });
       return data;
     },
   });
+
   const {data: countriesData, isLoading: isLoadingCountries} = useQuery(
     ['getCountries'],
     getCountries,
@@ -107,6 +114,7 @@ const AddAddressComponent = ({
       },
     },
   );
+  
   const [countrySelected, setCountrySelected] = useState<any>({});
   const [isDefualt, setDefualt] = useState<boolean>(false);
   const [stateSelected, setStateSelected] = useState<ISelectedState>({
@@ -114,12 +122,15 @@ const AddAddressComponent = ({
     isExistData: false,
     defualtText: t('addAddress.states-select-country'),
   });
+
   const [countryCode, setCountryCode] = useState<string>('970');
   const onChangeCountry = (value: string) => {
     setCountryCode(value);
   };
+
   const onSubmitForm = (values: any) => {
     if (isBillingAddress !== undefined) {
+
       mutateAddBillingAddress({
         Address1: values.address1,
         Address2: values.address2,
@@ -135,7 +146,9 @@ const AddAddressComponent = ({
         StateId: stateSelected.item?.Value,
         IsDefault: isDefualt,
       });
+
     } else {
+
       mutateaddAddress({
         Address1: values.address1,
         Address2: values.address2,
@@ -151,6 +164,7 @@ const AddAddressComponent = ({
         StateId: stateSelected.item?.Value,
         IsDefault: isDefualt,
       });
+      
     }
   };
 
@@ -299,7 +313,11 @@ const AddAddressComponent = ({
                     color={colors.black}
                   />
                 )}
-                disabled={isLoadingStates || !stateSelected.isExistData}
+                disabled={
+                  isLoadingStates ||
+                  !stateSelected.isExistData ||
+                  statesData?.data?.length == 0
+                }
                 renderCustomizedButtonChild={selectedItem =>
                   isLoadingStates ? (
                     <Loader size={'small'} />
@@ -308,9 +326,11 @@ const AddAddressComponent = ({
                       center
                       text={selectedItem?.Text || stateSelected.defualtText}
                       color={
-                        selectedItem?.Text || stateSelected.defualtText
+                        selectedItem?.Text
                           ? undefined
-                          : colors.gray[400]
+                          : statesData?.data?.length == 0
+                          ? colors.gray[400]
+                          : undefined
                       }
                     />
                   )
