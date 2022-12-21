@@ -433,7 +433,7 @@ const StoreDetails = () => {
                       name="keyboard-arrow-right"
                       color={colors.white}
                       size={13}
-                      style={{lineHeight: 0}}
+          
                     />
                   </Pressable>
                 </View>

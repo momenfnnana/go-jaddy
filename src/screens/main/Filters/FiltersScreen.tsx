@@ -161,6 +161,7 @@ const FiltersScreen = () => {
           }
 
           if (filter.Key == 'price') {
+
             return (
               <View
                 key={index.toString()}
@@ -173,8 +174,8 @@ const FiltersScreen = () => {
                 <RnRangeSlider
                   onResponderEnd={e => console.log({e})}
                   style={{width: '100%'}}
-                  min={0}
-                  max={100}
+                  min={filter.MinPrice}
+                  max={filter.MaxPrice}
                   step={1}
                   floatingLabel
                   renderThumb={renderThumb}
