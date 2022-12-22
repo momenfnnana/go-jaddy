@@ -227,6 +227,7 @@
   },
   "addAddress": {
     "titleHeader": "Add New Address",
+    "edit-titleHeader": "Edit Address",
     "description": "You can delete/modify any of the added sites with ease after the addition process",
     "coName": "Company",
     "fName": "First Name",

@@ -176,16 +176,20 @@ const WishlistItem = ({
             onChangeText={setCollectionName}
             containerStyle={styles.collectionNameInput}
             rightIcon={
-              <Pressable
-                onPress={editCollectionNameHandler}
-                style={styles.checkboxContainer}
-                disabled={isLoadingEditWishlistName || isLoadingCreateWishList}>
-                {isLoadingEditWishlistName || isLoadingCreateWishList ? (
-                  <Loader size={'small'} />
-                ) : (
-                  <AntDesign name={'check'} size={15} color={colors.white} />
-                )}
-              </Pressable>
+              collectionName.length > 0 ? (
+                <Pressable
+                  onPress={editCollectionNameHandler}
+                  style={styles.checkboxContainer}
+                  disabled={
+                    isLoadingEditWishlistName || isLoadingCreateWishList
+                  }>
+                  {isLoadingEditWishlistName || isLoadingCreateWishList ? (
+                    <Loader size={'small'} />
+                  ) : (
+                    <AntDesign name={'check'} size={15} color={colors.white} />
+                  )}
+                </Pressable>
+              ) : null
             }
           />
         ) : (

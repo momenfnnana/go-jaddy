@@ -1,6 +1,6 @@
 import {View, FlatList, Pressable, TextInput, StyleSheet} from 'react-native';
 import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
-import {useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery} from '@tanstack/react-query';
 import {
   applyDiscountCart,
   getCartProducts,
@@ -27,6 +27,8 @@ import {UserContext} from 'context/UserContext';
 import {useNavigation} from '@react-navigation/native';
 import {CartScreenNavigationProp} from 'navigators/NavigationsTypes';
 import {useProtectedFunction} from 'hook/useProdectedFunction';
+import Snackbar from 'react-native-snackbar';
+import {numberWithCommas} from 'utils/Regex';
 
 const Cart = () => {
   const {navigate, setOptions} = useNavigation<CartScreenNavigationProp>();
@@ -58,17 +60,23 @@ const Cart = () => {
     setShowPointsModel(false);
   };
 
-  const {
-    isLoading: isLoadingApplyDis,
-    isRefetching: isRefetchingApplyDis,
-    refetch: refetchApplyDis,
-  } = useQuery(['applyDiscountCart'], () => applyDiscountCart(discountCode), {
-    enabled: false,
-    onSuccess(data) {
-      console.log('ssersfrs', data.data);
-      setData(data.data);
+  const {isLoading: isLoadingApplyDis, mutate: mutateApplyDis} = useMutation(
+    ['applyDiscountCart'],
+    applyDiscountCart,
+    {
+      onSuccess(data) {
+        setData(data.data);
+        console.log({esacasd: data});
+        if (data?.data?.DiscountBox?.IsWarning) {
+          Snackbar.show({
+            text: data?.data?.DiscountBox?.Message,
+            duration: Snackbar.LENGTH_SHORT,
+            backgroundColor: colors.red,
+          });
+        }
+      },
     },
-  });
+  );
 
   const {
     data: summaryData,
@@ -79,17 +87,16 @@ const Cart = () => {
     enabled: false,
   });
 
-  const {
-    isLoading: isLoadingRemoveDis,
-    isRefetching: isRefetchingRemoveDis,
-    refetch: refetchRemoveDis,
-  } = useQuery(['RemoveDiscountCart'], () => removeDiscountCart(), {
-    enabled: false,
-    onSuccess(data) {
-      setData(data.data);
-      setDiscountCode('');
+  const {isLoading: isLoadingRemoveDis, mutate: mutateRemoveDis} = useMutation(
+    ['RemoveDiscountCart'],
+    removeDiscountCart,
+    {
+      onSuccess(data) {
+        setData(data.data);
+        setDiscountCode('');
+      },
     },
-  });
+  );
 
   const {
     isLoading: isLoadingApplyPoints,
@@ -253,7 +260,11 @@ const Cart = () => {
                 <Text variant="mediumRegular" tx="modal.TotalProducts" />
                 <Text
                   variant="mediumRegular"
-                  text={summaryData?.data?.SubTotal}
+                  text={
+                    numberWithCommas(summaryData?.data?.SubTotal) +
+                    ' ' +
+                    currency?.Symbol
+                  }
                 />
               </View>
               {summaryData?.data?.RewardPointsAmount && (
@@ -270,7 +281,11 @@ const Cart = () => {
                   <Text variant="mediumRegular" tx="modal.RewardPoints" />
                   <Text
                     variant="mediumRegular"
-                    text={summaryData?.data?.RewardPointsAmount}
+                    text={
+                      numberWithCommas(summaryData?.data?.RewardPointsAmount) +
+                      ' ' +
+                      currency?.Symbol
+                    }
                   />
                 </View>
               )}
@@ -288,7 +303,11 @@ const Cart = () => {
                   <Text variant="mediumRegular" tx="modal.DiscoundCode" />
                   <Text
                     variant="mediumRegular"
-                    text={summaryData?.data?.OrderTotalDiscount}
+                    text={
+                      numberWithCommas(summaryData?.data?.OrderTotalDiscount) +
+                      ' ' +
+                      currency?.Symbol
+                    }
                   />
                 </View>
               )}
@@ -304,7 +323,14 @@ const Cart = () => {
                     marginTop: 10,
                   }}>
                   <Text variant="mediumRegular" tx="modal.tax" />
-                  <Text variant="mediumRegular" text={summaryData?.data?.Tax} />
+                  <Text
+                    variant="mediumRegular"
+                    text={
+                      numberWithCommas(summaryData?.data?.Tax) +
+                      ' ' +
+                      currency?.Symbol
+                    }
+                  />
                 </View>
               )}
               <View
@@ -323,7 +349,11 @@ const Cart = () => {
                 <Text
                   variant="mediumBold"
                   color={colors.secondary}
-                  text={summaryData?.data?.OrderTotal}
+                  text={
+                    numberWithCommas(summaryData?.data?.OrderTotal) +
+                    ' ' +
+                    currency?.Symbol
+                  }
                 />
               </View>
             </>
@@ -398,9 +428,9 @@ const Cart = () => {
             {discountCode.length > 0 && !data?.DiscountBox?.IsWarning && (
               <Pressable
                 onPress={() => {
-                  refetchApplyDis();
+                  mutateApplyDis({discountPromoCode: discountCode});
                 }}
-                disabled={isRefetchingApplyDis}>
+                disabled={isLoadingApplyDis}>
                 <MaterialCommunityIcons
                   name="check"
                   color={colors.success}
@@ -417,8 +447,8 @@ const Cart = () => {
             )}
             {data?.DiscountBox?.IsWarning && (
               <Pressable
-                onPress={() => refetchRemoveDis()}
-                disabled={isRefetchingRemoveDis}>
+                onPress={() => mutateRemoveDis()}
+                disabled={isLoadingApplyDis}>
                 <Entypo name="circle-with-cross" color={colors.red} size={24} />
               </Pressable>
             )}
@@ -502,7 +532,7 @@ const Cart = () => {
                 />
               </Pressable>
               <Text
-                text={data?.Total + ' ' + currency?.Symbol}
+                text={numberWithCommas(data?.Total) + ' ' + currency?.Symbol}
                 color={colors.primary}
                 variant="xLargeBold"
               />

@@ -126,13 +126,14 @@ const FiltersScreen = () => {
       <View style={{paddingHorizontal: spacing.content}}>
         {Facets.map((filter: any, index: number) => {
           const key = filter?.Key;
+          const label = filter?.Label;
           if (key == 'rating') {
             return (
               <View
                 key={index.toString()}
                 style={{marginTop: 10, marginBottom: 15}}>
                 <Text
-                  text={key}
+                  text={label}
                   variant={'smallBold'}
                   style={{marginBottom: spacing.small}}
                 />
@@ -161,13 +162,12 @@ const FiltersScreen = () => {
           }
 
           if (filter.Key == 'price') {
-
             return (
               <View
                 key={index.toString()}
                 style={{marginTop: 10, marginBottom: 15}}>
                 <Text
-                  text={key}
+                  text={label}
                   variant={'smallBold'}
                   style={{marginBottom: spacing.small}}
                 />
@@ -196,7 +196,7 @@ const FiltersScreen = () => {
               key={index.toString()}
               style={{marginTop: 10, marginBottom: 15}}>
               <Text
-                text={key}
+                text={label}
                 variant={'smallBold'}
                 style={{marginBottom: spacing.small}}
               />

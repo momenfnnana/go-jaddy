@@ -20,6 +20,7 @@ import {CART} from 'types';
 import {UserContext} from 'context/UserContext';
 import {useNavigation} from '@react-navigation/native';
 import {IProductNavigation} from 'navigators/NavigationsTypes';
+import {numberWithCommas} from 'utils/Regex';
 
 interface ICartItem {
   item: any;
@@ -100,11 +101,11 @@ const CartItem = ({item, setData}: ICartItem) => {
     const cartItems = await AsyncStorage.getItem(CART);
     const cartArray =
       JSON.parse(cartItems as any) === null ? [] : JSON.parse(cartItems as any);
-    const filteredItems = cartArray.filter(
-      (element: any) => element.Id !== item.Id,
+    const filteredItems = cartArray?.filter(
+      (element: any) => element?.Id !== item?.Id,
     );
-    const foundedItems = cartArray.find(
-      (element: any) => element.Id === item.Id,
+    const foundedItems = cartArray?.find(
+      (element: any) => element?.Id === item?.Id,
     );
     const newArray = [
       ...filteredItems,
@@ -116,13 +117,15 @@ const CartItem = ({item, setData}: ICartItem) => {
   const imageUrl = useMemo(() => {
     return item?.Image?.Url
       ? BASE_URL + item?.Image?.Url
-      : BASE_URL + item?.Images[0]?.Url;
+      : item?.Images[0]?.Url
+      ? BASE_URL + item?.Images[0]?.Url
+      : undefined;
   }, [item, BASE_URL]);
   const productPrice = useMemo(() => {
     if (item?.SubTotal) {
-      return item?.SubTotal + ' ' + currency?.Symbol;
+      return numberWithCommas(item?.SubTotal) + ' ' + currency?.Symbol;
     }
-    return item?.ProductPrice?.Price + ' ' + currency?.Symbol;
+    return numberWithCommas(item?.ProductPrice?.Price) + ' ' + currency?.Symbol;
   }, [item, currency]);
 
   const increaseQuantityHandler = useCallback(() => {

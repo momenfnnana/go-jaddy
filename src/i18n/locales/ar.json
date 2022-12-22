@@ -213,6 +213,7 @@
     "addresses-description": "لإضافة عنوان اضغط على زر الاضافة في الاعلى",
     "store-follow-title": "لا يوجد متاجر",
     "store-follow-description": "اذهب لكل المتاجر وتابع منها",
+    "oreder-no-result": "لا توجد نتائج بحث",
     "no-reviews-title": "لم يتم اضافة تقييمات"
   },
   "validation": {
@@ -259,6 +260,7 @@
   },
   "addAddress": {
     "titleHeader": "اضافة عنوان جديد",
+    "edit-titleHeader": "تعديل عنوان",
     "description": "يمكنك حذف/تعديل أي موقع من المواقع المضافة بكل سهولة بعد عملية الاضافة",
     "coName": "الشركة",
     "fName": "الاسم الاول",
