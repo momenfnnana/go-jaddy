@@ -13,6 +13,10 @@ export const doLogin_service = (data: any) => {
   return axios.post(`${BASE_URL}/api/custom/account/login`, data);
 };
 
+export const doLogin_Guset = (data: any) => {
+  return axios.post(`${BASE_URL}/api/custom/account/GuestLogin`, data);
+};
+
 export const ExtenalLogin = (data: any) => {
   return axios.post(`${BASE_URL}/api/custom/account/ExternalLogin`, data);
 };
@@ -31,4 +35,3 @@ export const verificationCode = (params: any) =>
   });
 
 export const getLanguages = () => axios.get(`${BASE_URL}/api/custom/languages`);
-

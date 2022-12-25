@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import {
   Pressable,
   SafeAreaView,
@@ -9,11 +9,17 @@ import {
 import {colors, spacing} from 'theme';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {Button, InputField, PhoneNumberInput, Text} from 'components';
-import {useNavigation} from '@react-navigation/native';
+import {CommonActions, useNavigation} from '@react-navigation/native';
 import {Formik} from 'formik';
 import * as Yub from 'yup';
 import {useTranslation} from 'react-i18next';
 import {AuthNavigationsType} from 'navigators/NavigationsTypes';
+import {useMutation} from '@tanstack/react-query';
+import {doLogin_Guset} from 'services/Auth';
+import {UserContext} from 'context/UserContext';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useAccessToken} from 'hook/useAccessToken';
 
 interface IAnonymousModalProps {
   style?: ViewStyle;
@@ -37,17 +43,51 @@ const AnonymousModal: React.FC<IAnonymousModalProps> = ({
   visibleAnonymousModal,
   setvisibleAnonymousModal,
 }) => {
-  const {navigate} = useNavigation<AuthNavigationsType>();
+  const {mutate, isLoading} = useMutation(doLogin_Guset, {
+    onSuccess: data => {
+      successLogin(data);
+    },
+  });
+  const {navigate, dispatch} = useNavigation<AuthNavigationsType>();
   const {t} = useTranslation();
+  const [countryCode, setCountryCode] = useState<string>('00970');
+  const {setAccessToken, updateProducts} = useContext(UserContext);
+  const {reload} = useAccessToken();
 
-  const onSubmitLogin = values => {};
-  const onChangeCountry = () => {};
+  const successLogin = (data: any) => {
+    const {AccessToken} = data.data;
+    setAccessToken(AccessToken);
+    axios.defaults.headers.common['AccessToken'] = `${AccessToken}`;
+    AsyncStorage.setItem('accessToken', AccessToken);
+    reload(data.data?.AccessToken);
+    dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: 'HomeFlow', params: {screen: 'HomeStack'}}],
+      }),
+    );
+    return data;
+  };
+
+  const onSubmitLogin = values => {
+    console.log({values});
+    mutate({
+      FullName: values.userName,
+      PhoneNumber: countryCode + values.phoneNumber,
+    });
+  };
+
+  const onChangeCountry = (val: string) => {
+    setCountryCode(val);
+  };
+
   const loginSchema = Yub.object().shape({
     phoneNumber: Yub.string()
       .required('phone number must be string')
       .length(9, t('validation.phoneNumber-length', {length: 9})),
     userName: Yub.string().required('user name is required'),
   });
+
   return (
     <>
       {visibleAnonymousModal && (
@@ -122,6 +162,7 @@ const AnonymousModal: React.FC<IAnonymousModalProps> = ({
                       onPress={handleSubmit}
                       title="buttons.continue"
                       style={{marginTop: 30}}
+                      isLoading={isLoading}
                     />
                   </View>
                 )}
