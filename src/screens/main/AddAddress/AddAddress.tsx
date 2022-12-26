@@ -51,7 +51,7 @@ const AddAddress = () => {
     params?.item?.IsDefault || false,
   );
   const [introductionNumber, setIntroductionNumber] = useState<number | string>(
-    params?.item?.PhoneNumber || '00970',
+    '00970',
   );
   const [countrySelected, setCountrySelected] = useState<any>({});
   const {t} = useTranslation();
@@ -110,6 +110,9 @@ const AddAddress = () => {
 
   useLayoutEffect(() => {
     setOptions({
+      headerTitle: params?.item
+        ? t('addAddress.edit-titleHeader')
+        : t('addAddress.titleHeader'),
       headerLeft: () => <BackButton />,
     });
   }, []);

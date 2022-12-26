@@ -227,6 +227,7 @@
   },
   "addAddress": {
     "titleHeader": "Add New Address",
+    "edit-titleHeader": "Edit Address",
     "description": "You can delete/modify any of the added sites with ease after the addition process",
     "coName": "Company",
     "fName": "First Name",
@@ -242,6 +243,7 @@
     "countries-def": "Select Country",
     "states-select-country": "Select Country First",
     "states-def": "Select State",
+    "no-state": "No States",
     "setDefualt": "Set Defualt?",
     "submitBtn": "Continue"
   },

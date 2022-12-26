@@ -21,6 +21,7 @@ import {UserContext} from 'context/UserContext';
 import {useNavigation} from '@react-navigation/native';
 import {IProductNavigation} from 'navigators/NavigationsTypes';
 import {LogoSplash} from 'assets/images';
+import {numberWithCommas} from 'utils/Regex';
 
 interface ICartItem {
   item: any;
@@ -100,11 +101,11 @@ const CartItem = ({item, setData}: ICartItem) => {
     const cartItems = await AsyncStorage.getItem(CART);
     const cartArray =
       JSON.parse(cartItems as any) === null ? [] : JSON.parse(cartItems as any);
-    const filteredItems = cartArray.filter(
-      (element: any) => element.Id !== item.Id,
+    const filteredItems = cartArray?.filter(
+      (element: any) => element?.Id !== item?.Id,
     );
-    const foundedItems = cartArray.find(
-      (element: any) => element.Id === item.Id,
+    const foundedItems = cartArray?.find(
+      (element: any) => element?.Id === item?.Id,
     );
     const newArray = [
       ...filteredItems,
@@ -136,11 +137,13 @@ const CartItem = ({item, setData}: ICartItem) => {
   const productPrice = useMemo(() => {
     if (isLogged) {
       if (item?.SubTotal) {
-        return item?.SubTotal + ' ' + currency?.Symbol;
+        return numberWithCommas(item?.SubTotal) + ' ' + currency?.Symbol;
       }
       return 0 + ' ' + currency?.Symbol;
     } else {
-      return item?.ProductPrice?.Price + ' ' + currency?.Symbol;
+      return (
+        numberWithCommas(item?.ProductPrice?.Price) + ' ' + currency?.Symbol
+      );
     }
   }, [item, currency]);
 

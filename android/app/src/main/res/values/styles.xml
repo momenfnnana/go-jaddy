@@ -6,9 +6,11 @@
         <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
     </style>
     <style name="BootTheme" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/bootsplash_background</item>
+<!--    <item name="windowSplashScreenBackground">@color/bootsplash_background</item>-->
+        <item name="android:windowBackground">@drawable/splash</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/bootsplash_logo</item>
         <item name="postSplashScreenTheme">@style/AppTheme</item>
-    </style>
+        <item name="android:windowNoTitle">true</item>
+  </style>
 
 </resources>

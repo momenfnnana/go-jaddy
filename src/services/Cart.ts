@@ -48,7 +48,11 @@ export const removeCartProducts = (itemId: number) =>
     params: {itemId},
   });
 
-export const applyDiscountCart = (discountPromoCode: string) =>
+export const applyDiscountCart = ({
+  discountPromoCode,
+}: {
+  discountPromoCode: string;
+}) =>
   axios(`${BASE_URL}/api/custom/cart/ApplyDiscountCoupon`, {
     method: 'post',
     params: {discountPromoCode},

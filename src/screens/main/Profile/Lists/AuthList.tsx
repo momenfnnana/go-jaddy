@@ -28,7 +28,7 @@ export const data = ({userType}: {userType?: string}): ITab[] => {
         title: 'profile.purchases-list',
         icon: <ProfileIconTab />,
         goTo: 'OrdersList',
-        params: {isOrederRequest: false},
+        params: {isOrederRequest: true},
       },
       // {
       //   id: 4,

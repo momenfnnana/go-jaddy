@@ -15,6 +15,7 @@ interface IRatingFiltters {
   RatingSum?: any;
   style?: ViewStyle;
   DisplayStoreReviews?: boolean;
+  disabledFilters?: boolean;
 }
 
 const RatingFiltters = ({
@@ -25,6 +26,7 @@ const RatingFiltters = ({
   style,
   DisplayStoreReviews,
   onPressRate,
+  disabledFilters,
 }: IRatingFiltters) => {
   const onPressFilter = (value: string) => {
     if (value === 'all') {
@@ -94,6 +96,7 @@ const RatingFiltters = ({
       </View>
       <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
         <Pressable
+          disabled={disabledFilters}
           style={[
             styles.filterItem,
             {
@@ -102,18 +105,23 @@ const RatingFiltters = ({
                   ? colors.secondary
                   : colors.simiWhite,
             },
+            disabledFilters && {backgroundColor: colors.gray[200]},
           ]}
           onPress={() => onPressFilter('all')}>
           <Text
             tx="product-details.all"
             color={
-              !selectedFilter.withImage && selectedFilter.ratings.length === 0
+              disabledFilters
+                ? colors.gray[500]
+                : !selectedFilter.withImage &&
+                  selectedFilter.ratings.length === 0
                 ? colors.white
                 : colors.black
             }
           />
         </Pressable>
         <Pressable
+          disabled={disabledFilters}
           style={[
             styles.filterItem,
             {
@@ -121,11 +129,18 @@ const RatingFiltters = ({
                 ? colors.secondary
                 : colors.simiWhite,
             },
+            disabledFilters && {backgroundColor: colors.gray[200]},
           ]}
           onPress={() => onPressFilter('with-images')}>
           <Text
             tx="product-details.with-images"
-            color={selectedFilter.withImage ? colors.white : colors.black}
+            color={
+              disabledFilters
+                ? colors.gray[500]
+                : selectedFilter.withImage
+                ? colors.white
+                : colors.black
+            }
           />
         </Pressable>
         {[0, 1, 2, 3, 4].map((item, index) => {
@@ -163,6 +178,7 @@ const RatingFiltters = ({
 
           return (
             <Pressable
+              disabled={disabledFilters}
               style={[
                 styles.filterItem,
                 {
@@ -172,6 +188,7 @@ const RatingFiltters = ({
                     ? colors.secondary
                     : colors.simiWhite,
                 },
+                disabledFilters && {backgroundColor: colors.gray[200]},
               ]}
               key={item}
               onPress={() => onPressFilter((item + 1) as any)}>
