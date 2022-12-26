@@ -69,9 +69,10 @@
   "search": {
     "search-input": "ابحث في المتاجر",
     "search-result-for": "نتيجة البحث عن:",
+    "categoryTitle": "منتجات ل: ",
     "start-searching": "ابدأ البحث",
     "no-search-results": "لا يوجد نتائج بحث ",
-    "clear-filters": "ازالةالفلاتر"
+    "clear-filters": "ازالة الفلاتر"
   },
   "product-details": {
     "select-color": "اختر اللون",
@@ -189,7 +190,7 @@
     "retrive-password-description": "أدخل رمز الاستعادة المرسل على رقم الجوال المستخدم في الحساب ثم كلمة مرور جديدة",
     "code": "الكود",
     "something-went-wrong": "حصلت مشكلة ما؟",
-    "search_in_store": "ابحث في المتجر",
+    "search_in_store": "بحث في المتجر",
     "send": "إرسال",
     "load-more": "تحميل المزيد",
     "continue": "تأكيد",

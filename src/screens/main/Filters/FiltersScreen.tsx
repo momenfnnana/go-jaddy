@@ -161,7 +161,6 @@ const FiltersScreen = () => {
           }
 
           if (filter.Key == 'price') {
-
             return (
               <View
                 key={index.toString()}
@@ -172,7 +171,7 @@ const FiltersScreen = () => {
                   style={{marginBottom: spacing.small}}
                 />
                 <RnRangeSlider
-                  onResponderEnd={e => console.log({e})}
+                  onResponderEnd={e => {}}
                   style={{width: '100%'}}
                   min={filter.MinPrice}
                   max={filter.MaxPrice}

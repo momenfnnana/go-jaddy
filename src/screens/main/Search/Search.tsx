@@ -124,7 +124,6 @@ const Search = () => {
       if ((params as any)?.dataFilter) {
         setFilterOptions((params as any)?.dataFilter);
         if (isCategory) {
-          console.log('here');
           setTimeout(() => {
             refetchProductsCategory();
           }, 200);

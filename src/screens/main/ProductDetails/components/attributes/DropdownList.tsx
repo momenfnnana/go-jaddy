@@ -34,6 +34,7 @@ const DropdownList = ({item, onSelect}: IAttribute) => {
         IsMultipleChoice: item.IsMultipleChoice,
         VariantAttributeId: item.VariantAttributeId,
         Name: item.Name,
+        AttributeControlType: item.AttributeControlType,
       },
     });
   }, []);

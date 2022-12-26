@@ -110,10 +110,17 @@ const Login = () => {
     reload(data.data?.AccessToken);
     if (localData && localData.length) {
       const newData = localData.map(item => {
+        if (!!Object.keys(item?.SelectedAttributes).length) {
+          return {
+            ProductId: item?.ProductId,
+            QuantityToAdd: item?.QuantityToAdd || 1,
+            SelectedAttributes: item?.SelectedAttributes,
+          };
+        }
         return {
           ProductId: item?.ProductId,
           QuantityToAdd: item?.QuantityToAdd || 1,
-          SelectedAttributes: item?.SelectedAttributes,
+          SelectedAttributes: [],
         };
       });
       mutateAddToCart(newData);
@@ -258,7 +265,6 @@ const Login = () => {
         'email',
       ]);
       if (result.isCancelled) {
-        console.log('User cancelled the login process');
       }
       const data = await AccessToken.getCurrentAccessToken();
       if (!data) {
@@ -308,9 +314,7 @@ const Login = () => {
         doExtenalLogin(userCredential.user.uid);
       } else {
       }
-    } catch (error) {
-      console.log('error in apple auth:', {error});
-    }
+    } catch (error) {}
   }
 
   if (isLoadingExtenalLogin) {

@@ -146,6 +146,7 @@ const ListHeaderComponent = ({
           VariantAttributeId: f?.VariantAttributeId,
           AttributeValue: '',
           AttributeType: f?.AttributeControlType,
+          Name: f?.Name,
         });
       } else {
         readyData.push({
@@ -155,46 +156,102 @@ const ListHeaderComponent = ({
           VariantAttributeId: f?.VariantAttributeId,
           AttributeValueId: foundItem?.Id,
           AttributeType: f?.AttributeControlType,
+          Name: f?.Name,
+          ValueName: foundItem?.Name,
+          Color: foundItem?.Color,
+          PriceAdjustmentValue: foundItem?.PriceAdjustmentValue,
         });
       }
     });
     setSelectedAttributes(readyData);
   }, []);
-  console.log({selectedAttributes});
+
+  const showAddedMessage = () => {
+    Snackbar.show({
+      text: t('cart.added-successfull'),
+      duration: Snackbar.LENGTH_SHORT,
+      backgroundColor: colors.success,
+    });
+  };
+
+  const addLocalProduct = (prevList: any[] = [], attributesList?: any[]) => {
+    AsyncStorage.setItem(
+      CART,
+      JSON.stringify([
+        ...prevList,
+        {
+          ...Product,
+          Id: ProductId,
+          Attributes: attributesList,
+          AttributesSelection: attributesList,
+          QuantityToAdd: productsNumber,
+        },
+      ]),
+    ).then(() => {
+      showAddedMessage();
+    });
+    setUpdateProducts(!updateProducts);
+  };
 
   const onSubmit = async () => {
-    if (isLogged) {
-      if (!!selectedAttributes.length) {
-        let attributesList: any[] = [];
-        for (let index = 0; index < selectedAttributes.length; index++) {
-          const attributeItem = selectedAttributes[index];
-          if (attributeItem?.Values) {
-            for (let idx = 0; idx < attributeItem?.Values.length; idx++) {
-              const attributeValue = attributeItem?.Values[idx];
-              const newAttributes = {
-                AttributeId: attributeItem?.AttributeId,
-                VariantAttributeId: attributeItem?.VariantAttributeId,
-                AttributeValueId: attributeValue.Id,
-              };
-              attributesList = [...attributesList, newAttributes];
-            }
-          } else if (attributeItem?.AttributeType === 'TextBox') {
-            const newAttributes = {
-              AttributeId: attributeItem?.AttributeId,
-              VariantAttributeId: attributeItem?.VariantAttributeId,
-              AttributeValue: customTextValue.text,
+    const cartItems = await AsyncStorage.getItem(CART);
+    const cartArray =
+      JSON.parse(cartItems as any) === null ? [] : JSON.parse(cartItems as any);
+    if (!!selectedAttributes.length) {
+      // array of Attributes ready to send to BE
+      const attributesToSend = selectedAttributes?.map(item => {
+        if (isLogged) {
+          if (item?.AttributeType === 'TextBox') {
+            return {
+              AttributeId: item?.AttributeId,
+              VariantAttributeId: item?.VariantAttributeId,
+              AttributeValue: customTextValue?.text,
             };
-            attributesList = [...attributesList, newAttributes];
           }
+          return {
+            AttributeId: item?.AttributeId,
+            VariantAttributeId: item?.VariantAttributeId,
+            AttributeValueId: item?.AttributeValueId,
+          };
+        } else {
+          if (item?.AttributeType === 'Boxes') {
+            return {
+              ...item,
+              isColor: true,
+              Color: item?.Color,
+            };
+          } else if (item?.AttributeType === 'TextBox') {
+            return {
+              ...item,
+              AttributeValue: customTextValue?.text,
+            };
+          } else if (!item?.AttributeValueId) {
+            return {};
+          }
+          return item;
         }
+      });
+      if (isLogged) {
         mutateAddToCart([
           {
             ProductId,
             QuantityToAdd: productsNumber,
-            SelectedAttributes: attributesList,
+            SelectedAttributes: attributesToSend,
           },
         ]);
       } else {
+        if (!!cartArray.length) {
+          const filteredList = cartArray.filter((item: any) => {
+            return item.Id !== ProductId;
+          });
+          addLocalProduct(filteredList, attributesToSend);
+        } else {
+          // add data to the cart as array of products
+          addLocalProduct([], attributesToSend);
+        }
+      }
+    } else {
+      if (isLogged) {
         mutateAddToCart([
           {
             ProductId,
@@ -202,138 +259,13 @@ const ListHeaderComponent = ({
             SelectedAttributes: [],
           },
         ]);
-      }
-    } else {
-      debugger;
-      const cartItems = await AsyncStorage.getItem(CART);
-      const cartArray =
-        JSON.parse(cartItems as any) === null
-          ? []
-          : JSON.parse(cartItems as any);
-      if (!!cartArray.length) {
-        const foundedItem = cartArray.find((item: any) => {
-          return item.Id === ProductId;
-        });
-        const filteredArray = cartArray.filter((item: any) => {
-          return item.Id !== ProductId;
-        });
-        if (foundedItem) {
-          if (customTextValue.text.length > 0) {
-            filteredArray.push({
-              ...foundedItem,
-              Id: ProductId,
-              Attributes: [
-                ...selectedAttributes,
-                {
-                  AttributeId: customTextValue.attributeData?.AttributeId,
-                  VariantAttributeId:
-                    customTextValue.attributeData?.VariantAttributeId,
-                  AttributeValue: customTextValue.text,
-                },
-              ],
-              AttributesSelection: selectedAttributes,
-              QuantityToAdd: foundedItem.QuantityToAdd + productsNumber,
-            });
-          } else {
-            filteredArray.push({
-              ...foundedItem,
-              Id: ProductId,
-              Attributes: selectedAttributes,
-              AttributesSelection: selectedAttributes,
-              QuantityToAdd: foundedItem.QuantityToAdd + productsNumber,
-            });
-          }
-          AsyncStorage.setItem(CART, JSON.stringify(filteredArray)).then(() => {
-            Snackbar.show({
-              text: t('cart.added-successfull'),
-              duration: Snackbar.LENGTH_SHORT,
-              backgroundColor: colors.success,
-            });
-          });
-          setUpdateProducts(!updateProducts);
-        } else {
-          cartArray.push({
-            ...Product,
-            Id: ProductId,
-            Attributes: selectedAttributes,
-            AttributesSelection: selectedAttributes,
-            QuantityToAdd: productsNumber,
-          });
-          AsyncStorage.setItem(CART, JSON.stringify(cartArray)).then(() => {
-            Snackbar.show({
-              text: t('cart.added-successfull'),
-              duration: Snackbar.LENGTH_SHORT,
-              backgroundColor: colors.success,
-            });
-          });
-          setUpdateProducts(!updateProducts);
-        }
       } else {
-        if (customTextValue.attributeData.AttributeId) {
-          AsyncStorage.setItem(
-            CART,
-            JSON.stringify([
-              {
-                ...Product,
-                Id: ProductId,
-                Attributes: [
-                  ...selectedAttributes,
-                  {
-                    AttributeId: customTextValue.attributeData.AttributeId,
-                    VariantAttributeId:
-                      customTextValue.attributeData.VariantAttributeId,
-                    AttributeValue: customTextValue.text,
-                    AttributeType:
-                      customTextValue.attributeData.AttributeControlType,
-                    Name: customTextValue.attributeData.Name,
-                  },
-                ],
-                AttributesSelection: [
-                  ...selectedAttributes,
-                  {
-                    AttributeId: customTextValue.attributeData.AttributeId,
-                    VariantAttributeId:
-                      customTextValue.attributeData.VariantAttributeId,
-                    AttributeValue: customTextValue.text,
-                    AttributeType:
-                      customTextValue.attributeData.AttributeControlType,
-                    Name: customTextValue.attributeData.Name,
-                  },
-                ],
-                QuantityToAdd: productsNumber,
-              },
-            ]),
-          ).then(() => {
-            Snackbar.show({
-              text: t('cart.added-successfull'),
-              duration: Snackbar.LENGTH_SHORT,
-              backgroundColor: colors.success,
-            });
-          });
-        } else {
-          AsyncStorage.setItem(
-            CART,
-            JSON.stringify([
-              {
-                ...Product,
-                Id: ProductId,
-                Attributes: selectedAttributes,
-                AttributesSelection: selectedAttributes,
-                QuantityToAdd: productsNumber,
-              },
-            ]),
-          ).then(() => {
-            Snackbar.show({
-              text: t('cart.added-successfull'),
-              duration: Snackbar.LENGTH_SHORT,
-              backgroundColor: colors.success,
-            });
-          });
-        }
-        setUpdateProducts(!updateProducts);
+        // if there is no attributes selected and unLogged
+        addLocalProduct();
       }
     }
   };
+
   const schemaObj: any = {};
   Object.keys(initialValues).forEach(f => {
     schemaObj[f] = string().required('This field is required');
@@ -345,7 +277,6 @@ const ListHeaderComponent = ({
     validationSchema,
     initialValues,
   });
-  console.log({errors, values});
 
   const {mutate: mutateAddToCart, isLoading: isLoadingAddToCart} = useMutation(
     addCartProducts,
@@ -368,7 +299,7 @@ const ListHeaderComponent = ({
     setIsAddToCollectionShown(true);
   };
 
-  const gradientColors = ['#00000070', '#ffffff00'];
+  const gradientColors = [colors.black + '70', colors.white + '00'];
   const initialFilterValues = {ratings: [], withImage: false};
   const ShowDiscountBadge: boolean = Product?.ShowDiscountBadge;
   const DisplayProductReviews: boolean = Product?.DisplayProductReviews;
@@ -395,87 +326,86 @@ const ListHeaderComponent = ({
   const onPressHeart = () => {
     protectedFunction({func: () => onOpenAddToCollection()});
   };
+  console.log({selectedAttributes});
+
+  const totalPrice = useMemo(() => {
+    const sum = selectedAttributes.reduce((accumulator, object) => {
+      return (
+        accumulator +
+        (object.PriceAdjustmentValue ? object.PriceAdjustmentValue : 0)
+      );
+    }, 0);
+    return sum + ProductPrice?.Price;
+  }, [selectedAttributes, ProductPrice?.Price]);
+
   const onSelect = (value: any, attributesList: any[]) => {
-    debugger
-    const foundParent = selectedAttributes.find((item: any) => {
-      return item?.AttributeId === value?.parentAttribute?.AttributeId;
+    const attributeObject = value?.parentAttribute;
+    const attributeValueObject = value?.selectedItem;
+    // this object will remove all prev attributes
+    const filteredAttributes = attributesList.filter(item => {
+      return item?.AttributeId !== attributeObject?.AttributeId;
     });
-    const filteredParent = selectedAttributes.filter((item: any) => {
-      return item?.AttributeId !== value?.parentAttribute?.AttributeId;
-    });
-    if (foundParent) {
-      if (foundParent.IsMultipleChoice) {
-        const foundChild = foundParent?.Values?.find((element: any) => {
-          return element.Id === value?.selectedItem?.Id;
+    const regularAttributeObject = {
+      AttributeId: attributeObject?.AttributeId,
+      AttributeType: attributeObject?.AttributeControlType,
+      AttributeValueId: attributeValueObject?.Id,
+      IsMultipleChoice: attributeObject?.IsMultipleChoice,
+      IsRequired: attributeObject?.IsRequired,
+      VariantAttributeId: attributeObject?.VariantAttributeId,
+      Name: attributeObject?.Name,
+      ValueName: attributeValueObject?.Name,
+      Color: attributeValueObject?.Color,
+      PriceAdjustmentValue: attributeValueObject?.PriceAdjustmentValue,
+    };
+    if (attributeObject?.IsMultipleChoice === true) {
+      // this array contains all attributes related with selected one
+      const foundedAttributes = attributesList.filter(item => {
+        return item?.AttributeId === attributeObject?.AttributeId;
+      });
+      if (!!foundedAttributes.length) {
+        // if the value added before and attribute can accpet multiple values
+        const filteredValues = foundedAttributes?.filter(item => {
+          return item?.AttributeValueId !== attributeValueObject?.Id;
         });
-        const remainedValues = foundParent?.Values?.filter((element: any) => {
-          return element.Id !== value?.selectedItem?.Id;
+        // get prev attribute
+        const foundedSameAttribute = foundedAttributes?.find(item => {
+          return item?.AttributeValueId === attributeValueObject?.Id;
         });
-        if (foundChild) {
-          const newItem = {
-            AttributeId: foundParent.AttributeId,
-            IsMultipleChoice: foundParent.IsMultipleChoice,
-            IsRequired: foundParent.IsRequired,
-            VariantAttributeId: foundParent.VariantAttributeId,
-            Values: remainedValues,
-            AttributeType: value?.parentAttribute?.Name,
-          };
-          setFieldValue(`${foundParent.Name}`, foundParent.Name);
-          setSelectedAttributes([...filteredParent, newItem]);
-          return;
+        if (foundedSameAttribute !== undefined) {
+          // remove value for multiple choice
+          setSelectedAttributes([...filteredAttributes, ...filteredValues]);
+        } else {
+          // add new value for multiple choice
+          // check if the item type is Boxes to add value Color
+          console.log({regularAttributeObject});
+          setSelectedAttributes([
+            ...filteredAttributes,
+            ...filteredValues,
+            regularAttributeObject,
+          ]);
         }
-        const newItem = {
-          AttributeId: foundParent.AttributeId,
-          IsMultipleChoice: foundParent.IsMultipleChoice,
-          IsRequired: foundParent.IsRequired,
-          VariantAttributeId: foundParent.VariantAttributeId,
-          Values: [...remainedValues, {...value.selectedItem}],
-          AttributeType: value?.parentAttribute?.Name,
-        };
-        setFieldValue(`${foundParent.Name}`, foundParent.Name);
-        setSelectedAttributes([...filteredParent, newItem]);
-        return;
+      } else {
+        // if attribute value not added before and can accept multiple values
+        // check if the type is Boxes to add value Color
+        setSelectedAttributes([...filteredAttributes, regularAttributeObject]);
       }
-      const newParent = {
-        ...foundParent,
-        Values: [value.selectedItem],
-        AttributeType: value?.parentAttribute?.Name,
-      };
-      setFieldValue(`${foundParent.Name}`, foundParent.Name);
-      setSelectedAttributes([...filteredParent, newParent]);
-      return;
-    }
-    if (filteredParent?.AttributeType === 'TextBox') {
-      const newArray = [
-        ...attributesList,
-        {
-          AttributeId: value?.parentAttribute?.AttributeId,
-          VariantAttributeId: value?.parentAttribute?.VariantAttributeId,
-          AttributeValue: customTextValue.text,
-        },
-      ];
-      setFieldValue(
-        `${value.parentAttribute.Name}`,
-        value.parentAttribute.Name,
-      );
-      setSelectedAttributes(newArray);
     } else {
-      const newArray = [
-        ...attributesList,
+      // if attribute accpet single values
+      setSelectedAttributes([
+        ...filteredAttributes,
         {
-          AttributeId: value.parentAttribute?.AttributeId,
-          IsMultipleChoice: value.parentAttribute?.IsMultipleChoice,
-          IsRequired: value.parentAttribute?.IsRequired,
-          VariantAttributeId: value.parentAttribute.VariantAttributeId,
-          Values: [{...value.selectedItem}],
-          AttributeType: value?.parentAttribute?.Name,
+          AttributeId: attributeObject?.AttributeId,
+          AttributeType: attributeObject?.AttributeControlType,
+          AttributeValueId: attributeValueObject?.Id,
+          IsMultipleChoice: attributeObject?.IsMultipleChoice,
+          IsRequired: attributeObject?.IsRequired,
+          VariantAttributeId: attributeObject?.VariantAttributeId,
+          Name: attributeObject?.Name,
+          ValueName: attributeValueObject?.Name,
+          Color: attributeValueObject?.Color,
+          PriceAdjustmentValue: attributeValueObject?.PriceAdjustmentValue,
         },
-      ];
-      setFieldValue(
-        `${value.parentAttribute.Name}`,
-        value.parentAttribute.Name,
-      );
-      setSelectedAttributes(newArray);
+      ]);
     }
   };
 
@@ -492,7 +422,7 @@ const ListHeaderComponent = ({
                     if (ele.Id === attributeValue.Id) {
                       return {
                         ...ele,
-                        isSelected: !ele.isSelected,
+                        isSelected: true,
                         IsPreSelected: false,
                       };
                     }
@@ -502,7 +432,7 @@ const ListHeaderComponent = ({
                     if (ele.Id === attributeValue.Id) {
                       return {
                         ...ele,
-                        isSelected: !ele.isSelected,
+                        isSelected: true,
                         IsPreSelected: false,
                       };
                     }
@@ -531,18 +461,6 @@ const ListHeaderComponent = ({
     });
   };
 
-  // useEffect(() => {
-  //   // if (isLogged) {
-  //   for (let index = 0; index < Product?.Attributes.length; index++) {
-  //     const attributeItem = Product?.Attributes[index];
-  //     if (attributeItem.Values?.length) {
-  //       attributeItem?.Values?.map((element: any) => {});
-  //     } else {
-  //       setSelectedAttributes([...selectedAttributes]);
-  //     }
-  //   }
-  //   // }
-  // }, [Product?.Attributes]);
   useEffect(() => {
     if (Product?.Attributes) {
       const newItems = Product?.Attributes.map((element: IAttributes) => {
@@ -551,7 +469,7 @@ const ListHeaderComponent = ({
           Values: element?.Values?.map(ele => {
             return {
               ...ele,
-              isSelected: false,
+              isSelected: ele?.IsPreSelected,
             };
           }),
         };
@@ -712,7 +630,7 @@ const ListHeaderComponent = ({
           />
           <View style={[styles.priceContainer, styles.storeWidth]}>
             <Text
-              text={ProductPrice?.Price}
+              text={totalPrice?.toString()}
               color={colors.orange}
               variant="xLargeBold"
               numberOfLines={1}

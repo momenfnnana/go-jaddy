@@ -35,7 +35,6 @@ const ContactUsScreen = () => {
   const {contactUs} = useSchema();
   const {mutate, isLoading} = useMutation(postContactUs, {
     onSuccess: data => {
-      console.log({data});
       return data;
     },
     onError: error => {

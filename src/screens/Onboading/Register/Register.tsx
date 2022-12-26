@@ -200,9 +200,7 @@ const Register = () => {
               type: type,
             });
           })
-          .catch(err => {
-            console.log('error in ImageResizer: ', err);
-          });
+          .catch(err => {});
       }
     });
   };

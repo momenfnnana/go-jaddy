@@ -46,7 +46,6 @@ const Header = () => {
         }),
       );
     } catch (error) {
-      console.log('error in logout external: ', {error});
       dispatch(
         CommonActions.reset({
           index: 1,

@@ -49,11 +49,6 @@ export const openMap = (lat: number, lng: number, label: string) => {
 
 export const toastOnError = (error: Error | any) => {
   __DEV__ && console.log('toastOnError: ', error);
-  console.log({
-    type: 'error',
-    text1: error?.message,
-    text2: error?.details?.message,
-  });
 };
 
 export const showErrorMessage = (errorMessage: string) => {

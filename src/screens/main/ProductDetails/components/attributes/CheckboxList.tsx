@@ -9,7 +9,7 @@ interface ICheckboxItem {
   onSelect: (value: any) => void;
 }
 const CheckboxItem = ({ele, onSelect}: ICheckboxItem) => {
-  const [isSelected, setIsSelected] = useState<boolean>(false);
+  const [isSelected, setIsSelected] = useState<boolean>(ele?.isSelected);
   const onPress = () => {
     onSelect({...ele, isSelected: !isSelected});
     setIsSelected(currentState => !currentState);
@@ -36,6 +36,7 @@ const CheckboxList = ({item, onSelect}: IAttribute) => {
         IsMultipleChoice: item.IsMultipleChoice,
         VariantAttributeId: item.VariantAttributeId,
         Name: item.Name,
+        AttributeControlType: item.AttributeControlType,
       },
     });
   };

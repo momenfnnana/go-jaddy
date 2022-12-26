@@ -60,9 +60,7 @@ const LanguageModal: React.FC<ILanguageModalProps> = ({
   const activeOnboardingHandle = async () => {
     try {
       await AsyncStorage.setItem('onBoardingActive', 'true');
-    } catch (error) {
-      console.log({error});
-    }
+    } catch (error) {}
   };
 
   return (

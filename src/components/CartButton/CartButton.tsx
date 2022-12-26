@@ -9,9 +9,7 @@ interface ICartButton extends PressableProps {
 }
 
 const CartButton = ({color, size = spacing.large, ...rest}: ICartButton) => {
-  const onPress = () => {
-    console.log('onPress');
-  };
+  const onPress = () => {};
   return (
     <Pressable onPress={onPress} style={styles.container} {...rest}>
       <CartIcon

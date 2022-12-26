@@ -52,7 +52,6 @@ const CheckoutStepTwo = ({
     isLoading: isLoadingShippingMethod,
   } = useMutation(selectShippingMethod, {
     onSuccess: data => {
-      console.log({isSameAddress, Id:selectedAddress.Id});
       if (!isSameAddress && selectedAddress.Id) {
         mutateSelectAddress({
           addressId: selectedAddress.Id,

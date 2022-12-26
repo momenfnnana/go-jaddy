@@ -23,9 +23,11 @@ const Boxes = ({
         IsMultipleChoice: item.IsMultipleChoice,
         VariantAttributeId: item.VariantAttributeId,
         Name: item.Name,
+        AttributeControlType: item.AttributeControlType,
       },
     });
   };
+
   return (
     <Pressable
       onPress={onPress}

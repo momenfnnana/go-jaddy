@@ -20,6 +20,7 @@ import {CART} from 'types';
 import {UserContext} from 'context/UserContext';
 import {useNavigation} from '@react-navigation/native';
 import {IProductNavigation} from 'navigators/NavigationsTypes';
+import {LogoSplash} from 'assets/images';
 
 interface ICartItem {
   item: any;
@@ -28,8 +29,6 @@ interface ICartItem {
 }
 
 const CartItem = ({item, setData}: ICartItem) => {
-  console.log({item});
-
   const {setUpdateProducts, updateProducts} = useContext(UserContext);
   const {isLogged} = useLogged();
   const {currency} = useCurrency();
@@ -86,6 +85,7 @@ const CartItem = ({item, setData}: ICartItem) => {
       const filteredProducts = cartArray.filter(
         (element: any) => element?.Id !== item?.Id,
       );
+      setData(filteredProducts);
       if (filteredProducts.length == 0) {
         AsyncStorage.removeItem(CART);
         setUpdateProducts(!updateProducts);
@@ -114,15 +114,34 @@ const CartItem = ({item, setData}: ICartItem) => {
   };
 
   const imageUrl = useMemo(() => {
-    return item?.Image?.Url
-      ? BASE_URL + item?.Image?.Url
-      : BASE_URL + item?.Images[0]?.Url;
-  }, [item, BASE_URL]);
-  const productPrice = useMemo(() => {
-    if (item?.SubTotal) {
-      return item?.SubTotal + ' ' + currency?.Symbol;
+    if (isLogged) {
+      if (!!item?.Image?.Url?.length) {
+        return {
+          uri: BASE_URL + item?.Image?.Url,
+        };
+      } else {
+        return LogoSplash;
+      }
+    } else {
+      return !!item?.Images?.length
+        ? {uri: BASE_URL + item?.Images[0]?.Url}
+        : LogoSplash;
     }
-    return item?.ProductPrice?.Price + ' ' + currency?.Symbol;
+  }, [item, BASE_URL, isLogged, item?.Image?.Url?.length]);
+  const imageOpacity = useMemo(() => {
+    return isLogged
+      ? {opacity: !!item?.Image?.Url ? 1 : 0.5}
+      : {opacity: !!item?.Images?.length ? 1 : 0.5};
+  }, [item, isLogged]);
+  const productPrice = useMemo(() => {
+    if (isLogged) {
+      if (item?.SubTotal) {
+        return item?.SubTotal + ' ' + currency?.Symbol;
+      }
+      return 0 + ' ' + currency?.Symbol;
+    } else {
+      return item?.ProductPrice?.Price + ' ' + currency?.Symbol;
+    }
   }, [item, currency]);
 
   const increaseQuantityHandler = useCallback(() => {
@@ -165,13 +184,15 @@ const CartItem = ({item, setData}: ICartItem) => {
           variant="smallBold"
           size={12}
         />
-        <Text
-          text={'SKU :' + item.Sku}
-          variant="smallLight"
-          color={'#262626'}
-          size={11}
-          style={{marginTop: 2}}
-        />
+        {!!item.Sku && (
+          <Text
+            text={'SKU :' + item.Sku}
+            variant="smallLight"
+            color={'#262626'}
+            size={11}
+            style={{marginTop: 2}}
+          />
+        )}
         <View style={styles.counterButtonsContainer}>
           <Pressable
             disabled={isFetchingEditItem}
@@ -212,7 +233,7 @@ const CartItem = ({item, setData}: ICartItem) => {
       <Pressable
         onPress={navigateToProductDetails}
         style={styles.productImageContainer}>
-        <Image style={styles.productImage} source={{uri: imageUrl}} />
+        <Image style={[styles.productImage, imageOpacity]} source={imageUrl} />
       </Pressable>
     </View>
   );

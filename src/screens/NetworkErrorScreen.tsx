@@ -28,9 +28,7 @@ const NetworkErrorScreen = ({...rest}: INetworkErrorScreen) => {
     };
   }, []);
   const onPress = () => {
-    NetInfo.refresh().then(status => {
-      console.log({status});
-    });
+    NetInfo.refresh().then(status => {});
   };
   return (
     <ScreenContainer withPadding>

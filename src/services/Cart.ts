@@ -10,7 +10,7 @@ interface IAttributes {
 interface IAddCartItem {
   ProductId: number;
   QuantityToAdd: number;
-  SelectedAttributes?: IAttributes[];
+  SelectedAttributes?: any[];
 }
 
 interface IEditCartItem {

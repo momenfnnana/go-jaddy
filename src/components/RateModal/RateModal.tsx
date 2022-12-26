@@ -98,9 +98,7 @@ const RateModal = ({
               type: type,
             });
           })
-          .catch(err => {
-            console.log('error in ImageResizer: ', err);
-          });
+          .catch(err => {});
       }
     });
   };
@@ -121,12 +119,10 @@ const RateModal = ({
     useMutation(postAddStoreReview, {
       onSuccess: data => {
         hideRatePopup();
-        console.log({data});
         return data;
       },
       onError: error => {
         hideRatePopup();
-        console.log({error});
         return error;
       },
     });

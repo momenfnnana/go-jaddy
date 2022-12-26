@@ -57,12 +57,8 @@ const CheckoutStepFour = () => {
     },
   });
 
-  const onConfirmPayment = () => {
-    console.log('onConfirmPayment');
-  };
-  const onPressPrivacyTerms = () => {
-    console.log('onPressPrivacyTerms');
-  };
+  const onConfirmPayment = () => {};
+  const onPressPrivacyTerms = () => {};
   const onPressConfirm = () => {
     setIsConfirmed(currentValue => !currentValue);
   };

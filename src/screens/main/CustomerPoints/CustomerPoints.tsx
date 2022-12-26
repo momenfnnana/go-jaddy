@@ -22,8 +22,6 @@ const CustomerPoints = () => {
     });
   }, []);
 
-  console.log({data: data?.data?.Messages});
-
   if (isLoading || isFetching) {
     return (
       <Loader

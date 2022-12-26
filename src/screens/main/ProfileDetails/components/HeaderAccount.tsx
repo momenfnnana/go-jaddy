@@ -86,9 +86,7 @@ const HeaderAccount = ({
             });
             mutate(data);
           })
-          .catch(err => {
-            console.log('error in ImageResizer: ', err);
-          });
+          .catch(err => {});
       }
     });
   };

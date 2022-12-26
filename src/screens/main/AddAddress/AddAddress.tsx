@@ -93,7 +93,6 @@ const AddAddress = () => {
     mutate: mutateGetStates,
   } = useMutation(['getStates'], getStatesByCountry, {
     onError(error, variables, context) {
-      console.log('first: ', (error as any)?.response?.data?.Message);
       setStateSelected({
         ...stateSelected,
         isExistData: false,
