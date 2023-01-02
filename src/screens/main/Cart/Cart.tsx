@@ -35,11 +35,11 @@ const Cart = () => {
   const {updateProducts} = useContext(UserContext);
   const {isLogged} = useLogged();
   const {protectedFunction} = useProtectedFunction();
-  const {isLoading, isFetching, isRefetching, isError, refetch} = useQuery(
+  const {isLoading, isFetching, isRefetching, refetch} = useQuery(
     ['cartProducts'],
     getCartProducts,
     {
-      enabled: isLogged || false,
+      enabled: false,
       onSuccess(data) {
         setData(data.data);
         setUsedPoints(data.data?.RewardPoints?.UseRewardPoints);
@@ -235,7 +235,7 @@ const Cart = () => {
         title=""
         showCloseBtn={false}>
         <View style={styles.modalContent}>
-          <Text tx={`modal.BillTitle`} variant="xLargeBold" center />
+          <Text tx={'modal.BillTitle'} variant="xLargeBold" center />
           {isLoadingSummary || isFetchingSummary ? (
             <Loader
               containerStyle={{
@@ -519,7 +519,7 @@ const Cart = () => {
                 }}
                 style={{flexDirection: 'row', alignItems: 'center'}}>
                 <MaterialIcons
-                  name={`keyboard-arrow-down`}
+                  name={'keyboard-arrow-down'}
                   size={18}
                   color={colors.black}
                 />

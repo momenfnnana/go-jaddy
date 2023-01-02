@@ -187,7 +187,8 @@
     "collection-name": "Collection name",
     "are-sure-want-to-delete": "Are you sure to delete?",
     "are-sure-want-to-delete-hint": "By choosing to confirm deletion, you cannot undo this command. Are you sure to delete the item?",
-    "category": "category {{category}}"
+    "category": "category {{category}}",
+    "collection-name-required": "collection name is required"
   },
   "currencies": {
     "shikel": "Shikel {{currency}}",
@@ -200,7 +201,8 @@
     "continue-request": "Continue request",
     "total": "Total ({{currency}})",
     "discountPlaceholder": "discount code",
-    "added-successfull": "Added successfully"
+    "added-successfull": "Added successfully",
+    "must-add-attributes": "Must select product attributes"
   },
   "previousTitles": {
     "titleHeader": "Previous Addresses",

@@ -114,7 +114,7 @@ const AddAddressComponent = ({
       },
     },
   );
-  
+
   const [countrySelected, setCountrySelected] = useState<any>({});
   const [isDefualt, setDefualt] = useState<boolean>(false);
   const [stateSelected, setStateSelected] = useState<ISelectedState>({
@@ -129,8 +129,7 @@ const AddAddressComponent = ({
   };
 
   const onSubmitForm = (values: any) => {
-    if (isBillingAddress !== undefined) {
-
+    if (isBillingAddress === true) {
       mutateAddBillingAddress({
         Address1: values.address1,
         Address2: values.address2,
@@ -146,9 +145,7 @@ const AddAddressComponent = ({
         StateId: stateSelected.item?.Value,
         IsDefault: isDefualt,
       });
-
     } else {
-
       mutateaddAddress({
         Address1: values.address1,
         Address2: values.address2,
@@ -164,7 +161,6 @@ const AddAddressComponent = ({
         StateId: stateSelected.item?.Value,
         IsDefault: isDefualt,
       });
-      
     }
   };
 
@@ -245,7 +241,7 @@ const AddAddressComponent = ({
                 defaultButtonText={t('addAddress.countries-def')}
                 renderDropdownIcon={() => (
                   <MaterialIcons
-                    name={`keyboard-arrow-down`}
+                    name={'keyboard-arrow-down'}
                     size={18}
                     color={colors.black}
                   />
@@ -308,7 +304,7 @@ const AddAddressComponent = ({
                 defaultButtonText={t('addAddress.states-def')}
                 renderDropdownIcon={() => (
                   <MaterialIcons
-                    name={`keyboard-arrow-down`}
+                    name={'keyboard-arrow-down'}
                     size={18}
                     color={colors.black}
                   />

@@ -159,7 +159,8 @@
     "collection-name": "اسم القائمة",
     "are-sure-want-to-delete": "هل أنت متأكد من الحذف؟",
     "are-sure-want-to-delete-hint": "باختيارك تأكيد الحذف لا يمكنك الرجوع عن هذا الأمر، هل أنت متأكد من حذف العنصر؟",
-    "category": "التصنيف {{category}}"
+    "category": "التصنيف {{category}}",
+    "collection-name-required": "اسم الكولكشن مطلوب"
   },
   "currencies": {
     "shikel": "شيكل {{currency}}",
@@ -172,7 +173,8 @@
     "continue-request": "اتمام الطلب",
     "total": "الاجمالي ({{currency}})",
     "discountPlaceholder": "كود الخصم",
-    "added-successfull": "تم إضافة المنتج بنجاح"
+    "added-successfull": "تم إضافة المنتج بنجاح",
+    "must-add-attributes": "يجب اختيار خصائص المنتج"
   },
   "api": {
     "account": {
