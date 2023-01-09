@@ -22,6 +22,7 @@ import {useNavigation} from '@react-navigation/native';
 import {IProductNavigation} from 'navigators/NavigationsTypes';
 import {LogoSplash} from 'assets/images';
 import {numberWithCommas} from 'utils/Regex';
+import {readAccessToken} from 'constants';
 
 interface ICartItem {
   item: any;
@@ -75,7 +76,8 @@ const CartItem = ({item, setData}: ICartItem) => {
     },
   );
   const removeItem = async () => {
-    if (isLogged) {
+    const res = await readAccessToken();
+    if (res) {
       refetchRemoveItem();
     } else {
       const cartItems = await AsyncStorage.getItem(CART);
@@ -154,7 +156,7 @@ const CartItem = ({item, setData}: ICartItem) => {
     setQuantity(quantity + 1);
   }, [quantity]);
   const decreaseQuantityHandler = useCallback(() => {
-    if (quantity == 1) {
+    if (quantity === 1) {
       removeItem();
     } else {
       setQuantity(quantity - 1);

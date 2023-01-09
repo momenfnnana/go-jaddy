@@ -62,8 +62,8 @@ const GredientFrom = '#AFB2B500';
 const GredientTo = '#231D2590';
 
 const initialValues: IinitialValues = {
-  phoneNumber: '595702522',
-  password: 'Password$1',
+  phoneNumber: '',
+  password: '',
 };
 
 const Login = () => {
@@ -155,11 +155,9 @@ const Login = () => {
 
   const doLogin = (values: any) => {
     const data = {
-      // PhoneNumber: countryCode + values.phoneNumber,
-      // Password: values.password,
+      PhoneNumber: countryCode + values.phoneNumber,
+      Password: values.password,
       NotificationToken: notificationToken,
-      PhoneNumber: '00970595800504',
-      Password: '/9875410Bara',
     };
     mutate(data);
   };
