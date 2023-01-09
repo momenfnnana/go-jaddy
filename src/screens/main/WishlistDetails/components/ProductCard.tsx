@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
 import {useMutation} from '@tanstack/react-query';
 import {AddCartIcon, TrashIcon} from 'assets/icons';
 import {Loader, Text} from 'components';
@@ -18,6 +18,8 @@ import {useNavigation} from '@react-navigation/native';
 import {WishlistDetailsScreenNavigationProp} from 'navigators/NavigationsTypes';
 import {addCartProducts} from 'services/Cart';
 import {UserContext} from 'context/UserContext';
+import Snackbar from 'react-native-snackbar';
+import {useTranslation} from 'react-i18next';
 interface Price {
   RegularPrice: number;
   Price: number;
@@ -44,6 +46,7 @@ const ProductCard = ({
   ProductId,
   filterItems,
 }: IProductCard) => {
+  const {t} = useTranslation();
   const {navigate} = useNavigation<WishlistDetailsScreenNavigationProp>();
   const {height} = useWindowDimensions();
   const {currency} = useCurrency();
@@ -66,18 +69,31 @@ const ProductCard = ({
     addCartProducts,
     {
       onSuccess: () => {
+        Snackbar.show({
+          text: t('cart.added-successfull'),
+          duration: Snackbar.LENGTH_SHORT,
+          backgroundColor: colors.success,
+        });
         setUpdateProducts(!updateProducts);
       },
       onError: () => {
+        Snackbar.show({
+          text: t('cart.must-add-attributes'),
+          duration: Snackbar.LENGTH_SHORT,
+          backgroundColor: colors.danger,
+        });
         navigate('ProductDetails', {Id: ProductId} as any);
       },
     },
   );
   const addtoCartHandler = () => {
-    mutateAddToCart({
-      ProductId,
-      QuantityToAdd: 1,
-    });
+    mutateAddToCart([
+      {
+        ProductId,
+        QuantityToAdd: 1,
+        SelectedAttributes: [],
+      },
+    ]);
   };
 
   return (

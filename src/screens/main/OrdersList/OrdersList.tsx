@@ -1,5 +1,5 @@
-import {View, Pressable, Platform, FlatList} from 'react-native';
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useMemo, useState} from 'react';
+import {View, Pressable, Platform, FlatList, StyleSheet} from 'react-native';
 import {BackButton, Loader, Text} from 'components';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {colors, spacing} from 'theme';
@@ -9,7 +9,6 @@ import {FilterIcon, OrderIcon} from 'assets/icons';
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {getCustomerOrders, getStoreOrders} from 'services/Orders';
 import moment from 'moment';
-// import ar from 'moment/';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {useCurrency} from 'hook/useCurrency';
@@ -44,8 +43,6 @@ const OrdersList = () => {
         : t('myOrders.titleHeader'),
     });
   }, []);
-
-  console.log('params?.isOrederRequest: ', params?.isOrederRequest);
 
   const {
     data: StoreOrdersData,
@@ -108,21 +105,26 @@ const OrdersList = () => {
   }, [params?.isOrederRequest]);
 
   useEffect(() => {
-    if (params?.isOrederRequest) {
-      if (search.isSearching) {
-        refetchStoreOrders();
-      } else if (search.searchText.length == 0) {
-        setSearch({...search, isSearching: false});
-        refetchStoreOrders();
+    const timeout = setTimeout(() => {
+      if (params?.isOrederRequest) {
+        if (search.isSearching) {
+          refetchStoreOrders();
+        } else if (search.searchText.length == 0) {
+          setSearch({...search, isSearching: false});
+          refetchStoreOrders();
+        }
+      } else {
+        if (search.isSearching) {
+          refetchCustomerOrders();
+        } else if (search.searchText.length == 0) {
+          setSearch({searchText: '', isSearching: false});
+          refetchCustomerOrders();
+        }
       }
-    } else {
-      if (search.isSearching) {
-        refetchCustomerOrders();
-      } else if (search.searchText.length == 0) {
-        setSearch({searchText: '', isSearching: false});
-        refetchCustomerOrders();
-      }
-    }
+    }, 500);
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [search.searchText, search.isSearching]);
 
   const loadMoreStoreOrders = () => {
@@ -130,6 +132,14 @@ const OrdersList = () => {
       fetchNextPageStoreOrders();
     }
   };
+
+  const naviagteToDetails = (item: any) => {
+    navigate('OrdersDetails', {Id: item?.OrderNumber});
+  };
+
+  const data = useMemo(() => {
+    return params?.isOrederRequest ? StoreOrdersData : CustomerOrdersData;
+  }, [params?.isOrederRequest, StoreOrdersData, CustomerOrdersData]);
 
   if (isFetchingStoreOrders || isFetchingCustomerOrders) {
     return (
@@ -143,8 +153,6 @@ const OrdersList = () => {
       />
     );
   }
-
-  const data = params?.isOrederRequest ? StoreOrdersData : CustomerOrdersData;
 
   if (
     data?.pages.map(page => page.data.Orders).flat().length == 0 &&
@@ -160,18 +168,9 @@ const OrdersList = () => {
   }
 
   return (
-    <View style={{flex: 1}}>
+    <View style={styles.container}>
       <SearchInput
-        containerStyle={{
-          marginTop: spacing.xxLarge,
-          marginHorizontal: spacing.content,
-          borderWidth: 0,
-          paddingVertical: 2,
-          height: Platform.OS === 'android' ? 36 : undefined,
-          paddingHorizontal: spacing.tiny,
-          alignSelf: 'flex-end',
-          marginBottom: spacing.xLarge,
-        }}
+        containerStyle={styles.searchContainerStyle}
         placeholderTextColor={colors.gray[400]}
         placeholder={'myOrders.placeholderSearch'}
         textColor={colors.primary}
@@ -181,27 +180,12 @@ const OrdersList = () => {
           setSearch({...search, isSearching: true});
         }}
         rightIcon={
-          <Pressable
-            style={{
-              backgroundColor: colors.primary,
-              width: GO_BACK_SIZE - 6,
-              height: GO_BACK_SIZE - 6,
-              borderRadius: spacing.small + 2,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+          <Pressable style={styles.rightSearchIcon}>
             <FilterIcon />
           </Pressable>
         }
         leftIcon={
-          <Pressable
-            style={{
-              width: GO_BACK_SIZE,
-              height: GO_BACK_SIZE,
-              borderRadius: spacing.small + 2,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+          <Pressable style={styles.leftSearchIcon}>
             <AntDesign name="search1" size={ICON_SIZE} color={colors.primary} />
           </Pressable>
         }
@@ -209,40 +193,16 @@ const OrdersList = () => {
       <FlatList
         data={data?.pages.map(page => page.data.Orders).flat()}
         keyExtractor={(i, _) => _.toString()}
-        contentContainerStyle={{
-          paddingHorizontal: spacing.content,
-        }}
+        contentContainerStyle={styles.contentContainerStyle}
         ListEmptyComponent={<EmptyPage title="EmptyPage.oreder-no-result" />}
         renderItem={({item}) => (
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              borderRadius: spacing.medium,
-              backgroundColor: colors.white,
-              paddingHorizontal: spacing.small,
-              marginBottom: spacing.medium,
-            }}>
-            <View style={{marginRight: spacing.small}}>
+          <View style={styles.cardContainer}>
+            <View style={styles.orderIcon}>
               <OrderIcon />
             </View>
-            <View
-              style={{
-                height: '100%',
-                width: 0.3,
-                backgroundColor: colors.gray[300],
-                marginRight: spacing.smaller,
-              }}
-            />
-            <View style={{flex: 1, paddingVertical: spacing.medium}}>
-              <View
-                style={{
-                  width: '100%',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: spacing.medium,
-                }}>
+            <View style={styles.cardContentContainer} />
+            <View style={styles.subCardContentContainer}>
+              <View style={styles.statusContainer}>
                 <Text
                   text={item?.Status}
                   color={item?.StatusColor}
@@ -250,13 +210,7 @@ const OrdersList = () => {
                 />
                 <Text variant="xSmallBold" text={'#' + item?.OrderNumber} />
               </View>
-              <View
-                style={{
-                  width: '100%',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  //   alignItems: 'center',
-                }}>
+              <View style={styles.totalContainer}>
                 <View>
                   <Text
                     tx="myOrders.total"
@@ -266,20 +220,15 @@ const OrdersList = () => {
                     }}
                     variant="xSmallRegular"
                   />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      marginTop: spacing.tiny,
-                    }}>
+                  <View style={styles.dateContainer}>
                     <MaterialIcon
                       name="access-time"
-                      size={11}
-                      style={{marginRight: spacing.tiny}}
+                      size={spacing.medium}
+                      style={styles.accessTimeIcon}
                     />
                     <Text
                       tx="myOrders.chargeTime"
-                      color="#747474"
+                      color={colors.arrowColor}
                       txOptions={{
                         time: moment(item?.CreatedOn)
                           .locale(language == '2' ? 'ar' : 'en')
@@ -291,23 +240,13 @@ const OrdersList = () => {
                   </View>
                 </View>
                 <Pressable
-                  onPress={() =>
-                    navigate('OrdersDetails', {Id: item?.OrderNumber})
-                  }
-                  style={{
-                    width: 30,
-                    height: 30,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderRadius: 15,
-                    borderWidth: 1,
-                    borderColor: colors.primary,
-                  }}>
+                  onPress={() => naviagteToDetails(item)}
+                  style={styles.arrowContainer}>
                   <SimpleLineIcons
                     name={`arrow-${language == '1' ? 'right' : 'left'}`}
                     color={colors.primary}
-                    size={15}
-                    style={{marginRight: -3}}
+                    size={spacing.normal}
+                    style={styles.arrowIcon}
                   />
                 </Pressable>
               </View>
@@ -325,3 +264,90 @@ const OrdersList = () => {
 };
 
 export default OrdersList;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  searchContainerStyle: {
+    marginTop: spacing.xxLarge,
+    marginHorizontal: spacing.content,
+    borderWidth: 0,
+    paddingVertical: 2,
+    height: Platform.OS === 'android' ? 36 : undefined,
+    paddingHorizontal: spacing.tiny,
+    alignSelf: 'flex-end',
+    marginBottom: spacing.xLarge,
+  },
+  rightSearchIcon: {
+    backgroundColor: colors.primary,
+    width: GO_BACK_SIZE - 6,
+    height: GO_BACK_SIZE - 6,
+    borderRadius: spacing.small + 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  leftSearchIcon: {
+    width: GO_BACK_SIZE,
+    height: GO_BACK_SIZE,
+    borderRadius: spacing.small + 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  contentContainerStyle: {
+    paddingHorizontal: spacing.content,
+  },
+  cardContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: spacing.medium,
+    backgroundColor: colors.white,
+    paddingHorizontal: spacing.small,
+    marginBottom: spacing.medium,
+  },
+  orderIcon: {
+    marginRight: spacing.small,
+  },
+  cardContentContainer: {
+    height: '100%',
+    width: 0.3,
+    backgroundColor: colors.gray[300],
+    marginRight: spacing.smaller,
+  },
+  subCardContentContainer: {
+    flex: 1,
+    paddingVertical: spacing.medium,
+  },
+  statusContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: spacing.medium,
+  },
+  totalContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  dateContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: spacing.tiny,
+  },
+  accessTimeIcon: {
+    marginRight: spacing.tiny,
+  },
+  arrowContainer: {
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: colors.primary,
+  },
+  arrowIcon: {
+    marginRight: -3,
+  },
+});

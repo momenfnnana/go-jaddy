@@ -12,7 +12,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useCurrency} from 'hook/useCurrency';
 import {BASE_URL} from 'utils/Axios';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery} from '@tanstack/react-query';
 import {editCartProducts, removeCartProducts} from 'services/Cart';
 import {useLogged} from 'hook/useLogged';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -61,20 +61,13 @@ const CartItem = ({item, setData}: ICartItem) => {
       },
     },
   );
-  const {
-    refetch: refetchRemoveItem,
-    isFetching: isFetchingRemoveItem,
-    isLoading: isLoadingRemoveItem,
-  } = useQuery(
-    [`removeCartItem${item.Id}`],
-    () => removeCartProducts(item.Id),
-    {
-      enabled: false,
+  const {mutate: refetchRemoveItem, isLoading: isFetchingRemoveItem} =
+    useMutation(removeCartProducts, {
       onSuccess(data) {
         setData(data.data);
       },
-    },
-  );
+    });
+
   const removeItem = async () => {
     const res = await readAccessToken();
     if (res) {
@@ -118,7 +111,7 @@ const CartItem = ({item, setData}: ICartItem) => {
 
   const imageUrl = useMemo(() => {
     if (isLogged) {
-      if (!!item?.Image?.Url?.length) {
+      if (item?.Image?.Url?.length) {
         return {
           uri: BASE_URL + item?.Image?.Url,
         };
@@ -126,15 +119,15 @@ const CartItem = ({item, setData}: ICartItem) => {
         return LogoSplash;
       }
     } else {
-      return !!item?.Images?.length
+      return item?.Images?.length
         ? {uri: BASE_URL + item?.Images[0]?.Url}
         : LogoSplash;
     }
   }, [item, BASE_URL, isLogged, item?.Image?.Url?.length]);
   const imageOpacity = useMemo(() => {
     return isLogged
-      ? {opacity: !!item?.Image?.Url ? 1 : 0.5}
-      : {opacity: !!item?.Images?.length ? 1 : 0.5};
+      ? {opacity: item?.Image?.Url ? 1 : 0.5}
+      : {opacity: item?.Images?.length ? 1 : 0.5};
   }, [item, isLogged]);
   const productPrice = useMemo(() => {
     if (isLogged) {

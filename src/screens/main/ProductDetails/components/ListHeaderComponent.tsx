@@ -752,7 +752,8 @@ const ListHeaderComponent = ({
               {StockAvailability === '' ? 0 : StockAvailability}
             </Text>
           </View>
-          {StockAvailability === 0 &&
+          {isLogged &&
+            StockAvailability === 0 &&
             DisplayBackInStockSubscription === true &&
             !BackInStockAlreadySubscribed &&
             !subscribed && (

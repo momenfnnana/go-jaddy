@@ -209,7 +209,7 @@ const CheckoutStepFour = () => {
                 <Text variant="mediumRegular" tx="modal.tax" />
                 <Text
                   variant="mediumRegular"
-                  text={CartSummary?.Tax?.toString()+" "+currency?.Symbol}
+                  text={CartSummary?.Tax?.toString() + " " + currency?.Symbol}
                 />
               </View>
             )}
@@ -226,7 +226,9 @@ const CheckoutStepFour = () => {
               <Text variant="mediumRegular" tx="orderDetails.shipping-fee" />
               <Text
                 variant="mediumRegular"
-                text={CartSummary?.Shipping?.toString()+" "+currency?.Symbol}
+                text={
+                  CartSummary?.Shipping?.toString() + " " + currency?.Symbol
+                }
               />
             </View>
             {CartSummary?.IsDiscountApplied && (
@@ -243,7 +245,11 @@ const CheckoutStepFour = () => {
                 <Text variant="mediumRegular" tx="modal.DiscoundCode" />
                 <Text
                   variant="mediumRegular"
-                  text={CartSummary?.OrderTotalDiscount?.toString()+" "+currency?.Symbol}
+                  text={
+                    CartSummary?.OrderTotalDiscount?.toString() +
+                    " " +
+                    currency?.Symbol
+                  }
                 />
               </View>
             )}
