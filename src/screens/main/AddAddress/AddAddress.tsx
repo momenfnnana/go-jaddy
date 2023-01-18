@@ -81,8 +81,10 @@ const AddAddress = () => {
           const item = data.data.find(
             (i: any) => i.Value == params?.item?.CountryId,
           );
-          setCountrySelected(item);
-          mutateGetStates(item.Value);
+          if (item) {
+            setCountrySelected(item);
+            mutateGetStates(item.Value);
+          }
         }
       },
     },

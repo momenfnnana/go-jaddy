@@ -61,17 +61,17 @@ const CartItem = ({item, setData}: ICartItem) => {
       },
     },
   );
-  const {mutate: refetchRemoveItem, isLoading: isFetchingRemoveItem} =
+  const {mutate: mutateRemoveItem, isLoading: isFetchingRemoveItem} =
     useMutation(removeCartProducts, {
       onSuccess(data) {
         setData(data.data);
       },
     });
 
-  const removeItem = async () => {
+  const removeItem = useCallback(async () => {
     const res = await readAccessToken();
     if (res) {
-      refetchRemoveItem();
+      mutateRemoveItem(item?.Id);
     } else {
       const cartItems = await AsyncStorage.getItem(CART);
       const cartArray =
@@ -90,7 +90,7 @@ const CartItem = ({item, setData}: ICartItem) => {
       AsyncStorage.setItem(CART, JSON.stringify(filteredProducts));
       setUpdateProducts(!updateProducts);
     }
-  };
+  }, [item?.id]);
 
   const changeLocalItems = async (increaseNumber: number) => {
     const cartItems = await AsyncStorage.getItem(CART);

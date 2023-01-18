@@ -97,14 +97,6 @@ const OrdersList = () => {
   );
 
   useEffect(() => {
-    if (params?.isOrederRequest) {
-      refetchStoreOrders();
-    } else {
-      refetchCustomerOrders();
-    }
-  }, [params?.isOrederRequest]);
-
-  useEffect(() => {
     const timeout = setTimeout(() => {
       if (params?.isOrederRequest) {
         if (search.isSearching) {
@@ -125,7 +117,7 @@ const OrdersList = () => {
     return () => {
       clearTimeout(timeout);
     };
-  }, [search.searchText, search.isSearching]);
+  }, [search.searchText, search.isSearching, params?.isOrederRequest]);
 
   const loadMoreStoreOrders = () => {
     if (hasNextPageStoreOrders) {
