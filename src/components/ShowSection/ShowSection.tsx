@@ -68,7 +68,7 @@ const ShowSection = ({
         {/* <View style={styles.goNextArrowContainer}>
           <GoNextArrowIcon />
         </View> */}
-        {!!data.length && (
+        {!!data?.length && (
           <FlatList
             data={data}
             showsHorizontalScrollIndicator={false}

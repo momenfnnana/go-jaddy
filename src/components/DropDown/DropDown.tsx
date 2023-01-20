@@ -11,6 +11,7 @@ import {useDropDownContext} from 'context/dropdownContext';
 import {getCurrencies} from 'services/Auth';
 import {useQuery} from '@tanstack/react-query';
 import {UserContext} from 'context/UserContext';
+import RNRestart from 'react-native-restart';
 
 interface IDropDown {
   text?: string;
@@ -37,7 +38,8 @@ const DropDown: FC<IDropDown> = () => {
   }, [currenciesData, currency]);
   const changeCurrencyHandler = (value: ICurrency) => {
     changeLocalCurrencies(value);
-    setRefreshCurrency(currentState => !currentState);
+    setRefreshCurrency((currentState: any) => !currentState);
+    RNRestart.Restart();
   };
   if (isLoadingCurrencies) {
     return null;

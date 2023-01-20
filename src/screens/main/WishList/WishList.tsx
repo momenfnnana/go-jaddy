@@ -51,7 +51,7 @@ const WishList = () => {
   }, [isFetching]);
 
   const WishListItemsToRender = useMemo(() => {
-    if (wishlistData.length === 1) {
+    if (wishlistData?.length === 1) {
       return [
         ...wishlistData,
         {

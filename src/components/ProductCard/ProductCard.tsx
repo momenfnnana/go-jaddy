@@ -18,6 +18,7 @@ import {BASE_URL} from 'utils/Axios';
 import {useTranslation} from 'react-i18next';
 import {LogoSplash} from 'assets/images';
 import {useProtectedFunction} from 'hook/useProdectedFunction';
+import LinearGradient from 'react-native-linear-gradient';
 
 const ProductCard = (props: IProductInterface) => {
   const {
@@ -54,7 +55,7 @@ const ProductCard = (props: IProductInterface) => {
   const showAddToWishList = () => {
     protectedFunction({func: () => setIsAddToCollectionShown(true)});
   };
-
+  const gradientColors = ['#0003', colors.white + '00'];
   const source =
     ImageResponse.Id === 0
       ? LogoSplash
@@ -65,6 +66,19 @@ const ProductCard = (props: IProductInterface) => {
       <Pressable
         onPress={navigateToProduct}
         style={[styles.container, {width: width / 2 - 20}, styleContainer]}>
+        <LinearGradient
+          start={{x: 1.4, y: 0}}
+          end={{x: 0, y: 1}}
+          colors={gradientColors}
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            height: '100%',
+            width: '100%',
+            zIndex: 1,
+          }}
+        />
         <ImageBackground
           source={source}
           resizeMode="contain"
@@ -179,6 +193,7 @@ export default ProductCard;
 
 const styles = StyleSheet.create({
   container: {
+    position: 'relative',
     height: 268,
     marginBottom: 10,
     marginRight: 10,
