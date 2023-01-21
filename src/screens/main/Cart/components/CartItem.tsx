@@ -137,17 +137,19 @@ const CartItem = ({item, setData}: ICartItem) => {
       return 0 + ' ' + currency?.Symbol;
     } else {
       return (
-        numberWithCommas(item?.ProductPrice?.Price) + ' ' + currency?.Symbol
+        numberWithCommas((item?.ProductPrice?.Price * quantity).toFixed(1)) +
+        ' ' +
+        currency?.Symbol
       );
     }
-  }, [item, currency]);
+  }, [item, currency, isLogged, quantity]);
 
   const increaseQuantityHandler = useCallback(() => {
     if (!isLogged) {
       changeLocalItems(quantity + 1);
     }
     setQuantity(quantity + 1);
-  }, [quantity]);
+  }, [quantity, isLogged]);
   const decreaseQuantityHandler = useCallback(() => {
     if (quantity === 1) {
       removeItem();
@@ -157,7 +159,7 @@ const CartItem = ({item, setData}: ICartItem) => {
         changeLocalItems(quantity - 1);
       }
     }
-  }, [quantity]);
+  }, [quantity, isLogged]);
   const navigateToProductDetails = useCallback(() => {
     if (isLogged) {
       navigate('ProductDetails', {Id: item?.ProductId} as any);
