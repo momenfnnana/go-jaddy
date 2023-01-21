@@ -1,5 +1,6 @@
 import React, {useContext, useState} from 'react';
 import {
+  Keyboard,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -59,7 +60,7 @@ const AnonymousModal: React.FC<IAnonymousModalProps> = ({
     setAccessToken(AccessToken);
     axios.defaults.headers.common['AccessToken'] = `${AccessToken}`;
     AsyncStorage.setItem('accessToken', AccessToken);
-    reload(data.data?.AccessToken);
+    reload(AccessToken);
     dispatch(
       CommonActions.reset({
         index: 0,
@@ -69,8 +70,8 @@ const AnonymousModal: React.FC<IAnonymousModalProps> = ({
     return data;
   };
 
-  const onSubmitLogin = values => {
-    console.log({values});
+  const onSubmitLogin = (values: any) => {
+    Keyboard.dismiss();
     mutate({
       FullName: values.userName,
       PhoneNumber: countryCode + values.phoneNumber,
