@@ -53,6 +53,7 @@ import {
   ISelectAttributeHandler,
   productCounter,
 } from '../types';
+import {numberWithCommas} from 'utils/Regex';
 
 const AttributeContainer = ({
   children,
@@ -261,7 +262,10 @@ const ListHeaderComponent = ({
         ]);
       } else {
         // if there is no attributes selected and unLogged
-        addLocalProduct();
+        const filteredList = cartArray.filter((item: any) => {
+          return item.Id !== ProductId;
+        });
+        addLocalProduct(filteredList,[]);
       }
     }
   };
@@ -326,7 +330,6 @@ const ListHeaderComponent = ({
   const onPressHeart = () => {
     protectedFunction({func: () => onOpenAddToCollection()});
   };
-  console.log({selectedAttributes});
 
   const totalPrice = useMemo(() => {
     const sum = selectedAttributes.reduce((accumulator, object) => {
@@ -489,7 +492,7 @@ const ListHeaderComponent = ({
     return Product?.Images[activeImageIndex]?.Url
       ? {uri: `${BASE_URL}${Product?.Images[activeImageIndex]?.Url}`}
       : LogoSplash;
-  }, [Product?.Images, LogoSplash]);
+  }, [Product?.Images, LogoSplash, activeImageIndex]);
   const isHavingFilters = useMemo(() => {
     if (
       initialFilterValues.ratings.length === selectedFilter.ratings.length &&
@@ -628,16 +631,18 @@ const ListHeaderComponent = ({
             variant="mediumRegular"
             style={styles.shortDescription}
           />
-          <View style={[styles.priceContainer, styles.storeWidth]}>
+          <View style={styles.priceContainer}>
             <Text
-              text={totalPrice?.toString()}
+              text={numberWithCommas(totalPrice?.toString())}
               color={colors.orange}
               variant="xLargeBold"
               numberOfLines={1}
             />
             <View style={styles.row}>
               <Text
-                text={Product?.ProductPrice?.OldPrice?.toString()}
+                text={numberWithCommas(
+                  Product?.ProductPrice?.OldPrice?.toString(),
+                )}
                 color={colors.grayMain}
                 variant="mediumRegular"
                 style={styles.oldPrice}
