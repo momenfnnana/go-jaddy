@@ -96,7 +96,7 @@ const AddAddressComponent = ({
         ...stateSelected,
         isExistData: true,
         defualtText:
-          data.data.length > 0
+          data.data?.length > 0
             ? t('addAddress.states-def')
             : t('addAddress.no-state'),
       });

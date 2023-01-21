@@ -137,7 +137,7 @@ const Register = () => {
         } else {
           setVerifyModalShow(true);
         }
-        if (localData && !!localData.length) {
+        if (localData && !!localData?.length) {
           localData?.map(item => {
             // const attributesToSend=selectedAttributes.map(item=>{
             //   return {

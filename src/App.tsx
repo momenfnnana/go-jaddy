@@ -21,6 +21,7 @@ import {ToastProvider} from 'react-native-toast-notifications';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {Settings} from 'react-native-fbsdk-next';
 import RNBootSplash from 'react-native-bootsplash';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const App = () => {
   const {setSettings, setCurrencies} = useContext(UserContext);
@@ -40,8 +41,14 @@ const App = () => {
   useEffect(() => {
     if (isSuccessLoadingCurrencies === true) {
       setCurrencies(currenciesData?.data?.Currencies);
-      setAxiosCurrencyId(currenciesData?.data?.Currencies[0]?.Id);
-      changeLocalCurrencies(currenciesData?.data?.Currencies[0]);
+      AsyncStorage.getItem('currency').then((currency: any) => {
+        if (currency) {
+          const selectedCurrency = JSON.parse(currency);
+          changeLocalCurrencies(selectedCurrency);
+        } else {
+          changeLocalCurrencies(currenciesData?.data?.Currencies[0]);
+        }
+      });
     }
   }, [isSuccessLoadingCurrencies]);
 

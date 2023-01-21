@@ -108,7 +108,7 @@ const Login = () => {
       AsyncStorage.setItem('accessToken', AccessToken);
     }
     reload(data.data?.AccessToken);
-    if (localData && localData.length) {
+    if (localData && localData?.length) {
       const newData = localData.map(item => {
         if (!!Object.keys(item?.SelectedAttributes).length) {
           return {
