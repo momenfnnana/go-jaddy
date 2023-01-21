@@ -1,5 +1,11 @@
 import {View, FlatList, Pressable, TextInput, StyleSheet} from 'react-native';
-import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useLayoutEffect,
+  useMemo,
+} from 'react';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {
   applyDiscountCart,
@@ -147,6 +153,10 @@ const Cart = () => {
       headerLeft: () => <></>,
     });
   }, []);
+  const cartProducts = useMemo(() => {
+    return !isLogged ? localData : data?.Items;
+  }, [isLogged, localData, data?.Items]);
+
   if ((isLoading && isLogged) || (isFetching && !isLogged) || isRefetching) {
     return (
       <Loader
@@ -174,14 +184,6 @@ const Cart = () => {
       </View>
     );
   }
-
-  const cartProducts = () => {
-    if (!isLogged) {
-      return localData;
-    } else {
-      return data?.Items;
-    }
-  };
 
   return (
     <View style={{flex: 1}}>
@@ -372,7 +374,7 @@ const Cart = () => {
           paddingHorizontal: spacing.content,
           paddingTop: 10,
         }}
-        data={cartProducts()}
+        data={cartProducts}
         keyExtractor={(i, _) => _.toString()}
         renderItem={({item}) => <CartItem item={item} setData={setData} />}
       />
