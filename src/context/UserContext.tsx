@@ -7,6 +7,7 @@ interface IUserData {
   LastName?: string;
   PhoneNumber?: string | number;
   UserType: string;
+  UserTypeDisplay?: string;
 }
 interface IUserContext {
   userData: IUserData;

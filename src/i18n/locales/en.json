@@ -306,7 +306,9 @@
     "order-invoice": "Order Invoice",
     "shipping-fee": "Shipping Fee",
     "products-list": "Products List",
-    "cancelBtn": "Order Cancel"
+    "cancelBtn": "Order Cancel",
+    "completeBtn": "Complete Order",
+    "as-gift": "As a Gift"
   },
   "modal": {
     "successTitle": "are you sure from confirm?",
