@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useMemo, useState} from 'react';
+import React, {useContext, useLayoutEffect, useMemo, useState} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {AddHeaderBtn, BackButton, Loader} from 'components';
@@ -7,14 +7,17 @@ import {useQuery} from '@tanstack/react-query';
 import {getWishlist} from 'services/Profile';
 import {FreeWishlist, WishlistItem} from './components';
 import {IWishListItem} from './types';
+import {UserContext} from 'context/UserContext';
 
 const WishList = () => {
+  const {userData} = useContext(UserContext);
   const {setOptions} = useNavigation();
   const [wishlistData, setWishlistData] = useState<IWishListItem[]>([]);
   const {data, isFetching, refetch} = useQuery(['getWishlist'], getWishlist, {
     onSuccess: data => {
       setWishlistData(data?.data?.Wishlists);
     },
+    enabled: !userData?.IsGuestUser || false,
   });
   const onPress = () => {
     const newArray: IWishListItem[] = [
