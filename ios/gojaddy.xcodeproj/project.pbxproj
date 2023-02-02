@@ -641,10 +641,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = gojaddy/gojaddy.entitlements;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = BLYT9499A2;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = gojaddy/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Go Jaddy Test";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -656,7 +657,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.salam.gojaddy;
+				PRODUCT_BUNDLE_IDENTIFIER = com.salam.gojaddyT;
 				PRODUCT_NAME = gojaddy;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -676,9 +677,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = gojaddy/gojaddy.entitlements;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = BLYT9499A2;
 				INFOPLIST_FILE = gojaddy/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Go Jaddy Test";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -690,7 +692,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.salam.gojaddy;
+				PRODUCT_BUNDLE_IDENTIFIER = com.salam.gojaddyT;
 				PRODUCT_NAME = gojaddy;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;

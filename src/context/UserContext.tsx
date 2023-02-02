@@ -8,6 +8,7 @@ interface IUserData {
   PhoneNumber?: string | number;
   UserType: string;
   IsGuestUser?: boolean;
+  UserTypeDisplay?: string;
 }
 interface IUserContext {
   userData: IUserData;

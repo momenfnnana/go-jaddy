@@ -39,3 +39,9 @@ export const cancelOrder = ({orderId}: {orderId?: string}) =>
     method: 'post',
     params: {id: orderId},
   });
+
+export const completeOrder = ({orderId}: {orderId?: string}) =>
+  axios(`${BASE_URL}/api/custom/order/CompleteOrder`, {
+    method: 'post',
+    params: {id: orderId},
+  });

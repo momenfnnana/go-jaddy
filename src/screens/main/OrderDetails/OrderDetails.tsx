@@ -7,7 +7,7 @@ import {
   Pressable,
 } from 'react-native';
 import React, {useLayoutEffect, useMemo} from 'react';
-import {BackButton, Button, Loader, Text} from 'components';
+import {BackButton, Button, Loader, SelectedAttribute, Text} from 'components';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {
   IProductNavigation,
@@ -16,6 +16,7 @@ import {
 import {useInfiniteQuery, useMutation, useQuery} from '@tanstack/react-query';
 import {
   cancelOrder,
+  completeOrder,
   getCustomerOrders,
   getOrdersDetails,
 } from 'services/Orders';
@@ -25,6 +26,7 @@ import {useLanguage} from 'hook/useLanguage';
 import {useCurrency} from 'hook/useCurrency';
 import {LogoSplash} from 'assets/images';
 import {BASE_URL} from 'utils/Axios';
+import {Switch} from 'react-native-paper';
 require('moment/locale/ar.js');
 
 const OrderDetails = () => {
@@ -66,10 +68,19 @@ const OrderDetails = () => {
     },
   );
 
+  const {isLoading: isLoadingCompleteOrder, mutate: mutateCompleteOrder} =
+    useMutation(['completeOrder'], completeOrder, {
+      onSuccess() {
+        refetch();
+        refetchCustomerOrders();
+      },
+    });
+
   const {isLoading, data, refetch} = useQuery(['getOrderDetails'], () =>
     getOrdersDetails({orderId: params?.Id}),
   );
   const item = useMemo(() => data?.data?.OrderDetails, [data]);
+  console.log({item});
   if (isLoading) {
     return (
       <Loader
@@ -433,15 +444,19 @@ const OrderDetails = () => {
                     variant="mediumExtraBold"
                   />
                 </View>
-                {!!item?.AttributesSelection?.length &&
+                <View style={{flex: 0.7}}>
+                  <SelectedAttribute items={item?.AttributesSelection} />
+
+                  {/* {!!item?.AttributesSelection?.length &&
                   item?.AttributesSelection.map((_: any, index: number) => (
                     <View
                       style={{
                         width: 70,
                         flexDirection: 'row',
-                        justifyContent: 'center',
+                        justifyContent: 'flex-end',
                         alignItems: 'center',
                         backgroundColor: 'transparent',
+                        marginBottom:5
                       }}
                       key={index.toString()}>
                       <Text
@@ -468,28 +483,75 @@ const OrderDetails = () => {
                         }}
                       />
                     </View>
-                  ))}
+                  ))} */}
+                  {item?.AllowPackageAsGift && (
+                    <View
+                      style={{
+                        paddingHorizontal: spacing.normal,
+                        marginTop: spacing.xLarge,
+                      }}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: colors.arrowColor + '07',
+                          borderRadius: spacing.small,
+                        }}>
+                        <Switch
+                          value={item?.AllowPackageAsGift}
+                          onValueChange={() => {}}
+                          color={colors.primary}
+                          style={{transform: [{scale: 0.7}]}}
+                        />
+                        <Text
+                          tx="orderDetails.as-gift"
+                          variant="xSmallBold"
+                          style={{marginHorizontal: 10}}
+                        />
+                      </View>
+                    </View>
+                  )}
+                </View>
               </View>
             </View>
           </Pressable>
         )}
         ListFooterComponent={
-          item?.IsCancelOrderAllowed ? (
-            <Button
-              isLoading={isLoadingCancelOrder}
-              onPress={() => mutate({orderId: item?.Id})}
-              title="orderDetails.cancelBtn"
-              variant="Secondary"
-              style={{
-                marginHorizontal: spacing.content,
-                borderColor: colors.red,
-                marginTop: spacing.normal,
-                marginBottom: spacing.small,
-                backgroundColor: colors.transparent,
-              }}
-              color={colors.red}
-            />
-          ) : null
+          <>
+            {item?.IsCancelOrderAllowed && (
+              <Button
+                isLoading={isLoadingCancelOrder}
+                onPress={() => mutate({orderId: item?.Id})}
+                title="orderDetails.cancelBtn"
+                variant="Secondary"
+                style={{
+                  marginHorizontal: spacing.content,
+                  borderColor: colors.red,
+                  marginTop: spacing.normal,
+                  marginBottom: spacing.small,
+                  backgroundColor: colors.transparent,
+                }}
+                color={colors.red}
+              />
+            )}
+            {item?.IsCompleteOrderAllowed && (
+              <Button
+                isLoading={isLoadingCompleteOrder}
+                onPress={() => mutateCompleteOrder({orderId: item?.Id})}
+                title="orderDetails.completeBtn"
+                variant="Secondary"
+                style={{
+                  marginHorizontal: spacing.content,
+                  borderColor: colors.green,
+                  marginTop: spacing.normal,
+                  marginBottom: spacing.small,
+                  backgroundColor: colors.transparent,
+                }}
+                color={colors.green}
+              />
+            )}
+          </>
         }
       />
     </View>

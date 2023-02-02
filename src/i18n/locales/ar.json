@@ -342,7 +342,9 @@
     "order-invoice": "فاتورة الطلب",
     "shipping-fee": "رسوم الشحن",
     "products-list": "قائمة المنتجات",
-    "cancelBtn": "الغاء الطلب"
+    "cancelBtn": "الغاء الطلب",
+    "completeBtn": "اكمال الطلب",
+    "as-gift": "المنتج كهدية"
   },
   "modal": {
     "successTitle": "هل أنت متأكد من هذه العملية؟",
