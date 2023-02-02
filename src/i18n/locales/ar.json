@@ -48,7 +48,8 @@
     "anonymous-login": "الدخول كزائر",
     "anonymous-login-description": "أهلا بك، يرجى اعلامنا باسمك كاملا ورقم جوالك قبل المتابعة كزائر، سعداء بك",
     "forget-password": "نسيت كلمة المرور",
-    "forget-password-description": "هل نسيت كلمة المرور؟ لا مشكلة يمكنك ارجاع البريد الالكتروني المسجل لاستلام كود الاستعادة"
+    "forget-password-description": "هل نسيت كلمة المرور؟ لا مشكلة يمكنك ارجاع البريد الالكتروني المسجل لاستلام كود الاستعادة",
+    "guest-user": "مستخدم زائر"
   },
   "register": {
     "buyerAccount": "حساب مشتري",
@@ -160,7 +161,8 @@
     "are-sure-want-to-delete": "هل أنت متأكد من الحذف؟",
     "are-sure-want-to-delete-hint": "باختيارك تأكيد الحذف لا يمكنك الرجوع عن هذا الأمر، هل أنت متأكد من حذف العنصر؟",
     "category": "التصنيف {{category}}",
-    "collection-name-required": "اسم الكولكشن مطلوب"
+    "collection-name-required": "اسم الكولكشن مطلوب",
+    "guest-warning-message": "عند الدخول كزائر لا يمكنك الدخول الي صفحات الحساب الشخصي والمفضلة. الرجاء تسجيل الدخول كمستخدم لتحصل على كافة الصلاحيات."
   },
   "currencies": {
     "shikel": "شيكل {{currency}}",
