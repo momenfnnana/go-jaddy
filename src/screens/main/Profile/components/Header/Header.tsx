@@ -83,7 +83,11 @@ const Header = () => {
       <View>
         {!!userData?.UserType && (
           <View style={styles.userTypeContainer}>
-            <Text text={userData?.UserType} color={colors.orange} center />
+            {userData.IsGuestUser !== true ? (
+              <Text text={userData?.UserType} color={colors.orange} center />
+            ) : (
+              <Text tx={'login.guest-user'} color={colors.orange} center />
+            )}
           </View>
         )}
         {isLogged ? (
