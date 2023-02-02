@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   View,
   ImageBackground,
@@ -19,6 +19,8 @@ import {useTranslation} from 'react-i18next';
 import {LogoSplash} from 'assets/images';
 import {useProtectedFunction} from 'hook/useProdectedFunction';
 import LinearGradient from 'react-native-linear-gradient';
+import {UserContext} from 'context/UserContext';
+import Snackbar from 'react-native-snackbar';
 
 const ProductCard = (props: IProductInterface) => {
   const {
@@ -32,6 +34,7 @@ const ProductCard = (props: IProductInterface) => {
     Id,
     ColorAttributes,
   } = props;
+  const {userData} = useContext(UserContext);
   const {protectedFunction} = useProtectedFunction();
   const {currency} = useCurrency();
   const {navigate, setParams} = useNavigation<HomeNavigationsType>();
@@ -53,7 +56,15 @@ const ProductCard = (props: IProductInterface) => {
   };
 
   const showAddToWishList = () => {
-    protectedFunction({func: () => setIsAddToCollectionShown(true)});
+    if (userData.IsGuestUser === true) {
+      Snackbar.show({
+        text: t('wishlist.guest-warning-message'),
+        duration: Snackbar.LENGTH_LONG,
+        backgroundColor: colors.warning,
+      });
+    } else {
+      protectedFunction({func: () => setIsAddToCollectionShown(true)});
+    }
   };
   const gradientColors = ['#0003', colors.white + '00'];
   const source =
