@@ -7,6 +7,7 @@ interface IUserData {
   LastName?: string;
   PhoneNumber?: string | number;
   UserType: string;
+  IsGuestUser?: boolean;
   UserTypeDisplay?: string;
 }
 interface IUserContext {
@@ -34,6 +35,7 @@ const UserContext = createContext<IUserContext>({
       Title: '',
       Url: '',
     },
+    IsGuestUser: true,
     Email: '',
     FirstName: '',
     LastName: '',

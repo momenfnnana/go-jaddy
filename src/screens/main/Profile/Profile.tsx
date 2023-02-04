@@ -42,10 +42,10 @@ const Profile = () => {
     });
   }, []);
   useEffect(() => {
-    if (isLogged) {
+    if (isLogged && userData.IsGuestUser !== true) {
       refetch();
     }
-  }, [isLogged]);
+  }, [isLogged, userData.IsGuestUser]);
 
   if (isRefetching) {
     return <Loader size={'large'} containerStyle={styles.loader} />;
@@ -56,10 +56,13 @@ const Profile = () => {
       <TouchableWithoutFeedback onPress={closeOpenedModals}>
         <View style={styles.container}>
           <Header />
-          {isLogged && (
+          {isLogged && userData?.IsGuestUser !== true && (
             <Section
               title="screens-tabs.profile"
-              list={AuthList({userType: userData?.UserType})}
+              list={AuthList({
+                userType: userData?.UserType,
+                isGuest: userData?.IsGuestUser,
+              })}
             />
           )}
           <Section

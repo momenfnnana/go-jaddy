@@ -74,7 +74,7 @@ const Login = () => {
   const {navigate, canGoBack, dispatch} =
     useNavigation<LoginScreenNavigationProp>();
   const {t} = useTranslation();
-  const {setAccessToken, updateProducts} = useContext(UserContext);
+  const {setAccessToken, updateProducts, setUserData} = useContext(UserContext);
   const [notificationToken, setNotificationToken] = useState<string>();
   const [isPasswordShow, setIsPasswordShown] = useState<boolean>(false);
   const [isAnonymousModalOpened, setIsAnonymousModalOpened] =
@@ -101,10 +101,11 @@ const Login = () => {
   });
 
   const successLogin = (data: any) => {
+    setUserData(data.data);
     const {AccessToken, RememberMe} = data.data;
     setAccessToken(AccessToken);
+    axios.defaults.headers.common['AccessToken'] = `${AccessToken}`;
     if (!RememberMe) {
-      axios.defaults.headers.common['AccessToken'] = `${AccessToken}`;
       AsyncStorage.setItem('accessToken', AccessToken);
     }
     reload(data.data?.AccessToken);
@@ -153,12 +154,19 @@ const Login = () => {
     },
   });
 
+  const closeKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
+  // username: 121234567891012
+  // password: Password$1
   const doLogin = (values: any) => {
     const data = {
       PhoneNumber: countryCode + values.phoneNumber,
       Password: values.password,
       NotificationToken: notificationToken,
     };
+    closeKeyboard();
     mutate(data);
   };
 
@@ -172,10 +180,6 @@ const Login = () => {
 
   const showPassword = () => {
     setIsPasswordShown(currentValue => !currentValue);
-  };
-
-  const closeKeyboard = () => {
-    Keyboard.dismiss();
   };
 
   const showAnonymousModal = () => {

@@ -1,8 +1,14 @@
 import {ProfileIconTab} from 'assets/icons';
 import {ITab} from './UnAuthList';
 
-export const data = ({userType}: {userType?: string}): ITab[] => {
-  if (userType == 'Seller') {
+export const data = ({
+  userType,
+  isGuest,
+}: {
+  userType?: string;
+  isGuest?: boolean;
+}): ITab[] => {
+  if (userType == 'Seller' && !isGuest) {
     return [
       {
         id: 0,

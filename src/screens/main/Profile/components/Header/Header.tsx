@@ -84,11 +84,11 @@ const Header = () => {
         {/* change userData?.UserType => userData?.UserTypeDisplay */}
         {!!userData?.UserType && (
           <View style={styles.userTypeContainer}>
-            <Text
-              text={userData?.UserTypeDisplay || userData?.UserType}
-              color={colors.orange}
-              center
-            />
+            {userData.IsGuestUser !== true ? (
+              <Text text={userData?.UserTypeDisplay || userData?.UserType} color={colors.orange} center />
+            ) : (
+              <Text tx={'login.guest-user'} color={colors.orange} center />
+            )}
           </View>
         )}
         {isLogged ? (

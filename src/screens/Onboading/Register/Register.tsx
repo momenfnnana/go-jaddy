@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
+  Keyboard,
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import {RegisterHeader, RegisterLogo, ShareImage} from './images';
@@ -88,7 +89,9 @@ const Register = () => {
       .required('confirm password is required')
       .oneOf([Yup.ref('password'), null], 'Passwords must match'),
   });
-
+  const closeKeyboard = () => {
+    Keyboard.dismiss();
+  };
   const onRegisterHandle = (values: any) => {
     const data = new FormData();
     setEmail(values.email);
@@ -109,6 +112,7 @@ const Register = () => {
         name: image.name,
       });
     }
+    closeKeyboard();
     mutate(data);
   };
 

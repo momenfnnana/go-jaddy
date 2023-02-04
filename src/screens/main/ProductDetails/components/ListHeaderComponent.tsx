@@ -98,7 +98,7 @@ const ListHeaderComponent = ({
   isLoadingReviews,
 }: IListHeaderComponent) => {
   const {t} = useTranslation();
-  const {setUpdateProducts, updateProducts} = useContext(UserContext);
+  const {setUpdateProducts, updateProducts, userData} = useContext(UserContext);
   const {protectedFunction} = useProtectedFunction();
   const {isLogged} = useLogged();
   const [productsNumber, setProductsNumber] = useState<number>(1);
@@ -265,7 +265,7 @@ const ListHeaderComponent = ({
         const filteredList = cartArray.filter((item: any) => {
           return item.Id !== ProductId;
         });
-        addLocalProduct(filteredList,[]);
+        addLocalProduct(filteredList, []);
       }
     }
   };
@@ -328,7 +328,15 @@ const ListHeaderComponent = ({
   };
 
   const onPressHeart = () => {
-    protectedFunction({func: () => onOpenAddToCollection()});
+    if (userData.IsGuestUser === true) {
+      Snackbar.show({
+        text: t('wishlist.guest-warning-message'),
+        duration: Snackbar.LENGTH_LONG,
+        backgroundColor: colors.warning,
+      });
+    } else {
+      protectedFunction({func: () => onOpenAddToCollection()});
+    }
   };
 
   const totalPrice = useMemo(() => {

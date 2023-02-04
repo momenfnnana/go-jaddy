@@ -44,17 +44,17 @@ const AnonymousModal: React.FC<IAnonymousModalProps> = ({
   visibleAnonymousModal,
   setvisibleAnonymousModal,
 }) => {
-  const {mutate, isLoading} = useMutation(doLogin_Guset, {
-    onSuccess: data => {
-      successLogin(data);
-    },
-  });
   const {navigate, dispatch} = useNavigation<AuthNavigationsType>();
   const {t} = useTranslation();
   const [countryCode, setCountryCode] = useState<string>('00970');
-  const {setAccessToken, updateProducts} = useContext(UserContext);
+  const {setAccessToken, updateProducts, setUserData} = useContext(UserContext);
+  const {mutate, isLoading} = useMutation(doLogin_Guset, {
+    onSuccess: data => {
+      successLogin(data);
+      setUserData(data.data);
+    },
+  });
   const {reload} = useAccessToken();
-
   const successLogin = (data: any) => {
     const {AccessToken} = data.data;
     setAccessToken(AccessToken);
@@ -69,9 +69,11 @@ const AnonymousModal: React.FC<IAnonymousModalProps> = ({
     );
     return data;
   };
-
-  const onSubmitLogin = (values: any) => {
+  const closeKeyboard = () => {
     Keyboard.dismiss();
+  };
+  const onSubmitLogin = (values: any) => {
+    closeKeyboard();
     mutate({
       FullName: values.userName,
       PhoneNumber: countryCode + values.phoneNumber,

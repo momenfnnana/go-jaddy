@@ -19,6 +19,7 @@ import {useTranslation} from 'react-i18next';
 import {BASE_URL} from 'utils/Axios';
 import {WishlistContext} from 'context/WishlistContext';
 import {useAccessToken} from 'hook/useAccessToken';
+import {UserContext} from 'context/UserContext';
 
 const CARD_SIZE: number = 43;
 
@@ -45,15 +46,18 @@ const AddToFav = ({
 }: IAddToFav) => {
   const {accessToken} = useAccessToken();
   const {isRefetch} = useContext(WishlistContext);
+  const {userData} = useContext(UserContext);
   const [showInput, setShowInput] = useState<boolean>(false);
   const [selectedWishlist, setSelectedWishlist] = useState<number | string>();
   const {t} = useTranslation();
+
   const {
+    mutate: refetchWishlists,
     isLoading: isLoadingWishlists,
     data: wishlistsData,
-    refetch: refetchWishlists,
     isSuccess: isLoadedWishlists,
-  } = useQuery(['getWishlists'], getWishlists, {cacheTime: 0});
+  } = useMutation(['getWishlists'], getWishlists);
+
   const {
     mutate: mutateAddToWishlist,
     isLoading: isLoadingAddToWishlist,
@@ -94,8 +98,11 @@ const AddToFav = ({
     }
   }, [isLoadingAddToWishlist, isSuccessAddToWishlist]);
   useEffect(() => {
-    refetchWishlists();
-  }, [isRefetch, accessToken]);
+    if (userData.IsGuestUser === false) {
+      refetchWishlists();
+    }
+  }, [isRefetch, accessToken, userData]);
+
   return (
     <Modal
       isVisible={isAddToCollectionShown}
@@ -107,7 +114,7 @@ const AddToFav = ({
       description="wishlist.add-hint">
       {isLoadingWishlists ? (
         <Loader size={'small'} style={styles.collectionsLoader} />
-      ) : wishlistsData?.data?.Wishlists?.length > 0 ? (
+      ) : (
         <FlatList
           data={wishlistsData?.data?.Wishlists}
           keyExtractor={(_, index) => index.toString()}
@@ -129,6 +136,71 @@ const AddToFav = ({
                     <Pressable
                       onPress={showAddCollectionInput}
                       style={styles.row}
+                      disabled={isLoadingCreateWishList}>
+                      <View style={styles.addCollectionBtn}>
+                        {
+                          <AntDesign
+                            name="plus"
+                            color={colors.white}
+                            size={25}
+                          />
+                        }
+                      </View>
+                      <Text
+                        tx="wishlist.add-collection"
+                        variant="mediumBold"
+                        color={colors.primary}
+                        style={styles.collectionName}
+                      />
+                    </Pressable>
+                    {showInput && (
+                      <InputField
+                        value={values.collectionName}
+                        onChangeText={handleChange('collectionName')}
+                        onBlur={handleBlur('collectionName')}
+                        placeholder={t('wishlist.collection-name')}
+                        style={{}}
+                        rightIcon={
+                          isLoadingCreateWishList ? (
+                            <Loader size={'small'} color={colors.primary} />
+                          ) : (
+                            <AntDesign
+                              onPress={handleSubmit}
+                              name={'check'}
+                              size={18}
+                              color={colors.primary}
+                            />
+                          )
+                        }
+                        error={{
+                          value: errors.collectionName,
+                          touched: touched.collectionName,
+                        }}
+                      />
+                    )}
+                  </>
+                )}
+              </Formik>
+            </View>
+          }
+          ListEmptyComponent={
+            <View style={styles.addCollectionBtnContainer}>
+              <Formik
+                initialValues={collectionsInitialValues}
+                validationSchema={addCollectionSchema}
+                onSubmit={addCollectionHandler}>
+                {({
+                  values,
+                  handleChange,
+                  handleBlur,
+                  errors,
+                  touched,
+                  handleSubmit,
+                }) => (
+                  <>
+                    <Pressable
+                      onPress={showAddCollectionInput}
+                      style={[styles.row]}
                       disabled={isLoadingCreateWishList}>
                       <View style={styles.addCollectionBtn}>
                         {
@@ -224,64 +296,6 @@ const AddToFav = ({
             );
           }}
         />
-      ) : (
-        <View style={styles.addCollectionBtnContainer}>
-          <Formik
-            initialValues={collectionsInitialValues}
-            validationSchema={addCollectionSchema}
-            onSubmit={addCollectionHandler}>
-            {({
-              values,
-              handleChange,
-              handleBlur,
-              errors,
-              touched,
-              handleSubmit,
-            }) => (
-              <>
-                <Pressable
-                  onPress={showAddCollectionInput}
-                  style={[styles.row]}
-                  disabled={isLoadingCreateWishList}>
-                  <View style={styles.addCollectionBtn}>
-                    {<AntDesign name="plus" color={colors.white} size={25} />}
-                  </View>
-                  <Text
-                    tx="wishlist.add-collection"
-                    variant="mediumBold"
-                    color={colors.primary}
-                    style={styles.collectionName}
-                  />
-                </Pressable>
-                {showInput && (
-                  <InputField
-                    value={values.collectionName}
-                    onChangeText={handleChange('collectionName')}
-                    onBlur={handleBlur('collectionName')}
-                    placeholder={t('wishlist.collection-name')}
-                    style={{}}
-                    rightIcon={
-                      isLoadingCreateWishList ? (
-                        <Loader size={'small'} color={colors.primary} />
-                      ) : (
-                        <AntDesign
-                          onPress={handleSubmit}
-                          name={'check'}
-                          size={18}
-                          color={colors.primary}
-                        />
-                      )
-                    }
-                    error={{
-                      value: errors.collectionName,
-                      touched: touched.collectionName,
-                    }}
-                  />
-                )}
-              </>
-            )}
-          </Formik>
-        </View>
       )}
     </Modal>
   );

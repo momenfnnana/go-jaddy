@@ -48,7 +48,8 @@
     "anonymous-login": "Anonymous login",
     "anonymous-login-description": "Welcome, please let us know your full name and mobile number before continuing as a visitor, we are happy with you",
     "forget-password": "Forget Password",
-    "forget-password-description": "did you forget your password? No problem, you can return the registered email to receive the recovery code"
+    "forget-password-description": "did you forget your password? No problem, you can return the registered email to receive the recovery code",
+    "guest-user": "Guest user"
   },
   "register": {
     "buyerAccount": "Buyer Account",
@@ -188,7 +189,8 @@
     "are-sure-want-to-delete": "Are you sure to delete?",
     "are-sure-want-to-delete-hint": "By choosing to confirm deletion, you cannot undo this command. Are you sure to delete the item?",
     "category": "category {{category}}",
-    "collection-name-required": "collection name is required"
+    "collection-name-required": "collection name is required",
+    "guest-warning-message": "When you log in as a visitor, you cannot access the personal account and favorite pages. Please login as a user to get all permissions."
   },
   "currencies": {
     "shikel": "Shikel {{currency}}",

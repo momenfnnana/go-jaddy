@@ -1,13 +1,15 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, View, Pressable} from 'react-native';
 import {Divider, Text} from 'components';
-import {spacing} from 'theme';
+import {colors, spacing} from 'theme';
 import {useCurrency} from 'hook/useCurrency';
 import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
 import {ProfileScreenNavigationProp} from 'navigators/NavigationsTypes';
 import {ITab} from '../../Lists/UnAuthList';
 import {useProtectedFunction} from 'hook/useProdectedFunction';
+import {UserContext} from 'context/UserContext';
+import Snackbar from 'react-native-snackbar';
 
 interface ITabCustom extends ITab {
   showDevider: boolean;
@@ -21,6 +23,7 @@ const Tab = ({
   goTo,
   params,
 }: ITabCustom) => {
+  const {userData} = useContext(UserContext);
   const {currency} = useCurrency();
   const {t} = useTranslation();
   const {protectedFunction} = useProtectedFunction();
@@ -30,6 +33,17 @@ const Tab = ({
       switch (title) {
         case 'profile.about-app':
           navigate(goTo, params);
+          break;
+        case 'profile.favorite':
+          if (userData?.IsGuestUser !== true) {
+            navigate(goTo, params);
+          } else {
+            Snackbar.show({
+              text: t('wishlist.guest-warning-message'),
+              duration: Snackbar.LENGTH_LONG,
+              backgroundColor: colors.warning,
+            });
+          }
           break;
         default:
           protectedFunction({func: () => navigate(goTo, params)});
