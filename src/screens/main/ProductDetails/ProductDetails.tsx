@@ -88,7 +88,7 @@ const ProductDetails = ({}: IProductDetails) => {
   if (isError) {
     return <NetworkErrorScreen onPress={refetch} />;
   }
-  
+
   const Product = productData?.data?.Product;
   const RelatedProductsModel = Product?.RelatedProductsModel;
   const AlsoPurchasedModel = Product?.AlsoPurchasedModel;
