@@ -21,6 +21,10 @@ interface IEditAddress extends IAddAddress {
   id: number;
 }
 
+interface AddShippingAddress extends IAddAddress {
+  isBillingAddress?: boolean;
+}
+
 export const getPreAddresses = () =>
   axios(`${BASE_URL}/api/custom/customer/Addresses`);
 
@@ -44,21 +48,26 @@ export const setDefulatAddress = ({id}: {id: number}) =>
     params: {id},
   });
 
-export const addAddress = ({...rest}: IAddAddress) =>
-  axios(`${BASE_URL}/api/custom/addresses/AddAddress`, {
+export const addAddress = ({...rest}: AddShippingAddress) => {
+  const {isBillingAddress} = rest;
+  if ('isBillingAddress' in rest) {
+    return axios(
+      `${BASE_URL}/api/custom/checkout/NewAddress?isBillingAddress=${isBillingAddress}`,
+      {
+        method: 'post',
+        data: {
+          ...rest,
+        },
+      },
+    );
+  }
+  return axios(`${BASE_URL}/api/custom/addresses/AddAddress`, {
     method: 'post',
     data: {
       ...rest,
     },
   });
-
-export const addBillingAddress = ({...rest}: IAddAddress) =>
-  axios(`${BASE_URL}/api/custom/checkout/NewAddress?isBillingAddress=true`, {
-    method: 'post',
-    data: {
-      ...rest,
-    },
-  });
+};
 
 export const editAddress = ({...rest}: IEditAddress) =>
   axios(`${BASE_URL}/api/custom/addresses/EditAddress?id=${rest.id}`, {
