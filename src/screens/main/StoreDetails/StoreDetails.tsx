@@ -74,7 +74,7 @@ const StoreDetails = () => {
   const [viewType, setViewType] = useState<string>('grid');
   const [tab, setTab] = useState<string>(tabsName[0]);
   const [isFollowed, setFollowed] = useState<boolean>(false);
-  const [disabledFilters, setDisabledFilters] = useState<boolean>(false);
+  const [disabledFilters, setDisabledFilters] = useState<boolean>(true);
   const [subCatId, setSubCatId] = useState<number>(-1);
   const [catProductId, setCatProductId] = useState<number>(-1);
   const [selectedFilter, setSelectedFilter] = useState<Ifiltter>({
@@ -123,9 +123,7 @@ const StoreDetails = () => {
         return null;
       },
       onSuccess(data) {
-        if (data.pages[0]?.data?.StoreReviews?.Items?.length === 0) {
-          setDisabledFilters(true);
-        } else {
+        if (data.pages[0]?.data?.StoreReviews?.Items?.length !== 0) {
           setDisabledFilters(false);
         }
       },

@@ -21,7 +21,14 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {DiscountIcon, ShareIcon} from 'assets/icons';
-import {AddToFav, InputField, Loader, Text, ArrowIcon} from 'components';
+import {
+  AddToFav,
+  InputField,
+  Loader,
+  Text,
+  ArrowIcon,
+  Button,
+} from 'components';
 import {colors, spacing} from 'theme';
 import {BASE_URL} from 'utils/Axios';
 import ProductImagesList from './ProductImagesList';
@@ -526,6 +533,8 @@ const ListHeaderComponent = ({
     DisplayProductReviews,
   ]);
 
+  const CallForPrice = Product.ProductPrice.CallForPrice;
+
   return (
     <View>
       <ImageBackground
@@ -640,24 +649,38 @@ const ListHeaderComponent = ({
             style={styles.shortDescription}
           />
           <View style={styles.priceContainer}>
-            <Text
-              text={numberWithCommas(totalPrice?.toString())}
-              color={colors.orange}
-              variant="xLargeBold"
-              numberOfLines={1}
-            />
-            <View style={styles.row}>
+            {CallForPrice ? (
               <Text
-                text={numberWithCommas(
-                  Product?.ProductPrice?.OldPrice?.toString(),
-                )}
-                color={colors.grayMain}
-                variant="mediumRegular"
-                style={styles.oldPrice}
+                onPress={() =>
+                  navigate('ProfileStack', {screen: 'ContactUsScreen'} as any)
+                }
+                tx={'product-details.CallForPrice'}
+                color={colors.green}
+                variant="mediumBold"
                 numberOfLines={1}
               />
-              <Text text={currency?.Symbol} />
-            </View>
+            ) : (
+              <>
+                <Text
+                  text={numberWithCommas(totalPrice?.toString())}
+                  color={colors.orange}
+                  variant="xLargeBold"
+                  numberOfLines={1}
+                />
+                <View style={styles.row}>
+                  <Text
+                    text={numberWithCommas(
+                      Product?.ProductPrice?.OldPrice?.toString(),
+                    )}
+                    color={colors.grayMain}
+                    variant="mediumRegular"
+                    style={styles.oldPrice}
+                    numberOfLines={1}
+                  />
+                  <Text text={currency?.Symbol} />
+                </View>
+              </>
+            )}
           </View>
         </View>
         <View style={{marginTop: spacing.smaller}}>
@@ -777,47 +800,66 @@ const ListHeaderComponent = ({
             )}
         </View>
         <View style={[styles.row, styles.addToCartContainer]}>
-          <View style={[styles.addToCardContainer, styles.row]}>
-            <View
-              style={[
-                styles.row,
-                {
-                  flex: 0.5,
-                  justifyContent: 'flex-start',
-                },
-              ]}>
-              <Pressable
-                onPress={() => productCounterHandler(productCounter.increase)}
-                style={styles.addToCartBtn}>
-                <Entypo name="plus" size={20} color={colors.primary} />
-              </Pressable>
-              <Text
-                color={colors.white}
-                text={productsNumber.toString()}
-                style={styles.productInCartNumber}
-                variant="mediumBold"
+          {CallForPrice ? (
+            <View style={{flex: 1, marginRight: spacing.small}}>
+              <Button
+                onPress={() =>
+                  navigate('ProfileStack', {screen: 'ContactUsScreen'} as any)
+                }
+                title="product-details.CallForPrice"
+                variant="Secondary"
+                color={colors.green}
+                style={{
+                  backgroundColor: colors.transparent,
+                  borderColor: colors.green,
+                }}
               />
-              <Pressable
-                onPress={() => productCounterHandler(productCounter.descrease)}
-                style={styles.addToCartBtn}>
-                <Entypo name="minus" size={20} color={colors.primary} />
-              </Pressable>
             </View>
-            <Pressable
-              disabled={isLoadingAddToCart}
-              style={{flex: 0.5}}
-              onPress={doAddToCart}>
-              {isLoadingAddToCart ? (
-                <Loader color={colors.white} size={'small'} />
-              ) : (
+          ) : (
+            <View style={[styles.addToCardContainer, styles.row]}>
+              <View
+                style={[
+                  styles.row,
+                  {
+                    flex: 0.5,
+                    justifyContent: 'flex-start',
+                  },
+                ]}>
+                <Pressable
+                  onPress={() => productCounterHandler(productCounter.increase)}
+                  style={styles.addToCartBtn}>
+                  <Entypo name="plus" size={20} color={colors.primary} />
+                </Pressable>
                 <Text
-                  tx="product-details.add-to-cart"
                   color={colors.white}
+                  text={productsNumber.toString()}
+                  style={styles.productInCartNumber}
                   variant="mediumBold"
                 />
-              )}
-            </Pressable>
-          </View>
+                <Pressable
+                  onPress={() =>
+                    productCounterHandler(productCounter.descrease)
+                  }
+                  style={styles.addToCartBtn}>
+                  <Entypo name="minus" size={20} color={colors.primary} />
+                </Pressable>
+              </View>
+              <Pressable
+                disabled={isLoadingAddToCart}
+                style={{flex: 0.5}}
+                onPress={doAddToCart}>
+                {isLoadingAddToCart ? (
+                  <Loader color={colors.white} size={'small'} />
+                ) : (
+                  <Text
+                    tx="product-details.add-to-cart"
+                    color={colors.white}
+                    variant="mediumBold"
+                  />
+                )}
+              </Pressable>
+            </View>
+          )}
           <Pressable onPress={onPressHeart} style={styles.heartContainer}>
             <AntDesign name="heart" color={colors.red} size={20} />
           </Pressable>
