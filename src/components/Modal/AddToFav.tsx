@@ -79,7 +79,11 @@ const AddToFav = ({
     setIsAddToCollectionShown(false);
   };
   const addCollectionHandler = (values: IinitialValues, {resetForm}: any) => {
-    mutate(values.collectionName);
+    mutateAddToWishlist({
+      ProductId,
+      SelectedWishlistId: 0,
+      NewWishlistName:values.collectionName,
+    });
     resetForm();
   };
   const addToWishlistHandler = (item: any) => {
@@ -136,71 +140,6 @@ const AddToFav = ({
                     <Pressable
                       onPress={showAddCollectionInput}
                       style={styles.row}
-                      disabled={isLoadingCreateWishList}>
-                      <View style={styles.addCollectionBtn}>
-                        {
-                          <AntDesign
-                            name="plus"
-                            color={colors.white}
-                            size={25}
-                          />
-                        }
-                      </View>
-                      <Text
-                        tx="wishlist.add-collection"
-                        variant="mediumBold"
-                        color={colors.primary}
-                        style={styles.collectionName}
-                      />
-                    </Pressable>
-                    {showInput && (
-                      <InputField
-                        value={values.collectionName}
-                        onChangeText={handleChange('collectionName')}
-                        onBlur={handleBlur('collectionName')}
-                        placeholder={t('wishlist.collection-name')}
-                        style={{}}
-                        rightIcon={
-                          isLoadingCreateWishList ? (
-                            <Loader size={'small'} color={colors.primary} />
-                          ) : (
-                            <AntDesign
-                              onPress={handleSubmit}
-                              name={'check'}
-                              size={18}
-                              color={colors.primary}
-                            />
-                          )
-                        }
-                        error={{
-                          value: errors.collectionName,
-                          touched: touched.collectionName,
-                        }}
-                      />
-                    )}
-                  </>
-                )}
-              </Formik>
-            </View>
-          }
-          ListEmptyComponent={
-            <View style={styles.addCollectionBtnContainer}>
-              <Formik
-                initialValues={collectionsInitialValues}
-                validationSchema={addCollectionSchema}
-                onSubmit={addCollectionHandler}>
-                {({
-                  values,
-                  handleChange,
-                  handleBlur,
-                  errors,
-                  touched,
-                  handleSubmit,
-                }) => (
-                  <>
-                    <Pressable
-                      onPress={showAddCollectionInput}
-                      style={[styles.row]}
                       disabled={isLoadingCreateWishList}>
                       <View style={styles.addCollectionBtn}>
                         {
