@@ -185,7 +185,7 @@ const CheckoutStepTwo = ({
             </View>
             {!isSameAddress ? (
               <AddAddressComponent
-                onSubmit={handleSubmit}
+                onSubmit={() => setActiveStep(3)}
                 isBillingAddress={false}
               />
             ) : (
