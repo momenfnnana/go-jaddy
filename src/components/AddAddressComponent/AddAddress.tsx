@@ -1,12 +1,7 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Formik} from 'formik';
-import {
-  addAddress,
-  addBillingAddress,
-  getCountries,
-  getStatesByCountry,
-} from 'services/Addresses';
+import {addAddress, getCountries, getStatesByCountry} from 'services/Addresses';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {useTranslation} from 'react-i18next';
 import {useSchema} from 'hook/useSchema';
@@ -61,21 +56,17 @@ const AddAddressComponent = ({
   const {t} = useTranslation();
   const {addressSchema} = useSchema();
   const {mutate: mutateaddAddress, isLoading: isLoadingaddAddress} =
-    useMutation(['addAddress'], addAddress);
-  const {
-    mutate: mutateAddBillingAddress,
-    isLoading: isLoadingaddBillingAddress,
-  } = useMutation(addBillingAddress, {
-    onSuccess(data, variables) {
-      onSubmit({
-        ...variables,
-        StateId: variables.StateId ? variables.StateId.toString() : undefined,
-        CountryName: countrySelected.Text,
-        Id: data.data.Properties?.NewAddressId,
-      });
-      return data;
-    },
-  });
+    useMutation(addAddress, {
+      onSuccess: (data, variables) => {
+        onSubmit({
+          ...variables,
+          StateId: variables.StateId ? variables.StateId.toString() : undefined,
+          CountryName: countrySelected.Text,
+          Id: data.data.Properties?.NewAddressId,
+        });
+        return data;
+      },
+    });
 
   const {
     data: statesData,
@@ -129,39 +120,22 @@ const AddAddressComponent = ({
   };
 
   const onSubmitForm = (values: any) => {
-    if (isBillingAddress === true) {
-      mutateAddBillingAddress({
-        Address1: values.address1,
-        Address2: values.address2,
-        City: values.city,
-        Company: values.companyName,
-        CountryId: countrySelected?.Value,
-        Email: values.email,
-        FaxNumber: values.fax,
-        FirstName: values.firstName,
-        LastName: values.lastName,
-        PhoneNumber: countryCode + values.phoneNumber,
-        PostalCode: 'PostalCode',
-        StateId: stateSelected.item?.Value,
-        IsDefault: isDefualt,
-      });
-    } else {
-      mutateaddAddress({
-        Address1: values.address1,
-        Address2: values.address2,
-        City: values.city,
-        Company: values.companyName,
-        CountryId: countrySelected?.Value,
-        Email: values.email,
-        FaxNumber: values.fax,
-        FirstName: values.firstName,
-        LastName: values.lastName,
-        PhoneNumber: values.phoneNumber,
-        PostalCode: 'PostalCode',
-        StateId: stateSelected.item?.Value,
-        IsDefault: isDefualt,
-      });
-    }
+    mutateaddAddress({
+      Address1: values.address1,
+      Address2: values.address2,
+      City: values.city,
+      Company: values.companyName,
+      CountryId: countrySelected?.Value,
+      Email: values.email,
+      FaxNumber: values.fax,
+      FirstName: values.firstName,
+      LastName: values.lastName,
+      PhoneNumber: countryCode + values.phoneNumber,
+      PostalCode: 'PostalCode',
+      StateId: stateSelected.item?.Value,
+      IsDefault: isDefualt,
+      isBillingAddress,
+    });
   };
 
   return (
@@ -416,7 +390,7 @@ const AddAddressComponent = ({
               />
             </View>
             <Button
-              isLoading={isLoadingaddAddress || isLoadingaddBillingAddress}
+              isLoading={isLoadingaddAddress}
               onPress={handleSubmit}
               style={{marginBottom: 10}}
               title="addAddress.submitBtn"
