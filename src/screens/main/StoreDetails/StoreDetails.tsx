@@ -331,11 +331,13 @@ const StoreDetails = () => {
     : {
         uri: BASE_URL + isExistCoverImage?.Url,
       };
+
   const onPressShare = async () => {
     await Share.share({
-      url: 'https://www.google.com/',
+      url: (storeDetailsData as any).data?.StoreShareUrl,
     });
   };
+
   return (
     <View style={{flex: 1, backgroundColor: colors.white}}>
       <SearchHeader

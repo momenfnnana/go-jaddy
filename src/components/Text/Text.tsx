@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
 import {
+  I18nManager,
   Text as ReactNativeText,
   TextStyle,
   TouchableOpacity,
@@ -40,7 +41,7 @@ export default function Text(props: TextProps) {
     marginBottom: bottom ? spacing[bottom] : undefined,
     marginLeft: left ? spacing[left] : undefined,
     marginRight: right ? spacing[right] : undefined,
-    textAlign: center ? 'center' : 'left',
+    textAlign: center ? 'center' : I18nManager.isRTL ? 'right' : 'left',
     textDecorationLine: underline ? 'underline' : 'none',
     fontSize: size ? size : typography[variant].fontSize,
   };
