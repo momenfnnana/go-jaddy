@@ -5,8 +5,9 @@ import * as RootNavigation from 'navigators/RootNavigation';
 import Snackbar from 'react-native-snackbar';
 import {colors} from 'theme';
 
-export const setAxiosLanguage = (languageId: string) => {
+export const setAxiosLanguage = async (languageId: string) => {
   axios.defaults.headers.common['LanguageId'] = languageId;
+  await AsyncStorage.setItem('languageId', languageId);
 };
 export const setAxiosAccessToken = (accessToken: string) => {
   axios.defaults.headers.common['AccessToken'] = accessToken;
