@@ -76,8 +76,14 @@ const OrderDetails = () => {
       },
     });
 
-  const {isLoading, data, refetch} = useQuery(['getOrderDetails'], () =>
-    getOrdersDetails({orderId: params?.Id}),
+  const {isLoading, data, refetch} = useQuery(
+    ['getOrderDetails'],
+    () => getOrdersDetails({orderId: params?.Id}),
+    {
+      onSuccess(data) {
+        console.log({dataAhmad: data.data.OrderDetails.Items});
+      },
+    },
   );
   const item = useMemo(() => data?.data?.OrderDetails, [data]);
   console.log({item});
@@ -439,7 +445,12 @@ const OrderDetails = () => {
                     style={{marginRight: spacing.tiny}}
                   />
                   <Text
-                    text={'×' + ' ' + item?.Quantity}
+                    text={' × '}
+                    color={colors.primary}
+                    variant="mediumExtraBold"
+                  />
+                  <Text
+                    text={item?.Quantity}
                     color={colors.primary}
                     variant="mediumExtraBold"
                   />
@@ -484,7 +495,7 @@ const OrderDetails = () => {
                       />
                     </View>
                   ))} */}
-                  {item?.AllowPackageAsGift && (
+                  {item?.PackageAsGift && (
                     <View
                       style={{
                         paddingHorizontal: spacing.normal,
@@ -499,7 +510,7 @@ const OrderDetails = () => {
                           borderRadius: spacing.small,
                         }}>
                         <Switch
-                          value={item?.AllowPackageAsGift}
+                          value={item?.PackageAsGift}
                           onValueChange={() => {}}
                           color={colors.primary}
                           style={{transform: [{scale: 0.7}]}}
