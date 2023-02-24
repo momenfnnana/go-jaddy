@@ -160,8 +160,6 @@ const ListFooterComponent = ({
         </Pressable>
       )}
       {ReviewOverview?.AllowCustomerReviews &&
-        !ReviewOverview?.CustomerAlreadyReviewedProduct &&
-        ReviewOverview?.CustomerAlreadyPurchasedProduct &&
         isRateProductShown &&
         isLogged && (
           <Button

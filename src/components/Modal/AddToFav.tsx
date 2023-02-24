@@ -20,6 +20,7 @@ import {BASE_URL} from 'utils/Axios';
 import {WishlistContext} from 'context/WishlistContext';
 import {useAccessToken} from 'hook/useAccessToken';
 import {UserContext} from 'context/UserContext';
+import {useFocusEffect} from '@react-navigation/native';
 
 const CARD_SIZE: number = 43;
 
@@ -82,7 +83,7 @@ const AddToFav = ({
     mutateAddToWishlist({
       ProductId,
       SelectedWishlistId: 0,
-      NewWishlistName:values.collectionName,
+      NewWishlistName: values.collectionName,
     });
     resetForm();
   };
@@ -101,11 +102,14 @@ const AddToFav = ({
       onCloseAddToCollection();
     }
   }, [isLoadingAddToWishlist, isSuccessAddToWishlist]);
-  useEffect(() => {
-    if (userData.IsGuestUser === false) {
-      refetchWishlists();
-    }
-  }, [isRefetch, accessToken, userData]);
+  useFocusEffect(
+    React.useCallback(() => {
+      if (userData.IsGuestUser === false) {
+        refetchWishlists();
+      }
+      return () => {};
+    }, [isRefetch, accessToken, userData]),
+  );
 
   return (
     <Modal

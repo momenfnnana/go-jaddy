@@ -11,13 +11,11 @@ import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
 import {colors} from 'theme';
 import ProductCard from './components/ProductCard';
 import {FreeWishlist} from '../WishList/components';
-const fullPageStyle = {
-  flex: 1,
-} as ViewStyle;
+
 const WishlistDetails = () => {
   const {setOptions} = useNavigation<WishlistDetailsScreenNavigationProp>();
   const {params} = useRoute<ProfileStackProps>();
-  const [wishListData, setWishListData] = useState<any[]>();
+  const [wishListData, setWishListData] = useState<any[]>([]);
   const {
     data,
     isLoading,
@@ -89,7 +87,7 @@ const WishlistDetails = () => {
   }
 
   return (
-    <View style={fullPageStyle}>
+    <View style={{flex: 1}}>
       <FlatList
         data={wishListData}
         refreshControl={
@@ -106,7 +104,7 @@ const WishlistDetails = () => {
             <Loader size={'small'} color={colors.primary} />
           ) : undefined
         }
-        contentContainerStyle={{flex: 1}}
+        contentContainerStyle={{flex: wishListData?.length > 0 ? undefined : 1}}
       />
     </View>
   );
