@@ -676,7 +676,9 @@ const StoreDetails = () => {
             // showReview ? (
             <RatingFiltters
               disabledFilters={disabledFilters}
-              DisplayStoreReviews={storeDetailsData.data.DisplayStoreReviews}
+              DisplayStoreReviews={
+                storeDetailsData.data?.ReviewOverview?.AllowCustomerReviews
+              }
               style={{paddingHorizontal: spacing.content}}
               setSelectedFilter={setSelectedFilter}
               selectedFilter={selectedFilter}

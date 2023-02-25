@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Pressable} from 'react-native';
+import {View, StyleSheet, Pressable, I18nManager} from 'react-native';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider as LanguageProvider} from 'context/reducer';
@@ -25,6 +25,7 @@ import {ScreenProvider} from 'context/ScreenContext';
 import {WishlistProvider} from 'context/WishlistContext';
 import queryClient from 'queryClient';
 import messaging from '@react-native-firebase/messaging';
+import RNRestart from 'react-native-restart';
 
 async function requestUserPermission() {
   const authStatus = await messaging().requestPermission();
@@ -74,6 +75,15 @@ export default function App() {
           useSuspense: false,
         },
       });
+      console.log({res});
+      if (res === '2' || !res) {
+        if (!I18nManager.isRTL) {
+          (async () => {
+            await I18nManager.forceRTL(true);
+            RNRestart.Restart();
+          })();
+        }
+      }
     });
   }, []);
 

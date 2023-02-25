@@ -43,29 +43,32 @@ const SwitchLang = () => {
 
   return (
     <View style={styles.container}>
-      {data?.data?.Languages?.map((item: ILanguage) => (
-        <Pressable
-          key={item?.Id}
-          onPress={() => changeLanguageHandler(item)}
-          style={[
-            styles.languageBtnContainer,
-            {
-              backgroundColor:
+      {data?.data?.Languages?.map((item: ILanguage) => {
+        console.log({first: language});
+        return (
+          <Pressable
+            key={item?.Id}
+            onPress={() => changeLanguageHandler(item)}
+            style={[
+              styles.languageBtnContainer,
+              {
+                backgroundColor:
+                  item.Id.toString() === language
+                    ? colors.primary
+                    : 'transparent',
+              },
+            ]}>
+            <Text
+              text={item?.Name}
+              color={
                 item.Id.toString() === language
-                  ? colors.primary
-                  : 'transparent',
-            },
-          ]}>
-          <Text
-            text={item?.Name}
-            color={
-              item.Id.toString() === language
-                ? colors.white
-                : colors.languagesSwitchText
-            }
-          />
-        </Pressable>
-      ))}
+                  ? colors.white
+                  : colors.languagesSwitchText
+              }
+            />
+          </Pressable>
+        );
+      })}
     </View>
   );
 };
