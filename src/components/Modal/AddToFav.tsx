@@ -108,7 +108,7 @@ const AddToFav = ({
         refetchWishlists();
       }
       return () => {};
-    }, [isRefetch, accessToken, userData]),
+    }, [isRefetch, accessToken, userData, isAddToCollectionShown]),
   );
 
   return (

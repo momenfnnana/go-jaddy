@@ -14,7 +14,6 @@ import {UserContext} from 'context/UserContext';
 import {useQuery} from '@tanstack/react-query';
 import {getCurrencies, getSettings} from 'services/Auth';
 import {changeLocalCurrencies} from './constants';
-import {setAxiosCurrencyId} from 'axiosConfig';
 import {navigationRef} from 'navigators/RootNavigation';
 import RootStack from 'navigators/RootStack';
 import {ToastProvider} from 'react-native-toast-notifications';
@@ -22,9 +21,10 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {Settings} from 'react-native-fbsdk-next';
 import RNBootSplash from 'react-native-bootsplash';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getUserData} from 'services/Profile';
 
 const App = () => {
-  const {setSettings, setCurrencies} = useContext(UserContext);
+  const {setSettings, setCurrencies, setUserData} = useContext(UserContext);
   const {height, width} = useWindowDimensions();
   const {colors, dark} = useTheme();
   const {
@@ -37,7 +37,16 @@ const App = () => {
     isLoading: isLoadingCurrencies,
     isSuccess: isSuccessLoadingCurrencies,
   } = useQuery(['currencies'], getCurrencies);
-
+  const {isLoading: isLoadingUserData} = useQuery(
+    ['getUserData'],
+    getUserData,
+    {
+      onSuccess: data => {
+        setUserData(data.data);
+        return data;
+      },
+    },
+  );
   useEffect(() => {
     if (isSuccessLoadingCurrencies === true) {
       setCurrencies(currenciesData?.data?.Currencies);
@@ -65,7 +74,7 @@ const App = () => {
     Settings.initializeSDK();
   }, []);
 
-  if (isLoadingCurrencies || isLoadingSettings) {
+  if (isLoadingCurrencies || isLoadingSettings || isLoadingUserData) {
     return (
       <Loader
         size={'large'}

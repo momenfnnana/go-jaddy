@@ -32,5 +32,6 @@ const styles = StyleSheet.create({
   profileTitle: {
     marginTop: spacing.xLarge,
     marginBottom: spacing.xLarge,
+    textAlign: 'left',
   },
 });

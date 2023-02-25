@@ -279,6 +279,7 @@ const styles = StyleSheet.create({
   },
   closeBtn: {
     transform: [{scale: 1.2}],
+    color: colors.primary,
   },
   collectionNameContainer: {
     flex: 1,
